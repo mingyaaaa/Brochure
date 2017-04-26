@@ -9,7 +9,7 @@ namespace Brochure.Core
     {
         ITransaction Transaction { get; }
         IDocument Insert(IEntrity entrity);
-        long Delete<T>(QueryBuild build, IEntrity entrity = null) where T : IEntrity;
+        long Delete<T>(QueryBuild build) where T : IEntrity;
         long DeleteById<T>(Guid id) where T : IEntrity;
         long DeleteById(IEntrity entrity);
         long Update(IEntrity obj);

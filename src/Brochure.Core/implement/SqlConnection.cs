@@ -47,13 +47,12 @@ namespace Brochure.Core.implement
             }
         }
 
-        public long Delete<T>(QueryBuild build, IEntrity entrity = null) where T : IEntrity
+        public long Delete<T>(QueryBuild build) where T : IEntrity
         {
             try
             {
                 OpenConnection();
-                if (entrity == null)
-                    entrity = ObjectHelper.CreateInstance<T>();
+                var entrity = ObjectHelper.CreateInstance<T>();
                 var sql = $"delete from {entrity.TableName} where " + build;
                 SqlCommand cmd = GetSqlCommand(build.GetDictionary(), sql);
                 return cmd.ExecuteNonQuery();
@@ -65,18 +64,9 @@ namespace Brochure.Core.implement
             }
         }
 
-        public long DeleteById(IEntrity entrity)
-        {
-            if (entrity == null)
-                throw new Exception("参数错误");
-            var tuple = entrity.GetPropertyValueTuple<IEntrity>(t => t.Id);
-            return Delete<IEntrity>(QueryBuild.Ins.And(tuple), entrity);
-        }
-
         public long DeleteById<T>(Guid id) where T : IEntrity
         {
-            var entrity = ObjectHelper.CreateInstance<T>();
-            return Delete<T>(QueryBuild.Ins.And(ConstString.Id, id), entrity);
+            return Delete<T>(QueryBuild.Ins.And(ConstString.Id, id));
         }
 
         public long Update(IEntrity obj)

@@ -16,7 +16,7 @@ namespace test.SqlconnectionTest
         private readonly string _connectionString;
         public SqlConnectionTest(ITestOutputHelper outputHelper) : base(outputHelper)
         {
-            var root = new ConfigurationBuilder().AddJsonFile("appSetting.json").Build();
+            var root = new ConfigurationBuilder().AddJsonFile("appSettin.json").Build();
             _connectionString = root.GetSection(ConstString.ConnectionString).Value;
         }
 
@@ -40,9 +40,10 @@ namespace test.SqlconnectionTest
             {
                 Age = 12
             };
-            con.Delete<UserDatabase>(QueryBuild.Ins.And(t => t.Age, a));
+            con.Delete<UserDatabase>(QueryBuild.Ins.And(a, t => t.Age));
             con.Commit();
-            con.Delete<UserDatabase>(QueryBuild.Ins.AndBetweeen<UserDatabase>(t => t.Age, 40, 50));
+            var property = ObjectHelper.GetPropertyName<UserDatabase>(t => t.Age);
+            con.Delete<UserDatabase>(QueryBuild.Ins.AndBetweeen(property, 40, 50));
             con.Commit();
         }
 
@@ -55,7 +56,7 @@ namespace test.SqlconnectionTest
                 Age = 12
             };
             var rr = a.GetPropertyValueTuple<UserDatabase>(t => t.Age);
-            con.Delete<UserDatabase>(QueryBuild.Ins.And(rr), a);
+            con.Delete<UserDatabase>(QueryBuild.Ins.And(rr));
         }
     }
 }
