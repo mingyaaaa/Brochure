@@ -43,7 +43,7 @@ namespace test.SqlconnectionTest
             con.Delete<UserDatabase>(QueryBuild.Ins.And(a, t => t.Age));
             con.Commit();
             var property = ObjectHelper.GetPropertyName<UserDatabase>(t => t.Age);
-            con.Delete<UserDatabase>(QueryBuild.Ins.AndBetweeen(property, 40, 50));
+            con.Delete<UserDatabase>(QueryBuild.Ins.AndBetweeen<UserDatabase>(t => t.Age, 40, 50));
             con.Commit();
         }
 
