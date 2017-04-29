@@ -12,13 +12,13 @@ namespace Brochure.Core
         long Delete(DeleteBuild build);
         long DeleteById<T>(Guid id) where T : IEntrity;
         long DeleteById(IEntrity entrity);
-        long Update(IEntrity obj);
+        long Update(UpdateBuild updateBuild);
         T GetInfoById<T>(string id);
         IDocument GetInfoById(string id);
         IDocument Search(string str);
         Task<IDocument> InsertAsync(IEntrity entrity);
         Task<long> DeleteAsync(IEntrity entrity);
-        Task<long> UpdateaAsync(IEntrity entrity);
+        Task<long> UpdateaAsync(IDocument entrity);
         Task<T> GetInfoByIdAsync<T>(Guid id);
         Task<IDocument> GetInfoByIdAsync(Guid id);
         Task<IDocument> SearchAsync(string str);

@@ -35,7 +35,32 @@ namespace Brochure.Core.Query
         }
     }
 
+    public class ParamBuild : BaseBuild
+    {
+        public ParamBuild(object obj) : base("")
+        {
+            Dic = obj.AsDocument();
+            SetResultStr();
+        }
+        public ParamBuild(IDocument doc) : base("")
+        {
+            Dic = doc;
+            SetResultStr();
+        }
 
+        private void SetResultStr()
+        {
+            foreach (var item in Dic.Keys)
+            {
+                ResultStr = ResultStr + $" {item}={ConstString.SqlServerPre + item}, ";
+            }
+            ResultStr = ResultStr.TrimEnd().TrimEnd(',');
+        }
+        public override string ToString()
+        {
+            return ResultStr;
+        }
+    }
 
     public class DeleteBuild : BaseBuild
     {
@@ -47,17 +72,25 @@ namespace Brochure.Core.Query
             _whereBuild = whereBuild;
         }
 
+        public override string ToString()
+        {
+            return ResultStr + _whereBuild;
+        }
+
         public override IDocument GetDocument()
         {
             Dic.Merger(_whereBuild.GetDocument());
             return base.GetDocument();
         }
     }
+
     public class UpdateBuild : BaseBuild
     {
+        private readonly BaseBuild _paramBuild;
         private readonly BaseBuild _whereBuild;
-        public UpdateBuild(BaseBuild whereBuild) : base("update {0} set ")
+        public UpdateBuild(ParamBuild paramBuild, BaseBuild whereBuild) : base("update {0} set ")
         {
+            _paramBuild = paramBuild;
             TableName = whereBuild.GetTableName();
             ResultStr = string.Format(ResultStr, TableName);
             _whereBuild = whereBuild;
@@ -66,11 +99,17 @@ namespace Brochure.Core.Query
         public override IDocument GetDocument()
         {
             Dic.Merger(_whereBuild.GetDocument());
+            Dic.Merger(_paramBuild.GetDocument());
             return base.GetDocument();
+        }
+
+        public override string ToString()
+        {
+            return ResultStr + _paramBuild + _whereBuild;
         }
     }
 
-    public class SelectBuild : IQuery
+    public class SelectBuild
     {
         private string _result = "select {0} from  {1}";
         private readonly BaseBuild _whereBuild;

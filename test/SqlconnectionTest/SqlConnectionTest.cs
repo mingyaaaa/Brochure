@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
 using Brochure.Core;
 using Brochure.Core.Extends;
-using Brochure.Core.Helper;
 using Brochure.Core.implement;
 using Brochure.Core.Query;
 using Microsoft.Extensions.Configuration;
@@ -48,21 +46,30 @@ namespace test.SqlconnectionTest
             var query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
             con.Delete(query);
             con.Commit();
-            query = new DeleteBuild(new WhereBuild().And(a.Between(t => t.Age, 90, 100)));
+            query = new DeleteBuild(new WhereBuild().And(a.Between(t => t.Age, 50, 100)));
             con.Delete(query);
             con.Commit();
         }
 
         [Fact]
-        public void TestDelete1()
+        public void TestUpdate()
         {
             var con = new SqlServerConnection(_connectionString);
             var a = new UserDatabase()
             {
-                Age = 12
+                Id = new Guid("32D1CE3B-D841-4B71-84C3-324A2C969505"),
+                Age = 46,
+                Name = "bbb0000"
             };
-            var query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
-            con.Delete(query);
+            var param = new ParamBuild(new RecordDocument(new
+            {
+                a.Age,
+                a.Name
+            }));
+            var where = new WhereBuild().And(a.Equal(t => t.Id));
+            var query = new UpdateBuild(param, where);
+            con.Update(query);
+            con.Commit();
         }
     }
 }

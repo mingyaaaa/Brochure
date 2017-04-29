@@ -5,7 +5,6 @@ using Brochure.Core.Query;
 
 namespace Brochure.Core
 {
-
     public abstract class BaseBuild
     {
         protected IDocument Dic = new RecordDocument();

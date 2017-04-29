@@ -70,9 +70,21 @@ namespace Brochure.Core.implement
             return Delete(query);
         }
 
-        public long Update(IEntrity obj)
+        public long Update(UpdateBuild updateBuild)
         {
-            throw new NotImplementedException();
+            try
+            {
+                OpenConnection();
+                var str = updateBuild.ToString();
+                var cmd = GetSqlCommand(updateBuild.GetDocument(), str);
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
+
         }
 
         public T GetInfoById<T>(string id)
@@ -100,9 +112,10 @@ namespace Brochure.Core.implement
             throw new NotImplementedException();
         }
 
-        public Task<long> UpdateaAsync(IEntrity entrity)
+        public async Task<long> UpdateaAsync(IDocument entrity)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            return -1;
         }
 
         public Task<T> GetInfoByIdAsync<T>(Guid id)
