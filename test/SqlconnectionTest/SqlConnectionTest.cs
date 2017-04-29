@@ -27,7 +27,7 @@ namespace test.SqlconnectionTest
             Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                IQuery query = new InsertBuid(new UserDatabase()
+                InsertBuid query = new InsertBuid(new UserDatabase()
                 {
                     Age = random.Next(10, 99),
                     Name = "aaaa" + random.Next(10, 99),
@@ -45,7 +45,7 @@ namespace test.SqlconnectionTest
             {
                 Age = 62
             };
-            IQuery query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
+            var query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
             con.Delete(query);
             con.Commit();
             query = new DeleteBuild(new WhereBuild().And(a.Between(t => t.Age, 90, 100)));
@@ -61,7 +61,7 @@ namespace test.SqlconnectionTest
             {
                 Age = 12
             };
-            IQuery query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
+            var query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
             con.Delete(query);
         }
     }

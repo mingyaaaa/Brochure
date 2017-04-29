@@ -8,18 +8,20 @@ namespace Brochure.Core
     public interface IConnection : IDisposable
     {
         ITransaction Transaction { get; }
-        IDocument Insert(IQuery query);
-        long Delete(IQuery build);
+        IDocument Insert(InsertBuid query);
+        long Delete(DeleteBuild build);
         long DeleteById<T>(Guid id) where T : IEntrity;
         long DeleteById(IEntrity entrity);
         long Update(IEntrity obj);
         T GetInfoById<T>(string id);
-        T Search<T>(string str);
+        IDocument GetInfoById(string id);
+        IDocument Search(string str);
         Task<IDocument> InsertAsync(IEntrity entrity);
         Task<long> DeleteAsync(IEntrity entrity);
         Task<long> UpdateaAsync(IEntrity entrity);
         Task<T> GetInfoByIdAsync<T>(Guid id);
-        Task<T> SearchAsync<T>(string str);
+        Task<IDocument> GetInfoByIdAsync(Guid id);
+        Task<IDocument> SearchAsync(string str);
         void Close();
         void Commit();
     }

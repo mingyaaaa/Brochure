@@ -1,133 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Net.Http.Headers;
-using System.Text;
 using Brochure.Core.Extends;
-using Brochure.Core.Helper;
 
 namespace Brochure.Core.Query
 {
-    public class WhereBuild : IQuery
+    public class WhereBuild : BaseBuild
     {
-        private IDocument dic = new RecordDocument();
-        private string _resultStr = " where 1=1";
-        private const string PreString = ConstString.SqlServerPre;
-        private string _tableName;
-        public WhereBuild And(EntrieyQuery query)
+        public WhereBuild() : base(" where 1=1 ")
         {
-            _tableName = query.GetTableName();
-            _resultStr = _resultStr + $" and {query}";
-            dic.Merger(query.GetDocument());
+
+        }
+        public BaseBuild And(EntrieyQuery query)
+        {
+            TableName = query.GetTableName();
+            ResultStr = ResultStr + $" and {query}";
+            Dic.Merger(query.GetDocument());
             return this;
         }
-
-        public WhereBuild Or(EntrieyQuery query)
+        public BaseBuild Or(EntrieyQuery query)
         {
-            _tableName = query.GetTableName();
-            _resultStr = _resultStr + $" or {query}";
-            dic.Merger(query.GetDocument());
+            TableName = query.GetTableName();
+            ResultStr = ResultStr + $" or {query}";
+            Dic.Merger(query.GetDocument());
             return this;
         }
-        public override string ToString() => _resultStr;
-
-        public IDocument GetDocument()
-        {
-            return dic;
-        }
-
-        public string GetTableName()
-        {
-            return _tableName;
-        }
     }
 
-    public class EntrieyQuery : IQuery
+    public class EntrieyQuery : BaseBuild
     {
-        private string _result = string.Empty;
-        private IDocument _doc;
-        private IEntrity _entrity;
-        public EntrieyQuery(string str, IDocument doc, IEntrity entrity)
+        public EntrieyQuery(string str, IDocument doc, IEntrity entrity) : base("")
         {
-            _result = str;
-            _doc = doc;
-            _entrity = entrity;
-        }
-
-        public IDocument GetDocument()
-        {
-            return _doc;
-        }
-
-        public string GetTableName()
-        {
-            return _entrity.TableName;
-        }
-
-        public override string ToString()
-        {
-            return _result;
+            ResultStr = str;
+            Dic = doc;
+            TableName = entrity.TableName;
         }
     }
 
 
 
-    public class DeleteBuild : IQuery
+    public class DeleteBuild : BaseBuild
     {
-        private string _result = "delete from {0} ";
-        private readonly WhereBuild _whereBuild;
-        private readonly string _tableName;
-        public DeleteBuild(WhereBuild whereBuild)
+        private readonly BaseBuild _whereBuild;
+        public DeleteBuild(BaseBuild whereBuild) : base("delete from {0}")
         {
-            _tableName = whereBuild.GetTableName();
-            _result = string.Format(_result, _tableName);
+            TableName = whereBuild.GetTableName();
+            ResultStr = string.Format(ResultStr, TableName);
             _whereBuild = whereBuild;
         }
-        public override string ToString()
-        {
-            return _result + _whereBuild;
-        }
-        public IDocument GetDocument()
-        {
-            return _whereBuild.GetDocument();
-        }
 
-        public string GetTableName()
+        public override IDocument GetDocument()
         {
-            return _tableName;
+            Dic.Merger(_whereBuild.GetDocument());
+            return base.GetDocument();
         }
     }
-    public class UpdateBuild : IQuery
+    public class UpdateBuild : BaseBuild
     {
-        private string _result = "update {0} set ";
-        private readonly WhereBuild _whereBuild;
-        private readonly string _tableName;
-        public UpdateBuild(WhereBuild whereBuild)
+        private readonly BaseBuild _whereBuild;
+        public UpdateBuild(BaseBuild whereBuild) : base("update {0} set ")
         {
-            _tableName = whereBuild.GetTableName();
-            _result = string.Format(_result, _tableName);
+            TableName = whereBuild.GetTableName();
+            ResultStr = string.Format(ResultStr, TableName);
             _whereBuild = whereBuild;
         }
-        public override string ToString()
-        {
-            return _result + _whereBuild;
-        }
-        public IDocument GetDocument()
-        {
-            return _whereBuild.GetDocument();
-        }
 
-        public string GetTableName()
+        public override IDocument GetDocument()
         {
-            return _tableName;
+            Dic.Merger(_whereBuild.GetDocument());
+            return base.GetDocument();
         }
     }
 
     public class SelectBuild : IQuery
     {
         private string _result = "select {0} from  {1}";
-        private readonly IQuery _whereBuild;
-        public SelectBuild(IQuery whereBuild)
+        private readonly BaseBuild _whereBuild;
+        public SelectBuild(BaseBuild whereBuild)
         {
             _whereBuild = whereBuild;
         }
@@ -146,34 +93,20 @@ namespace Brochure.Core.Query
         }
     }
 
-    public class InsertBuid : IQuery
+    public class InsertBuid : BaseBuild
     {
-        private readonly string _result = "Insert into {0}({1}) values({2})";
-        private const string PreString = ConstString.SqlServerPre;
-        private readonly IDocument _dic;
-        private readonly string _tableName;
-        public InsertBuid(IEntrity entrity)
-        {
-            _dic = entrity.AsDocument();
-            var arr = _dic.Keys.AddPreString(PreString);
-            _tableName = entrity.TableName;
-            _dic.Remove(ConstString.T);
-            if (_dic[ConstString.Id].To<Guid>() == Guid.Empty)
-                _dic[ConstString.Id] = Guid.NewGuid();
-            _result = string.Format(_result, _tableName, _dic.Keys.ToString(","), arr.ToString(","));
-        }
-        public override string ToString()
-        {
-            return _result;
-        }
-        public IDocument GetDocument()
-        {
-            return _dic;
-        }
 
-        public string GetTableName()
+        private const string PreString = ConstString.SqlServerPre;
+
+        public InsertBuid(IEntrity entrity) : base("Insert into {0}({1}) values({2})")
         {
-            return _tableName;
+            Dic = entrity.AsDocument();
+            var arr = Dic.Keys.AddPreString(PreString);
+            TableName = entrity.TableName;
+            Dic.Remove(ConstString.T);
+            if (Dic[ConstString.Id].To<Guid>() == Guid.Empty)
+                Dic[ConstString.Id] = Guid.NewGuid();
+            ResultStr = string.Format(ResultStr, TableName, Dic.Keys.ToString(","), arr.ToString(","));
         }
     }
 }

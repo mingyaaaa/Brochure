@@ -22,7 +22,7 @@ namespace Brochure.Core.implement
 
         public ITransaction Transaction { get; }
 
-        public IDocument Insert(IQuery insertBuid)
+        public IDocument Insert(InsertBuid insertBuid)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace Brochure.Core.implement
             }
         }
 
-        public long Delete(IQuery build)
+        public long Delete(DeleteBuild build)
         {
             try
             {
@@ -60,13 +60,13 @@ namespace Brochure.Core.implement
         public long DeleteById<T>(Guid id) where T : IEntrity
         {
             var instance = ObjectHelper.CreateInstance<T>();
-            IQuery query = new DeleteBuild(new WhereBuild().And(instance.Equal(t => t.Id, id)));
+            DeleteBuild query = new DeleteBuild(new WhereBuild().And(instance.Equal(t => t.Id, id)));
             return Delete(query);
         }
 
         public long DeleteById(IEntrity entrity)
         {
-            IQuery query = new DeleteBuild(new WhereBuild().And(entrity.Equal(t => t.Id)));
+            DeleteBuild query = new DeleteBuild(new WhereBuild().And(entrity.Equal(t => t.Id)));
             return Delete(query);
         }
 
@@ -80,7 +80,12 @@ namespace Brochure.Core.implement
             throw new NotImplementedException();
         }
 
-        public T Search<T>(string str)
+        public IDocument GetInfoById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDocument Search(string str)
         {
             throw new NotImplementedException();
         }
@@ -105,7 +110,12 @@ namespace Brochure.Core.implement
             throw new NotImplementedException();
         }
 
-        public Task<T> SearchAsync<T>(string str)
+        public Task<IDocument> GetInfoByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IDocument> SearchAsync(string str)
         {
             throw new NotImplementedException();
         }
