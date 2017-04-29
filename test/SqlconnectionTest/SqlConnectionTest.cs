@@ -16,7 +16,7 @@ namespace test.SqlconnectionTest
         private readonly string _connectionString;
         public SqlConnectionTest(ITestOutputHelper outputHelper) : base(outputHelper)
         {
-            var root = new ConfigurationBuilder().AddJsonFile("appSettin.json").Build();
+            var root = new ConfigurationBuilder().AddJsonFile("appSetting.json").Build();
             _connectionString = root.GetSection(ConstString.ConnectionString).Value;
         }
 
@@ -25,11 +25,16 @@ namespace test.SqlconnectionTest
         {
             var con = new SqlServerConnection(_connectionString);
             Random random = new Random();
-            con.Insert(new UserDatabase()
+            for (int i = 0; i < 10; i++)
             {
-                Age = random.Next(10, 99),
-                Name = "aaaa" + random.Next(10, 99),
-            });
+                IQuery query = new InsertBuid(new UserDatabase()
+                {
+                    Age = random.Next(10, 99),
+                    Name = "aaaa" + random.Next(10, 99),
+                });
+                con.Insert(query);
+            }
+
             con.Commit();
         }
         [Fact]
@@ -38,12 +43,13 @@ namespace test.SqlconnectionTest
             var con = new SqlServerConnection(_connectionString);
             var a = new UserDatabase()
             {
-                Age = 12
+                Age = 62
             };
-            con.Delete<UserDatabase>(QueryBuild.Ins.And(a, t => t.Age));
+            IQuery query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
+            con.Delete(query);
             con.Commit();
-            var property = ObjectHelper.GetPropertyName<UserDatabase>(t => t.Age);
-            con.Delete<UserDatabase>(QueryBuild.Ins.AndBetweeen<UserDatabase>(t => t.Age, 40, 50));
+            query = new DeleteBuild(new WhereBuild().And(a.Between(t => t.Age, 90, 100)));
+            con.Delete(query);
             con.Commit();
         }
 
@@ -55,8 +61,8 @@ namespace test.SqlconnectionTest
             {
                 Age = 12
             };
-            var rr = a.GetPropertyValueTuple<UserDatabase>(t => t.Age);
-            con.Delete<UserDatabase>(QueryBuild.Ins.And(rr));
+            IQuery query = new DeleteBuild(new WhereBuild().And(a.Equal(t => t.Age)));
+            con.Delete(query);
         }
     }
 }

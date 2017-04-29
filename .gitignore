@@ -1,0 +1,9 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/src/Brochure.Core/obj
+/test/obj
+/test/obj
+/test/obj/Debug/netcoreapp1.1
+/test/obj/Release/netcoreapp1.1

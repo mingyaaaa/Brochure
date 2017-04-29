@@ -73,9 +73,25 @@ namespace Brochure.Core.Extends
                 throw new Exception("对象为null");
             var type = obj.GetType();
             var properties = type.GetRuntimeProperties();
-            var property = properties.FirstOrDefault(t => t.Name == ObjectHelper.GetPropertyName(expr));
+            var property = properties.FirstOrDefault(t => t.Name == obj.GetPropertyName(expr));
             return Tuple.Create<string, object>(property.Name, property.GetValue(obj));
         }
-
+        public static string GetPropertyName<T>(this T obj, Expression<Func<T, object>> expr)
+        {
+            var rtn = "";
+            if (expr.Body is UnaryExpression)
+            {
+                rtn = ((MemberExpression)((UnaryExpression)expr.Body).Operand).Member.Name;
+            }
+            else if (expr.Body is MemberExpression)
+            {
+                rtn = ((MemberExpression)expr.Body).Member.Name;
+            }
+            else if (expr.Body is ParameterExpression)
+            {
+                rtn = ((ParameterExpression)expr.Body).Type.Name;
+            }
+            return rtn;
+        }
     }
 }

@@ -9,6 +9,10 @@ namespace Brochure.Core
     {
         private IDictionary<string, object> _dic;
 
+        public RecordDocument()
+        {
+            _dic = new Dictionary<string, object>();
+        }
         public RecordDocument(object data)
         {
             _dic = data.AsDictionary();

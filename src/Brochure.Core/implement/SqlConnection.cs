@@ -22,23 +22,17 @@ namespace Brochure.Core.implement
 
         public ITransaction Transaction { get; }
 
-        public IDocument Insert(IEntrity entrity)
+        public IDocument Insert(IQuery insertBuid)
         {
             try
             {
                 OpenConnection();
-                var dic = entrity.AsDictionary();
-                var arr = dic.Keys.AddPreString(_preString);
-                var tableName = dic[ConstString.T];
-                dic.Remove(ConstString.T);
-                if (dic[ConstString.Id].To<Guid>() == Guid.Empty)
-                    dic[ConstString.Id] = Guid.NewGuid();
-                string sql = $"Insert into {tableName}({dic.Keys.ToString(",")}) values({arr.ToString(",")})";
-                SqlCommand cmd = GetSqlCommand(dic, sql);
+                var dic = insertBuid.GetDocument();
+                SqlCommand cmd = GetSqlCommand(dic, insertBuid.ToString());
                 var result = cmd.ExecuteNonQuery();
                 if (result != 1)
-                    throw new Exception($"插入{tableName}错误");
-                return dic.AsDocument();
+                    throw new Exception($"插入{insertBuid.GetTableName()}错误");
+                return dic;
             }
             catch (Exception e)
             {
@@ -47,14 +41,13 @@ namespace Brochure.Core.implement
             }
         }
 
-        public long Delete<T>(QueryBuild build) where T : IEntrity
+        public long Delete(IQuery build)
         {
             try
             {
                 OpenConnection();
-                var entrity = ObjectHelper.CreateInstance<T>();
-                var sql = $"delete from {entrity.TableName} where " + build;
-                SqlCommand cmd = GetSqlCommand(build.GetDictionary(), sql);
+                var sql = build.ToString();
+                SqlCommand cmd = GetSqlCommand(build.GetDocument(), sql);
                 return cmd.ExecuteNonQuery();
             }
             catch (Exception e)
@@ -66,7 +59,15 @@ namespace Brochure.Core.implement
 
         public long DeleteById<T>(Guid id) where T : IEntrity
         {
-            return Delete<T>(QueryBuild.Ins.And(ConstString.Id, id));
+            var instance = ObjectHelper.CreateInstance<T>();
+            IQuery query = new DeleteBuild(new WhereBuild().And(instance.Equal(t => t.Id, id)));
+            return Delete(query);
+        }
+
+        public long DeleteById(IEntrity entrity)
+        {
+            IQuery query = new DeleteBuild(new WhereBuild().And(entrity.Equal(t => t.Id)));
+            return Delete(query);
         }
 
         public long Update(IEntrity obj)
@@ -134,7 +135,7 @@ namespace Brochure.Core.implement
                 _transaction = _connection.BeginTransaction();
         }
 
-        private SqlCommand GetSqlCommand(IDictionary<string, object> dictionary, string sql)
+        private SqlCommand GetSqlCommand(IDocument dictionary, string sql)
         {
             SqlCommand cmd = new SqlCommand(sql, _connection);
             cmd.Transaction = _transaction;

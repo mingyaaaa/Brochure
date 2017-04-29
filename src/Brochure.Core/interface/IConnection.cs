@@ -8,8 +8,8 @@ namespace Brochure.Core
     public interface IConnection : IDisposable
     {
         ITransaction Transaction { get; }
-        IDocument Insert(IEntrity entrity);
-        long Delete<T>(QueryBuild build) where T : IEntrity;
+        IDocument Insert(IQuery query);
+        long Delete(IQuery build);
         long DeleteById<T>(Guid id) where T : IEntrity;
         long DeleteById(IEntrity entrity);
         long Update(IEntrity obj);
