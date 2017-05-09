@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Brochure.Core.Abstract;
 using Brochure.Core.Extends;
 
 namespace Brochure.Core.Query
@@ -9,14 +11,14 @@ namespace Brochure.Core.Query
         {
 
         }
-        public BaseBuild And(EntrieyQuery query)
+        public WhereBuild And(EntrieyQuery query)
         {
             TableName = query.GetTableName();
             ResultStr = ResultStr + $" and {query}";
             Dic.Merger(query.GetDocument());
             return this;
         }
-        public BaseBuild Or(EntrieyQuery query)
+        public WhereBuild Or(EntrieyQuery query)
         {
             TableName = query.GetTableName();
             ResultStr = ResultStr + $" or {query}";
@@ -24,7 +26,6 @@ namespace Brochure.Core.Query
             return this;
         }
     }
-
     public class EntrieyQuery : BaseBuild
     {
         public EntrieyQuery(string str, IDocument doc, IEntrity entrity) : base("")
@@ -35,30 +36,60 @@ namespace Brochure.Core.Query
         }
     }
 
-    public class ParamBuild : BaseBuild
+    public class UpdateParamBuild : BaseBuild
     {
-        public ParamBuild(object obj) : base("")
+        public UpdateParamBuild(object obj) : base("")
         {
             Dic = obj.AsDocument();
             SetResultStr();
         }
-        public ParamBuild(IDocument doc) : base("")
+        public UpdateParamBuild(IDocument doc) : base("")
         {
             Dic = doc;
             SetResultStr();
         }
-
+        public UpdateParamBuild(BaseBuild build) : base("")
+        {
+            Dic = build.GetDocument();
+            TableName = build.GetTableName();
+            ResultStr = build.ToString();
+            SetResultStr();
+        }
         private void SetResultStr()
         {
             foreach (var item in Dic.Keys)
             {
-                ResultStr = ResultStr + $" {item}={ConstString.SqlServerPre + item}, ";
+                ResultStr = ResultStr + $" {TableName}.{item}={ConstString.SqlServerPre + item}, ";
             }
             ResultStr = ResultStr.TrimEnd().TrimEnd(',');
         }
         public override string ToString()
         {
             return ResultStr;
+        }
+    }
+
+    public class SelectParamBuild : BaseBuild
+    {
+        public static string SearchAll = " * ";
+        public List<string> ParamList = new List<string>();
+        public SelectParamBuild(bool isSearchAll) : base("")
+        {
+            if (isSearchAll)
+            {
+                ResultStr = SearchAll;
+            }
+        }
+        public SelectParamBuild(List<string> param) : base("")
+        {
+            ResultStr = ResultStr + param.ToString(",");
+            ParamList.AddRange(param);
+        }
+
+        public void Add(List<string> param)
+        {
+            ResultStr = ResultStr + "," + param.ToString(",");
+            ParamList.AddRange(param);
         }
     }
 
@@ -88,7 +119,7 @@ namespace Brochure.Core.Query
     {
         private readonly BaseBuild _paramBuild;
         private readonly BaseBuild _whereBuild;
-        public UpdateBuild(ParamBuild paramBuild, BaseBuild whereBuild) : base("update {0} set ")
+        public UpdateBuild(UpdateParamBuild paramBuild, BaseBuild whereBuild) : base("update {0} set ")
         {
             _paramBuild = paramBuild;
             TableName = whereBuild.GetTableName();
@@ -109,26 +140,30 @@ namespace Brochure.Core.Query
         }
     }
 
-    public class SelectBuild
+    public class SelectBuild : BaseBuild
     {
-        private string _result = "select {0} from  {1}";
-        private readonly BaseBuild _whereBuild;
-        public SelectBuild(BaseBuild whereBuild)
+        private readonly SelectParamBuild _paramBuild;
+        public SelectBuild(IEntrity entrity, SelectParamBuild param, WhereBuild whereBuild = null) : base("select {0} from  {1}")
         {
-            _whereBuild = whereBuild;
-        }
-        public override string ToString()
-        {
-            return _result + _whereBuild;
-        }
-        public IDocument GetDocument()
-        {
-            return _whereBuild.GetDocument();
+            _paramBuild = param;
+            ResultStr = string.Format(ResultStr, _paramBuild, entrity.TableName);
+            if (whereBuild != null)
+                ResultStr = ResultStr + whereBuild;
+            if (param.ToString() == SelectParamBuild.SearchAll)
+            {
+                _paramBuild.ParamList.AddRange(entrity.AsDocument().Keys);
+            }
         }
 
-        public string GetTableName()
+        public SelectBuild LeftJoin(IEntrity entrity, string str1, string str2)
         {
-            return "";
+            ResultStr = $" left join {entrity.TableName} on {str1}={str2} ";
+            return this;
+        }
+
+        public List<string> GetParamList()
+        {
+            return _paramBuild.ParamList;
         }
     }
 

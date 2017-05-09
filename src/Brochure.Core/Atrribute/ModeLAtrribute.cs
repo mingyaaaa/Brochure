@@ -5,11 +5,11 @@ namespace Brochure.Core.Atrribute
 
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class ModeLAtrribute : Attribute
+    public sealed class ModeLAttribute : Attribute
     {
         private AtrributeType _type;
 
-        public ModeLAtrribute(AtrributeType type)
+        public ModeLAttribute(AtrributeType type)
         {
             _type = type;
         }

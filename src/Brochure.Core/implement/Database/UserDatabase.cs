@@ -1,14 +1,15 @@
 using System;
+using Brochure.Core.Abstract;
+using Brochure.Core.Atrribute;
 
 namespace Brochure.Core
 {
-    public class UserDatabase : IEntrity
+    public class UserDatabase : BaseEntrity
     {
-        public string TableName => "user_info";
-        public Guid Id { get; set; }
+        public override string TableName => "user_info";
         public string Name { get; set; }
         public int Age { get; set; }
-        public IModel ConverToDataModel()
+        public override IModel ConverToDataModel()
         {
             throw new NotImplementedException();
         }

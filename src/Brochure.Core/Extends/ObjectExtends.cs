@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Brochure.Core.Helper;
+using Brochure.Core.Atrribute;
+using Brochure.Core.implement;
 
 namespace Brochure.Core.Extends
 {
@@ -11,17 +12,8 @@ namespace Brochure.Core.Extends
     {
         public static T To<T>(this object obj)
         {
-            //var type = obj.GetType();
-            //if (typeof(T) == type)
-            //    return (T)obj;
-            //else if (typeof(T) == typeof(string))
-            //    return ConvertToT<T>(obj.ToString());
-            //else if (typeof(T) == typeof(int))
-            //    return ConvertToT<T>(Convert.ToInt32(obj));
-            //else if (typeof(T) == typeof(Guid))
-            //    return ConvertToT<T>(Guid.Parse(obj.ToString()));
-            //else if (typeof(T) == typeof(bool))
-            //    return ConvertToT<T>(Convert.ToBoolean(obj));
+            if (obj is T)
+                return (T)obj;
             return (T)Convert.ChangeType(obj, typeof(T));
         }
 
@@ -39,7 +31,22 @@ namespace Brochure.Core.Extends
                 return new RecordDocument(obj as IDictionary<string, object>);
             return new RecordDocument(obj);
         }
-
+        public static IDocument AsDocument<T>(this T obj, params Expression<Func<T, object>>[] array)
+        {
+            IDocument result;
+            if (obj is IDictionary<string, object>)
+                result = new RecordDocument(obj as IDictionary<string, object>);
+            else
+            {
+                result = new RecordDocument(obj);
+            }
+            foreach (var item in array)
+            {
+                var property = obj.GetPropertyName(item);
+                result.Remove(property);
+            }
+            return result;
+        }
         public static IDictionary<string, object> AsDictionary(this object obj)
         {
             var result = new Dictionary<string, object>();
@@ -49,6 +56,9 @@ namespace Brochure.Core.Extends
             var properties = type.GetRuntimeProperties();
             foreach (var item in properties)
             {
+                var attribute = item.GetCustomAttribute(typeof(IngoreAttribute), true);
+                if (attribute != null)
+                    continue;
                 result.Add(item.Name, item.GetValue(obj));
             }
             return result;
@@ -74,7 +84,7 @@ namespace Brochure.Core.Extends
             var type = obj.GetType();
             var properties = type.GetRuntimeProperties();
             var property = properties.FirstOrDefault(t => t.Name == obj.GetPropertyName(expr));
-            return Tuple.Create<string, object>(property.Name, property.GetValue(obj));
+            return Tuple.Create(property.Name, property.GetValue(obj));
         }
         public static string GetPropertyName<T>(this T obj, Expression<Func<T, object>> expr)
         {

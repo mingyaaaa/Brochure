@@ -1,12 +1,13 @@
 using System;
-using Brochure.Core;
-using Brochure.Core.Extends;
-using Xunit;
 using System.Threading.Tasks;
-using test;
+using Brochure.Core;
+using Brochure.Core.Abstract;
+using Brochure.Core.Extends;
+using Brochure.Core.implement;
+using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests
+namespace test
 {
     public class Tests : BaseTest
     {
@@ -23,7 +24,7 @@ namespace Tests
             Assert.NotNull(a);
             Assert.Equal(1, a["aa"]);
             Assert.Equal(222, a["bb"]);
-            a = new RecordDocument(new { aa = 1, bb = new { cc = 33, dd = 44 } });
+
         }
         [Fact]
         public void Test3() => OutputHelper.WriteLine((16 | 4).ToString());
@@ -54,14 +55,13 @@ namespace Tests
         }
 
 
-        public class TestClass : IEntrity
+        public class TestClass : BaseEntrity
         {
             public Class1 Class1 { get; set; }
 
             public string C { get; set; }
-            public string TableName { get; }
-            public Guid Id { get; }
-            public IModel ConverToDataModel()
+            public override string TableName => "";
+            public override IModel ConverToDataModel()
             {
                 throw new NotImplementedException();
             }

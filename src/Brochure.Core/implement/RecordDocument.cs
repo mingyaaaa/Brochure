@@ -1,13 +1,12 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Brochure.Core.Extends;
 
-namespace Brochure.Core
+namespace Brochure.Core.implement
 {
     public class RecordDocument : IDocument
     {
-        private IDictionary<string, object> _dic;
+        private readonly IDictionary<string, object> _dic;
 
         public RecordDocument()
         {
@@ -25,8 +24,8 @@ namespace Brochure.Core
 
         public object this[string key]
         {
-            get { return _dic[key]; }
-            set { _dic[key] = value; }
+            get => _dic[key.ToLower()];
+            set => _dic[key.ToLower()] = value;
         }
 
         public int Count => _dic.Count;
@@ -44,7 +43,7 @@ namespace Brochure.Core
 
         public void Add(string key, object value)
         {
-            _dic.Add(key, value);
+            _dic.Add(key.ToLower(), value);
         }
 
         public void Clear()
@@ -59,7 +58,7 @@ namespace Brochure.Core
 
         public bool ContainsKey(string key)
         {
-            return _dic.ContainsKey(key);
+            return _dic.ContainsKey(key.ToLower());
         }
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
@@ -79,12 +78,12 @@ namespace Brochure.Core
 
         public bool Remove(string key)
         {
-            return _dic.Remove(key);
+            return _dic.Remove(key.ToLower());
         }
 
         public bool TryGetValue(string key, out object value)
         {
-            return _dic.TryGetValue(key, out value);
+            return _dic.TryGetValue(key.ToLower(), out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

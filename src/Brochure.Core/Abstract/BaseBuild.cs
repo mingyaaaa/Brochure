@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Brochure.Core.Query;
+﻿using Brochure.Core.implement;
 
-namespace Brochure.Core
+namespace Brochure.Core.Abstract
 {
     public abstract class BaseBuild
     {

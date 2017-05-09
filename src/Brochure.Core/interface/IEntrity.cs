@@ -1,5 +1,6 @@
 
 using System;
+using Brochure.Core.Atrribute;
 using Brochure.Core.implement;
 
 namespace Brochure.Core
