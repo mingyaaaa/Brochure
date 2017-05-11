@@ -1,5 +1,5 @@
 ﻿using Brochure.Core;
-using SqlConnectionDal;
+using OracleConnectionDal;
 
 namespace ConnectionDal
 {
