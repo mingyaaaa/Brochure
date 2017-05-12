@@ -10,6 +10,14 @@ namespace Brochure.Core.Extends
     public static class EntrityQueryExtend
     {
         private static readonly Random Random = new Random();
+
+        /// <summary>
+        /// 等于条件（对象中包含条件的值）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">实体对象</param>
+        /// <param name="expr">字段名称</param>
+        /// <returns></returns>
         public static EntrieyQuery Equal<T>(this T entrity, Expression<Func<T, object>> expr) where T : IEntrity
         {
             var randomstr = Random.Next(0, 9999);
@@ -21,6 +29,15 @@ namespace Brochure.Core.Extends
             EntrieyQuery entrieyQuery = new EntrieyQuery(str, doc, entrity);
             return entrieyQuery;
         }
+
+        /// <summary>
+        /// 等于条件（对象中不包含条件的值）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">实体对象</param>
+        /// <param name="expr">字段名称</param>
+        /// <param name="value">条件值</param>
+        /// <returns></returns>
         public static EntrieyQuery Equal<T>(this T entrity, Expression<Func<T, object>> expr, object value) where T : IEntrity
         {
             var randomstr = Random.Next(0, 9999);//确保参数不会重复
@@ -32,6 +49,15 @@ namespace Brochure.Core.Extends
             EntrieyQuery entrieyQuery = new EntrieyQuery(str, doc, entrity);
             return entrieyQuery;
         }
+        /// <summary>
+        /// between条件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">对象</param>
+        /// <param name="expr">字段名称</param>
+        /// <param name="min">最大值</param>
+        /// <param name="max">最小值</param>
+        /// <returns></returns>
         public static EntrieyQuery Between<T>(this T entrity, Expression<Func<T, object>> expr, double min, double max) where T : IEntrity
         {
             var randomstr = Random.Next(0, 9999);
@@ -43,7 +69,14 @@ namespace Brochure.Core.Extends
             doc.Add(ConstString.Max + dicStr, max);
             return new EntrieyQuery(str, doc, entrity);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity"></param>
+        /// <param name="expr"></param>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public static EntrieyQuery In<T>(this T entrity, Expression<Func<T, object>> expr, params object[] array) where T : IEntrity
         {
             var property = entrity.GetPropertyName(expr);
@@ -60,7 +93,13 @@ namespace Brochure.Core.Extends
             str = string.Format(str + " [{0}] ", paramlist.ToString(","));
             return new EntrieyQuery(str, doc, entrity);
         }
-
+        /// <summary>
+        /// 获取更新的参数和值（该对象中包含要更新的值）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">实体对象</param>
+        /// <param name="expr">对象字段</param>
+        /// <returns></returns>
         public static BaseBuild UpdateParam<T>(this T entrity, params Expression<Func<T, object>>[] expr) where T : IEntrity
         {
             var doc = new RecordDocument();
@@ -71,7 +110,13 @@ namespace Brochure.Core.Extends
             }
             return new EntrieyQuery("", doc, entrity);
         }
-
+        /// <summary>
+        /// 获取查询参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">实体对象</param>
+        /// <param name="expr">对象字段</param>
+        /// <returns></returns>
         public static List<string> SelectParam<T>(this T entrity, params Expression<Func<T, object>>[] expr) where T : IEntrity
         {
             List<string> result = new List<string>();
@@ -82,7 +127,13 @@ namespace Brochure.Core.Extends
             }
             return result;
         }
-
+        /// <summary>
+        /// 获取单个字段
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entrity">对象</param>
+        /// <param name="expr">名称</param>
+        /// <returns></returns>
         public static string Param<T>(this T entrity, Expression<Func<T, object>> expr) where T : IEntrity
         {
             var property = entrity.GetPropertyName(expr);

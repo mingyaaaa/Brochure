@@ -1,0 +1,9 @@
+F:\GitHub Program\Brochure\SqlConnectionDal\bin\Debug\netcoreapp1.1\SqlConnectionDal.deps.json
+F:\GitHub Program\Brochure\SqlConnectionDal\bin\Debug\netcoreapp1.1\SqlConnectionDal.dll
+F:\GitHub Program\Brochure\SqlConnectionDal\bin\Debug\netcoreapp1.1\SqlConnectionDal.pdb
+F:\GitHub Program\Brochure\SqlConnectionDal\bin\Debug\netcoreapp1.1\Brochure.Core.dll
+F:\GitHub Program\Brochure\SqlConnectionDal\bin\Debug\netcoreapp1.1\Brochure.Core.pdb
+F:\GitHub Program\Brochure\SqlConnectionDal\obj\Debug\netcoreapp1.1\SqlConnectionDal.csprojResolveAssemblyReference.cache
+F:\GitHub Program\Brochure\SqlConnectionDal\obj\Debug\netcoreapp1.1\SqlConnectionDal.AssemblyInfo.cs
+F:\GitHub Program\Brochure\SqlConnectionDal\obj\Debug\netcoreapp1.1\SqlConnectionDal.dll
+F:\GitHub Program\Brochure\SqlConnectionDal\obj\Debug\netcoreapp1.1\SqlConnectionDal.pdb

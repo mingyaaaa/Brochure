@@ -1,0 +1,459 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v1.1",
+    "signature": "89183d6d75140a5c3732ebccc8c1800d5ba57424"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v1.1": {
+      "sqlconnectiondal/1.0.0": {
+        "dependencies": {
+          "Brochure.Core": "1.0.0"
+        },
+        "runtime": {
+          "SqlConnectionDal.dll": {}
+        }
+      },
+      "microsoft.extensions.configuration/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "2.0.0-preview1-final"
+        },
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.Extensions.Configuration.dll": {}
+        }
+      },
+      "microsoft.extensions.configuration.abstractions/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "2.0.0-preview1-final"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+        }
+      },
+      "microsoft.extensions.configuration.fileextensions/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "2.0.0-preview1-final",
+          "Microsoft.Extensions.FileProviders.Physical": "2.0.0-preview1-final"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.Extensions.Configuration.FileExtensions.dll": {}
+        }
+      },
+      "microsoft.extensions.configuration.json/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "2.0.0-preview1-final",
+          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.0-preview1-final",
+          "Newtonsoft.Json": "10.0.2",
+          "System.Runtime.Serialization.Primitives": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.Extensions.Configuration.Json.dll": {}
+        }
+      },
+      "microsoft.extensions.fileproviders.abstractions/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "2.0.0-preview1-final"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+        }
+      },
+      "microsoft.extensions.fileproviders.physical/2.0.0-preview1-final": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Abstractions": "2.0.0-preview1-final",
+          "Microsoft.Extensions.FileSystemGlobbing": "2.0.0-preview1-final"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.Extensions.FileProviders.Physical.dll": {}
+        }
+      },
+      "microsoft.extensions.filesystemglobbing/2.0.0-preview1-final": {
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.Extensions.FileSystemGlobbing.dll": {}
+        }
+      },
+      "microsoft.extensions.primitives/2.0.0-preview1-final": {
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.4.0-preview1-25305-02"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Microsoft.Extensions.Primitives.dll": {}
+        }
+      },
+      "newtonsoft.json/10.0.2": {
+        "dependencies": {
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.Runtime.Serialization.Formatters": "4.3.0",
+          "System.Runtime.Serialization.Primitives": "4.3.0",
+          "System.Xml.XmlDocument": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Newtonsoft.Json.dll": {}
+        }
+      },
+      "runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25305-02": {
+        "dependencies": {
+          "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni": "4.4.0-preview1-25301-01",
+          "runtime.win-x64.runtime.native.System.Data.SqlClient.sni": "4.4.0-preview1-25301-01",
+          "runtime.win-x86.runtime.native.System.Data.SqlClient.sni": "4.4.0-preview1-25301-01"
+        }
+      },
+      "runtime.win-arm64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/sni.dll": {
+            "rid": "win-arm64",
+            "assetType": "native"
+          }
+        }
+      },
+      "runtime.win-x64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+        "runtimeTargets": {
+          "runtimes/win-x64/native/sni.dll": {
+            "rid": "win-x64",
+            "assetType": "native"
+          }
+        }
+      },
+      "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+        "runtimeTargets": {
+          "runtimes/win-x86/native/sni.dll": {
+            "rid": "win-x86",
+            "assetType": "native"
+          }
+        }
+      },
+      "system.collections.nongeneric/4.3.0": {
+        "runtime": {
+          "lib/netstandard1.3/System.Collections.NonGeneric.dll": {}
+        }
+      },
+      "system.collections.specialized/4.3.0": {
+        "dependencies": {
+          "System.Collections.NonGeneric": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Collections.Specialized.dll": {}
+        }
+      },
+      "system.componentmodel.primitives/4.3.0": {
+        "runtime": {
+          "lib/netstandard1.0/System.ComponentModel.Primitives.dll": {}
+        }
+      },
+      "system.componentmodel.typeconverter/4.3.0": {
+        "dependencies": {
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.Collections.Specialized": "4.3.0",
+          "System.ComponentModel.Primitives": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.5/System.ComponentModel.TypeConverter.dll": {}
+        }
+      },
+      "system.data.common/4.3.0": {
+        "runtime": {
+          "lib/netstandard1.2/System.Data.Common.dll": {}
+        }
+      },
+      "system.data.sqlclient/4.4.0-preview1-25305-02": {
+        "dependencies": {
+          "System.Data.Common": "4.3.0",
+          "System.Diagnostics.DiagnosticSource": "4.4.0-preview1-25305-02",
+          "System.IO.Pipes": "4.3.0",
+          "System.Security.Principal.Windows": "4.4.0-preview1-25305-02",
+          "System.Text.Encoding.CodePages": "4.4.0-preview1-25305-02",
+          "runtime.native.System.Data.SqlClient.sni": "4.4.0-preview1-25305-02"
+        },
+        "runtime": {
+          "lib/netstandard1.3/System.Data.SqlClient.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netstandard1.3/System.Data.SqlClient.dll": {
+            "rid": "unix",
+            "assetType": "runtime"
+          },
+          "runtimes/win/lib/netstandard1.3/System.Data.SqlClient.dll": {
+            "rid": "win",
+            "assetType": "runtime"
+          }
+        }
+      },
+      "system.diagnostics.diagnosticsource/4.4.0-preview1-25305-02": {
+        "runtime": {
+          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {}
+        }
+      },
+      "system.io.pipes/4.3.0": {
+        "runtimeTargets": {
+          "runtimes/unix/lib/netstandard1.3/System.IO.Pipes.dll": {
+            "rid": "unix",
+            "assetType": "runtime"
+          },
+          "runtimes/win/lib/netstandard1.3/System.IO.Pipes.dll": {
+            "rid": "win",
+            "assetType": "runtime"
+          }
+        }
+      },
+      "system.runtime.compilerservices.unsafe/4.4.0-preview1-25305-02": {
+        "runtime": {
+          "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        }
+      },
+      "system.runtime.serialization.formatters/4.3.0": {
+        "dependencies": {
+          "System.Runtime.Serialization.Primitives": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.4/System.Runtime.Serialization.Formatters.dll": {}
+        }
+      },
+      "system.runtime.serialization.primitives/4.3.0": {
+        "runtime": {
+          "lib/netstandard1.3/System.Runtime.Serialization.Primitives.dll": {}
+        }
+      },
+      "system.security.principal.windows/4.4.0-preview1-25305-02": {
+        "runtime": {
+          "lib/netstandard1.3/System.Security.Principal.Windows.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netstandard1.3/System.Security.Principal.Windows.dll": {
+            "rid": "win",
+            "assetType": "runtime"
+          }
+        }
+      },
+      "system.text.encoding.codepages/4.4.0-preview1-25305-02": {
+        "runtime": {
+          "lib/netstandard1.3/System.Text.Encoding.CodePages.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netstandard1.3/System.Text.Encoding.CodePages.dll": {
+            "rid": "win",
+            "assetType": "runtime"
+          }
+        }
+      },
+      "system.xml.xmldocument/4.3.0": {
+        "runtime": {
+          "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
+        }
+      },
+      "brochure.core/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "2.0.0-preview1-final",
+          "Microsoft.Extensions.Configuration.FileExtensions": "2.0.0-preview1-final",
+          "Microsoft.Extensions.Configuration.Json": "2.0.0-preview1-final",
+          "Newtonsoft.Json": "10.0.2",
+          "System.Data.Common": "4.3.0",
+          "System.Data.SqlClient": "4.4.0-preview1-25305-02"
+        },
+        "runtime": {
+          "Brochure.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "sqlconnectiondal/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "microsoft.extensions.configuration/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HluXGJDPC7bSNJpMLA2/JddYhVzyZmnInVlmrDzpHLhN7bVHMHeReUq33wIhcvyU+XuDFqPym0t8XXwhLpdeJw==",
+      "path": "microsoft.extensions.configuration/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.configuration.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.configuration.abstractions/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pf2zCLs1IgslFZRdmKOU1CPtIbzpDM0tLk00cduCE10g2R9tP5qOUoq1P10EOEYPIoNwKqkZ2a4uJE6L+DdqKQ==",
+      "path": "microsoft.extensions.configuration.abstractions/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.configuration.abstractions.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.configuration.fileextensions/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LHcOPmtBTcq7fExtizCKe32w9wbkcs2rt1tnnhReD78FAKqs8ZpnzxDSBQIICWGN4Rp3LulTs/MaWCoCPcE+Dg==",
+      "path": "microsoft.extensions.configuration.fileextensions/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.configuration.fileextensions.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.configuration.json/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FlUl+nG6f+tpwIDumKt2zkNdVPTixJVc+KhJehGmRa1NqyakgSuipDOjiJLbeA62sxXsMTbCtlqORdVKbGti7w==",
+      "path": "microsoft.extensions.configuration.json/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.configuration.json.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.fileproviders.abstractions/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dLdTBwUZzVO/stbc5fvJIp7N2u8UJ6QPxH8ymexMyu8oLnlqaQW2tCNVtX6Y5tbz2EXLwurptKU8D+LXPmZThA==",
+      "path": "microsoft.extensions.fileproviders.abstractions/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.fileproviders.abstractions.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.fileproviders.physical/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5YvtaNJW3dPRaQ6r5h0dT1UxP+qu+b6x9WBjgKwRZdXyr62a6uK8i5UvCO+fEnajSpKGuw4CdQcSpHH6MZG8Jg==",
+      "path": "microsoft.extensions.fileproviders.physical/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.fileproviders.physical.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.filesystemglobbing/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r4Ub33jtnBmdfJ7m4LH6MFgdZ5Ey7V+4gK9w6TEmiZoHU3XXUZq2LExh6c4XcFeM2Nd0FHiOwnHOwc5ogUObUQ==",
+      "path": "microsoft.extensions.filesystemglobbing/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.filesystemglobbing.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "microsoft.extensions.primitives/2.0.0-preview1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OAgerzgUcUPHpNAjQ8IQiVQQGXJpl3DkdMhleYPfkKvl50Id/qYorZaIIXO4W4xeffbOAUNWCt65gMjkqhLi+g==",
+      "path": "microsoft.extensions.primitives/2.0.0-preview1-final",
+      "hashPath": "microsoft.extensions.primitives.2.0.0-preview1-final.nupkg.sha512"
+    },
+    "newtonsoft.json/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iwElSU2IXmwGvytJsezyDML2ZWDkG2JzTYzlU/BNlmzMdlmRvbnwITsGGY74gwVEpDli1UdOLkMT7/3jxWvXzA==",
+      "path": "newtonsoft.json/10.0.2",
+      "hashPath": "newtonsoft.json.10.0.2.nupkg.sha512"
+    },
+    "runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ozTFuYTEN1xi8QXuq/BrHXAqgwbaqlpLNPGohVS16iYqMLROo8jQhScIP3XwlBp8kx0Km1V4TDJrqem27zDxMQ==",
+      "path": "runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25305-02",
+      "hashPath": "runtime.native.system.data.sqlclient.sni.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "runtime.win-arm64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UzzOipoxXJRwQ6xpdfeXmlLm3n+Y8OPS6d0ZqDrM7Xq8JpMHFnSC4kGsy9pDNlhNg3w3WdDlMpi3IiHDCFUiUg==",
+      "path": "runtime.win-arm64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01",
+      "hashPath": "runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0-preview1-25301-01.nupkg.sha512"
+    },
+    "runtime.win-x64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bZuQQio6yUjebfgMZBPQCoN3Eiki6SHVdnxyszYfHqWpyeKowtdRAjFfBEWtcsKZ6ZAgiBN1GNAWyVdh7c0o3w==",
+      "path": "runtime.win-x64.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01",
+      "hashPath": "runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0-preview1-25301-01.nupkg.sha512"
+    },
+    "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5EHMq/N1SmqKr4Rn89WqGWK/OV8xrgCceBskQpqni0fNyCWhtr63WDbzBAd62wWEG3PHsbPbL5xY6MVYSBBP+Q==",
+      "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0-preview1-25301-01",
+      "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0-preview1-25301-01.nupkg.sha512"
+    },
+    "system.collections.nongeneric/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-prtjIEMhGUnQq6RnPEYLpFt8AtLbp9yq2zxOSrY7KJJZrw25Fi97IzBqY7iqssbM61Ek5b8f3MG/sG1N2sN5KA==",
+      "path": "system.collections.nongeneric/4.3.0",
+      "hashPath": "system.collections.nongeneric.4.3.0.nupkg.sha512"
+    },
+    "system.collections.specialized/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Epx8PoVZR0iuOnJJDzp7pWvdfMMOAvpUo95pC4ScH2mJuXkKA2Y4aR3cG9qt2klHgSons1WFh4kcGW7cSXvrxg==",
+      "path": "system.collections.specialized/4.3.0",
+      "hashPath": "system.collections.specialized.4.3.0.nupkg.sha512"
+    },
+    "system.componentmodel.primitives/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j8GUkCpM8V4d4vhLIIoBLGey2Z5bCkMVNjEZseyAlm4n5arcsJOeI3zkUP+zvZgzsbLTYh4lYeP/ZD/gdIAPrw==",
+      "path": "system.componentmodel.primitives/4.3.0",
+      "hashPath": "system.componentmodel.primitives.4.3.0.nupkg.sha512"
+    },
+    "system.componentmodel.typeconverter/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-16pQ6P+EdhcXzPiEK4kbA953Fu0MNG2ovxTZU81/qsCd1zPRsKc3uif5NgvllCY598k6bI0KUyKW8fanlfaDQg==",
+      "path": "system.componentmodel.typeconverter/4.3.0",
+      "hashPath": "system.componentmodel.typeconverter.4.3.0.nupkg.sha512"
+    },
+    "system.data.common/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WIbJ/atQSQibgNDavkgdDtPSQCAb+s+8k/IqPRLSu40S1lKsnhbqFiSPc0NfUn83i+bmDX9ZLiJ+/d+KL8XQFw==",
+      "path": "system.data.common/4.3.0",
+      "hashPath": "system.data.common.4.3.0.nupkg.sha512"
+    },
+    "system.data.sqlclient/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j8VEYoQJGpPTtpSLVhmtnv/XyTUiUobVwjF+0zCI+q3wRwBQbDhIAzO/jM+9uxajcI1Z+as3F8lKna2eAWUIPA==",
+      "path": "system.data.sqlclient/4.4.0-preview1-25305-02",
+      "hashPath": "system.data.sqlclient.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "system.diagnostics.diagnosticsource/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s6xaUEVi5e2PIyJ/oVFA3d9ddK4NpPMvxeyyE336pXzaT3uG41hESU9BwRd6Y3O2rNb/92pACXQ7uwQq49s4MA==",
+      "path": "system.diagnostics.diagnosticsource/4.4.0-preview1-25305-02",
+      "hashPath": "system.diagnostics.diagnosticsource.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "system.io.pipes/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wpGJuACA6r8+KRckXoI6ghGTwgPRiICI6T7kgHI/m7S5eMqV/8jH37fzAUhTwIe9RwlH/j1sWwm2Q2zyXwZGHw==",
+      "path": "system.io.pipes/4.3.0",
+      "hashPath": "system.io.pipes.4.3.0.nupkg.sha512"
+    },
+    "system.runtime.compilerservices.unsafe/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-keqowXVd5U8XgkRrZwiA4YCCW4TiuRyjl3Yld+12MW4tBXenjVEAiEyMxI/OnrHKUwvF7IKVE9DjHG+rBg5abg==",
+      "path": "system.runtime.compilerservices.unsafe/4.4.0-preview1-25305-02",
+      "hashPath": "system.runtime.compilerservices.unsafe.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "system.runtime.serialization.formatters/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KT591AkTNFOTbhZlaeMVvfax3RqhH1EJlcwF50Wm7sfnBLuHiOeZRRKrr1ns3NESkM20KPZ5Ol/ueMq5vg4QoQ==",
+      "path": "system.runtime.serialization.formatters/4.3.0",
+      "hashPath": "system.runtime.serialization.formatters.4.3.0.nupkg.sha512"
+    },
+    "system.runtime.serialization.primitives/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Wz+0KOukJGAlXjtKr+5Xpuxf8+c8739RI1C+A2BoQZT+wMCCoMDDdO8/4IRHfaVINqL78GO8dW8G2lW/e45Mcw==",
+      "path": "system.runtime.serialization.primitives/4.3.0",
+      "hashPath": "system.runtime.serialization.primitives.4.3.0.nupkg.sha512"
+    },
+    "system.security.principal.windows/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-i/87uUlutjoXKIGEgjAh6tzpFtwhBZxMqX+ZW38UoJqHxaW0+cglUovfEfPRJeEYFhck9SqJqJnEqsVvAgu6oQ==",
+      "path": "system.security.principal.windows/4.4.0-preview1-25305-02",
+      "hashPath": "system.security.principal.windows.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "system.text.encoding.codepages/4.4.0-preview1-25305-02": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6M9tNcQYONLsm7UFxnnGQ3w/TWB8+emjtuA/Nx6hdH+/8gA2N3YXphNLm547Wf+g91nV5t1tj8TFuQ+AcQsnzw==",
+      "path": "system.text.encoding.codepages/4.4.0-preview1-25305-02",
+      "hashPath": "system.text.encoding.codepages.4.4.0-preview1-25305-02.nupkg.sha512"
+    },
+    "system.xml.xmldocument/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lJ8AxvkX7GQxpC6GFCeBj8ThYVyQczx2+f/cWHJU8tjS7YfI6Cv6bon70jVEgs2CiFbmmM8b9j1oZVx0dSI2Ww==",
+      "path": "system.xml.xmldocument/4.3.0",
+      "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
+    },
+    "brochure.core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

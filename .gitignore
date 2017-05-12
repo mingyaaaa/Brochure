@@ -2,8 +2,17 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
+/src/Brochure.Core/bin
 /src/Brochure.Core/obj
-/test/obj
+/test/bin
 /test/obj
 /test/obj/Debug/netcoreapp1.1
 /test/obj/Release/netcoreapp1.1
+/Brochure/OraclConnectionDal/bin
+/Brochure/SqlConnectionDal/bin
+/Brochure/MySqlConnectionDal/bin
+/Brochure/OraclConnectionDal/obj
+/Brochure/SqlConnectionDal/obj
+/Brochure/MySqlConnectionDal/obj
+/Brochure.sln.DotSettings.user
+
