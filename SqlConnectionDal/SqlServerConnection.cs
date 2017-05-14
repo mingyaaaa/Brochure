@@ -9,7 +9,7 @@ using Brochure.Core.Helper;
 using Brochure.Core.implement;
 using Brochure.Core.Query;
 
-namespace SqlConnectionDal
+namespace ConnectionDal
 {
     public class SqlServerConnection : IConnection
     {

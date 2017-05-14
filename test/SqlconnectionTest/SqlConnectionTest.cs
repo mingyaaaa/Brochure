@@ -5,6 +5,7 @@ using Brochure.Core.implement;
 using Brochure.Core.Query;
 using ConnectionDal;
 using Microsoft.Extensions.Configuration;
+using test.Entity;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,21 +13,22 @@ namespace test.SqlconnectionTest
 {
     public class SqlConnectionTest : BaseTest
     {
-        private readonly string _connectionString;
+        private readonly Setting _setting;
         public SqlConnectionTest(ITestOutputHelper outputHelper) : base(outputHelper)
         {
+            _setting = Singleton.GetInstace<Setting>();
             var root = new ConfigurationBuilder().AddJsonFile("appSetting.json").Build();
-            _connectionString = root.GetSection(ConstString.ConnectionString).Value;
+            _setting.ConnectString = root.GetSection(ConstString.ConnectionString).Value;
         }
 
         [Fact]
         public void TestInsert()
         {
-            var con = DbFactory.GetConnection(_connectionString);
+            var con = DbFactory.GetConnection(_setting.ConnectString);
             Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                InsertBuid query = new InsertBuid(new UserDatabase()
+                InsertBuid query = new InsertBuid(new UserEntity()
                 {
                     Age = random.Next(10, 99),
                     Name = "aaaa" + random.Next(10, 99),
@@ -38,8 +40,8 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestDelete()
         {
-            var con = DbFactory.GetConnection(_connectionString);
-            var a = new UserDatabase()
+            var con = DbFactory.GetConnection(_setting.ConnectString);
+            var a = new UserEntity()
             {
                 Age = 62
             };
@@ -54,8 +56,9 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestUpdate()
         {
-            var con = DbFactory.GetConnection(_connectionString);
-            var a = new UserDatabase()
+            var setting = Singleton.GetInstace<Setting>();
+            var con = DbFactory.GetConnection(setting.ConnectString);
+            var a = new UserEntity()
             {
                 Id = new Guid("32D1CE3B-D841-4B71-84C3-324A2C969505"),
                 Age = 46,
@@ -71,8 +74,8 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestSearch()
         {
-            var con = DbFactory.GetConnection(_connectionString);
-            var a = new UserDatabase()
+            var con = DbFactory.GetConnection(_setting.ConnectString);
+            var a = new UserEntity()
             {
                 Id = new Guid("32D1CE3B-D841-4B71-84C3-324A2C969505"),
                 Age = 46,
@@ -81,7 +84,7 @@ namespace test.SqlconnectionTest
             var select = new SelectBuild(a, new SelectParamBuild(true));
             // var list = con.Search(select);
 
-            var obj = con.GetInfoById<UserDatabase>(a.Id);
+            var obj = con.GetInfoById<UserEntity>(a.Id);
 
         }
     }

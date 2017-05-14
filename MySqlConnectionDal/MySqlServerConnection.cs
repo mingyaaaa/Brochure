@@ -9,7 +9,7 @@ using Brochure.Core.Helper;
 using Brochure.Core.implement;
 using Brochure.Core.Query;
 
-namespace MySqlConnectionDal
+namespace ConnectionDal
 {
     public class MySqlServerConnection : IConnection
     {

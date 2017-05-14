@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Compile Include="..\SqlConnectionDal\DbFactory.cs" Link="DbFactory.cs" />
+    <Compile Include="..\SqlConnectionDal\Setting.cs" Link="Setting.cs" />
   </ItemGroup>
 
   <ItemGroup>

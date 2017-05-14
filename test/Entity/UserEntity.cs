@@ -1,10 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Brochure.Core;
 using Brochure.Core.Abstract;
-using Brochure.Core.Atrribute;
 
-namespace Brochure.Core
+namespace test.Entity
 {
-    public class UserDatabase : BaseEntrity
+    public class UserEntity : BaseEntrity
     {
         public override string TableName => "user_info";
         public string Name { get; set; }
@@ -13,6 +15,5 @@ namespace Brochure.Core
         {
             throw new NotImplementedException();
         }
-
     }
 }

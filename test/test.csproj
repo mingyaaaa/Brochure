@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OraclConnectionDal\OracleConnectionDal.csproj" />
+    <ProjectReference Include="..\SqlConnectionDal\SqlConnectionDal.csproj" />
     <ProjectReference Include="..\src\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>
 
