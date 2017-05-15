@@ -4,16 +4,16 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Brochure.Core;
+using Brochure.Core.Abstract;
 using Brochure.Core.Extends;
 using Brochure.Core.Helper;
 using Brochure.Core.implement;
-using Brochure.Core.Query;
 
 namespace ConnectionDal
 {
     public class OracleServerConnection : IConnection
     {
-        private string _preString = ConstString.SqlServerPre;
+        private string _preString = Singleton.GetInstace<Setting>().ConnectString;
         private readonly SqlConnection _connection;
         private SqlTransaction _transaction;
         public OracleServerConnection(string connectionString)
@@ -21,11 +21,12 @@ namespace ConnectionDal
             _connection = new SqlConnection(connectionString);
         }
 
-        public IDocument Insert(InsertBuid insertBuid)
+        public IDocument Insert(IEntrity entrity)
         {
             try
             {
                 OpenConnection();
+                InsertBuid insertBuid = new InsertBuid(entrity);
                 var dic = insertBuid.GetDocument();
                 SqlCommand cmd = GetSqlCommand(dic, insertBuid.ToString());
                 var result = cmd.ExecuteNonQuery();
@@ -36,19 +37,17 @@ namespace ConnectionDal
             catch (Exception e)
             {
                 Log(e);
-                throw;
+                return null;
             }
         }
 
-        public IDocument Insert(IEntrity entrity)
-        {
-            return Insert(new InsertBuid(entrity));
-        }
-
-        public long Delete(DeleteBuild build)
+        public long Delete(BaseBuild deletebuild)
         {
             try
             {
+                if (!(deletebuild is DeleteBuild))
+                    throw new ArgumentException("参数类型错误请传入DeleteBuild类型");
+                var build = deletebuild.To<DeleteBuild>();
                 OpenConnection();
                 var sql = build.ToString();
                 SqlCommand cmd = GetSqlCommand(build.GetDocument(), sql);
@@ -74,10 +73,13 @@ namespace ConnectionDal
             return Delete(query);
         }
 
-        public long Update(UpdateBuild updateBuild)
+        public long Update(BaseBuild build)
         {
             try
             {
+                if (!(build is UpdateBuild))
+                    throw new ArgumentException("参数类型错误请传入UpdateBuild类型");
+                var updateBuild = build.To<UpdateBuild>();
                 OpenConnection();
                 var str = updateBuild.ToString();
                 var cmd = GetSqlCommand(updateBuild.GetDocument(), str);
@@ -117,10 +119,13 @@ namespace ConnectionDal
             }
         }
 
-        public List<IDocument> Search(SelectBuild selectBuild)
+        public List<IDocument> Search(BaseBuild select)
         {
             try
             {
+                if (!(select is SelectBuild))
+                    throw new ArgumentException("参数类型错误请传入SelectBuild类型");
+                var selectBuild = select.To<SelectBuild>();
                 OpenConnection(false);
                 var cmd = GetSqlCommand(selectBuild.GetDocument(), selectBuild.ToString());
                 var reader = cmd.ExecuteReader();
@@ -238,10 +243,13 @@ namespace ConnectionDal
             }
         }
 
-        public async Task<long> DeleteAsync(DeleteBuild build)
+        public async Task<long> DeleteAsync(BaseBuild deletebuild)
         {
             try
             {
+                if (!(deletebuild is DeleteBuild))
+                    throw new ArgumentException("参数类型错误请传入DeleteBuild类型");
+                var build = deletebuild.To<DeleteBuild>();
                 OpenConnection();
                 var sql = build.ToString();
                 SqlCommand cmd = GetSqlCommand(build.GetDocument(), sql);
@@ -254,10 +262,13 @@ namespace ConnectionDal
             }
         }
 
-        public async Task<long> UpdateaAsync(UpdateBuild updateBuild)
+        public async Task<long> UpdateaAsync(BaseBuild build)
         {
             try
             {
+                if (!(build is UpdateBuild))
+                    throw new ArgumentException("参数类型错误请传入UpdateBuild类型");
+                var updateBuild = build.To<UpdateBuild>();
                 OpenConnection();
                 var str = updateBuild.ToString();
                 var cmd = GetSqlCommand(updateBuild.GetDocument(), str);
@@ -297,10 +308,13 @@ namespace ConnectionDal
             }
         }
 
-        public async Task<List<IDocument>> SearchAsync(SelectBuild selectBuild)
+        public async Task<List<IDocument>> SearchAsync(BaseBuild select)
         {
             try
             {
+                if (!(select is SelectBuild))
+                    throw new ArgumentException("参数类型错误请传入SelectBuild类型");
+                var selectBuild = select.To<SelectBuild>();
                 OpenConnection(false);
                 var cmd = GetSqlCommand(selectBuild.GetDocument(), selectBuild.ToString());
                 var reader = await cmd.ExecuteReaderAsync();

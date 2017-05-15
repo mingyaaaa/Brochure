@@ -11,6 +11,12 @@ namespace Brochure.Core
 {
     public static class DocumentExtend
     {
+        /// <summary>
+        /// 字典中的字段为小写
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         public static T ToEntrityObject<T>(this IDocument doc) where T : IEntrity
         {
             var obj = ObjectHelper.CreateInstance<T>();
@@ -19,7 +25,7 @@ namespace Brochure.Core
             foreach (var item in properties)
             {
                 if (item.CanWrite)
-                    item.SetValue(obj, doc[item.Name]);
+                    item.SetValue(obj, doc[item.Name.ToLower()]);
             }
             return obj;
         }

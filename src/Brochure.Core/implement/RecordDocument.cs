@@ -24,8 +24,8 @@ namespace Brochure.Core.implement
 
         public object this[string key]
         {
-            get => _dic[key.ToLower()];
-            set => _dic[key.ToLower()] = value;
+            get => _dic[key];
+            set => _dic[key] = value;
         }
 
         public int Count => _dic.Count;
@@ -43,7 +43,7 @@ namespace Brochure.Core.implement
 
         public void Add(string key, object value)
         {
-            _dic.Add(key.ToLower(), value);
+            _dic.Add(key, value);
         }
 
         public void Clear()
@@ -58,7 +58,7 @@ namespace Brochure.Core.implement
 
         public bool ContainsKey(string key)
         {
-            return _dic.ContainsKey(key.ToLower());
+            return _dic.ContainsKey(key);
         }
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
@@ -78,12 +78,12 @@ namespace Brochure.Core.implement
 
         public bool Remove(string key)
         {
-            return _dic.Remove(key.ToLower());
+            return _dic.Remove(key);
         }
 
         public bool TryGetValue(string key, out object value)
         {
-            return _dic.TryGetValue(key.ToLower(), out value);
+            return _dic.TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

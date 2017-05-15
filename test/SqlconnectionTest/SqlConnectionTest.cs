@@ -1,8 +1,5 @@
 ﻿using System;
-using Brochure.Core;
-using Brochure.Core.Extends;
 using Brochure.Core.implement;
-using Brochure.Core.Query;
 using ConnectionDal;
 using Microsoft.Extensions.Configuration;
 using test.Entity;
@@ -24,23 +21,23 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestInsert()
         {
-            var con = DbFactory.GetConnection(_setting.ConnectString);
+            var con = DbFactory.GetConnection();
             Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
-                InsertBuid query = new InsertBuid(new UserEntity()
+                var user = new UserEntity()
                 {
                     Age = random.Next(10, 99),
                     Name = "aaaa" + random.Next(10, 99),
-                });
-                con.Insert(query);
+                };
+                con.Insert(user);
             }
             con.Commit();
         }
         [Fact]
         public void TestDelete()
         {
-            var con = DbFactory.GetConnection(_setting.ConnectString);
+            var con = DbFactory.GetConnection();
             var a = new UserEntity()
             {
                 Age = 62
@@ -56,8 +53,7 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestUpdate()
         {
-            var setting = Singleton.GetInstace<Setting>();
-            var con = DbFactory.GetConnection(setting.ConnectString);
+            var con = DbFactory.GetConnection();
             var a = new UserEntity()
             {
                 Id = new Guid("32D1CE3B-D841-4B71-84C3-324A2C969505"),
@@ -74,7 +70,7 @@ namespace test.SqlconnectionTest
         [Fact]
         public void TestSearch()
         {
-            var con = DbFactory.GetConnection(_setting.ConnectString);
+            var con = DbFactory.GetConnection();
             var a = new UserEntity()
             {
                 Id = new Guid("32D1CE3B-D841-4B71-84C3-324A2C969505"),

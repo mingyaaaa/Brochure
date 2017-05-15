@@ -7,6 +7,5 @@ namespace Brochure.Core
     public interface ISetting
     {
         string ConnectString { get; }
-        string PreParamString { get; }
     }
 }

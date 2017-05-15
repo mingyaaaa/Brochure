@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Brochure.Core;
 using Brochure.Core.Abstract;
 using Brochure.Core.Extends;
 
-namespace Brochure.Core.Query
+namespace ConnectionDal
 {
     public class WhereBuild : BaseBuild
     {
@@ -59,7 +60,7 @@ namespace Brochure.Core.Query
         {
             foreach (var item in Dic.Keys)
             {
-                ResultStr = ResultStr + $" {TableName}.{item}={ConstString.SqlServerPre + item}, ";
+                ResultStr = ResultStr + $" {TableName}.{item}={ConstString.PreParamString + item}, ";
             }
             ResultStr = ResultStr.TrimEnd().TrimEnd(',');
         }
@@ -170,7 +171,7 @@ namespace Brochure.Core.Query
     public class InsertBuid : BaseBuild
     {
 
-        private const string PreString = ConstString.SqlServerPre;
+        private const string PreString = ConstString.PreParamString;
 
         public InsertBuid(IEntrity entrity) : base("Insert into {0}({1}) values({2})")
         {

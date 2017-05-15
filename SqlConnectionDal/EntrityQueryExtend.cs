@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Brochure.Core;
 using Brochure.Core.Abstract;
+using Brochure.Core.Extends;
 using Brochure.Core.implement;
-using Brochure.Core.Query;
+using ConnectionDal;
 
-namespace Brochure.Core.Extends
+namespace ConnectionDal
 {
     public static class EntrityQueryExtend
     {
         private static readonly Random Random = new Random();
-
+        private static ISetting setting = Singleton.GetInstace<Setting>();
         /// <summary>
         /// 等于条件（对象中包含条件的值）
         /// </summary>
@@ -24,7 +26,7 @@ namespace Brochure.Core.Extends
             var tuple = entrity.GetPropertyValueTuple(expr);
             IDocument doc = new RecordDocument();
             var dicStr = tuple.Item1 + randomstr;
-            string str = $" {entrity.TableName}.{tuple.Item1} = {ConstString.SqlServerPre + dicStr} ";//拼接字符串
+            string str = $" {entrity.TableName}.{tuple.Item1} = {ConstString.PreParamString + dicStr} ";//拼接字符串
             doc.Add(dicStr, tuple.Item2);//存储字符串参数
             EntrieyQuery entrieyQuery = new EntrieyQuery(str, doc, entrity);
             return entrieyQuery;
@@ -44,7 +46,7 @@ namespace Brochure.Core.Extends
             var property = entrity.GetPropertyName(expr);
             IDocument doc = new RecordDocument();
             var dicStr = property + randomstr;
-            string str = $" {entrity.TableName}.{property} = {ConstString.SqlServerPre + dicStr} ";
+            string str = $" {entrity.TableName}.{property} = {ConstString.PreParamString + dicStr} ";
             doc.Add(dicStr, value);
             EntrieyQuery entrieyQuery = new EntrieyQuery(str, doc, entrity);
             return entrieyQuery;
@@ -63,7 +65,7 @@ namespace Brochure.Core.Extends
             var randomstr = Random.Next(0, 9999);
             var property = entrity.GetPropertyName(expr);
             var dicStr = property + randomstr;
-            string str = $" {entrity.TableName}.{property} between {ConstString.SqlServerPre + ConstString.Min + dicStr } and {ConstString.SqlServerPre + ConstString.Max + dicStr } ";
+            string str = $" {entrity.TableName}.{property} between {ConstString.PreParamString + ConstString.Min + dicStr } and {ConstString.PreParamString + ConstString.Max + dicStr } ";
             IDocument doc = new RecordDocument();
             doc.Add(ConstString.Min + dicStr, min);
             doc.Add(ConstString.Max + dicStr, max);
@@ -88,7 +90,7 @@ namespace Brochure.Core.Extends
                 var randomstr = Random.Next(0, 9999);
                 string tstr = property + randomstr;
                 doc.Add(tstr, array[i]);
-                paramlist.Add(ConstString.SqlServerPre + tstr);
+                paramlist.Add(ConstString.PreParamString + tstr);
             }
             str = string.Format(str + " [{0}] ", paramlist.ToString(","));
             return new EntrieyQuery(str, doc, entrity);

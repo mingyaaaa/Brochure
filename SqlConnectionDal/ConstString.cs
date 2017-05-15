@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Brochure.Core
+﻿namespace ConnectionDal
 {
     public class ConstString
     {
-        public const string SqlServerPre = "@";
+#if Sql
+        public const string PreParamString = "@";
+#elif Oracle
+        public const string PreParamString = "@";
+#elif MySql
+        public const string PreParamString = "@";
+#endif
         public const string T = "TableName";
         public const string Id = "Id";
         public const string ConnectionString = "ConnectionStrings";

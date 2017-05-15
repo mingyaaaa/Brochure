@@ -7,15 +7,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace ConnectionDal
 {
-    public class Setting : Singleton<Setting>, ISetting
+    public class Setting : Singleton, ISetting
     {
         public string ConnectString { get; set; }
-#if Sql
-        public string PreParamString => "@";
-#elif Oracle
-        public string PreParamString => "@";
-#elif MySql
-        public string PreParamString => "@";
-#endif
     }
 }

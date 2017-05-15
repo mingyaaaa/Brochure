@@ -1,11 +1,13 @@
 ﻿using Brochure.Core;
+using Brochure.Core.implement;
 
 namespace ConnectionDal
 {
     public class DbFactory
     {
-        public static IConnection GetConnection(string connectString)
+        public static IConnection GetConnection()
         {
+            var connectString = Singleton.GetInstace<Setting>().ConnectString;
 #if Sql
             return new SqlServerConnection(connectString);
 #elif Oracle
@@ -14,7 +16,6 @@ namespace ConnectionDal
             return new MySqlServerConnection(connectString);
 
 #endif
-
         }
     }
 }

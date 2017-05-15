@@ -7,7 +7,6 @@ namespace Brochure.Core.Abstract
         protected IDocument Dic = new RecordDocument();
         protected string ResultStr;
         protected string TableName;
-
         protected BaseBuild(string resultStr)
         {
             ResultStr = resultStr;

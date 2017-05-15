@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Brochure.Core;
+using test.Entity;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,8 +19,8 @@ namespace test
         [Fact]
         public void Test1()
         {
-            Expression<Func<UserDatabase, bool>> expression = u => u.Age == 1;
-            Expression<Func<UserDatabase, int>> expressionaction = y => y.Age + 1;
+            Expression<Func<UserEntity, bool>> expression = u => u.Age == 1;
+            Expression<Func<UserEntity, int>> expressionaction = y => y.Age + 1;
             ParameterExpression number = Expression.Parameter(typeof(int), "number");
 
             BlockExpression myBlock = Expression.Block(
