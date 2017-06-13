@@ -1,0 +1,2 @@
+F:\GitHub Program\Brochure\src\Brochure.Core\bin\Debug\netstandard1.4\Brochure.Core.deps.json
+F:\GitHub Program\Brochure\src\Brochure.Core\obj\Debug\netstandard1.4\Brochure.Core.AssemblyInfo.cs

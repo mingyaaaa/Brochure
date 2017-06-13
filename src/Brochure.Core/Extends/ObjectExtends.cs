@@ -10,7 +10,7 @@ namespace Brochure.Core.Extends
 {
     public static class ObjectExtends
     {
-        public static T To<T>(this object obj)
+        public static T As<T>(this object obj)
         {
             if (obj is T)
                 return (T)obj;
@@ -22,7 +22,7 @@ namespace Brochure.Core.Extends
             var ir = obj as IEnumerable<T>;
             if (ir == null)
                 throw new Exception("无法转化为集合类型");
-            var result = ir.ForEach(t => t.To<T>());
+            var result = ir.ForEach(t => t.As<T>());
             return result;
         }
         public static IDocument AsDocument(this object obj)

@@ -27,15 +27,6 @@ namespace ConnectionDal
             return this;
         }
     }
-    public class EntrieyQuery : BaseBuild
-    {
-        public EntrieyQuery(string str, IDocument doc, IEntrity entrity) : base("")
-        {
-            ResultStr = str;
-            Dic = doc;
-            TableName = entrity.TableName;
-        }
-    }
 
     public class UpdateParamBuild : BaseBuild
     {
@@ -179,9 +170,19 @@ namespace ConnectionDal
             var arr = Dic.Keys.AddPreString(PreString);
             TableName = entrity.TableName;
             Dic.Remove(ConstString.T);
-            if (Dic[ConstString.Id].To<Guid>() == Guid.Empty)
+            if (Dic[ConstString.Id].As<Guid>() == Guid.Empty)
                 Dic[ConstString.Id] = Guid.NewGuid();
             ResultStr = string.Format(ResultStr, TableName, Dic.Keys.ToString(","), arr.ToString(","));
+        }
+    }
+
+    public class EntrieyQuery : BaseBuild
+    {
+        public EntrieyQuery(string str, IDocument doc, IEntrity entrity) : base("")
+        {
+            ResultStr = str;
+            Dic = doc;
+            TableName = entrity.TableName;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace ConnectionDal
             {
                 if (!(deletebuild is DeleteBuild))
                     throw new ArgumentException("参数类型错误请传入DeleteBuild类型");
-                var build = deletebuild.To<DeleteBuild>();
+                var build = deletebuild.As<DeleteBuild>();
                 OpenConnection();
                 var sql = build.ToString();
                 SqlCommand cmd = GetSqlCommand(build.GetDocument(), sql);
@@ -79,7 +79,7 @@ namespace ConnectionDal
             {
                 if (!(build is UpdateBuild))
                     throw new ArgumentException("参数类型错误请传入UpdateBuild类型");
-                var updateBuild = build.To<UpdateBuild>();
+                var updateBuild = build.As<UpdateBuild>();
                 OpenConnection();
                 var str = updateBuild.ToString();
                 var cmd = GetSqlCommand(updateBuild.GetDocument(), str);
@@ -125,7 +125,7 @@ namespace ConnectionDal
             {
                 if (!(select is SelectBuild))
                     throw new ArgumentException("参数类型错误请传入SelectBuild类型");
-                var selectBuild = select.To<SelectBuild>();
+                var selectBuild = select.As<SelectBuild>();
                 OpenConnection(false);
                 var cmd = GetSqlCommand(selectBuild.GetDocument(), selectBuild.ToString());
                 var reader = cmd.ExecuteReader();
@@ -249,7 +249,7 @@ namespace ConnectionDal
             {
                 if (!(deletebuild is DeleteBuild))
                     throw new ArgumentException("参数类型错误请传入DeleteBuild类型");
-                var build = deletebuild.To<DeleteBuild>();
+                var build = deletebuild.As<DeleteBuild>();
                 OpenConnection();
                 var sql = build.ToString();
                 SqlCommand cmd = GetSqlCommand(build.GetDocument(), sql);
@@ -268,7 +268,7 @@ namespace ConnectionDal
             {
                 if (!(build is UpdateBuild))
                     throw new ArgumentException("参数类型错误请传入UpdateBuild类型");
-                var updateBuild = build.To<UpdateBuild>();
+                var updateBuild = build.As<UpdateBuild>();
                 OpenConnection();
                 var str = updateBuild.ToString();
                 var cmd = GetSqlCommand(updateBuild.GetDocument(), str);
@@ -314,7 +314,7 @@ namespace ConnectionDal
             {
                 if (!(select is SelectBuild))
                     throw new ArgumentException("参数类型错误请传入SelectBuild类型");
-                var selectBuild = select.To<SelectBuild>();
+                var selectBuild = select.As<SelectBuild>();
                 OpenConnection(false);
                 var cmd = GetSqlCommand(selectBuild.GetDocument(), selectBuild.ToString());
                 var reader = await cmd.ExecuteReaderAsync();
