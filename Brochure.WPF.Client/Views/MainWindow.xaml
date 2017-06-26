@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:client="clr-namespace:Brochure.WPF.Client"
+        xmlns:localCore="clr-namespace:Brochure.WPF.Client.Core"
+        xmlns:local="clr-namespace:Brochure.WPF.Client.Views"
         mc:Ignorable="d" Title="标题"
         Height="350" Width="525" Style="{DynamicResource WindowStyle1}">
     <client:WindowViewBase.Resources>
@@ -30,7 +32,7 @@
         <Style x:Key="WindowStyle1" TargetType="{x:Type Window}">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
             <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-            <Setter Property="ResizeMode" Value="NoResize"></Setter>
+            <Setter Property="ResizeMode" Value="CanResize"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Window}">
@@ -274,11 +276,12 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
             <Menu  ItemsSource="{Binding Menus}" ItemTemplate="{StaticResource  MenuItemTemplete}" ItemContainerStyle="{DynamicResource MenuItemStyle1}" >
             </Menu>
-
         </StackPanel>
     </Grid>
 </client:WindowViewBase>

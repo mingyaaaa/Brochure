@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 F:\GitHub Program\Brochure\Brochure.WPF.Client\App.xaml
-2113843157
+444131449
 
-20-2087523846
+22-915785825
 141277149961
-MainWindow.xaml;Resources.xaml;
+Views\LeftAndRightDockPanle.xaml;Views\MainWindow.xaml;Resources.xaml;Views\TopAndBottomDockPanle.xaml;
 
 False
 

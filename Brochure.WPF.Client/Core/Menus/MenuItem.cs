@@ -7,13 +7,20 @@ namespace Brochure.WPF.Client
 {
     public class MenuItem
     {
+        /// <summary>
+        /// 菜单的唯一标识
+        /// </summary>
         public Guid Key { get; set; }
-
+        //
         public string Title { get; set; }
 
         public Guid GroupKey { get; set; }
 
         public List<MenuItem> Childs { get; set; }
+
+        public int Order { get; set; }
+
+        public bool IsShowSeparator { get; set; }
 
         public Dictionary<Guid, List<MenuItem>> Groups
         {
@@ -42,8 +49,7 @@ namespace Brochure.WPF.Client
             Order = order;
             Childs = new List<MenuItem>();
         }
-        public int Order { get; set; }
 
-        public bool IsShowSeparator { get; set; }
+
     }
 }

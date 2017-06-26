@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Brochure.WPF.Client.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,29 +72,44 @@
     </Compile>
     <Compile Include="Command\AsyncCommand.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Core\DockPanleManager.cs" />
     <Compile Include="Interface\IMenus.cs" />
     <Compile Include="Converter\IntToVisibilityConverter.cs" />
     <Compile Include="Interface\IViewModel.cs" />
-    <Compile Include="MenuItem.cs" />
-    <Compile Include="Menus.cs" />
-    <Compile Include="NotifyPropertyChanged.cs" />
+    <Compile Include="Core\Menus\MenuItem.cs" />
+    <Compile Include="Core\Menus\Menus.cs" />
+    <Compile Include="Core\NotifyPropertyChanged.cs" />
     <Compile Include="Command\RelayCommand.cs" />
-    <Compile Include="ViewBase.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Core\ViewBase.cs" />
+    <Compile Include="Core\ViewModelBase.cs" />
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\TopAndBottomDockPanle.xaml.cs">
+      <DependentUpon>TopAndBottomDockPanle.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\LeftAndRightDockPanle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Command\Attach.cs" />
+    <Compile Include="Views\LeftAndRightDockPanle.xaml.cs">
+      <DependentUpon>LeftAndRightDockPanle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TopAndBottomDockPanle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
