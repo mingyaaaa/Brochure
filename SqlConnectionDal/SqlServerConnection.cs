@@ -10,13 +10,14 @@ using Brochure.Core.Helper;
 using Brochure.Core.implement;
 using ConnectionDal;
 
-namespace ConnectionDal
+namespace SqlConnectionDal
 {
     public class SqlServerConnection : IConnection
     {
         private string _preString = ConstString.PreParamString;
         private readonly SqlConnection _connection;
         private SqlTransaction _transaction;
+
         public SqlServerConnection(string connectionString)
         {
             _connection = new SqlConnection(connectionString);

@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="constStr\ConstString.cs" />
     <Compile Remove="Query\QueryBuild.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0-preview1-final" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-preview1-final" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.0-preview1-25305-02" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="constStr\" />

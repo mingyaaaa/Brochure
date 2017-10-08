@@ -1,9 +1,0 @@
-F:\GitHub Program\Brochure\Brochure.Server\bin\Debug\netcoreapp1.1\Brochure.Server.deps.json
-F:\GitHub Program\Brochure\Brochure.Server\bin\Debug\netcoreapp1.1\Brochure.Server.runtimeconfig.json
-F:\GitHub Program\Brochure\Brochure.Server\bin\Debug\netcoreapp1.1\Brochure.Server.runtimeconfig.dev.json
-F:\GitHub Program\Brochure\Brochure.Server\bin\Debug\netcoreapp1.1\Brochure.Server.dll
-F:\GitHub Program\Brochure\Brochure.Server\bin\Debug\netcoreapp1.1\Brochure.Server.pdb
-F:\GitHub Program\Brochure\Brochure.Server\obj\Debug\netcoreapp1.1\Brochure.Server.csprojResolveAssemblyReference.cache
-F:\GitHub Program\Brochure\Brochure.Server\obj\Debug\netcoreapp1.1\Brochure.Server.AssemblyInfo.cs
-F:\GitHub Program\Brochure\Brochure.Server\obj\Debug\netcoreapp1.1\Brochure.Server.dll
-F:\GitHub Program\Brochure\Brochure.Server\obj\Debug\netcoreapp1.1\Brochure.Server.pdb

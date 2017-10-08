@@ -1,27 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace Brochure.WPF.Client
+namespace Brochure.WPF.Client.Core.Menus
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class MenuItem
     {
         /// <summary>
         /// 菜单的唯一标识
         /// </summary>
         public Guid Key { get; set; }
+
         //
+        /// <summary>
+        ///
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public Guid GroupKey { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public List<MenuItem> Childs { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public int Order { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public bool IsShowSeparator { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public Dictionary<Guid, List<MenuItem>> Groups
         {
             get
@@ -35,12 +55,17 @@ namespace Brochure.WPF.Client
                         continue;
                     }
                     dic[item.GroupKey].Add(item);
-
                 }
                 return dic;
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="groupKey"></param>
+        /// <param name="order"></param>
         public MenuItem(string title, Guid groupKey, int order = int.MinValue)
         {
             Key = Guid.NewGuid();
@@ -49,7 +74,5 @@ namespace Brochure.WPF.Client
             Order = order;
             Childs = new List<MenuItem>();
         }
-
-
     }
 }

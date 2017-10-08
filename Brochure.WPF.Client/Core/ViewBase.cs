@@ -5,15 +5,29 @@ using System.Windows;
 using System.Windows.Controls;
 using Brochure.Core.Extends;
 using Brochure.Core.Helper;
+using Brochure.WPF.Client.Interface;
 
 namespace Brochure.WPF.Client
 {
+    /// <summary>
+    ///
+    /// </summary>
     public abstract class ViewBase : UserControl
     {
         private readonly ViewModelBase _viewModel;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected ViewBase() : this(null)
         {
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="Exception"></exception>
         protected ViewBase(params object[] obj)
         {
             if (ViewModel == null)
@@ -41,6 +55,10 @@ namespace Brochure.WPF.Client
                 ViewModel.InitCommand();
             };
         }
+
+        /// <summary>
+        ///
+        /// </summary>
         public ViewModelBase ViewModel
         {
             get => DataContext as ViewModelBase;
@@ -48,13 +66,25 @@ namespace Brochure.WPF.Client
         }
     }
 
+    /// <summary>
+    ///
+    /// </summary>
     public abstract class WindowViewBase : Window
     {
         private readonly ViewModelBase _viewModel;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected WindowViewBase() : this(null)
         {
-
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="Exception"></exception>
         protected WindowViewBase(params object[] obj)
         {
             if (ViewModel == null)
@@ -87,6 +117,10 @@ namespace Brochure.WPF.Client
                 }
             };
         }
+
+        /// <summary>
+        ///
+        /// </summary>
         public ViewModelBase ViewModel
         {
             get => DataContext as ViewModelBase;

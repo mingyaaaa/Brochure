@@ -12,7 +12,9 @@ namespace Brochure.Core.Extends
     {
         public static T As<T>(this object obj)
         {
-            if (obj is T)
+            if (obj == null)
+                return default(T);
+            else if (obj is T)
                 return (T)obj;
             return (T)Convert.ChangeType(obj, typeof(T));
         }
@@ -25,12 +27,14 @@ namespace Brochure.Core.Extends
             var result = ir.ForEach(t => t.As<T>());
             return result;
         }
+
         public static IDocument AsDocument(this object obj)
         {
             if (obj is IDictionary<string, object>)
                 return new RecordDocument(obj as IDictionary<string, object>);
             return new RecordDocument(obj);
         }
+
         public static IDocument AsDocument<T>(this T obj, params Expression<Func<T, object>>[] array)
         {
             IDocument result;
@@ -47,6 +51,7 @@ namespace Brochure.Core.Extends
             }
             return result;
         }
+
         public static IDictionary<string, object> AsDictionary(this object obj)
         {
             var result = new Dictionary<string, object>();
@@ -86,6 +91,7 @@ namespace Brochure.Core.Extends
             var property = properties.FirstOrDefault(t => t.Name == obj.GetPropertyName(expr));
             return Tuple.Create(property.Name, property.GetValue(obj));
         }
+
         public static string GetPropertyName<T>(this T obj, Expression<Func<T, object>> expr)
         {
             var rtn = "";

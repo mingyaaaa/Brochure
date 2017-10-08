@@ -15,6 +15,7 @@ namespace test
         public Tests(ITestOutputHelper outputHelper) : base(outputHelper)
         {
         }
+
         [Fact]
         public void Test1()
         {
@@ -25,8 +26,8 @@ namespace test
             Assert.NotNull(a);
             Assert.Equal(1, a["aa"]);
             Assert.Equal(222, a["bb"]);
-
         }
+
         [Fact]
         public void Test3() => OutputHelper.WriteLine((16 | 4).ToString());
 
@@ -48,12 +49,14 @@ namespace test
             Assert.NotNull(result.Class1);
             Assert.Equal("cccc", result.C);
         }
+
         [Fact]
         public async Task Test4Async()
         {
             await TestTask();
             OutputHelper.WriteLine("1");
         }
+
         [Fact]
         public void Test30()
         {
@@ -68,6 +71,7 @@ namespace test
 
             public string C { get; set; }
             public override string TableName => "";
+
             public override IModel ConverToDataModel()
             {
                 throw new NotImplementedException();
@@ -82,9 +86,9 @@ namespace test
 
         public class Config : Singleton
         {
-
         }
-        public async Task TestTask()
+
+        private async Task TestTask()
         {
             OutputHelper.WriteLine("2");
             await Task.Delay(1000);

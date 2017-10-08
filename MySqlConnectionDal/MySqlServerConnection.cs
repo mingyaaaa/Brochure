@@ -8,14 +8,16 @@ using Brochure.Core.Abstract;
 using Brochure.Core.Extends;
 using Brochure.Core.Helper;
 using Brochure.Core.implement;
+using ConnectionDal;
 
-namespace ConnectionDal
+namespace MySqlConnectionDal
 {
     public class MySqlServerConnection : IConnection
     {
         private string _preString = Singleton.GetInstace<Setting>().ConnectString;
         private readonly SqlConnection _connection;
         private SqlTransaction _transaction;
+
         public MySqlServerConnection(string connectionString)
         {
             _connection = new SqlConnection(connectionString);

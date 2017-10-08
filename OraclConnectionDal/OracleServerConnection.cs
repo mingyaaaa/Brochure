@@ -8,14 +8,16 @@ using Brochure.Core.Abstract;
 using Brochure.Core.Extends;
 using Brochure.Core.Helper;
 using Brochure.Core.implement;
+using ConnectionDal;
 
-namespace ConnectionDal
+namespace OracleConnectionDal
 {
     public class OracleServerConnection : IConnection
     {
         private string _preString = Singleton.GetInstace<Setting>().ConnectString;
         private readonly SqlConnection _connection;
         private SqlTransaction _transaction;
+
         public OracleServerConnection(string connectionString)
         {
             _connection = new SqlConnection(connectionString);

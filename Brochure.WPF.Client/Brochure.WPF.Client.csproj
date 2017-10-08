@@ -67,12 +67,21 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\Theme.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Command\AsyncCommand.cs" />
+    <Compile Include="Controls\DockManager.cs" />
+    <Compile Include="Controls\LayoutAnchorSide.cs" />
+    <Compile Include="Controls\LayoutContent.cs" />
+    <Compile Include="Controls\LayoutDocument.cs" />
+    <Compile Include="Controls\LayoutDocumentPane.cs" />
+    <Compile Include="Controls\LayoutPanel.cs" />
+    <Compile Include="Controls\LayoutRoot.cs" />
     <Compile Include="Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Core\DockPanleManager.cs" />
+    <Compile Include="Enums\AnchorSideEnum.cs" />
     <Compile Include="Interface\IMenus.cs" />
     <Compile Include="Converter\IntToVisibilityConverter.cs" />
     <Compile Include="Interface\IViewModel.cs" />
@@ -86,9 +95,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Themes\GenericTheme.cs" />
     <Compile Include="Views\TopAndBottomDockPanle.xaml.cs">
       <DependentUpon>TopAndBottomDockPanle.xaml</DependentUpon>
     </Compile>
+    <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LeftAndRightDockPanle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -153,6 +167,32 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\Images\DockBottom.PNG" />
+    <Resource Include="Themes\Images\DockLeft.PNG" />
+    <Resource Include="Themes\Images\DockPane.PNG" />
+    <Resource Include="Themes\Images\DockPaneEmpty.png" />
+    <Resource Include="Themes\Images\DockRight.PNG" />
+    <Resource Include="Themes\Images\DockTop.PNG" />
+    <Resource Include="Themes\Images\HTabGroup.png" />
+    <Resource Include="Themes\Images\InnerDockDocPaneBottom.png" />
+    <Resource Include="Themes\Images\InnerDockDocPaneLeft.png" />
+    <Resource Include="Themes\Images\InnerDockDocPaneRight.png" />
+    <Resource Include="Themes\Images\InnerDockDocPaneTop.png" />
+    <Resource Include="Themes\Images\InnerDockPaneBottom.png" />
+    <Resource Include="Themes\Images\InnerDockPaneInside.png" />
+    <Resource Include="Themes\Images\InnerDockPaneLeft.png" />
+    <Resource Include="Themes\Images\InnerDockPaneRight.png" />
+    <Resource Include="Themes\Images\InnerDockPaneTop.png" />
+    <Resource Include="Themes\Images\Locked.png" />
+    <Resource Include="Themes\Images\PinAutoHide.png" />
+    <Resource Include="Themes\Images\PinClose.png" />
+    <Resource Include="Themes\Images\PinDocMenu.png" />
+    <Resource Include="Themes\Images\PinMaximize.png" />
+    <Resource Include="Themes\Images\PinMenu.png" />
+    <Resource Include="Themes\Images\PinRestore.png" />
+    <Resource Include="Themes\Images\VTabGroup.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Brochure.Core\Brochure.Core.csproj">

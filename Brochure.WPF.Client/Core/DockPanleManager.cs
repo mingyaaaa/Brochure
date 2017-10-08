@@ -11,22 +11,30 @@ using Brochure.WPF.Client.Views;
 namespace Brochure.WPF.Client.Core
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
 
     public class DockPanleManager : Control
     {
         static DockPanleManager()
         {
-
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         public DockPanleManager()
         {
-
         }
+
+        /// <summary>
+        ///
+        /// </summary>
         public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register("Layout", typeof(LeftAndRightDockPanle), typeof(DockPanleManager), new PropertyMetadata(null));
 
+        /// <summary>
+        ///
+        /// </summary>
         public LeftAndRightDockPanle Layout
         {
             get { return GetValue(LayoutProperty) as LeftAndRightDockPanle; }

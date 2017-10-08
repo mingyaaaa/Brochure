@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Brochure.Core;
+﻿using Brochure.Core;
 using Brochure.Core.implement;
-using Microsoft.Extensions.Configuration;
 
 namespace ConnectionDal
 {

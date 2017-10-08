@@ -1,7 +1,0 @@
-F:\GitHub Program\Brochure\src\Brochure.Core\bin\Debug\netstandard1.6\Brochure.Core.deps.json
-F:\GitHub Program\Brochure\src\Brochure.Core\bin\Debug\netstandard1.6\Brochure.Core.dll
-F:\GitHub Program\Brochure\src\Brochure.Core\bin\Debug\netstandard1.6\Brochure.Core.pdb
-F:\GitHub Program\Brochure\src\Brochure.Core\obj\Debug\netstandard1.6\Brochure.Core.csprojResolveAssemblyReference.cache
-F:\GitHub Program\Brochure\src\Brochure.Core\obj\Debug\netstandard1.6\Brochure.Core.AssemblyInfo.cs
-F:\GitHub Program\Brochure\src\Brochure.Core\obj\Debug\netstandard1.6\Brochure.Core.dll
-F:\GitHub Program\Brochure\src\Brochure.Core\obj\Debug\netstandard1.6\Brochure.Core.pdb

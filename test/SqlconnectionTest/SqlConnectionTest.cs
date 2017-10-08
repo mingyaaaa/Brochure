@@ -11,6 +11,7 @@ namespace test.SqlconnectionTest
     public class SqlConnectionTest : BaseTest
     {
         private readonly Setting _setting;
+
         public SqlConnectionTest(ITestOutputHelper outputHelper) : base(outputHelper)
         {
             _setting = Singleton.GetInstace<Setting>();
@@ -34,6 +35,7 @@ namespace test.SqlconnectionTest
             }
             con.Commit();
         }
+
         [Fact]
         public void TestDelete()
         {
@@ -81,7 +83,6 @@ namespace test.SqlconnectionTest
             // var list = con.Search(select);
 
             var obj = con.GetInfoById<UserEntity>(a.Id);
-
         }
     }
 }

@@ -1,9 +1,0 @@
-F:\GitHub Program\Brochure\OraclConnectionDal\bin\Debug\netcoreapp1.1\OracleConnectionDal.deps.json
-F:\GitHub Program\Brochure\OraclConnectionDal\bin\Debug\netcoreapp1.1\OracleConnectionDal.dll
-F:\GitHub Program\Brochure\OraclConnectionDal\bin\Debug\netcoreapp1.1\OracleConnectionDal.pdb
-F:\GitHub Program\Brochure\OraclConnectionDal\bin\Debug\netcoreapp1.1\Brochure.Core.dll
-F:\GitHub Program\Brochure\OraclConnectionDal\bin\Debug\netcoreapp1.1\Brochure.Core.pdb
-F:\GitHub Program\Brochure\OraclConnectionDal\obj\Debug\netcoreapp1.1\OracleConnectionDal.csprojResolveAssemblyReference.cache
-F:\GitHub Program\Brochure\OraclConnectionDal\obj\Debug\netcoreapp1.1\OracleConnectionDal.AssemblyInfo.cs
-F:\GitHub Program\Brochure\OraclConnectionDal\obj\Debug\netcoreapp1.1\OracleConnectionDal.dll
-F:\GitHub Program\Brochure\OraclConnectionDal\obj\Debug\netcoreapp1.1\OracleConnectionDal.pdb

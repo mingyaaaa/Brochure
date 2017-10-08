@@ -1,0 +1,11 @@
+F:\GitHub Program\Brochure\MySqlConnectionDal\bin\Debug\netcoreapp2.0\MySqlConnectionDal.deps.json
+F:\GitHub Program\Brochure\MySqlConnectionDal\bin\Debug\netcoreapp2.0\MySqlConnectionDal.dll
+F:\GitHub Program\Brochure\MySqlConnectionDal\bin\Debug\netcoreapp2.0\MySqlConnectionDal.pdb
+F:\GitHub Program\Brochure\MySqlConnectionDal\bin\Debug\netcoreapp2.0\Brochure.Core.dll
+F:\GitHub Program\Brochure\MySqlConnectionDal\bin\Debug\netcoreapp2.0\Brochure.Core.pdb
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.csprojResolveAssemblyReference.cache
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.csproj.CoreCompileInputs.cache
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.AssemblyInfoInputs.cache
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.AssemblyInfo.cs
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.dll
+F:\GitHub Program\Brochure\MySqlConnectionDal\obj\Debug\netcoreapp2.0\MySqlConnectionDal.pdb

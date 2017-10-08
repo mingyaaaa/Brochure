@@ -4,6 +4,17 @@
         <name>Brochure.WPF.Client</name>
     </assembly>
     <members>
+        <member name="T:Brochure.WPF.Client.Abstract.Theme">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Abstract.Theme.GetReourceUri">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Brochure.WPF.Client.App">
             <summary>
             App.xaml 的交互逻辑
@@ -22,15 +33,589 @@
             Application Entry Point.
             </summary>
         </member>
-        <member name="T:Brochure.WPF.Client.Core.DockPanleManager">
-            <summary>
+        <member name="T:Brochure.WPF.Client.Command.AsyncCommand">
+             <summary>
             
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.AsyncCommand.#ctor(System.Action{System.Object},System.Func{System.Object,System.Threading.Tasks.Task{System.Boolean}})">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+             <param name="func"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.AsyncCommand.#ctor(System.Action,System.Func{System.Threading.Tasks.Task{System.Boolean}})">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+             <param name="func"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.AsyncCommand.Execute(System.Object)">
+             <summary>
+            
+             </summary>
+             <param name="parameter"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.AsyncCommand.CanExecute(System.Object)">
+             <summary>
+            
+             </summary>
+             <param name="parameter"></param>
+             <returns></returns>
+        </member>
+        <member name="E:Brochure.WPF.Client.Command.AsyncCommand.CanExecuteChanged">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Command.RelayCommand">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.#ctor(System.Action{System.Object},System.Func{System.Object,System.Boolean})">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+             <param name="func"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.#ctor(System.Action,System.Func{System.Boolean})">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+             <param name="func"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.#ctor(System.Action{System.Object})">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.#ctor(System.Action)">
+             <summary>
+            
+             </summary>
+             <param name="action"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.CanExecute(System.Object)">
+             <summary>
+            
+             </summary>
+             <param name="parameter"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.RelayCommand.Execute(System.Object)">
+             <summary>
+            
+             </summary>
+             <param name="parameter"></param>
+        </member>
+        <member name="E:Brochure.WPF.Client.Command.RelayCommand.CanExecuteChanged">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Command.Attach">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Command.Attach.AttachsEventProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Command.Attach.AttachsHandleProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.Attach.GetAttachsEvent(System.Windows.DependencyObject)">
+             <summary>
+            
+             </summary>
+             <param name="d"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.Attach.SetAttachsEvent(System.Windows.DependencyObject,System.Windows.RoutedEvent)">
+             <summary>
+            
+             </summary>
+             <param name="d"></param>
+             <param name="value"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.Attach.GetAttachsHandle(System.Windows.DependencyObject)">
+             <summary>
+            
+             </summary>
+             <param name="d"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.Command.Attach.SetAttachsHandle(System.Windows.DependencyObject,System.Delegate)">
+             <summary>
+            
+             </summary>
+             <param name="d"></param>
+             <param name="value"></param>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.DockManager">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.DockManager.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Controls.DockManager.LayoutProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.DockManager.Layout">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Controls.DockManager.ThemeProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.DockManager.Theme">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Controls.DockManager.DocumentPaneTemplateProperty">
+            <summary>
+            DocumentPaneTemplate Dependency Property
             </summary>
         </member>
-        <member name="P:Brochure.WPF.Client.MenuItem.Key">
+        <member name="P:Brochure.WPF.Client.Controls.DockManager.DocumentPaneTemplate">
+            <summary>
+            Gets or sets the DocumentPaneDataTemplate property.  This dependency property
+            indicates .
+            </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.DockManager.OnDocumentPaneTemplateChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Handles changes to the DocumentPaneTemplate property.
+            </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.DockManager.OnDocumentPaneTemplateChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Provides derived classes an opportunity to handle changes to the DocumentPaneTemplate property.
+            </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.DockManager.OnApplyTemplate">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutAnchorSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.LayoutAnchorSide.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.LayoutAnchorSide.UpdateSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutAnchorSide.Side">
+             <summary>
+            
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutAnchorSide.Root">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutContent">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Controls.LayoutContent.TitleProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutContent.PropertyType">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutDocument">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutDocumentPane">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutPanel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.LayoutPanel.#ctor(Brochure.WPF.Client.Controls.LayoutDocumentPane)">
+             <summary>
+            
+             </summary>
+             <param name="pane"></param>
+        </member>
+        <member name="T:Brochure.WPF.Client.Controls.LayoutRoot">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Controls.LayoutRoot.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.RootPanel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.BottomSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.TopSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.LeftSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.RightSide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Controls.LayoutRoot.Manager">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Converter.BoolToVisibilityConverter">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Converter.BoolToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+             <summary>
+            
+             </summary>
+             <param name="value"></param>
+             <param name="targetType"></param>
+             <param name="parameter"></param>
+             <param name="culture"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.Converter.BoolToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+             <summary>
+            
+             </summary>
+             <param name="value"></param>
+             <param name="targetType"></param>
+             <param name="parameter"></param>
+             <param name="culture"></param>
+             <returns></returns>
+        </member>
+        <member name="T:Brochure.WPF.Client.Core.DockPanleManager">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Core.DockPanleManager.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Core.DockPanleManager.LayoutProperty">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.DockPanleManager.Layout">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Core.Menus.MenuItem">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.Key">
             <summary>
             菜单的唯一标识
             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.Title">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.GroupKey">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.Childs">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.Order">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.IsShowSeparator">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.Core.Menus.MenuItem.Groups">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Core.Menus.MenuItem.#ctor(System.String,System.Guid,System.Int32)">
+             <summary>
+            
+             </summary>
+             <param name="title"></param>
+             <param name="groupKey"></param>
+             <param name="order"></param>
+        </member>
+        <member name="T:Brochure.WPF.Client.Core.Menus.Menus">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Core.Menus.Menus.Items">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.Enums.AnchorSideEnum">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Enums.AnchorSideEnum.Left">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Enums.AnchorSideEnum.Top">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Enums.AnchorSideEnum.Right">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="F:Brochure.WPF.Client.Enums.AnchorSideEnum.Bottom">
+             <summary>
+            
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.IMenus">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.IMenus.AddMenuItem(Brochure.WPF.Client.Core.Menus.MenuItem)">
+             <summary>
+            
+             </summary>
+             <param name="menu"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.IMenus.RemoveMenuItem(System.Guid)">
+             <summary>
+            
+             </summary>
+             <param name="key"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.IMenus.GetMenuItems">
+             <summary>
+            
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.IMenus.GetMenuItem(System.Guid)">
+             <summary>
+            
+             </summary>
+             <param name="key"></param>
+             <returns></returns>
+        </member>
+        <member name="T:Brochure.WPF.Client.IntToVisibilityConverter">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.IntToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+             <summary>
+            
+             </summary>
+             <param name="value"></param>
+             <param name="targetType"></param>
+             <param name="parameter"></param>
+             <param name="culture"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Brochure.WPF.Client.IntToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+             <summary>
+            
+             </summary>
+             <param name="value"></param>
+             <param name="targetType"></param>
+             <param name="parameter"></param>
+             <param name="culture"></param>
+             <returns></returns>
+        </member>
+        <member name="T:Brochure.WPF.Client.Interface.IViewModel`1">
+             <summary>
+            
+             </summary>
+             <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Brochure.WPF.Client.NotifyPropertyChanged">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="E:Brochure.WPF.Client.NotifyPropertyChanged.PropertyChanged">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.NotifyPropertyChanged.OnPropertyChanged(System.String)">
+             <summary>
+            
+             </summary>
+             <param name="propertyName"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.NotifyPropertyChanged.Set``1(System.Linq.Expressions.Expression{System.Func{System.Object}},``0@,``0)">
+             <summary>
+            
+             </summary>
+             <param name="exp"></param>
+             <param name="field"></param>
+             <param name="value"></param>
+             <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Brochure.WPF.Client.ViewBase">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewBase.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewBase.#ctor(System.Object[])">
+             <summary>
+            
+             </summary>
+             <param name="obj"></param>
+             <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="P:Brochure.WPF.Client.ViewBase.ViewModel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.WindowViewBase">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.WindowViewBase.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.WindowViewBase.#ctor(System.Object[])">
+             <summary>
+            
+             </summary>
+             <param name="obj"></param>
+             <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="P:Brochure.WPF.Client.WindowViewBase.ViewModel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.ViewModelBase">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModelBase.LoadDataAsync(System.Object[])">
+             <summary>
+            
+             </summary>
+             <param name="obj"></param>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModelBase.LoadDataAsync">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModelBase.InitCommand">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModelBase.InitCommand(System.Object[])">
+             <summary>
+            
+             </summary>
+             <param name="obj"></param>
+        </member>
+        <member name="T:Brochure.WPF.Client.Themes.GenericTheme">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.Themes.GenericTheme.GetReourceUri">
+             <summary>
+            
+             </summary>
+             <returns></returns>
         </member>
         <member name="T:Brochure.WPF.Client.Views.TopAndBottomDockPanle">
             <summary>
@@ -76,10 +661,31 @@
             MainWindow
             </summary>
         </member>
+        <member name="M:Brochure.WPF.Client.MainWindow.#ctor">
+             <summary>
+            
+             </summary>
+        </member>
         <member name="M:Brochure.WPF.Client.MainWindow.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
+        </member>
+        <member name="T:Brochure.WPF.Client.ViewModels.MianViewModel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:Brochure.WPF.Client.ViewModels.MianViewModel.Menus">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModels.MianViewModel.LoadDataAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Brochure.WPF.Client.ViewModels.MianViewModel.InitCommand">
+            <inheritdoc />
         </member>
         <member name="T:Brochure.WPF.Client.Annotations.CanBeNullAttribute">
             <summary>

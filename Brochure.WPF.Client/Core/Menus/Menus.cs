@@ -1,36 +1,37 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Brochure.Core.Extends;
 using Brochure.Core.implement;
 
-namespace Brochure.WPF.Client
+namespace Brochure.WPF.Client.Core.Menus
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class Menus : Singleton, IMenus
     {
+        /// <summary>
+        ///
+        /// </summary>
         public List<MenuItem> Items = new List<MenuItem>();
 
-        public void AddMenuItem(MenuItem menu)
+        void IMenus.AddMenuItem(MenuItem menu)
         {
             Items.Add(menu);
-
         }
-        public void RemoveMenuItem(Guid key)
+
+        void IMenus.RemoveMenuItem(Guid key)
         {
             RemoveMenuItem(Items, key);
         }
 
-        public List<MenuItem> GetMenuItems()
+        List<MenuItem> IMenus.GetMenuItems()
         {
             OrderMenuItem();
             return Items;
         }
 
-        public MenuItem GetMenuItem(Guid key)
+        MenuItem IMenus.GetMenuItem(Guid key)
         {
             MenuItem result = null;
             Stack<MenuItem> stack = new Stack<MenuItem>();
