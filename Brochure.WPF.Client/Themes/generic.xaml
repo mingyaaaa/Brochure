@@ -1,9 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:control="clr-namespace:Brochure.WPF.Client.Controls"
-                    xmlns:local="clr-namespace:Brochure.WPF.Client.Themes">
-    <Style x:Key="DockManagerTemplete" TargetType="{x:Type  control:DockManager}">
-    </Style>
-    <Style x:Key="LayoutContentTemplete" TargetType="{x:Type  control:LayoutContent}">
-    </Style>
-</ResourceDictionary>
