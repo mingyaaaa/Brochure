@@ -1,6 +1,10 @@
 using System;
 using Brochure.Core.Interfaces;
 using BaseType = Brochure.Core.System.BaseType;
+using System.Collections.Generic;
+using System.Reflection;
+using Brochure.Core.Atrributes;
+
 namespace Brochure.Core.Extends
 {
     public static class ObjectExtend
@@ -20,7 +24,7 @@ namespace Brochure.Core.Extends
                 return (T)(object)null;
             var type = typeof(T);
             var objType = obj.GetType();
-            if (type == objType)
+            if (type == objType || obj is T)
                 return (T)obj;
             //如果是枚举类型 着转化为整形
             if (obj is Enum)
@@ -41,10 +45,10 @@ namespace Brochure.Core.Extends
                 else if (type.Name == BaseType.DateTime)
                     return (T)(object)DateTime.Parse(obj.ToString());
                 //实现接口IBConverable的类使用 借口转换气
-                var interfaceType = type.GetInterface("IBConverable");
-                var ibConver = interfaceType as IBConverables;
+                var interfaceType = objType.GetInterface($"IBConverables`1");
+                var ibConver = obj as IBConverables<T>;
                 if (ibConver != null)
-                    return ibConver.Conver<T>(obj);
+                    return ibConver.Conver();
                 //如果是系统其他类型  则使用系统的转换器
                 return (T)(object)Convert.ChangeType(obj, type);
             }
@@ -54,6 +58,23 @@ namespace Brochure.Core.Extends
                     throw exc;
                 return (T)(object)default(T);
             }
+        }
+        public static IDictionary<string, object> AsDictionary(this object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj", "参数为空");
+            var result = new Dictionary<string, object>();
+            var type = obj.GetType();
+            var typeInfo = type.GetTypeInfo();
+            var props = typeInfo.GetRuntimeProperties();
+            foreach (var item in props)
+            {
+                var attribute = item.GetCustomAttribute(typeof(IngoreAttribute), true);
+                if (attribute != null)
+                    continue;
+                result.Add(item.Name, item.GetValue(obj));
+            }
+            return result;
         }
     }
 }

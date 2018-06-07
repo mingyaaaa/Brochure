@@ -8,7 +8,7 @@ namespace Brochure.Core.Test
         a = 1,
         b = 2
     }
-    public class UnitTest1
+    public class AsTest
     {
         [Fact]
         public void StringTo()
