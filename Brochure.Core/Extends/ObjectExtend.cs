@@ -76,5 +76,44 @@ namespace Brochure.Core.Extends
             }
             return result;
         }
+        public static Type GetBaseType(this Type type, string typeName)
+        {
+            if (type.Name == typeName)
+                return type;
+            if (type.BaseType == null)
+                return null;
+            return type.BaseType.GetBaseType(typeName);
+        }
+        public static Type[] GetSonTypes(this Type type)
+        {
+            var result = new List<Type>();
+            var assembles = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assem in assembles)
+            {
+                var types = assem.GetTypes();
+                foreach (var item in types)
+                {
+                    if (item.BaseType == type)
+                        result.Add(item);
+                }
+            }
+            return result.ToArray();
+        }
+        public static Type[] GetSonInterfaceType(this Type type)
+        {
+            var result = new List<Type>();
+            var assembles = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assem in assembles)
+            {
+                var types = assem.GetTypes();
+                foreach (var item in types)
+                {
+                    var iface = item.GetInterface(type.Name);
+                    if (iface != null)
+                        result.Add(item);
+                }
+            }
+            return result.ToArray();
+        }
     }
 }
