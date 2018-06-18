@@ -49,7 +49,7 @@ namespace Brochure.Core.Implements
         /// <returns></returns>
         public IEnumerable<object> Values { get { return _dic.Values; } }
 
-        public object Current => throw new NotImplementedException();
+        public object Current { get; set; }
 
         /// <summary>
         /// 获取或设置值

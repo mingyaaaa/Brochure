@@ -26,14 +26,4 @@ namespace Brochure.Core.Server.Attributes
     public class IsNotNullAttribut : Attribute
     {
     }
-
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
-    public class RenameAttribut : Attribute
-    {
-        public string _newName;
-        public RenameAttribut(string newName)
-        {
-            _newName = newName;
-        }
-    }
 }
