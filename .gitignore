@@ -5,4 +5,8 @@ Brochure.Core/bin/
 Brochure.Core/obj/
 Brochure.Core.Test/bin/
 Brochure.Core.Test/obj/
+Brochure.Server.MySql/bin/
+Brochure.Server.MySql/obj/
+Brochure.Core.Server/bin/
+Brochure.Core.Server/obj/
 .vscode/

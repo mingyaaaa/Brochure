@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Brochure.Core.Extends;
-using System;
 using Brochure.Core.Interfaces;
 
 namespace Brochure.Core.Implements
@@ -25,13 +25,13 @@ namespace Brochure.Core.Implements
         /// 移除数据是执行
         /// </summary>
         public Action RemoveHander;
-        public BDocument(object obj)
+        public BDocument (object obj)
         {
-            _dic = obj.AsDictionary();
+            _dic = obj.AsDictionary ();
         }
-        public BDocument()
+        public BDocument ()
         {
-            _dic = new Dictionary<string, object>();
+            _dic = new Dictionary<string, object> ();
         }
         /// <summary>
         /// 获取集合的个数
@@ -55,24 +55,24 @@ namespace Brochure.Core.Implements
         /// 获取或设置值
         /// </summary>
         /// <returns></returns>
-        public object this[string key]
+        public object this [string key]
         {
             get
             {
-                if (!_dic.ContainsKey(key))
+                if (!_dic.ContainsKey (key))
                     return null;
                 return _dic[key];
             }
             set
             {
                 var isAdd = false;
-                if (!_dic.ContainsKey(key))
+                if (!_dic.ContainsKey (key))
                     isAdd = true;
                 _dic[key] = value;
                 if (isAdd)
-                    AddHander?.Invoke();
+                    AddHander?.Invoke ();
                 else
-                    UpdateHander?.Invoke();
+                    UpdateHander?.Invoke ();
             }
         }
         /// <summary>
@@ -80,54 +80,53 @@ namespace Brochure.Core.Implements
         /// </summary>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public void Add(string key, object obj)
+        public void Add (string key, object obj)
         {
-            _dic.Add(key, obj);
-            AddHander?.Invoke();
+            _dic.Add (key, obj);
+            AddHander?.Invoke ();
         }
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator ()
         {
-            return _dic.GetEnumerator();
+            return _dic.GetEnumerator ();
         }
         /// <summary>
         /// 根据Key值移除数据
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public void Remove(string key)
+        public void Remove (string key)
         {
-            if (_dic.ContainsKey(key))
-                _dic.Remove(key);
-            RemoveHander?.Invoke();
+            if (_dic.ContainsKey (key))
+                _dic.Remove (key);
+            RemoveHander?.Invoke ();
         }
         /// <summary>
         /// 批量移除数据
         /// </summary>
         /// <param name="keys"></param>
-        public void RemoveMany(string[] keys)
+        public void RemoveMany (string[] keys)
         {
             foreach (var item in keys)
             {
-                if (_dic.ContainsKey(item))
-                    _dic.Remove(item);
+                if (_dic.ContainsKey (item))
+                    _dic.Remove (item);
             }
-            RemoveHander?.Invoke();
+            RemoveHander?.Invoke ();
         }
 
-        public bool MoveNext()
+        public bool MoveNext ()
         {
-            return _dic.GetEnumerator().MoveNext();
+            return _dic.GetEnumerator ().MoveNext ();
         }
 
-        public void Reset()
+        public void Reset ()
         {
-            _dic.GetEnumerator().Reset();
+            _dic.GetEnumerator ().Reset ();
         }
 
-
-        public string Conver()
+        public string Conver ()
         {
-            return _dic.ToString();
+            return _dic.ToString ();
         }
     }
 }

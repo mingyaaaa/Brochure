@@ -14,5 +14,9 @@
   <ItemGroup>
       <ProjectReference Include="../Brochure.Core/Brochure.Core.csproj" />
       <ProjectReference Include="../Brochure.Core.Server/Brochure.Core.Server.csproj" />
+      <ProjectReference Include="../Brochure.Server.MySql/Brochure.Server.MySql.csproj" />
   </ItemGroup>
+      <ItemGroup>
+      <PackageReference Include="mysql.data" Version="8.0.11" />
+    </ItemGroup>
 </Project>

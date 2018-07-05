@@ -7,6 +7,6 @@ namespace Brochure.Core.System
         public const string Double = "double";
         public const string Float = "Float";
         public const string DateTime = "DateTime";
-
+        public const string Byte = "Byte";
     }
 }

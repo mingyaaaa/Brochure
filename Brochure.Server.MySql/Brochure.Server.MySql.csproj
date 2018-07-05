@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+      <ProjectReference Include="../Brochure.Core/Brochure.Core.csproj" />
+  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="../Brochure.Core.Server/Brochure.Core.Server.csproj" />
+  </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="mysql.data" Version="8.0.11" />
+    </ItemGroup>
+</Project>
