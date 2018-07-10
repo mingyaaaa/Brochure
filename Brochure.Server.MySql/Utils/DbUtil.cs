@@ -77,11 +77,11 @@ namespace Brochure.Server.MySql.Utils
             var sql = $@"create table {tableName}({string.Join(",",columSqls)})";
             return sql;
         }
-        public static IDbParams GetInsertSql (string tableName, IBDocument doc)
+        public static IDbParams GetInsertSql (string tableName, IRecord doc)
         {
             var sql = $"insert into {tableName}";
             var param = new MySqlDbParams ();
-            param.Params = new BDocument ();
+            param.Params = new Record ();
             var fields = doc.Keys.ToList ();
             foreach (var item in doc.Keys.ToList ())
             {
@@ -91,10 +91,10 @@ namespace Brochure.Server.MySql.Utils
             param.Sql = $"{sql}{string.Join(",",fields)} set ({string.Join(",",param.Params.Keys.ToList())})";
             return param;
         }
-        public static IDbParams GetUpdateSql (string tableName, IBDocument doc)
+        public static IDbParams GetUpdateSql (string tableName, IRecord doc)
         {
             var param = new MySqlDbParams ();
-            param.Params = new BDocument ();
+            param.Params = new Record ();
             var sql = $"update {tableName} set ";
             var fieldList = new List<string> ();
             foreach (var item in doc.Keys.ToList ())
@@ -108,7 +108,7 @@ namespace Brochure.Server.MySql.Utils
             return param;
         }
 
-        public static MySqlParameter[] GetDbParams (IBDocument param)
+        public static MySqlParameter[] GetDbParams (IRecord param)
         {
             var result = new List<MySqlParameter> ();
             var sqlTypeMap = AbSingleton.GetInstance<AbTypeMap> ();

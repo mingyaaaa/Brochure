@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Brochure.Core.Interfaces
 {
-    public interface IBDocument : IEnumerator
+    public interface IRecord : IEnumerator
     {
         void Add (string key, object obj);
 
@@ -15,5 +15,6 @@ namespace Brochure.Core.Interfaces
 
         IEnumerable<object> Values { get; }
         void Remove (string key);
+        bool ContainsKey (string key);
     }
 }

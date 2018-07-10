@@ -19,7 +19,7 @@ namespace Brochure.Core.Test
                 ProTime = DateTime.Now,
                 ProString = "ProString"
             };
-            var doc = new BDocument (obj);
+            var doc = new Implements.Record (obj);
             Assert.Equal (obj.ProInt, doc[nameof (obj.ProInt)]);
             Assert.Equal (obj.ProTime, doc[nameof (obj.ProTime)]);
             Assert.Equal (obj.ProString, doc[nameof (obj.ProString)]);

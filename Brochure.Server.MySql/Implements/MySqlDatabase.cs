@@ -12,6 +12,7 @@ using Brochure.Core.Querys;
 using Brochure.Core.Server.Abstracts;
 using Brochure.Core.Server.Enums;
 using Brochure.Core.Server.Interfaces;
+using Brochure.Core.Server.Models;
 using Brochure.Server.MySql.Utils;
 using MySql.Data.MySqlClient;
 
@@ -172,15 +173,15 @@ namespace Brochure.Server.MySql.Implements
             return rr.As<int> ();
         }
 
-        public async Task<IBDocument> GetInfoAsync (Guid guid)
+        public async Task<IRecord> GetInfoAsync (Guid guid)
         {
-            IBDocument doc = null;
+            IRecord doc = null;
             var sql = $"select * from {TableName} where 1=1 and Id={guid}";
             _command.CommandText = sql;
             var dr = await _command.ExecuteReaderAsync ();
             if (dr.NextResult ())
             {
-                doc = new BDocument ();
+                doc = new Record ();
                 for (int i = 0; i < dr.FieldCount; i++)
                 {
                     var name = dr.GetName (i);
@@ -191,9 +192,9 @@ namespace Brochure.Server.MySql.Implements
             return doc;
         }
 
-        public async Task<List<IBDocument>> GetListAsync (SearchParams searchParams)
+        public async Task<List<IRecord>> GetListAsync (SearchParams searchParams)
         {
-            List<IBDocument> result = null;
+            List<IRecord> result = null;
             var orderDoc = searchParams.OrderField;
             var orderStr = string.Empty;
             foreach (var item in orderDoc.Keys)
@@ -212,7 +213,7 @@ namespace Brochure.Server.MySql.Implements
             var dr = await _command.ExecuteReaderAsync ();
             while (dr.Read ())
             {
-                var doc = new BDocument ();
+                var doc = new Record ();
                 for (int i = 0; i < dr.FieldCount; i++)
                 {
                     var name = dr.GetName (i);
@@ -223,7 +224,39 @@ namespace Brochure.Server.MySql.Implements
             }
             return result;
         }
+        public async Task<List<IRecord>> GetListGroupByAsync (List<Aggregate> aggregates, SearchParams searchParams, params string[] groupFields)
+        {
+            List<IRecord> result = null;
+            var orderDoc = searchParams.OrderField;
+            var orderStr = string.Empty;
+            foreach (var item in orderDoc.Keys)
+            {
+                var value = orderDoc[item].As<OrderType> ();
+                orderStr = $"{orderStr}";
+                if (value == OrderType.Desc)
+                    orderStr = $"{orderStr} desc";
+                else
+                    orderStr = $"{orderStr} asc";
+            }
+            var count = searchParams.EndIndex - searchParams.StarIndex + 1;
+            var gfield = string.Join (",", groupFields);
+            var sql = $"select {string.Join(",",aggregates)},{gfield} from {TableName} where 1=1 and {searchParams.Filter} group by {gfield} order by {orderStr} limit {searchParams.StarIndex},{count}";
+            _command.CommandText = sql;
+            var dr = await _command.ExecuteReaderAsync ();
+            while (dr.Read ())
+            {
+                var doc = new Record ();
+                for (int i = 0; i < dr.FieldCount; i++)
+                {
+                    var name = dr.GetName (i);
+                    var value = dr[i];
+                    doc[name] = value;
+                }
+                result.Add (doc);
+            }
+            return result;
 
+        }
         public async Task<long> InserManyAsync (IEnumerable<EntityBase> entities)
         {
             var tasks = new List<Task<long>> ();
@@ -236,7 +269,7 @@ namespace Brochure.Server.MySql.Implements
         public async Task<long> InserOneAsync (EntityBase entity)
         {
             var dic = entity.AsDictionary ();
-            var doc = new BDocument (dic);
+            var doc = new Record (dic);
             var sqlParams = DbUtil.GetInsertSql (TableName, doc);
             _command.CommandText = sqlParams.Sql;
             var paramList = DbUtil.GetDbParams (sqlParams.Params);
@@ -261,7 +294,7 @@ namespace Brochure.Server.MySql.Implements
             return rr == 0 ? 1 : -1;
         }
 
-        public async Task<long> UpdateAsync (Guid id, IBDocument doc)
+        public async Task<long> UpdateAsync (Guid id, IRecord doc)
         {
             var paramObj = DbUtil.GetUpdateSql (TableName, doc);
             var idSymbol = $"{paramObj.ParamSymbol}id";
@@ -275,7 +308,7 @@ namespace Brochure.Server.MySql.Implements
             return rr;
         }
 
-        public async Task<long> UpdateAsync (Query query, IBDocument doc)
+        public async Task<long> UpdateAsync (Query query, IRecord doc)
         {
             var paramObj = DbUtil.GetUpdateSql (TableName, doc);
             var sql = $"{paramObj.Sql} where 1=1 and {query}";

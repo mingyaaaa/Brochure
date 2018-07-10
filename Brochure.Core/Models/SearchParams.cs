@@ -8,7 +8,7 @@ namespace Brochure.Core.Model
     {
         public SearchParams ()
         {
-            OrderField = new BDocument ();
+            OrderField = new Record ();
             OrderField["CreateTime"] = OrderType.Desc;
         }
         public SearchParams (Query query)
@@ -40,6 +40,6 @@ namespace Brochure.Core.Model
         /// <summary>
         /// 排序字段 {field:1}  1-升序，2-降序
         /// </summary>
-        public IBDocument OrderField;
+        public IRecord OrderField;
     }
 }

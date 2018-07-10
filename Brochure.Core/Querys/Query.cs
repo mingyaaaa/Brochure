@@ -9,7 +9,6 @@ namespace Brochure.Core.Querys
     {
         public string Key;
         private string _queryString;
-        public IBDocument Params;
         public Query (string queryString)
         {
             _queryString = queryString;

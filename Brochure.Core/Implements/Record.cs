@@ -10,7 +10,7 @@ namespace Brochure.Core.Implements
     /// 文档类型
     /// </summary>
     /// <typeparam name="BDocument"></typeparam>
-    public class BDocument : IBDocument, IBConverables<string>
+    public class Record : IRecord, IBConverables<string>
     {
         private readonly IDictionary<string, object> _dic;
         /// <summary>
@@ -25,11 +25,11 @@ namespace Brochure.Core.Implements
         /// 移除数据是执行
         /// </summary>
         public Action RemoveHander;
-        public BDocument (object obj)
+        public Record (object obj)
         {
             _dic = obj.AsDictionary ();
         }
-        public BDocument ()
+        public Record ()
         {
             _dic = new Dictionary<string, object> ();
         }
@@ -127,6 +127,11 @@ namespace Brochure.Core.Implements
         public string Conver ()
         {
             return _dic.ToString ();
+        }
+
+        public bool ContainsKey (string key)
+        {
+            return _dic.ContainsKey (key);
         }
     }
 }

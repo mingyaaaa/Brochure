@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Brochure.Core.Abstracts;
 using Brochure.Core.Interfaces;
+using Brochure.Core.Querys;
+using Irony.Parsing;
 
 namespace Brochure.Core.Server.Interfaces
 {
@@ -17,7 +19,12 @@ namespace Brochure.Core.Server.Interfaces
     {
         string ParamSymbol { get; }
         string Sql { get; }
-        IBDocument Params { get; }
+        IRecord Params { get; }
+    }
+
+    public interface ISqlParse
+    {
+        IDbParams Parse (ParseTree tree);
     }
 
     public interface IDbField

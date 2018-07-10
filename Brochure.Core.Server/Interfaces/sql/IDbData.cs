@@ -6,6 +6,7 @@ using Brochure.Core.Model;
 using Brochure.Core.Querys;
 using Brochure.Core.Server.Abstracts;
 using Brochure.Core.Server.Enums;
+using Brochure.Core.Server.Models;
 
 namespace Brochure.Core.Server.Interfaces
 {
@@ -42,19 +43,22 @@ namespace Brochure.Core.Server.Interfaces
         /// </summary>
         /// <param name="id">主建</param>
         /// <param name="doc">需要更新的数据</param>
-        Task<long> UpdateAsync (Guid id, IBDocument doc);
+        Task<long> UpdateAsync (Guid id, IRecord doc);
         /// <summary>
         /// 更新一个数据
         /// </summary>
         /// <param name="query">对应的查询条件{field:value}</param>
         /// <param name="doc">需要更新的数据</param>
-        Task<long> UpdateAsync (Query query, IBDocument doc);
+        Task<long> UpdateAsync (Query query, IRecord doc);
         /// <summary>
         /// 获取列表
         /// </summary>
         /// <param name="searchParams"></param>
         /// <returns></returns>
-        Task<List<IBDocument>> GetListAsync (SearchParams searchParams);
+        Task<List<IRecord>> GetListAsync (SearchParams searchParams);
+
+        Task<List<IRecord>> GetListGroupByAsync (List<Aggregate> aggregates, SearchParams searchParams, params string[] groupField);
+
         /// <summary>
         /// 获取数量
         /// </summary>
@@ -66,7 +70,7 @@ namespace Brochure.Core.Server.Interfaces
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        Task<IBDocument> GetInfoAsync (Guid guid);
+        Task<IRecord> GetInfoAsync (Guid guid);
         #endregion
 
         #region Columns
@@ -128,6 +132,7 @@ namespace Brochure.Core.Server.Interfaces
         /// <param name="indexName">索引名称</param>
         /// <returns></returns>
         Task<long> DeleteIndexAsync (string indexName);
+
         #endregion
     }
 }
