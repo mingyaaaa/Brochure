@@ -11,7 +11,7 @@ namespace Brochure.Server.MySql.Implements
         {
             Params = new Record ();
         }
-        public string ParamSymbol => "";
+        public string ParamSymbol => "@";
         public string Sql { get; set; }
         public IRecord Params { get; set; }
     }

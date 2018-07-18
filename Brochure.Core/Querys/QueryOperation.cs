@@ -8,7 +8,9 @@ namespace Brochure.Core.Querys
     {
         public const string Eq = "=";
         public const string In = "In";
+
         public const string Like = "Like";
+
         public const string NotIn = "NotIn";
 
         public const string NotLike = "Not Like";

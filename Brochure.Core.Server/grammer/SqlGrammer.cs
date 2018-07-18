@@ -26,7 +26,7 @@ namespace Brochure.Core.Server
 
             var in_stmt = new NonTerminal ("In");
             var eq = new NonTerminal ("OperationExp");
-            var betweenstmt = new NonTerminal ("Betweent");
+            var betweenstmt = new NonTerminal ("Between");
             var likestmt = new NonTerminal ("Like");
             var notnullstmt = new NonTerminal ("NotNull");
             var nullstmt = new NonTerminal ("Null");
@@ -81,7 +81,7 @@ namespace Brochure.Core.Server
             parExp.Rule = "(" + expressstmt + ")";
             RegisterBracePair ("(", ")");
             MarkPunctuation ("(", ")");
-            MarkTransient (stmtlist, valuestmt, expressstmt, parExp);
+            MarkTransient (stmtlist, valuestmt, expressstmt, parExp, OprExp);
             this.Root = expressstmt;
         }
     }

@@ -18,7 +18,7 @@ namespace Brochure.Core.Server.Interfaces
     public interface IDbParams
     {
         string ParamSymbol { get; }
-        string Sql { get; }
+        string Sql { get; set; }
         IRecord Params { get; }
     }
 

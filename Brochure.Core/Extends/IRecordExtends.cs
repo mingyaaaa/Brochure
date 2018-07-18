@@ -10,8 +10,9 @@ namespace Brochure.Core.Extends
             var keys = newRecord.Keys.ToList ();
             foreach (var item in keys)
             {
-                if (isOverride)
-                    record[item] = newRecord[item];
+                if (record.ContainsKey (item) && !isOverride)
+                    continue;
+                record[item] = newRecord[item];
             }
             return record;
         }
