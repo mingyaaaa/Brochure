@@ -15,19 +15,25 @@ namespace Brochure.Core.Server
             var timeValue = new QuotedValueLiteral ("DateTimeValue", "Date(", ")", TypeCode.String);
             //key
             var _in = ToTerm ("in");
+            var not_in = ToTerm ("notin");
             var and = ToTerm ("and");
             var or = ToTerm ("or");
             var between = ToTerm ("between");
+            var notbetween = ToTerm ("notbetween");
             var like = ToTerm ("like");
+            var notlike = ToTerm ("notlike");
             var not = ToTerm ("not");
             var _null = ToTerm ("null");
             var _is = ToTerm ("is");
             var comma = ToTerm (",");
 
             var in_stmt = new NonTerminal ("In");
+            var not_in_stmt = new NonTerminal ("NotIn");
             var eq = new NonTerminal ("OperationExp");
-            var betweenstmt = new NonTerminal ("Between");
-            var likestmt = new NonTerminal ("Like");
+            var between_stmt = new NonTerminal ("Between");
+            var not_between_stmt = new NonTerminal ("NotBetween");
+            var like_stmt = new NonTerminal ("Like");
+            var not_like_stmt = new NonTerminal ("NotLike");
             var notnullstmt = new NonTerminal ("NotNull");
             var nullstmt = new NonTerminal ("Null");
             var stmtlist = new NonTerminal ("stmtlist");
@@ -46,19 +52,34 @@ namespace Brochure.Core.Server
             in_stmt.Rule = identifier + _in + "(" + valueListstmt + ")";
             #endregion
 
+            #region notin
+            not_in_stmt.Rule = identifier + not_in + "(" + valueListstmt + ")";
+            #endregion
+
             #region EqOperation
             eq.Rule = identifier + OprExp + valuestmt;
             #endregion
 
             #region like
 
-            likestmt.Rule = identifier + like + valuestmt;
+            like_stmt.Rule = identifier + like + valuestmt;
+
+            #endregion
+
+            #region not like
+
+            not_like_stmt.Rule = identifier + notlike + valuestmt;
 
             #endregion
 
             #region Betweent
 
-            betweenstmt.Rule = identifier + valuestmt + "and" + valuestmt;
+            between_stmt.Rule = identifier + between + valuestmt + "and" + valuestmt;
+
+            #endregion
+            #region NotBetweent
+
+            not_between_stmt.Rule = identifier + notbetween + valuestmt + "and" + valuestmt;
 
             #endregion
 
@@ -76,7 +97,7 @@ namespace Brochure.Core.Server
             var logicOper = new NonTerminal ("LogicOper");
 
             logicOper.Rule = ToTerm ("and") |"or";
-            expressstmt.Rule = in_stmt | eq | likestmt | betweenstmt | nullstmt | notnullstmt | parExp | logicExp;
+            expressstmt.Rule = in_stmt | not_in_stmt | eq | like_stmt | not_like_stmt | between_stmt | not_between_stmt | nullstmt | notnullstmt | parExp | logicExp;
             logicExp.Rule = expressstmt + logicOper + expressstmt;
             parExp.Rule = "(" + expressstmt + ")";
             RegisterBracePair ("(", ")");

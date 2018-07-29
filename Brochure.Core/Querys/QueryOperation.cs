@@ -9,13 +9,13 @@ namespace Brochure.Core.Querys
         public const string Eq = "=";
         public const string In = "In";
 
+        public const string NotIn = "NotIn";
         public const string Like = "Like";
 
-        public const string NotIn = "NotIn";
-
-        public const string NotLike = "Not Like";
+        public const string NotLike = "NotLike";
 
         public const string Betweent = "Between {0} and {1}";
+        public const string NotBetweent = "NotBetween {0} and {1}";
         public const string NotEq = "!=";
         public const string Gt = ">";
         public const string Gte = ">=";

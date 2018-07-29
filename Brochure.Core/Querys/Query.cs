@@ -23,19 +23,19 @@ namespace Brochure.Core.Querys
 
         public Query And (Query query)
         {
-            _queryString = $"{QueryOperationType.And} { query.ToString()}";
+            _queryString = $"{_queryString} {QueryOperationType.And} { query.ToString()}";
             return this;
         }
         public Query Or (Query query)
         {
-            _queryString = $"{QueryOperationType.Or} {query.ToString()}";
+            _queryString = $"{_queryString} {QueryOperationType.Or} {query.ToString()}";
             return this;
         }
         public static Query Eq (string key, object value)
         {
             if (value == null)
                 return Query.IsNull (key);
-            var str = $"({key} {QueryOperationType.Eq} {GetString(value)})";
+            var str = $"{key} {QueryOperationType.Eq} {GetString(value)}";
             return new Query (str);
         }
 
@@ -93,10 +93,10 @@ namespace Brochure.Core.Querys
             var count = 1;
             foreach (var item in a)
             {
-                valueStr = $"{key} {QueryOperationType.NotIn} ({string.Join(",",item)})";
+                valueStr = $"{key}  {QueryOperationType.NotIn} ({string.Join(",",item)})";
                 if (count > 2)
                 {
-                    valueStr = $"{valueStr} or {key} {QueryOperationType.NotIn} ({string.Join(",",item)})";
+                    valueStr = $"{valueStr} and {key} {QueryOperationType.NotIn} ({string.Join(",",item)})";
                 }
                 count++;
             }
@@ -120,38 +120,44 @@ namespace Brochure.Core.Querys
         }
         public static Query Like (string key, string value)
         {
-            var str = $"({key} {QueryOperationType.Like} {value})";
+            var str = $"{key} {QueryOperationType.Like} '{value}'";
             return new Query (str);
         }
         public static Query NotLike (string key, string value)
         {
-            var str = $"({key}  {QueryOperationType.Like} {value})";
+            var str = $"{key} {QueryOperationType.NotLike} '{value}'";
             return new Query (str);
         }
         public static Query Between (string key, object value, object value1)
         {
-            var str = $"({key} {QueryOperationType.Betweent} )";
+            var str = $"{key} {QueryOperationType.Betweent}";
+            var aa = string.Format (str, GetString (value), GetString (value1));
+            return new Query (aa);
+        }
+        public static Query NotBetween (string key, object value, object value1)
+        {
+            var str = $"{key} {QueryOperationType.NotBetweent}";
             var aa = string.Format (str, GetString (value), GetString (value1));
             return new Query (aa);
         }
         public static Query Gt (string key, object value)
         {
-            var str = $"({key} {QueryOperationType.Gt} {GetString(value)})";
+            var str = $"{key} {QueryOperationType.Gt} {GetString(value)}";
             return new Query (str);
         }
         public static Query Gte (string key, object value)
         {
-            var str = $"({key} {QueryOperationType.Gte} {GetString(value)})";
+            var str = $"{key} {QueryOperationType.Gte} {GetString(value)}";
             return new Query (str);
         }
         public static Query Lt (string key, object value)
         {
-            var str = $"({key} {QueryOperationType.Lt} {GetString(value)})";
+            var str = $"{key} {QueryOperationType.Lt} {GetString(value)}";
             return new Query (str);
         }
         public static Query Lte (string key, object value)
         {
-            var str = $"({key} {QueryOperationType.Lte} {GetString(value)})";
+            var str = $"{key} {QueryOperationType.Lte} {GetString(value)}";
             return new Query (str);
         }
         private static string GetString (object a)

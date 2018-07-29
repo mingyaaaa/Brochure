@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Brochure.Core.Querys;
 using Brochure.Core.Server.core;
@@ -20,11 +21,23 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             var mysqlParse = new MySqlParse ();
             var parse = new QueryParse (mysqlParse);
-            //Given
+
             var query = Query.Eq ("aa", 11);
             var param = parse.Parse (query);
-            //When
             Assert.Equal ("aa = @aa", param.Sql);
+            Assert.Equal ("@aa", param.Params.Keys.FirstOrDefault ());
+            Assert.Equal (11, param.Params["@aa"]);
+
+            var time = new DateTime (2011, 1, 1);
+            query = Query.Eq ("aa", time);
+            param = parse.Parse (query);
+            Assert.Equal ("aa = @aa", param.Sql);
+            Assert.Equal ("@aa", param.Params.Keys.FirstOrDefault ());
+            Assert.Equal (time, param.Params["@aa"]);
+
+            query = Query.NotEq ("aa", 11);
+            param = parse.Parse (query);
+            Assert.Equal ("aa != @aa", param.Sql);
             Assert.Equal ("@aa", param.Params.Keys.FirstOrDefault ());
             Assert.Equal (11, param.Params["@aa"]);
 
@@ -99,6 +112,80 @@ namespace Brochure.Core.Test.MySqlDbTest
             Assert.Equal ("2", param.Params["@bbb2"]);
             Assert.Equal ("3", param.Params["@bbb3"]);
             //Then
+
+            var ccc = new string[] { "1", "2", "3" };
+            query = Query.NotIn ("bbb", ccc);
+            param = parse.Parse (query);
+            Assert.Equal ("bbb not in (@bbb1,@bbb2,@bbb3)", param.Sql);
+            Assert.Equal ("1", param.Params["@bbb1"]);
+            Assert.Equal ("2", param.Params["@bbb2"]);
+            Assert.Equal ("3", param.Params["@bbb3"]);
+        }
+
+        [Fact]
+        public void TestLike ()
+        {
+            var mysqlParse = new MySqlParse ();
+            var parse = new QueryParse (mysqlParse);
+            //Given
+            var query = Query.Like ("aaa", "aaaaa");
+            var param = parse.Parse (query);
+            Assert.Equal ("aaa like '%@aaa%'", param.Sql);
+            Assert.Equal ("aaaaa", param.Params["@aaa"]);
+            //When
+
+            query = Query.NotLike ("aaa", "aaaa");
+            param = parse.Parse (query);
+            Assert.Equal ("aaa not like '%@aaa%'", param.Sql);
+            Assert.Equal ("aaaa", param.Params["@aaa"]);
+            //Then
+        }
+
+        [Fact]
+        public void TestBetween ()
+        {
+            //Given
+            var mysqlParse = new MySqlParse ();
+            var parse = new QueryParse (mysqlParse);
+            //Given
+            var query = Query.Between ("aaa", 1, 2);
+            var param = parse.Parse (query);
+            Assert.Equal ("aaa between @aaa1 and @aaa2", param.Sql);
+            Assert.Equal (1, param.Params["@aaa1"]);
+            Assert.Equal (2, param.Params["@aaa2"]);
+            //When
+
+            query = Query.NotBetween ("aaa", 1, 2);
+            param = parse.Parse (query);
+            Assert.Equal ("aaa not between @aaa1 and @aaa2", param.Sql);
+            Assert.Equal (1, param.Params["@aaa1"]);
+            Assert.Equal (2, param.Params["@aaa2"]);
+            //When
+
+            var time1 = new DateTime (2011, 1, 1);
+            var time2 = new DateTime (2011, 1, 2);
+            query = Query.NotBetween ("aaa", time1, time2);
+            param = parse.Parse (query);
+            Assert.Equal ("aaa not between @aaa1 and @aaa2", param.Sql);
+            Assert.Equal (time1, param.Params["@aaa1"]);
+            Assert.Equal (time2, param.Params["@aaa2"]);
+            //Then
+        }
+
+        [Fact]
+        public void TestAnd ()
+        {
+            var mysqlParse = new MySqlParse ();
+            var parse = new QueryParse (mysqlParse);
+
+            var query = Query.Eq ("aa", 11).And (Query.Eq ("bb", 2));
+            var param = parse.Parse (query);
+            Assert.Equal ("aa = @aa and (bb = @bb)", param.Sql);
+
+            query = Query.Eq ("aa", 11).And (Query.Eq ("bb", 2).Or (Query.Eq ("cc", 3)));
+            param = parse.Parse (query);
+            Assert.Equal ("aa = @aa and (bb = @bb or (cc = @cc))", param.Sql);
+
         }
     }
 }

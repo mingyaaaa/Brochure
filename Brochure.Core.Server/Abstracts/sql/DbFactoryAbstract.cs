@@ -13,6 +13,7 @@ namespace Brochure.Core.Server.Abstracts
             Password = password;
             Port = port;
             DatabaseName = databaseName;
+            InitParse ();
         }
         public string Address { get; set; }
         public string UserName { get; set; }
@@ -20,5 +21,7 @@ namespace Brochure.Core.Server.Abstracts
         public string Port { get; set; }
         public string DatabaseName { get; set; }
         public abstract IDbConnect GetDbConnect ();
+        protected static ISqlParse _parse;
+        public abstract void InitParse ();
     }
 }

@@ -28,9 +28,23 @@ namespace Brochure.Server.MySql.Utils
             var name = node.Term.Name;
             if (name == "LogicExp")
             {
-                var tp = ToQuery (node);
-                sqlParams.Sql = sqlParams.Sql + "(" + tp.Sql + ")";
-                sqlParams.Params.Merge (tp.Params, false);
+                var nodes = node.ChildNodes.ToList ();
+                var leftNode = nodes[0];
+                var operaNode = nodes[1];
+                var rightNode = nodes[2];
+                var leftparam = ToQuery (leftNode);
+                var operaparam = ToQuery (operaNode);
+                var rightparam = ToQuery (rightNode);
+                sqlParams.Params.Merge (leftparam.Params, false);
+                sqlParams.Params.Merge (operaparam.Params, false);
+                sqlParams.Params.Merge (rightparam.Params, false);
+                sqlParams.Sql = $"{leftparam.Sql} {operaparam.Sql} ({rightparam.Sql})";
+                // foreach (var item in nodes)
+                // {
+                //     var cparam = ToQuery (item);
+                //     sqlParams.Params.Merge (cparam.Params, false);
+                //     sqlParams.Sql = $"{sqlParams.Sql} ({cparam.Sql})";
+                // }
             }
             else if (name == "LogicOper")
             {
@@ -44,11 +58,20 @@ namespace Brochure.Server.MySql.Utils
                     case "In":
                         pp = GetInParams (node);
                         break;
+                    case "NotIn":
+                        pp = GetNotInParams (node);
+                        break;
                     case "Between":
                         pp = GetBetweenParams (node);
                         break;
+                    case "NotBetween":
+                        pp = GetNotBetweenParams (node);
+                        break;
                     case "Like":
                         pp = GetLikeParams (node);
+                        break;
+                    case "NotLike":
+                        pp = GetNotLikeParams (node);
                         break;
                     case "NotNull":
                         pp = GetNotNullParams (node);
@@ -66,20 +89,14 @@ namespace Brochure.Server.MySql.Utils
                     sqlParams.Sql = sqlParams.Sql + pp.Sql;
                 }
             }
-            var nodes = node.ChildNodes.ToList ();
-            foreach (var item in nodes)
-            {
-                var cparam = ToQuery (item);
-                sqlParams.Params.Merge (cparam.Params, false);
-                sqlParams.Sql = sqlParams.Sql + cparam.Sql;
-            }
             return sqlParams;
         }
         private string GetLogicOperation (ParseTreeNode node)
         {
             var str = string.Empty;
             var name = node.Term.Name;
-            switch (name)
+            var opearName = node.ChildNodes[0].Token.ValueString;
+            switch (opearName)
             {
                 case QueryOperationType.And:
                     str = "and";
@@ -110,32 +127,60 @@ namespace Brochure.Server.MySql.Utils
             sqlParams.Sql = $"{field} in ({string.Join(",",sqlParams.Params.Keys.ToList())})";
             return sqlParams;
         }
+
+        private IDbParams GetNotInParams (ParseTreeNode node)
+        {
+            // in ('' ,'','')
+            var left = node.ChildNodes[0];
+            var right = node.ChildNodes[2];
+            var field = left.Token.ValueString;
+            var sqlParams = GetParams (field, right.ChildNodes.ToList ());
+            sqlParams.Sql = $"{field} not in ({string.Join(",",sqlParams.Params.Keys.ToList())})";
+            return sqlParams;
+        }
+
         private IDbParams GetBetweenParams (ParseTreeNode node)
         {
             // betwween {1} and {2}
             var left = node.ChildNodes[0];
-            var right = node.ChildNodes[2];
             var field = left.Token.ValueString;
-            var starField = right.ChildNodes[1];
-            var endField = right.ChildNodes[1];
-            var sqlParams = new MySqlDbParams ();
-            var starParams = GetParams (starField.Token.ValueString, starField.ChildNodes.ToList ());
-            var endParams = GetParams (endField.Token.ValueString, endField.ChildNodes.ToList ());
-            sqlParams.Params.Merge (starParams.Params, false);
-            sqlParams.Params.Merge (endParams.Params, false);
-            sqlParams.Sql = $"{field} between {string.Join(",",starParams.Params.Keys.ToList())}  and {string.Join(",",endParams.Params.Keys.ToList())}";
+            var starField = node.ChildNodes[2];
+            var endField = node.ChildNodes[4];
+            var sqlParams = GetParams (field, new ParseTreeNodeList () { starField, endField });
+            sqlParams.Sql = $"{field} between {sqlParams.Params.Keys.ToList()[0]} and {sqlParams.Params.Keys.ToList()[1]}";
             return sqlParams;
         }
+
+        private IDbParams GetNotBetweenParams (ParseTreeNode node)
+        {
+            // betwween {1} and {2}
+            var left = node.ChildNodes[0];
+            var field = left.Token.ValueString;
+            var starField = node.ChildNodes[2];
+            var endField = node.ChildNodes[4];
+            var sqlParams = GetParams (field, new ParseTreeNodeList () { starField, endField });
+            sqlParams.Sql = $"{field} not between {sqlParams.Params.Keys.ToList()[0]} and {sqlParams.Params.Keys.ToList()[1]}";
+            return sqlParams;
+        }
+
         private IDbParams GetLikeParams (ParseTreeNode node)
         {
             var left = node.ChildNodes[0];
             var right = node.ChildNodes[2];
             var field = left.Token.ValueString;
-            var sqlParams = GetParams (field, right.ChildNodes.ToList ());
-            sqlParams.Sql = $"{field} like %{string.Join(",",sqlParams.Params.Keys.ToList())}%";
+            var sqlParams = GetParams (field, right);
+            sqlParams.Sql = $"{field} like '%{string.Join(",",sqlParams.Params.Keys.ToList())}%'";
             return sqlParams;
         }
-
+        private IDbParams GetNotLikeParams (ParseTreeNode node)
+        {
+            var left = node.ChildNodes[0];
+            var right = node.ChildNodes[2];
+            var field = left.Token.ValueString;
+            var sqlParams = GetParams (field, right);
+            sqlParams.Sql = $"{field} not like '%{string.Join(",",sqlParams.Params.Keys.ToList())}%'";
+            return sqlParams;
+        }
         private IDbParams GetNotNullParams (ParseTreeNode node)
         {
             var left = node.ChildNodes[0];

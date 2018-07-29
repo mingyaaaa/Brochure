@@ -10,6 +10,7 @@ using Brochure.Core.Interfaces;
 using Brochure.Core.Model;
 using Brochure.Core.Querys;
 using Brochure.Core.Server.Abstracts;
+using Brochure.Core.Server.core;
 using Brochure.Core.Server.Enums;
 using Brochure.Core.Server.Interfaces;
 using Brochure.Core.Server.Models;
@@ -21,14 +22,17 @@ namespace Brochure.Server.MySql.Implements
     public class MySqlDatabase : IDbTableBase, IDbDatabase, IDbData
     {
         private MySqlCommand _command;
-        public MySqlDatabase (string tableName, MySqlCommand command)
+        private ISqlParse _parse;
+        internal MySqlDatabase (string tableName, MySqlCommand command, ISqlParse sqlParse)
         {
             TableName = tableName;
             _command = command;
+            _parse = sqlParse;
         }
-        public MySqlDatabase (MySqlCommand command)
+        internal MySqlDatabase (MySqlCommand command, ISqlParse sqlParse)
         {
             _command = command;
+            _parse = sqlParse;
         }
         public string TableName { get; }
 
@@ -144,8 +148,12 @@ namespace Brochure.Server.MySql.Implements
         public async Task<long> DeleteManyAsync (Guid[] ids)
         {
             var query = Query.In ("Id", ids.Select (t => t.ToString ()).ToArray ());
-            var sql = $"delete from {TableName} where 1=1 and {query}";
+            var parse = new QueryParse (_parse);
+            var param = parse.Parse (query);
+            var sql = $"delete from {TableName} where 1=1 and {param.Sql}";
             _command.CommandText = sql;
+            var mysqlParams = DbUtil.GetDbParams (param.Params);
+            _command.Parameters.AddRange (mysqlParams);
             var r = await _command.ExecuteNonQueryAsync ();
             return r;
         }
@@ -169,6 +177,10 @@ namespace Brochure.Server.MySql.Implements
         {
             var sql = $"select count(*) from {TableName} where 1=1 and {query}";
             _command.CommandText = sql;
+            var parse = new QueryParse (_parse);
+            var param = parse.Parse (query);
+            var mysqlParams = DbUtil.GetDbParams (param.Params);
+            _command.Parameters.AddRange (mysqlParams);
             var rr = await _command.ExecuteScalarAsync ();
             return rr.As<int> ();
         }
@@ -208,8 +220,12 @@ namespace Brochure.Server.MySql.Implements
             }
             //分页 排序
             var count = searchParams.EndIndex - searchParams.StarIndex + 1;
-            var sql = $"select * from {TableName} where 1=1 and {searchParams.Filter} order by {orderStr} limit {searchParams.StarIndex},{count}";
+            var parse = new QueryParse (_parse);
+            var param = parse.Parse (searchParams.Filter);
+            var mysqlParams = DbUtil.GetDbParams (param.Params);
+            var sql = $"select * from {TableName} where 1=1 and {param.Sql} order by {orderStr} limit {searchParams.StarIndex},{count}";
             _command.CommandText = sql;
+            _command.Parameters.AddRange (mysqlParams);
             var dr = await _command.ExecuteReaderAsync ();
             while (dr.Read ())
             {
@@ -240,8 +256,12 @@ namespace Brochure.Server.MySql.Implements
             }
             var count = searchParams.EndIndex - searchParams.StarIndex + 1;
             var gfield = string.Join (",", groupFields);
-            var sql = $"select {string.Join(",",aggregates)},{gfield} from {TableName} where 1=1 and {searchParams.Filter} group by {gfield} order by {orderStr} limit {searchParams.StarIndex},{count}";
+            var parse = new QueryParse (_parse);
+            var param = parse.Parse (searchParams.Filter);
+            var mysqlParams = DbUtil.GetDbParams (param.Params);
+            var sql = $"select {string.Join(",",aggregates)},{gfield} from {TableName} where 1=1 and {param.Sql} group by {gfield} order by {orderStr} limit {searchParams.StarIndex},{count}";
             _command.CommandText = sql;
+            _command.Parameters.AddRange (mysqlParams);
             var dr = await _command.ExecuteReaderAsync ();
             while (dr.Read ())
             {
@@ -311,11 +331,15 @@ namespace Brochure.Server.MySql.Implements
         public async Task<long> UpdateAsync (Query query, IRecord doc)
         {
             var paramObj = DbUtil.GetUpdateSql (TableName, doc);
-            var sql = $"{paramObj.Sql} where 1=1 and {query}";
+            var parse = new QueryParse (_parse);
+            var param = parse.Parse (query);
+            var sql = $"{paramObj.Sql} where 1=1 and {param.Sql}";
             var paramDic = paramObj.Params;
             var sqlParams = DbUtil.GetDbParams (paramDic);
+            var mysqlParams = DbUtil.GetDbParams (param.Params);
             _command.CommandText = sql;
             _command.Parameters.AddRange (sqlParams);
+            _command.Parameters.AddRange (mysqlParams);
             var rr = await _command.ExecuteNonQueryAsync ();
             return rr;
         }
