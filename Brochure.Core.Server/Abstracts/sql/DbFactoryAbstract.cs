@@ -3,7 +3,7 @@ using Brochure.Core.Server.Interfaces;
 
 namespace Brochure.Core.Server.Abstracts
 {
-    public abstract class DbFactoryAbstract : AbSingleton
+    public abstract class DbFactoryAbstract : Singleton
     {
 
         protected DbFactoryAbstract (string address, string userName, string password, string port, string databaseName)
@@ -13,7 +13,6 @@ namespace Brochure.Core.Server.Abstracts
             Password = password;
             Port = port;
             DatabaseName = databaseName;
-            InitParse ();
         }
         public string Address { get; set; }
         public string UserName { get; set; }
@@ -21,7 +20,5 @@ namespace Brochure.Core.Server.Abstracts
         public string Port { get; set; }
         public string DatabaseName { get; set; }
         public abstract IDbConnect GetDbConnect ();
-        protected static ISqlParse _parse;
-        public abstract void InitParse ();
     }
 }

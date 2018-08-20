@@ -23,16 +23,18 @@ namespace Brochure.Server.MySql.Implements
     {
         private MySqlCommand _command;
         private ISqlParse _parse;
-        internal MySqlDatabase (string tableName, MySqlCommand command, ISqlParse sqlParse)
+        internal MySqlDatabase (string tableName, MySqlCommand command) : this ()
         {
             TableName = tableName;
             _command = command;
-            _parse = sqlParse;
         }
-        internal MySqlDatabase (MySqlCommand command, ISqlParse sqlParse)
+        internal MySqlDatabase (MySqlCommand command) : this ()
         {
             _command = command;
-            _parse = sqlParse;
+        }
+        protected MySqlDatabase ()
+        {
+            _parse = new MySqlParse ();
         }
         public string TableName { get; }
 

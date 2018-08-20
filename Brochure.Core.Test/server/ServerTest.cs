@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Brochure.Core.Test.server
 {
-    public class S1 : AbSingleton, IS1
+    public class S1 : Singleton, IS1
     {
 
     }
@@ -19,7 +19,7 @@ namespace Brochure.Core.Test.server
     {
 
     }
-    public abstract class abc : AbSingleton
+    public abstract class abc : Singleton
     {
 
     }
@@ -33,9 +33,9 @@ namespace Brochure.Core.Test.server
         public void TypeMapTest ()
         {
             var aa = new abcA ();
-            var bb = AbSingleton.GetInstance<abc> ();
+            var bb = Singleton.GetInstance<abc> ();
             Assert.True (aa == bb);
-            var cc = AbSingleton.GetInstance<abcA> ();
+            var cc = Singleton.GetInstance<abcA> ();
             Assert.True (aa == cc);
             Assert.True (bb == cc);
             try
@@ -50,16 +50,16 @@ namespace Brochure.Core.Test.server
             //测试接口
             try
             {
-                var s11 = AbSingleton.GetInstance<S1> ();
+                var s11 = Singleton.GetInstance<S1> ();
                 Assert.False (false);
             }
             catch (Exception)
             {
                 Assert.True (true);
             }
-            AbSingleton.Regist<S1> ();
-            var s1 = AbSingleton.GetInstance<S1> ();
-            var s2 = AbSingleton.GetInstance<IS1> ();
+            Singleton.Regist<S1> ();
+            var s1 = Singleton.GetInstance<S1> ();
+            var s2 = Singleton.GetInstance<IS1> ();
             Assert.True (s1 == s2);
         }
 

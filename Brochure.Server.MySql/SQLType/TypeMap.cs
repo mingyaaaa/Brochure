@@ -6,7 +6,7 @@ using Brochure.Core.Server.Abstracts;
 
 namespace Brochure.Core.Server.SQLMap
 {
-    public class MySqlTypeMap : AbTypeMap
+    public class MySqlTypeMap : ATypeMap
     {
         public override void InitMap ()
         {

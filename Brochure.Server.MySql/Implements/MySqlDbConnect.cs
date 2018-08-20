@@ -15,17 +15,15 @@ namespace Brochure.Server.MySql
         private IDictionary<string, IDbData> _baseDic;
         private MySqlTransaction _transaction;
 
-        private ISqlParse _parse;
-        internal MySqlDbConnect (string connectString, ISqlParse sqlParse)
+        internal MySqlDbConnect (string connectString)
         {
             //注册表映射类型
-            AbSingleton.Regist<MySqlTypeMap> ();
+            Singleton.Regist<MySqlTypeMap> ();
             _connection = new MySqlConnection (connectString);
             _baseDic = new Dictionary<string, IDbData> ();
-            _parse = sqlParse;
             Open ();
         }
-        internal MySqlDbConnect (string connectString, ISqlParse sqlParse, bool isbeginTransation) : this (connectString, sqlParse)
+        internal MySqlDbConnect (string connectString, bool isbeginTransation) : this (connectString)
         {
             if (isbeginTransation)
                 _transaction = _connection.BeginTransaction ();
@@ -34,14 +32,14 @@ namespace Brochure.Server.MySql
         {
             var commond = new MySqlCommand ();
             commond.Connection = _connection;
-            return new MySqlDatabase (commond, _parse);
+            return new MySqlDatabase (commond);
         }
 
         public IDbTableBase GetTableHub ()
         {
             var commond = new MySqlCommand ();
             commond.Connection = _connection;
-            return new MySqlDatabase (commond, _parse);
+            return new MySqlDatabase (commond);
         }
 
         public IDbData GetDataHub (string tableName)
@@ -52,7 +50,7 @@ namespace Brochure.Server.MySql
             var commond = new MySqlCommand ();
             commond.Connection = _connection;
             commond.Transaction = _transaction;
-            var table = new MySqlDatabase (key, commond, _parse);
+            var table = new MySqlDatabase (key, commond);
             _baseDic.Add (key, table);
             return table;
         }

@@ -7,13 +7,13 @@ using Brochure.Core.Interfaces;
 
 namespace Brochure.Core.Abstracts
 {
-    public abstract class AbSingleton
+    public abstract class Singleton
     {
         private static object lockObj = new object ();
-        protected AbSingleton ()
+        protected Singleton ()
         {
             var type = this.GetType ();
-            if (type == typeof (AbSingleton))
+            if (type == typeof (Singleton))
                 throw new TypeLoadException ("无法创建AbSingleton的实例");
             if (_dic.ContainsKey (type))
                 throw new TypeLoadException ("单例类无法创建对象,请通过GetInstace方法获取实例对象");
@@ -23,7 +23,7 @@ namespace Brochure.Core.Abstracts
                     _dic.Add (type, this);
             }
         }
-        public static IDictionary<Type, AbSingleton> _dic = new Dictionary<Type, AbSingleton> ();
+        public static IDictionary<Type, Singleton> _dic = new Dictionary<Type, Singleton> ();
         public static T GetInstance<T> ()
         {
             var type = typeof (T);
@@ -32,7 +32,7 @@ namespace Brochure.Core.Abstracts
                 throw new TypeLoadException ($"没有注册{type.Name}的类型");
             return (T) (object) _dic[insType];
         }
-        public static void Regist<T> () where T : AbSingleton
+        public static void Regist<T> () where T : Singleton
         {
             var type = typeof (T);
             var insType = GetAbSingletonType (type);

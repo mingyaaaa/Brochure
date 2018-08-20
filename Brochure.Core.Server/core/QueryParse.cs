@@ -1,11 +1,12 @@
 using System;
+using Brochure.Core.Abstracts;
 using Brochure.Core.Querys;
 using Brochure.Core.Server.Interfaces;
 using Irony.Parsing;
 
 namespace Brochure.Core.Server.core
 {
-    public class QueryParse
+    public class QueryParse : Singleton
     {
         private ISqlParse _parse;
         public QueryParse (ISqlParse parse)

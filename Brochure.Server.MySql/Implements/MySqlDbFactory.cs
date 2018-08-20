@@ -17,12 +17,7 @@ namespace Brochure.Server.MySql.Implements
             var connectString = string.Format (_connectStr, Address, UserName, Password, Port);
             if (!string.IsNullOrWhiteSpace (DatabaseName))
                 connectString = $"{connectString} Database={DatabaseName};";
-            return new MySqlDbConnect (connectString, _parse);
-        }
-
-        public override void InitParse ()
-        {
-            _parse = new MySqlParse ();
+            return new MySqlDbConnect (connectString);
         }
     }
 }

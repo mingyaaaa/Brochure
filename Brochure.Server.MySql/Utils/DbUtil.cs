@@ -24,7 +24,7 @@ namespace Brochure.Server.MySql.Utils
             var typeInfo = type.GetTypeInfo ();
             var props = typeInfo.GetRuntimeProperties ();
             var columSqls = new List<string> ();
-            var typeMap = AbSingleton.GetInstance<AbTypeMap> ();
+            var typeMap = Singleton.GetInstance<ATypeMap> ();
             var tableName = GetTableName<T> ();
             foreach (var item in props)
             {
@@ -111,7 +111,7 @@ namespace Brochure.Server.MySql.Utils
         public static MySqlParameter[] GetDbParams (IRecord param)
         {
             var result = new List<MySqlParameter> ();
-            var sqlTypeMap = AbSingleton.GetInstance<AbTypeMap> ();
+            var sqlTypeMap = Singleton.GetInstance<ATypeMap> ();
             foreach (var item in param.Keys.ToList ())
             {
                 var mParams = new MySqlParameter (item, param[item]);

@@ -4,9 +4,9 @@ using Brochure.Core.Abstracts;
 
 namespace Brochure.Core.Server.Abstracts
 {
-    public abstract class AbTypeMap : AbSingleton
+    public abstract class ATypeMap : Singleton
     {
-        protected AbTypeMap ()
+        protected ATypeMap ()
         {
             InitMap ();
         }
