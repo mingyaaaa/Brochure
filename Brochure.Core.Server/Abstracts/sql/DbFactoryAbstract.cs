@@ -1,12 +1,13 @@
-using Brochure.Core.Abstracts;
-using Brochure.Core.Server.Interfaces;
+﻿using Brochure.Core.Server.Interfaces;
 
 namespace Brochure.Core.Server.Abstracts
 {
-    public abstract class DbFactoryAbstract : Singleton
+    public abstract class DbFactoryAbstract
     {
 
-        protected DbFactoryAbstract (string address, string userName, string password, string port, string databaseName)
+        protected DbFactoryAbstract(string address, string userName,
+                                   string password, string port,
+                                   string databaseName)
         {
             Address = address;
             UserName = userName;
@@ -19,6 +20,7 @@ namespace Brochure.Core.Server.Abstracts
         public string Password { get; set; }
         public string Port { get; set; }
         public string DatabaseName { get; set; }
-        public abstract IDbConnect GetDbConnect ();
+        public static TypeMap TypeMap { get; set; }
+        public abstract IDbConnect GetDbConnect();
     }
 }

@@ -1,9 +1,5 @@
-namespace Brochure.Core.Querys
+﻿namespace Brochure.Core.Querys
 {
-    public class QueryOperation
-    {
-
-    }
     public class QueryOperationType
     {
         public const string Eq = "=";

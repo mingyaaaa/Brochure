@@ -10,3 +10,6 @@ Brochure.Server.MySql/obj/
 Brochure.Core.Server/bin/
 Brochure.Core.Server/obj/
 .vscode/
+/.vs/Brochure
+/Brochure.Core/.vs/Brochure.Core
+/Brochure.Server.MySql/Brochure.Server.MySql.csproj.user

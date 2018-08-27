@@ -3,6 +3,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Core\" />
+    <PackageReference Include="AspectCore.Core" Version="0.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Abstracts\" />
   </ItemGroup>
 </Project>
