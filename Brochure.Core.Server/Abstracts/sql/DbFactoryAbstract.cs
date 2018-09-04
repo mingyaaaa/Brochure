@@ -1,6 +1,4 @@
-﻿using Brochure.Core.Server.Interfaces;
-
-namespace Brochure.Core.Server.Abstracts
+﻿namespace Brochure.Core.Server
 {
     public abstract class DbFactoryAbstract
     {

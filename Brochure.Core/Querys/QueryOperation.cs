@@ -1,4 +1,4 @@
-﻿namespace Brochure.Core.Querys
+﻿namespace Brochure.Core
 {
     public class QueryOperationType
     {

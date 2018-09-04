@@ -1,5 +1,4 @@
-using System;
-using Brochure.Core.System;
+﻿using System;
 using Xunit;
 
 namespace Brochure.Core.Test
@@ -7,7 +6,7 @@ namespace Brochure.Core.Test
     public class BaseTypeTest
     {
         [Fact]
-        public void TestName ()
+        public void TestName()
         {
             //Given
             var a = 1;
@@ -16,23 +15,23 @@ namespace Brochure.Core.Test
             var d = DateTime.Now;
             byte e = 1;
             long f = 1;
-            var type = a.GetType ();
-            Assert.Equal (BaseType.Int, type.Name);
+            var type = a.GetType();
+            Assert.Equal(BaseType.Int, type.Name);
 
-            type = b.GetType ();
-            Assert.Equal (BaseType.Float, type.Name);
+            type = b.GetType();
+            Assert.Equal(BaseType.Float, type.Name);
 
-            type = c.GetType ();
-            Assert.Equal (BaseType.Double, type.Name);
+            type = c.GetType();
+            Assert.Equal(BaseType.Double, type.Name);
 
-            type = d.GetType ();
-            Assert.Equal (BaseType.DateTime, type.Name);
+            type = d.GetType();
+            Assert.Equal(BaseType.DateTime, type.Name);
 
-            type = e.GetType ();
-            Assert.Equal (BaseType.Byte, type.Name);
+            type = e.GetType();
+            Assert.Equal(BaseType.Byte, type.Name);
 
-            type = f.GetType ();
-            Assert.Equal (BaseType.Long, type.Name);
+            type = f.GetType();
+            Assert.Equal(BaseType.Long, type.Name);
             //When
 
             //Then

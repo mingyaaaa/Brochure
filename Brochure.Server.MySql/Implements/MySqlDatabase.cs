@@ -1,21 +1,12 @@
-using Brochure.Core.Enums;
-using Brochure.Core.Extends;
-using Brochure.Core.Implements;
-using Brochure.Core.Interfaces;
-using Brochure.Core.Model;
-using Brochure.Core.Querys;
-using Brochure.Core.Server.Abstracts;
-using Brochure.Core.Server.core;
-using Brochure.Core.Server.Interfaces;
-using Brochure.Core.Server.Models;
-using Brochure.Server.MySql.Utils;
+using Brochure.Core;
+using Brochure.Core.Server;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Brochure.Server.MySql.Implements
+namespace Brochure.Server.MySql
 {
     public class MySqlDatabase : IDbTableBase, IDbDatabase, IDbData
     {

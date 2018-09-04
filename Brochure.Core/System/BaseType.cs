@@ -1,4 +1,4 @@
-namespace Brochure.Core.System
+﻿namespace Brochure.Core
 {
     public class BaseType
     {

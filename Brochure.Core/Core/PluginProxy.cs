@@ -1,7 +1,6 @@
-﻿using Brochure.Core.Interfaces;
-using System;
+﻿using System;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
     public class PluginProxy
     {
@@ -11,7 +10,12 @@ namespace Brochure.Core.Core
         public PluginProxy(IPlugins plugin)
         {
             _plugin = plugin;
+        }
 
+        public PluginProxy(string configPath)
+        {
+            var record = JsonUtil.ReadJson(configPath);
+            _plugin = record.As<IPlugins>();
         }
         public void Start()
         {

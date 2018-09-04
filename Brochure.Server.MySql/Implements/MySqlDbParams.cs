@@ -1,15 +1,13 @@
-using System.Collections.Generic;
-using Brochure.Core.Implements;
-using Brochure.Core.Interfaces;
-using Brochure.Core.Server.Interfaces;
+﻿using Brochure.Core;
+using Brochure.Core.Server;
 
-namespace Brochure.Server.MySql.Implements
+namespace Brochure.Server.MySql
 {
     public class MySqlDbParams : IDbParams
     {
-        public MySqlDbParams ()
+        public MySqlDbParams()
         {
-            Params = new Record ();
+            Params = new Record();
         }
         public string ParamSymbol => "@";
         public string Sql { get; set; }

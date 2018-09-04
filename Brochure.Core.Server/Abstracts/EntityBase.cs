@@ -1,8 +1,6 @@
 using System;
-using Brochure.Core;
-using Brochure.Core.Atrributes;
 
-namespace Brochure.Core.Server.Abstracts
+namespace Brochure.Core.Server
 {
     public abstract class EntityBase
     {
@@ -10,7 +8,7 @@ namespace Brochure.Core.Server.Abstracts
         /// 主建
         /// </summary>
         /// <returns></returns>
-        public Guid Id { get; set; } = Guid.NewGuid ();
+        public Guid Id { get; set; } = Guid.NewGuid();
         /// <summary>
         /// 创建时间
         /// </summary>

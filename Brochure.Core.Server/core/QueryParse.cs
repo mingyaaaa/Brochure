@@ -1,9 +1,7 @@
-﻿using Brochure.Core.Querys;
-using Brochure.Core.Server.Interfaces;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 using System;
 
-namespace Brochure.Core.Server.core
+namespace Brochure.Core.Server
 {
     public class QueryParse
     {

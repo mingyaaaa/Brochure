@@ -1,7 +1,6 @@
-﻿using Brochure.Core.Interfaces;
-using Irony.Parsing;
+﻿using Irony.Parsing;
 
-namespace Brochure.Core.Server.Interfaces
+namespace Brochure.Core.Server
 {
     public interface IDbConnect
     {

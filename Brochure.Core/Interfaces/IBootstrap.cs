@@ -1,4 +1,4 @@
-﻿namespace Brochure.Core.Interfaces
+﻿namespace Brochure.Core
 {
     public interface IBootstrap
     {

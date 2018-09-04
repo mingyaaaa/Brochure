@@ -1,4 +1,3 @@
-using Brochure.Core.Extends;
 using System;
 using Xunit;
 namespace Brochure.Core.Test
@@ -7,6 +6,20 @@ namespace Brochure.Core.Test
     {
         a = 1,
         b = 2
+    }
+
+    public class A
+    {
+        public string AStr { get; set; }
+        public B BObject { get; set; }
+        public int C { get; set; }
+        public DateTime DateTime { get; set; }
+    }
+    public class B
+    {
+        public string BStr { get; set; }
+        public int C { get; set; }
+        public DateTime DateTime { get; set; }
     }
     public class AsTest
     {
@@ -122,6 +135,33 @@ namespace Brochure.Core.Test
             Assert.Null(obj.As<string>());
             Assert.Equal(default(DateTime), obj.As<DateTime>());
 
+        }
+
+        [Fact]
+        public void RecordTo()
+        {
+            var a = new A();
+            a.AStr = "AStr";
+            a.C = 0;
+            a.DateTime = DateTime.Now;
+            var b = new B();
+            b.BStr = "BStr";
+            b.C = 1;
+            b.DateTime = DateTime.Now.AddDays(-1);
+            a.BObject = b;
+            var ar = a.As<IRecord>();
+            Assert.True(ar.ContainsKey(nameof(a.AStr)));
+            Assert.True(ar.ContainsKey(nameof(a.BObject)));
+            Assert.True(ar.ContainsKey(nameof(a.C)));
+            Assert.True(ar.ContainsKey(nameof(a.DateTime)));
+            Assert.Equal(a.AStr, ar[nameof(a.AStr)]);
+            Assert.Equal(a.C, ar[nameof(a.C)]);
+            Assert.Equal(a.DateTime, ar[nameof(a.DateTime)]);
+            Assert.Equal(a.AStr, ar[nameof(a.AStr)]);
+            var br = ar[nameof(a.BObject)].As<IRecord>();
+            Assert.Equal(b.BStr, br[nameof(b.BStr)]);
+            Assert.Equal(b.C, br[nameof(b.C)]);
+            Assert.Equal(b.DateTime, br[nameof(b.DateTime)]);
         }
     }
 }

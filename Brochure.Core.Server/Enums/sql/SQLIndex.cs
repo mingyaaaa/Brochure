@@ -1,4 +1,4 @@
-namespace Brochure.Core.Server.Enums
+﻿namespace Brochure.Core.Server
 {
     public class SQLIndex
     {

@@ -1,11 +1,11 @@
-﻿using Brochure.Core.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
-    public class PluginManagers
+    public class PluginManagers : IPluginManagers
     {
         private IDictionary<Guid, IPlugins> pluginDic;
 
@@ -32,6 +32,13 @@ namespace Brochure.Core.Core
         public List<IPlugins> GetPlugins()
         {
             return pluginDic.Values.ToList();
+        }
+
+        public static string GetPluginPath()
+        {
+            var bathPath = AppDomain.CurrentDomain.BaseDirectory;
+            var pluginPath = Path.Combine(bathPath, "Plugin");
+            return pluginPath;
         }
     }
 }

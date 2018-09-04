@@ -1,4 +1,4 @@
-namespace Brochure.Core.Enums
+﻿namespace Brochure.Core
 {
     public enum OrderType
     {

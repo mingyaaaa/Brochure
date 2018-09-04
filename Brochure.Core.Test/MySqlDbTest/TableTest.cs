@@ -1,9 +1,5 @@
-﻿using Brochure.Core.Server.Abstracts;
-using Brochure.Core.Server.Attributes;
-using Brochure.Core.Server.Enums;
-using Brochure.Core.Server.Interfaces;
-using Brochure.Server.MySql.Implements;
-using Brochure.Server.MySql.Utils;
+﻿using Brochure.Core.Server;
+using Brochure.Server.MySql;
 using Xunit;
 
 namespace Brochure.Core.Test.MySqlDbTest

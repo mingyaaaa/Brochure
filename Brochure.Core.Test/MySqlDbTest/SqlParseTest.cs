@@ -1,6 +1,5 @@
-﻿using Brochure.Core.Querys;
-using Brochure.Core.Server.core;
-using Brochure.Server.MySql.Utils;
+﻿using Brochure.Core.Server;
+using Brochure.Server.MySql;
 using System;
 using System.Linq;
 using Xunit;

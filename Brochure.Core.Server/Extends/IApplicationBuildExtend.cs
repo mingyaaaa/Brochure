@@ -1,4 +1,4 @@
-﻿namespace Brochure.Core.Server.Extends
+﻿namespace Brochure.Core.Server
 {
     public static class IApplicationBuildExtend
     {

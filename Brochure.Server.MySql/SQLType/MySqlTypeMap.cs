@@ -1,7 +1,7 @@
-﻿using Brochure.Core.Server.Abstracts;
+﻿using Brochure.Core.Server;
 using System;
 
-namespace Brochure.Core.Server.SQLMap
+namespace Brochure.Server.MySql
 {
     public class MySqlTypeMap : TypeMap
     {

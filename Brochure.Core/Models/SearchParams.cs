@@ -1,21 +1,17 @@
-using Brochure.Core.Enums;
-using Brochure.Core.Implements;
-using Brochure.Core.Interfaces;
-using Brochure.Core.Querys;
-namespace Brochure.Core.Model
+namespace Brochure.Core
 {
     public class SearchParams
     {
-        public SearchParams ()
+        public SearchParams()
         {
-            OrderField = new Record ();
+            OrderField = new Record();
             OrderField["CreateTime"] = OrderType.Desc;
         }
-        public SearchParams (Query query)
+        public SearchParams(Query query)
         {
             Filter = query;
         }
-        public SearchParams (Query query, int star, int end)
+        public SearchParams(Query query, int star, int end)
         {
             Filter = query;
             StarIndex = star;

@@ -1,8 +1,7 @@
-using System;
-namespace Brochure.Core.Interfaces
+﻿namespace Brochure.Core
 {
-    public interface IBConverables<T>
+    public interface IBConverables
     {
-        T Conver ();
+        T Conver<T>();
     }
 }

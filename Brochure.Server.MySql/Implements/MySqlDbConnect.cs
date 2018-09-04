@@ -1,9 +1,9 @@
-﻿using Brochure.Core.Server.Interfaces;
-using Brochure.Server.MySql.Implements;
+﻿using Brochure.Core.Server;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 namespace Brochure.Server.MySql
 {
     public class MySqlDbConnect : IDbConnect, IDisposable

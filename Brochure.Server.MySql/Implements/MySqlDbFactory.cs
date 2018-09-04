@@ -1,8 +1,6 @@
-﻿using Brochure.Core.Server.Abstracts;
-using Brochure.Core.Server.Interfaces;
-using Brochure.Core.Server.SQLMap;
+﻿using Brochure.Core.Server;
 
-namespace Brochure.Server.MySql.Implements
+namespace Brochure.Server.MySql
 {
     public class MySqlDbFactory : DbFactoryAbstract
     {

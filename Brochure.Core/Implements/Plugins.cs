@@ -1,8 +1,7 @@
-﻿using Brochure.Core.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Brochure.Core.Implements
+namespace Brochure.Core
 {
     public class Plugins : IPlugins
     {
@@ -18,6 +17,10 @@ namespace Brochure.Core.Implements
         }
 
         public Guid Key { get; }
+        public string Name { get; }
+        public long Version { get; }
+        public string Author { get; }
+        public string AssemblyName { get; }
         public List<Guid> DependencesKey { get; }
     }
 }

@@ -1,19 +1,12 @@
-using Brochure.Core.Atrributes;
-using Brochure.Core.Implements;
-using Brochure.Core.Interfaces;
-using Brochure.Core.Querys;
-using Brochure.Core.Server.Abstracts;
-using Brochure.Core.Server.Attributes;
-using Brochure.Core.Server.Interfaces;
-using Brochure.Core.System;
-using Brochure.Server.MySql.Implements;
+using Brochure.Core;
+using Brochure.Core.Server;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Brochure.Server.MySql.Utils
+namespace Brochure.Server.MySql
 {
     public static class DbUtil
     {
