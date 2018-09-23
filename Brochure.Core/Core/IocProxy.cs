@@ -1,5 +1,6 @@
 ﻿using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
+using AspectCore.Injector;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -10,16 +11,15 @@ namespace Brochure.Core
     /// </summary>
     public class IocProxy
     {
-        private IServiceCollection _services;
-        private IServiceProvider _serviceProvider;
-        public IocProxy(IServiceCollection services, IServiceProvider serviceProvider)
+        private IServiceContainer _services;
+        public IocProxy(IServiceCollection services)
         {
-            _services = services;
+            _services = services.ToServiceContainer();
+
             services.AddDynamicProxy(config =>
             {
 
             });
-            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
         public IocProxy AddTransient(Type serviceType, Type implementationType)
         {
-            _services.AddTransient(serviceType, implementationType);
+            _services.AddType(serviceType, implementationType);
             return this;
         }
 
@@ -49,11 +49,11 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
-        public IocProxy AddTransient(Type serviceType, Func<IServiceProvider, object> implementationFactory)
-        {
-            _services.AddTransient(serviceType, implementationFactory);
-            return this;
-        }
+        //public IocProxy AddTransient(Type serviceType, Func<IServiceProvider, object> implementationFactory)
+        //{
+        //    _services.AddType(serviceType, implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService" /> with an
@@ -68,7 +68,7 @@ namespace Brochure.Core
         public IocProxy AddTransient<TService, TImplementation>()
             where TService : class where TImplementation : class, TService
         {
-            _services.AddTransient<TService, TImplementation>();
+            _services.AddType<TService, TImplementation>();
             return this;
         }
 
@@ -82,7 +82,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
         public IocProxy AddTransient(Type serviceType)
         {
-            _services.AddTransient(serviceType);
+            _services.AddType(serviceType);
             return this;
         }
 
@@ -96,7 +96,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
         public IocProxy AddTransient<TService>() where TService : class
         {
-            _services.AddTransient<TService>();
+            _services.AddType<TService>();
             return this;
         }
 
@@ -110,12 +110,12 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
-        public IocProxy AddTransient<TService>(Func<IServiceProvider, TService> implementationFactory)
-            where TService : class
-        {
-            _services.AddTransient<TService>(implementationFactory);
-            return this;
-        }
+        //public IocProxy AddTransient<TService>(Func<IServiceProvider, TService> implementationFactory)
+        //    where TService : class
+        //{
+        //    _services.AddType<TService>(implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService" /> with an
@@ -129,13 +129,13 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient" />
-        public IocProxy AddTransient<TService, TImplementation>(
-            Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
-            where TImplementation : class, TService
-        {
-            _services.AddTransient<TService, TImplementation>(implementationFactory);
-            return this;
-        }
+        //public IocProxy AddTransient<TService, TImplementation>(
+        //    Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
+        //    where TImplementation : class, TService
+        //{
+        //    _services.AddTransient<TService, TImplementation>(implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a scoped service of the type specified in <paramref name="serviceType" /> with an
@@ -149,7 +149,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
         public IocProxy AddScoped(Type serviceType, Type implementationType)
         {
-            _services.AddScoped(serviceType, implementationType);
+            _services.AddType(serviceType, implementationType, Lifetime.Scoped);
             return this;
         }
 
@@ -163,11 +163,11 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
-        public IocProxy AddScoped(Type serviceType, Func<IServiceProvider, object> implementationFactory)
-        {
-            _services.AddScoped(serviceType, implementationFactory);
-            return this;
-        }
+        //public IocProxy AddScoped(Type serviceType, Func<IServiceProvider, object> implementationFactory)
+        //{
+        //    _services.AddScoped(serviceType, implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a scoped service of the type specified in <typeparamref name="TService" /> with an
@@ -182,7 +182,7 @@ namespace Brochure.Core
         public IocProxy AddScoped<TService, TImplementation>()
             where TService : class where TImplementation : class, TService
         {
-            _services.AddScoped<TService, TImplementation>();
+            _services.AddType<TService, TImplementation>(Lifetime.Scoped);
             return this;
         }
 
@@ -196,7 +196,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
         public IocProxy AddScoped(Type serviceType)
         {
-            _services.AddScoped(serviceType);
+            _services.AddType(serviceType, Lifetime.Scoped);
             return this;
         }
 
@@ -210,7 +210,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
         public IocProxy AddScoped<TService>() where TService : class
         {
-            _services.AddScoped<TService>();
+            _services.AddType<TService>(Lifetime.Scoped);
             return this;
         }
 
@@ -224,12 +224,12 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
-        public IocProxy AddScoped<TService>(Func<IServiceProvider, TService> implementationFactory)
-            where TService : class
-        {
-            _services.AddScoped<TService>(implementationFactory);
-            return this;
-        }
+        //public IocProxy AddScoped<TService>(Func<IServiceProvider, TService> implementationFactory)
+        //    where TService : class
+        //{
+        //    _services.AddScoped<TService>(implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a scoped service of the type specified in <typeparamref name="TService" /> with an
@@ -243,13 +243,13 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped" />
-        public IocProxy AddScoped<TService, TImplementation>(
-            Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
-            where TImplementation : class, TService
-        {
-            _services.AddScoped<TService, TImplementation>(implementationFactory);
-            return this;
-        }
+        //public IocProxy AddScoped<TService, TImplementation>(
+        //    Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
+        //    where TImplementation : class, TService
+        //{
+        //    _services.AddScoped<TService, TImplementation>(implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a singleton service of the type specified in <paramref name="serviceType" /> with an
@@ -263,7 +263,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
         public IocProxy AddSingleton(Type serviceType, Type implementationType)
         {
-            _services.AddSingleton(serviceType, implementationType);
+            _services.AddInstance(serviceType, implementationType);
             return this;
         }
 
@@ -277,11 +277,11 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
-        public IocProxy AddSingleton(Type serviceType, Func<IServiceProvider, object> implementationFactory)
-        {
-            _services.AddSingleton(serviceType, implementationFactory);
-            return this;
-        }
+        //public IocProxy AddSingleton(Type serviceType, Func<IServiceProvider, object> implementationFactory)
+        //{
+        //    _services.AddSingleton(serviceType, implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a singleton service of the type specified in <typeparamref name="TService" /> with an
@@ -296,7 +296,7 @@ namespace Brochure.Core
         public IocProxy AddSingleton<TService, TImplementation>()
             where TService : class where TImplementation : class, TService
         {
-            _services.AddSingleton<TService, TImplementation>();
+            _services.AddType<TService, TImplementation>(Lifetime.Singleton);
             return this;
         }
 
@@ -310,7 +310,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
         public IocProxy AddSingleton(Type serviceType)
         {
-            _services.AddSingleton(serviceType);
+            _services.AddInstance(serviceType);
             return this;
         }
 
@@ -324,7 +324,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
         public IocProxy AddSingleton<TService>() where TService : class
         {
-            _services.AddSingleton<TService>();
+            _services.AddType<TService>(Lifetime.Scoped);
             return this;
         }
 
@@ -338,12 +338,12 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
-        public IocProxy AddSingleton<TService>(Func<IServiceProvider, TService> implementationFactory)
-            where TService : class
-        {
-            _services.AddSingleton<TService>();
-            return this;
-        }
+        //public IocProxy AddSingleton<TService>(Func<IServiceProvider, TService> implementationFactory)
+        //    where TService : class
+        //{
+        //    _services.AddSingleton<TService>();
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a singleton service of the type specified in <typeparamref name="TService" /> with an
@@ -357,13 +357,13 @@ namespace Brochure.Core
         /// <param name="implementationFactory">The factory that creates the service.</param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
-        public IocProxy AddSingleton<TService, TImplementation>(
-            Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
-            where TImplementation : class, TService
-        {
-            _services.AddSingleton<TService, TImplementation>(implementationFactory);
-            return this;
-        }
+        //public IocProxy AddSingleton<TService, TImplementation>(
+        //    Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
+        //    where TImplementation : class, TService
+        //{
+        //    _services.AddSingleton<TService, TImplementation>(implementationFactory);
+        //    return this;
+        //}
 
         /// <summary>
         /// Adds a singleton service of the type specified in <paramref name="serviceType" /> with an
@@ -377,7 +377,7 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
         public IocProxy AddSingleton(Type serviceType, object implementationInstance)
         {
-            _services.AddSingleton(serviceType, implementationInstance);
+            _services.AddInstance(serviceType, implementationInstance);
             return this;
         }
 
@@ -392,24 +392,26 @@ namespace Brochure.Core
         /// <seealso cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton" />
         public IocProxy AddSingleton<TService>(TService implementationInstance) where TService : class
         {
-            _services.AddSingleton<TService>(implementationInstance);
+            _services.AddInstance(implementationInstance);
             return this;
         }
 
         public IocProxy AddDynamicProxy<TInterceptor>() where TInterceptor : IInterceptor
         {
-            _services.AddDynamicProxy(config => { config.Interceptors.AddTyped<TInterceptor>(); });
+            _services.Configure(config => { config.Interceptors.AddTyped<TInterceptor>(); });
             return this;
         }
-        public IocProxy AddInterfaceProxy<TInterceptor>(ServiceLifetime serviceLifetime) where TInterceptor : IInterceptor
-        {
-            _services.AddInterfaceProxy<TInterceptor>((Microsoft.Extensions.DependencyInjection.ServiceLifetime)serviceLifetime);
-            return this;
-        }
+        //public IocProxy AddInterfaceProxy<TInterceptor>(ServiceLifetime serviceLifetime) where TInterceptor : IInterceptor
+        //{
+        //    _services
+        //    _services.AddInterfaceProxy<TInterceptor>((Microsoft.Extensions.DependencyInjection.ServiceLifetime)serviceLifetime);
+        //    return this;
+        //}
 
         public TService GetServices<TService>() where TService : class
         {
-            return _serviceProvider.GetService<TService>();
+            var solve = _services.Build();
+            return solve.GetService<TService>();
         }
     }
 

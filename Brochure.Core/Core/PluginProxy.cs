@@ -1,32 +1,53 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Loader;
 
 namespace Brochure.Core
 {
-    public class PluginProxy
+    public class PluginProxy : IPlugins
     {
+        //此处存储的为PluginProxy
         private IPlugins _plugin;
-        public Func<Guid, bool> StartingHandle;
-        public Func<Guid, bool> EndingHandle;
-        public PluginProxy(IPlugins plugin)
+        private AssemblyLoadContext _loadContext;
+        public PluginProxy(IPlugins plugin, AssemblyLoadContext assemblyLoadContext)
         {
             _plugin = plugin;
-        }
-
-        public PluginProxy(string configPath)
-        {
-            var record = JsonUtil.ReadJson(configPath);
-            _plugin = record.As<IPlugins>();
+            _loadContext = assemblyLoadContext;
         }
         public void Start()
         {
-            if (StartingHandle != null && StartingHandle.Invoke(_plugin.Key))
-                _plugin.Start();
+            _plugin.Start();
         }
 
         public void Exit()
         {
-            if (EndingHandle != null && EndingHandle.Invoke(_plugin.Key))
-                _plugin.Start();
+            _plugin.Exit();
+        }
+
+        public Guid Key => _plugin.Key;
+        public string Name => _plugin.Name;
+        public long Version => _plugin.Version;
+        public string Author => _plugin.Author;
+        public string AssemblyName => _plugin.AssemblyName;
+        public List<Guid> DependencesKey => _plugin.DependencesKey;
+        public bool Starting()
+        {
+            return _plugin.Starting();
+        }
+
+        public void Started()
+        {
+            _plugin.Started();
+        }
+
+        public bool Exiting()
+        {
+            return _plugin.Exiting();
+        }
+
+        public void Exited()
+        {
+            _plugin.Exited();
         }
     }
 }

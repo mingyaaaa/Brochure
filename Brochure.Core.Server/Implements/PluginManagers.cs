@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Brochure.Core
+namespace Brochure.Core.Server
 {
     public class PluginManagers : IPluginManagers
     {
@@ -13,15 +13,20 @@ namespace Brochure.Core
         public PluginManagers(IocProxy iocProxy)
         {
             pluginDic = new Dictionary<Guid, IPlugins>();
+            var services = iocProxy.GetServices<IServiceCollection>();
+            _mvcBuilder = services.AddMvcCore();
         }
 
         public void Regist(IPlugins plugin)
         {
+            var assembly = plugin.GetType().Assembly;
+            _mvcBuilder.AddApplicationPart(assembly);
             pluginDic.Add(plugin.Key, plugin);
         }
 
         public void Remove(IPlugins plugin)
         {
+            _mvcBuilder.PartManager.ApplicationParts.Remove(t => t.Name == plugin.AssemblyName);
             pluginDic.Remove(plugin.Key);
         }
 

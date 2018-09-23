@@ -7,7 +7,7 @@ namespace Brochure.Core
     {
         void Regist(IPlugins plugin);
 
-        void Remove(Guid key);
+        void Remove(IPlugins plugin);
 
         IPlugins GetPlugin(Guid key);
 

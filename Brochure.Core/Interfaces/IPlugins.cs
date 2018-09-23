@@ -13,6 +13,10 @@ namespace Brochure.Core
         string Author { get; }
         string AssemblyName { get; }
         List<Guid> DependencesKey { get; }
+        bool Starting();
+        void Started();
+        bool Exiting();
+        void Exited();
 
     }
 }

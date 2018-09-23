@@ -11,7 +11,7 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="mvcBuilder"></param>
         /// <param name="assembly"></param>
-        public static void LoadPluginAssembyl(IMvcBuilder mvcBuilder, Assembly assembly)
+        public static void LoadPluginAssembyl(this IMvcBuilder mvcBuilder, Assembly assembly)
         {
             if (mvcBuilder == null)
             {

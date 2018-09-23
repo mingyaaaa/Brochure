@@ -22,5 +22,24 @@ namespace Brochure.Core
         public string Author { get; }
         public string AssemblyName { get; }
         public List<Guid> DependencesKey { get; }
+        public virtual bool Starting()
+        {
+            return true;
+        }
+
+        public virtual void Started()
+        {
+
+        }
+
+        public virtual bool Exiting()
+        {
+            return true;
+        }
+
+        public virtual void Exited()
+        {
+
+        }
     }
 }

@@ -13,3 +13,4 @@ Brochure.Core.Server/obj/
 /.vs/Brochure
 /Brochure.Core/.vs/Brochure.Core
 /Brochure.Server.MySql/Brochure.Server.MySql.csproj.user
+/.vs
