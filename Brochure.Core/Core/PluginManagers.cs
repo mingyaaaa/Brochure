@@ -10,7 +10,7 @@ namespace Brochure.Core
     {
         private IDictionary<Guid, IPlugins> pluginDic;
         private IMvcCoreBuilder _mvcBuilder;
-        public PluginManagers(IocProxy iocProxy)
+        public PluginManagers()
         {
             pluginDic = new Dictionary<Guid, IPlugins>();
         }

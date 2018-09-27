@@ -23,7 +23,4 @@
       <PackageReference Include="mysql.data" Version="8.0.12" />
           <PackageReference Include="Irony.NetCore" Version="1.0.11" />
     </ItemGroup>
-      <ItemGroup>
-        <Folder Include="server\" />
-      </ItemGroup>
 </Project>

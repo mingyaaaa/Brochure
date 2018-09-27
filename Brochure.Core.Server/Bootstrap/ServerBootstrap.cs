@@ -1,21 +1,22 @@
-﻿using Brochure.Core.Interfaces;
+﻿using AspectCore.Injector;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
 namespace Brochure.Core.Server
 {
     public class ServerBootstrap : IBootstrap
     {
-        private IocProxy _proxy { get; set; }
+        [FromContainer]
+        private IMvcCoreBuilder mvcCoreBuilder { get; set; }
 
-        public ServerBootstrap(IocProxy proxy)
+        public ServerBootstrap()
         {
-            _proxy = proxy;
         }
         public void Start()
         {
             //查询所有的插件信息
-            var pluginManager = _proxy.GetServices<IPluginManagers>();
-            var context = _proxy.GetServices<IContext>();
+            var pluginManager = new PluginManagers(mvcCoreBuilder);
+            var context = new Context();
             var pluginPathDir = Core.PluginManagers.GetPluginPath();
             var configFiles = Directory.GetFiles(pluginPathDir, "plugin.json");
             foreach (var configFile in configFiles)
@@ -28,6 +29,7 @@ namespace Brochure.Core.Server
                 if (plugin.Starting())
                     plugin.Start();
             }
+
         }
 
         public void Exit(IPlugins[] plugins)

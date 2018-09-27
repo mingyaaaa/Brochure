@@ -1,6 +1,6 @@
 ﻿using Brochure.Core.Interfaces;
 
-namespace Brochure.Core.Server.Implements
+namespace Brochure.Core.Server
 {
     public class Context : IContext
     {

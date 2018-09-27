@@ -10,11 +10,10 @@ namespace Brochure.Core.Server
     {
         private IDictionary<Guid, IPlugins> pluginDic;
         private IMvcCoreBuilder _mvcBuilder;
-        public PluginManagers(IocProxy iocProxy)
+        public PluginManagers(IMvcCoreBuilder mvcBuilder)
         {
             pluginDic = new Dictionary<Guid, IPlugins>();
-            var services = iocProxy.GetServices<IServiceCollection>();
-            _mvcBuilder = services.AddMvcCore();
+            _mvcBuilder = mvcBuilder;
         }
 
         public void Regist(IPlugins plugin)
