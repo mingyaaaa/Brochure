@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Brochure.Core
@@ -16,6 +17,15 @@ namespace Brochure.Core
                 return null;
             var jsonStr = File.ReadAllText(filePath);
             var record = JsonConvert.DeserializeObject<IRecord>(jsonStr);
+            return record;
+        }
+
+        public static List<IRecord> ReadArrayJson(string filePath)
+        {
+            if (!File.Exists(filePath))
+                return null;
+            var jsonStr = File.ReadAllText(filePath);
+            var record = JsonConvert.DeserializeObject<List<IRecord>>(jsonStr);
             return record;
         }
     }

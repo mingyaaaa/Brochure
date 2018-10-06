@@ -29,5 +29,18 @@ namespace Brochure.Core
                 fun = t => t.ToString();
             return string.Join(separator, list.Select(fun));
         }
+
+        public static List<T2> OfType<T1, T2>(this IEnumerable<T1> list, Func<T1, T2> fun)
+        {
+            if (fun == null)
+                return list.OfType<T2>().ToList();
+            var alist = list.ToList();
+            var result = new List<T2>();
+            foreach (var item in alist)
+            {
+                result.Add(fun(item));
+            }
+            return result;
+        }
     }
 }

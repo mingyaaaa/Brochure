@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Brochure.Core.Models;
+using System.Collections.Generic;
 
 namespace Brochure.Core
 {
     public interface IAuth
     {
-        List<string> Auths { get; }
+        List<AuthModel> AuthModels { get; }
     }
 }
