@@ -3,6 +3,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="log4net.config.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="log4net.config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../Brochure.Core/Brochure.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
