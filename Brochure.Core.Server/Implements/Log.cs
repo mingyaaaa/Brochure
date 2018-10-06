@@ -12,7 +12,7 @@ namespace Brochure.Core.Server
         public Log()
         {
             var repository = LogManager.CreateRepository("NETCoreRepository");
-            XmlConfigurator.Configure(repository, new FileInfo("log4net.config"));
+            XmlConfigurator.Configure(repository, new FileInfo("log4net.config.xml"));
             logger = LogManager.GetLogger(repository.Name, "InfoLogger");
         }
         public void Error(string message, Exception e)
