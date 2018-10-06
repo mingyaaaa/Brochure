@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using ILog = Brochure.Core.Interfaces.ILog;
 
-namespace Brochure.Core
+namespace Brochure.Core.Server
 {
     public class Log : ILog
     {
