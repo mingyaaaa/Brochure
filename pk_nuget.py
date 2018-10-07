@@ -29,6 +29,7 @@ source = "http://localhost:9000/nuget"
 
 # 获取项目路径
 project_path = sys.argv[1]
+#project_path = 'G:\Brochure\Brochure.Core\Brochure.Core.csproj'
 project_spit = project_path.split('\\')
 # 获取项目名称
 project_name = project_spit[len(project_spit)-2]
@@ -41,7 +42,7 @@ p.wait()
 out = p.stdout.read()
 # 返回中文乱码 使用一下方法解决
 # print(out.decode("gbk"))
-old_version_re = re.search("(\d.){3}\d", str(out))
+old_version_re = re.search("(\d+.){3}\d+", str(out))
 if(old_version_re == None):
     pack_version = "1.0.0.1"
 else:
