@@ -24,5 +24,5 @@ namespace Brochure.Core
     }
 
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class IsNotNullAttribute : Attribute { }
+    public class NotNullAttribute : Attribute { }
 }
