@@ -22,4 +22,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.2" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Attributes\sql\" />
+  </ItemGroup>
 </Project>

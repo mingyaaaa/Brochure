@@ -1,5 +1,5 @@
 using System;
-namespace Brochure.Core.Server
+namespace Brochure.Core
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class TableAttribute : Attribute
