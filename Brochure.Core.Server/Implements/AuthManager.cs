@@ -13,18 +13,18 @@ namespace Brochure.Core.Server
         }
         public void AddAuthDic(IEnumerable<AuthModel> key)
         {
-            _auth.Auths.AddRange(key);
+            _auth.AuthModels.AddRange(key);
         }
 
         public void RemoveAuthDic(IEnumerable<string> key)
         {
             var keyList = key.ToList();
-            _auth.Auths.Remove(t => keyList.Contains(t.Key));
+            _auth.AuthModels.Remove(t => keyList.Contains(t.Key));
         }
 
         public bool HasAuth(string key)
         {
-            return _auth.Auths.Any(t => t.Key == key);
+            return _auth.AuthModels.Any(t => t.Key == key);
         }
     }
 }
