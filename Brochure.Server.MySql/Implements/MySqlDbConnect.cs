@@ -1,4 +1,5 @@
-﻿using Brochure.Core.Server;
+﻿using Brochure.Core;
+using Brochure.Core.Server;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace Brochure.Server.MySql
 
         public IDbData GetDataHub(string tableName)
         {
+            Open();
             var key = tableName;
             if (_baseDic.ContainsKey(key))
                 return _baseDic[key];
@@ -50,6 +52,13 @@ namespace Brochure.Server.MySql
             _baseDic.Add(key, table);
             return table;
         }
+
+        public IDbData GetDataHub<T>() where T : EntityBase
+        {
+            var tableName = DbUtil.GetTableName<T>();
+            return GetDataHub(tableName);
+        }
+
         public void Close()
         {
             _connection?.Close();

@@ -180,6 +180,7 @@ namespace Brochure.Core.Test.MySqlDbTest
             await tableHub.DeleteTableAsync(tableName);
             //Then
         }
+
         private IDbConnect Getconncet()
         {
             _factory.DatabaseName = "test";

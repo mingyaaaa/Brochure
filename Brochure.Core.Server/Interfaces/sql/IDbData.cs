@@ -67,47 +67,7 @@ namespace Brochure.Core.Server
         Task<IRecord> GetInfoAsync(Guid guid);
         #endregion
 
-        #region Columns
-        /// <summary>
-        /// 判断指定表，指定列是否存在
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="ColumnName">列名</param>
-        /// <returns></returns>
-        Task<bool> IsExistColmnAsync(string ColumnName);
-        /// <summary>
-        /// 向指定表中添加列
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="ColumnName">列名</param>
-        /// <param name="typeName">列的类型</param>
-        /// <returns></returns>
-        Task<long> AddColumnsAsync(string ColumnName, string typeName, bool IsNotNull);
-        /// <summary>
-        /// 删除指定表的指定列
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="ColumnName">列名</param>
-        /// <returns></returns>
-        Task<long> DeleteColumnAsync(string ColumnName);
-        /// <summary>
-        /// 修改制定表的制定列的类型
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="ColumnName">列名</param>
-        /// <param name="typeName">类型明</param>
-        /// <param name="IsNotNull">是否可以为空</param>
-        /// <returns></returns>
-        Task<long> UpdateColumnAsync(string ColumnName, string typeName, bool IsNotNull);
-        /// <summary>
-        /// 对指定的表名，指定的列名 重命名
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <param name="ColumnName">列名</param>
-        /// <param name="newColumnName">新名称</param>
-        /// <returns></returns>
-        Task<long> RenameColumnAsync(string ColumnName, string newColumnName, string typeName);
-        #endregion
+
 
         #region SQLIndex
         /// <summary>

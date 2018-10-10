@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Brochure.Server.MySql
 {
-    public class MySqlDatabase : IDbTableBase, IDbDatabase, IDbData
+    public class MySqlDatabase : IDbTableBase, IDbDatabase, IDbData, IDisposable
     {
         private MySqlCommand _command;
         private ISqlParse _parse;
@@ -71,6 +71,82 @@ namespace Brochure.Server.MySql
             var rr = await _command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
+
+        public async Task<bool> IsExistColmnAsync(string columnName)
+        {
+            var sql = $"select COUNT(1) from information_schema.columns WHERE table_name = '{TableName}' and column_name = '{columnName}'";
+            _command.CommandText = sql;
+            var rr = await _command.ExecuteScalarAsync();
+            return rr.As<int>() == 1;
+        }
+
+        public async Task<long> RenameColumnAsync(string columnName, string newcolumnName, string typeName)
+        {
+            var sql = $"alter table {TableName} change column {columnName} {newcolumnName} {typeName}";
+            _command.CommandText = sql;
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr == 0 ? 1 : -1;
+        }
+
+        public async Task<long> UpdateAsync(Guid id, IRecord doc)
+        {
+            var paramObj = DbUtil.GetUpdateSql(TableName, doc);
+            var idSymbol = $"{paramObj.ParamSymbol}id";
+            var sql = $"{paramObj.Sql} where 1=1 and Id={idSymbol}";
+            var paramDic = paramObj.Params;
+            paramDic.Add(idSymbol, id);
+            var sqlParams = DbUtil.GetDbParams(paramDic);
+            _command.CommandText = sql;
+            _command.Parameters.AddRange(sqlParams);
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr;
+        }
+
+        public async Task<long> UpdateAsync(Query query, IRecord doc)
+        {
+            var paramObj = DbUtil.GetUpdateSql(TableName, doc);
+            var parse = new QueryParse(_parse);
+            var param = parse.Parse(query);
+            var sql = $"{paramObj.Sql} where 1=1 and {param.Sql}";
+            var paramDic = paramObj.Params;
+            var sqlParams = DbUtil.GetDbParams(paramDic);
+            var mysqlParams = DbUtil.GetDbParams(param.Params);
+            _command.CommandText = sql;
+            _command.Parameters.AddRange(sqlParams);
+            _command.Parameters.AddRange(mysqlParams);
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr;
+        }
+
+        public async Task<long> UpdateColumnAsync(string columnName, string typeName, bool isNotNull)
+        {
+            var sql = $"alter table {TableName} modify {columnName} {typeName}";
+            if (isNotNull)
+                sql = $"{sql} not null";
+            _command.CommandText = sql;
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr == 0 ? 1 : -1;
+        }
+
+        public async Task<long> DeleteColumnAsync(string columnName)
+        {
+            var sql = $"alter table {TableName} drop column {columnName}";
+            _command.CommandText = sql;
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr == 0 ? 1 : -1;
+        }
+        public async Task<long> AddColumnsAsync(string columnName, string typeName, bool isNotNull)
+        {
+            var sql = $"alter table {TableName} add column {columnName} {typeName}";
+            if (isNotNull)
+            {
+                sql = $"{sql} not null";
+            }
+            _command.CommandText = sql;
+            var rr = await _command.ExecuteNonQueryAsync();
+            return rr == 0 ? 1 : -1;
+        }
+
         #endregion
 
         #region Database
@@ -102,27 +178,9 @@ namespace Brochure.Server.MySql
         #endregion
 
         #region Data
-        public async Task<long> AddColumnsAsync(string ColumnName, string typeName, bool IsNotNull)
+        public async Task<long> CreateIndexAsync(string[] columnNames, string indexName, string sqlIndex)
         {
-            var sql = $"alter table {TableName} add column {ColumnName} {typeName}";
-            if (IsNotNull)
-            {
-                sql = $"{sql} not null";
-            }
-            _command.CommandText = sql;
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr == 0 ? 1 : -1;
-        }
-        public async Task<long> CreateIndexAsync(string[] ColumnNames, string indexName, string sqlIndex)
-        {
-            var sql = $"create {sqlIndex} {indexName} on {TableName}({string.Join(",", ColumnNames)})";
-            _command.CommandText = sql;
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr == 0 ? 1 : -1;
-        }
-        public async Task<long> DeleteColumnAsync(string ColumnName)
-        {
-            var sql = $"alter table {TableName} drop column {ColumnName}";
+            var sql = $"create {sqlIndex} {indexName} on {TableName}({string.Join(",", columnNames)})";
             _command.CommandText = sql;
             var rr = await _command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
@@ -289,63 +347,12 @@ namespace Brochure.Server.MySql
             return rr;
         }
 
-        public async Task<bool> IsExistColmnAsync(string ColumnName)
-        {
-            var sql = $"select COUNT(1) from information_schema.columns WHERE table_name = '{TableName}' and column_name = '{ColumnName}'";
-            _command.CommandText = sql;
-            var rr = await _command.ExecuteScalarAsync();
-            return rr.As<int>() == 1;
-        }
-
-        public async Task<long> RenameColumnAsync(string ColumnName, string newColumnName, string typeName)
-        {
-            var sql = $"alter table {TableName} change column {ColumnName} {newColumnName} {typeName}";
-            _command.CommandText = sql;
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr == 0 ? 1 : -1;
-        }
-
-        public async Task<long> UpdateAsync(Guid id, IRecord doc)
-        {
-            var paramObj = DbUtil.GetUpdateSql(TableName, doc);
-            var idSymbol = $"{paramObj.ParamSymbol}id";
-            var sql = $"{paramObj.Sql} where 1=1 and Id={idSymbol}";
-            var paramDic = paramObj.Params;
-            paramDic.Add(idSymbol, id);
-            var sqlParams = DbUtil.GetDbParams(paramDic);
-            _command.CommandText = sql;
-            _command.Parameters.AddRange(sqlParams);
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr;
-        }
-
-        public async Task<long> UpdateAsync(Query query, IRecord doc)
-        {
-            var paramObj = DbUtil.GetUpdateSql(TableName, doc);
-            var parse = new QueryParse(_parse);
-            var param = parse.Parse(query);
-            var sql = $"{paramObj.Sql} where 1=1 and {param.Sql}";
-            var paramDic = paramObj.Params;
-            var sqlParams = DbUtil.GetDbParams(paramDic);
-            var mysqlParams = DbUtil.GetDbParams(param.Params);
-            _command.CommandText = sql;
-            _command.Parameters.AddRange(sqlParams);
-            _command.Parameters.AddRange(mysqlParams);
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr;
-        }
-
-        public async Task<long> UpdateColumnAsync(string ColumnName, string typeName, bool IsNotNull)
-        {
-            var sql = $"alter table {TableName} modify {ColumnName} {typeName}";
-            if (IsNotNull)
-                sql = $"{sql} not null";
-            _command.CommandText = sql;
-            var rr = await _command.ExecuteNonQueryAsync();
-            return rr == 0 ? 1 : -1;
-        }
 
         #endregion
 
+        public void Dispose()
+        {
+            _command?.Connection.Close();
+        }
     }
 }

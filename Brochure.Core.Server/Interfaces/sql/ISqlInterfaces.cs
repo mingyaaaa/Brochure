@@ -7,6 +7,7 @@ namespace Brochure.Core.Server
         IDbTableBase GetTableHub();
         IDbDatabase GetBatabaseHub();
         IDbData GetDataHub(string tableName);
+        IDbData GetDataHub<T>() where T : EntityBase;
         void Commit();
         void Rollback();
         void BeginTransaction();
