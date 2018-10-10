@@ -17,7 +17,7 @@ namespace Brochure.Core.Server
             //查询所有的插件信息
             var pluginManager = new PluginManagers(mvcCoreBuilder);
             var context = new Context();
-            var pluginPathDir = Core.PluginManagers.GetPluginPath();
+            var pluginPathDir = PluginManagers.GetPluginPath();
             var configFiles = Directory.GetFiles(pluginPathDir, "plugin.json");
             foreach (var configFile in configFiles)
             {

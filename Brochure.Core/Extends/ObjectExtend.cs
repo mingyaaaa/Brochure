@@ -50,9 +50,13 @@ namespace Brochure.Core
                     return (T)(object)DateTime.Parse(obj.ToString());
                 //实现接口IBConverable的类使用 接口转换器
                 var interfaceType = objType.GetInterface($"IBConverables`1");
-                var ibConver = obj as IBConverables;
-                if (ibConver != null)
-                    return ibConver.Conver<T>();
+                if (interfaceType != null)
+                {
+                    var ibConver = obj as IBConverables<T>;
+                    if (ibConver != null)
+                        return ibConver.Conver();
+                }
+
                 //如果是系统其他类型  则使用系统的转换器
                 return (T)(object)Convert.ChangeType(obj, type);
             }

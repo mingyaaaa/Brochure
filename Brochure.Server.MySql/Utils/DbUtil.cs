@@ -58,7 +58,7 @@ namespace Brochure.Server.MySql
                         columSql = $"{columSql}({255})";
                 }
 
-                var isNotNullAttribute = item.GetCustomAttribute(typeof(IsNotNullAttribut), true);
+                var isNotNullAttribute = item.GetCustomAttribute(typeof(NotNullAttribute), true);
                 if (isNotNullAttribute != null)
                     columSql = $"{columSql} not null";
                 columSqls.Add(columSql);

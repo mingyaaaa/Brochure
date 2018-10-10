@@ -1,7 +1,7 @@
 ﻿namespace Brochure.Core
 {
-    public interface IBConverables
+    public interface IBConverables<T>
     {
-        T Conver<T>();
+        T Conver();
     }
 }

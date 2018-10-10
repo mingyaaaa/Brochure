@@ -1,4 +1,7 @@
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 namespace Brochure.Core.Test
 {
@@ -20,6 +23,17 @@ namespace Brochure.Core.Test
         public string BStr { get; set; }
         public int C { get; set; }
         public DateTime DateTime { get; set; }
+    }
+
+    public class C : IBConverables<B>
+    {
+        public B Conver()
+        {
+            return new B()
+            {
+                BStr = "C"
+            };
+        }
     }
     public class AsTest
     {
@@ -162,6 +176,51 @@ namespace Brochure.Core.Test
             Assert.Equal(b.BStr, br[nameof(b.BStr)]);
             Assert.Equal(b.C, br[nameof(b.C)]);
             Assert.Equal(b.DateTime, br[nameof(b.DateTime)]);
+        }
+
+        [Fact]
+        public void JsonTo()
+        {
+            string json = "{\"aa\":1}";
+            var obj = json.AsObject<IRecord>();
+            Assert.True(obj.ContainsKey("aa"));
+            Assert.Equal(1, obj["aa"].As<int>());
+
+            var jsonArray = new string[]
+            {
+                "a", "b", "c"
+            };
+            json = JsonConvert.SerializeObject(jsonArray);
+            var array = json.AsEnumerable<string>().ToArray();
+            Assert.Equal(3, array.Length);
+
+            var recordArray = new List<IRecord>
+            {
+                new Record()
+                {
+                    ["a"]=1,
+                }, new Record()
+                {
+                    ["b"]=2,
+                },new Record()
+                {
+                    ["c"]=3,
+                },
+            };
+
+            json = JsonConvert.SerializeObject(recordArray);
+            var records = json.AsEnumerable<IRecord>().ToArray();
+            Assert.Equal(3, records.Length);
+            Assert.True(records[0].ContainsKey("a"));
+            Assert.Equal(1, records[0]["a"].As<int>());
+        }
+
+        [Fact]
+        public void IBConverTo()
+        {
+            var c = new C();
+            var b = c.As<B>();
+            Assert.Equal("C", b.BStr);
         }
     }
 }

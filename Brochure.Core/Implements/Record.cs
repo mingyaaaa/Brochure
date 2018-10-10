@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Brochure.Core
 {
@@ -7,7 +9,8 @@ namespace Brochure.Core
     /// 文档类型
     /// </summary>
     /// <typeparam name="BDocument"></typeparam>
-    public class Record : IRecord
+    [Serializable]
+    public class Record : IRecord, ISerializable
     {
         private readonly IDictionary<string, object> _dic;
         /// <summary>
@@ -29,6 +32,16 @@ namespace Brochure.Core
         public Record()
         {
             _dic = new Dictionary<string, object>();
+        }
+
+        public Record(SerializationInfo info, StreamingContext context)
+        {
+            _dic = new Dictionary<string, object>();
+            foreach (var item in info)
+            {
+                _dic[item.Name] = item.Value;
+            }
+
         }
         /// <summary>
         /// 获取集合的个数
@@ -125,6 +138,20 @@ namespace Brochure.Core
         public bool ContainsKey(string key)
         {
             return _dic.ContainsKey(key);
+        }
+        public override string ToString()
+        {
+            if (_dic == null)
+                return string.Empty;
+            return JsonConvert.SerializeObject(_dic);
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            foreach (var item in _dic)
+            {
+                info.AddValue(item.Key, item.Value);
+            }
         }
     }
 }
