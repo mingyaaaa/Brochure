@@ -1,46 +1,45 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
 {
     public class PluginManagers : IPluginManagers
     {
         private IDictionary<Guid, IPlugins> pluginDic;
-        private IMvcCoreBuilder _mvcBuilder;
-        public PluginManagers()
+        public PluginManagers ()
         {
-            pluginDic = new Dictionary<Guid, IPlugins>();
+            pluginDic = new Dictionary<Guid, IPlugins> ();
         }
 
-        public void Regist(IPlugins plugin)
+        public void Regist (IPlugins plugin)
         {
-            pluginDic.Add(plugin.Key, plugin);
+            pluginDic.Add (plugin.Key, plugin);
         }
 
-        public void Remove(IPlugins plugin)
+        public void Remove (IPlugins plugin)
         {
-            pluginDic.Remove(plugin.Key);
+            pluginDic.Remove (plugin.Key);
         }
 
-        public IPlugins GetPlugin(Guid key)
+        public IPlugins GetPlugin (Guid key)
         {
             return pluginDic[key];
         }
 
-        public List<IPlugins> GetPlugins()
+        public List<IPlugins> GetPlugins ()
         {
-            return pluginDic.Values.ToList();
+            return pluginDic.Values.ToList ();
         }
 
-        public static string GetPluginPath()
+        public static string GetPluginPath ()
         {
             var bathPath = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginPath = Path.Combine(bathPath, "Plugin");
-            if (Directory.Exists(pluginPath))
-                Directory.CreateDirectory(pluginPath);
+            var pluginPath = Path.Combine (bathPath, "Plugin");
+            if (Directory.Exists (pluginPath))
+                Directory.CreateDirectory (pluginPath);
             return pluginPath;
         }
     }

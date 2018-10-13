@@ -1,9 +1,9 @@
-﻿using Brochure.Core;
-using Brochure.Core.Server;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Brochure.Core;
+using Brochure.Core.Server;
+using MySql.Data.MySqlClient;
 
 namespace Brochure.Server.MySql
 {
@@ -11,82 +11,74 @@ namespace Brochure.Server.MySql
     {
         private MySqlConnection _connection;
         private IDictionary<string, IDbData> _baseDic;
-        private MySqlTransaction _transaction;
-
-        internal MySqlDbConnect(string connectString)
+        internal MySqlDbConnect (string connectString)
         {
             //注册表映射类型
-            _connection = new MySqlConnection(connectString);
-            _baseDic = new Dictionary<string, IDbData>();
-            Open();
+            _connection = new MySqlConnection (connectString);
+            _baseDic = new Dictionary<string, IDbData> ();
+            Open ();
         }
-        internal MySqlDbConnect(string connectString, bool isbeginTransation) : this(connectString)
+        #region Name
+
+        public IDbDatabase GetBatabaseHub ()
         {
-            if (isbeginTransation)
-                _transaction = _connection.BeginTransaction();
-        }
-        public IDbDatabase GetBatabaseHub()
-        {
-            var commond = new MySqlCommand();
-            commond.Connection = _connection;
-            return new MySqlDatabase(commond);
+            return new MySqlDatabase (_connection);
         }
 
-        public IDbTableBase GetTableHub()
+        public IDbTableBase GetTableHub ()
         {
-            var commond = new MySqlCommand();
+            var commond = new MySqlCommand ();
             commond.Connection = _connection;
-            return new MySqlDatabase(commond);
+            return new MySqlDatabase (_connection);
         }
 
-        public IDbData GetDataHub(string tableName)
+        public IDbColumns GetColumnsHub (string tableName)
         {
-            Open();
+            Open ();
             var key = tableName;
-            if (_baseDic.ContainsKey(key))
-                return _baseDic[key];
-            var commond = new MySqlCommand();
+            var commond = new MySqlCommand ();
             commond.Connection = _connection;
-            commond.Transaction = _transaction;
-            var table = new MySqlDatabase(key, commond);
-            _baseDic.Add(key, table);
-            return table;
+            var database = new MySqlDatabase (key, _connection);
+            return database;
         }
 
-        public IDbData GetDataHub<T>() where T : EntityBase
+        public IDbColumns GetColumnsHub<T> () where T : EntityBase
         {
-            var tableName = DbUtil.GetTableName<T>();
-            return GetDataHub(tableName);
+            var tableName = DbUtil.GetTableName<T> ();
+            return GetColumnsHub (tableName);
+        }
+        public IDbData GetDataHub (string tableName, bool isBeginTransaction = false)
+        {
+            Open ();
+            var key = tableName;
+            if (_baseDic.ContainsKey (key))
+                return _baseDic[key];
+            var database = new MySqlDatabase (key, _connection);
+            if (!isBeginTransaction)
+                database.BeginTransaction ();
+            _baseDic.Add (key, database);
+            return database;
         }
 
-        public void Close()
+        public IDbData GetDataHub<T> (bool isBeginTransaction = false) where T : EntityBase
         {
-            _connection?.Close();
+            var tableName = DbUtil.GetTableName<T> ();
+            return GetDataHub (tableName, isBeginTransaction);
         }
-        public void Open()
+
+        public void Close ()
+        {
+            _connection?.Close ();
+        }
+        public void Open ()
         {
             if (_connection != null && _connection.State == ConnectionState.Closed)
-                _connection.Open();
+                _connection.Open ();
         }
-        public void BeginTransaction()
+        #endregion
+        public void Dispose ()
         {
-            _transaction = _connection.BeginTransaction();
+            throw new NotImplementedException ();
         }
-        public void Dispose()
-        {
-            Close();
-            _connection?.Dispose();
-        }
-
-        public void Commit()
-        {
-            _transaction?.Commit();
-        }
-
-        public void Rollback()
-        {
-            _transaction?.Rollback();
-        }
-
     }
 }

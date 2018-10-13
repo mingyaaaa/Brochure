@@ -8,7 +8,7 @@ namespace Brochure.Core
         /// 主建
         /// </summary>
         /// <returns></returns>
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid ();
         /// <summary>
         /// 创建时间
         /// </summary>

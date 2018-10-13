@@ -1,5 +1,4 @@
-﻿using Brochure.Core.Utils;
-using Thrift.Protocol;
+﻿using Thrift.Protocol;
 using Thrift.Transport;
 
 namespace Brochure.Core.Core
@@ -9,26 +8,26 @@ namespace Brochure.Core.Core
         private string _host;
         private int _port;
         private TTransport transport;
-        public RpcService(string host, int port)
+        public RpcService (string host, int port)
         {
             _host = host;
             _port = port;
-            transport = new TSocket(host, port);
-            TProtocol protocol = new TBinaryProtocol(transport);
-            Client = ReflectorUtil.CreateInstance<T>(protocol);
+            transport = new TSocket (host, port);
+            TProtocol protocol = new TBinaryProtocol (transport);
+            Client = ReflectorUtil.CreateInstance<T> (protocol);
         }
 
-        public void Open()
+        public void Open ()
         {
             if (!transport.IsOpen)
-                transport.Open();
+                transport.Open ();
         }
 
-        public void Close()
+        public void Close ()
         {
-            transport.Flush();
+            transport.Flush ();
             if (transport.IsOpen)
-                transport.Close();
+                transport.Close ();
         }
         public T Client { get; }
     }
