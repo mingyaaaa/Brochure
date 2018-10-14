@@ -9,5 +9,6 @@
         public const string DateTime = "DateTime";
         public const string Byte = "Byte";
         public const string Long = "Int64";
+        public const string Guid = "Guid";
     }
 }

@@ -41,7 +41,7 @@ namespace Brochure.Core
             var a = new List<List<string>>();
             var b = new List<string>();
             var type = typeof(T);
-            var list = values.Select(t => GetString(type.Name, t)).ToList();
+            var list = values.Select(t => GetString(t)).ToList();
             for (int i = 0; i < list.Count; i++)
             {
                 if (i % 1000 == 0 && i != 0)
@@ -160,21 +160,14 @@ namespace Brochure.Core
         private static string GetString(object a)
         {
             var type = a.GetType();
-            if (type.Name == BaseType.Int || type.Name == BaseType.Double || type.Name == BaseType.Float)
+            if (type.Name == BaseType.Int
+                || type.Name == BaseType.Double
+                || type.Name == BaseType.Float)
                 return a.ToString();
-            else if (type.Name == BaseType.String)
+            else if (type.Name == BaseType.String
+                || type.Name == BaseType.Guid)
                 return $"'{a.ToString()}'";
             else if (type.Name == BaseType.DateTime)
-                return $"Date({a.ToString()})";
-            return string.Empty;
-        }
-        private static string GetString(string typeName, object a)
-        {
-            if (typeName == BaseType.Int || typeName == BaseType.Double || typeName == BaseType.Float)
-                return a.ToString();
-            else if (typeName == BaseType.String)
-                return $"'{a.ToString()}'";
-            else if (typeName == BaseType.DateTime)
                 return $"Date({a.ToString()})";
             return string.Empty;
         }

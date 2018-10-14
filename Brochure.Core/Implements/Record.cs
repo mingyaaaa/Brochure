@@ -44,11 +44,6 @@ namespace Brochure.Core
 
         }
         /// <summary>
-        /// 获取集合的个数
-        /// </summary>
-        /// <returns></returns>
-        public int Count { get { return _dic.Count; } }
-        /// <summary>
         /// 获取Key的集合
         /// </summary>
         /// <returns></returns>

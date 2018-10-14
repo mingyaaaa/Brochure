@@ -8,7 +8,6 @@ namespace Brochure.Core
         void Add(string key, object obj);
 
         object this[string key] { get; set; }
-        int Count { get; }
 
         IEnumerable<string> Keys { get; }
 

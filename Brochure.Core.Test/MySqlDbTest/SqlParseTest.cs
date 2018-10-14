@@ -1,6 +1,7 @@
 ﻿using Brochure.Core.Server;
 using Brochure.Server.MySql;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,6 +27,12 @@ namespace Brochure.Core.Test.MySqlDbTest
             Assert.Equal("aa = @aa", param.Sql);
             Assert.Equal("@aa", param.Params.Keys.FirstOrDefault());
             Assert.Equal(11, param.Params["@aa"]);
+
+            var guid = Guid.NewGuid();
+            query = Query.Eq("a", guid);
+            param = parse.Parse(query);
+            Assert.Equal("a = @a", param.Sql);
+
 
             var time = new DateTime(2011, 1, 1);
             query = Query.Eq("aa", time);
@@ -102,6 +109,13 @@ namespace Brochure.Core.Test.MySqlDbTest
             Assert.Equal(1, param.Params["@aaa1"]);
             Assert.Equal(2, param.Params["@aaa2"]);
             Assert.Equal(3, param.Params["@aaa3"]);
+
+            var guidList = new List<Guid>();
+            for (int i = 0; i < 3; i++)
+                guidList.Add(Guid.NewGuid());
+            query = Query.In("aaa", guidList);
+            param = parse.Parse(query);
+            Assert.Equal("aaa in (@aaa1,@aaa2,@aaa3)", param.Sql);
             //When
             var bbb = new string[] { "1", "2", "3" };
             query = Query.In("bbb", bbb);
@@ -119,6 +133,10 @@ namespace Brochure.Core.Test.MySqlDbTest
             Assert.Equal("1", param.Params["@bbb1"]);
             Assert.Equal("2", param.Params["@bbb2"]);
             Assert.Equal("3", param.Params["@bbb3"]);
+
+
+
+
         }
 
         [Fact]
