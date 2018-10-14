@@ -37,16 +37,13 @@ namespace Brochure.Server.MySql
             var isExist = await IsExistDataBaseAsync(databaseName);
             if (isExist)
                 return 1;
-            var sql = $"create database {databaseName}";
-            command.CommandText = sql;
-            var rr = await command.ExecuteNonQueryAsync();
-            return rr;
+            command.CommandText = $"create database {databaseName}";
+            return await command.ExecuteNonQueryAsync();
         }
         public async Task<long> DeleteDataBaseAsync(string databaseName)
         {
             var command = GetCommand();
-            var sql = $"drop database {databaseName}";
-            command.CommandText = sql;
+            command.CommandText = $"drop database {databaseName}";
             //执行删除方法  删除成功 默认返回了0  改变返回的值；
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
@@ -54,8 +51,7 @@ namespace Brochure.Server.MySql
         public async Task<bool> IsExistDataBaseAsync(string databaseName)
         {
             var command = GetCommand();
-            var sql = $"SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='{databaseName}'";
-            command.CommandText = sql;
+            command.CommandText = $"SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='{databaseName}'";
             var rr = await command.ExecuteScalarAsync();
             return rr.As<int>() == 1;
         }
@@ -73,24 +69,21 @@ namespace Brochure.Server.MySql
             var r = await IsExistTableAsync(tableName);
             if (r)
                 return 1;
-            var sql = DbUtil.GetCreateTableSql<T>();
-            command.CommandText = sql;
+            command.CommandText = DbUtil.GetCreateTableSql<T>();
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
         public async Task<bool> IsExistTableAsync(string tableName)
         {
             var command = GetCommand();
-            var sql = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}'";
-            command.CommandText = sql;
+            command.CommandText = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}'";
             var rr = await command.ExecuteScalarAsync();
             return rr.As<int>() == 1;
         }
         public async Task<long> DeleteTableAsync(string tableName)
         {
             var command = GetCommand();
-            var sql = $"drop table  {tableName}";
-            command.CommandText = sql;
+            command.CommandText = $"drop table  {tableName}";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -101,8 +94,7 @@ namespace Brochure.Server.MySql
             var r = await IsExistTableAsync(olderName);
             if (!r)
                 return 0;
-            var sql = $"alter table {olderName} rename {tableName};";
-            command.CommandText = sql;
+            command.CommandText = $"alter table {olderName} rename {tableName};";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -113,8 +105,7 @@ namespace Brochure.Server.MySql
         public async Task<bool> IsExistColumnAsync(string columnName)
         {
             var command = GetCommand();
-            var sql = $"select COUNT(1) from information_schema.columns WHERE table_name = '{TableName}' and column_name = '{columnName}'";
-            command.CommandText = sql;
+            command.CommandText = $"select COUNT(1) from information_schema.columns WHERE table_name = '{TableName}' and column_name = '{columnName}'";
             var rr = await command.ExecuteScalarAsync();
             return rr.As<int>() == 1;
         }
@@ -122,8 +113,7 @@ namespace Brochure.Server.MySql
         public async Task<long> RenameColumnAsync(string columnName, string newcolumnName, string typeName)
         {
             var command = GetCommand();
-            var sql = $"alter table {TableName} change column {columnName} {newcolumnName} {typeName}";
-            command.CommandText = sql;
+            command.CommandText = $"alter table {TableName} change column {columnName} {newcolumnName} {typeName}";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -142,8 +132,7 @@ namespace Brochure.Server.MySql
         public async Task<long> DeleteColumnAsync(string columnName)
         {
             var command = GetCommand();
-            var sql = $"alter table {TableName} drop column {columnName}";
-            command.CommandText = sql;
+            command.CommandText = $"alter table {TableName} drop column {columnName}";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -166,8 +155,7 @@ namespace Brochure.Server.MySql
         public async Task<long> CreateIndexAsync(string[] columnNames, string indexName, string sqlIndex)
         {
             var command = GetCommand();
-            var sql = $"create {sqlIndex} {indexName} on {TableName}({string.Join(",", columnNames)})";
-            command.CommandText = sql;
+            command.CommandText = $"create {sqlIndex} {indexName} on {TableName}({string.Join(",", columnNames)})";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -175,8 +163,7 @@ namespace Brochure.Server.MySql
         public async Task<long> DeleteIndexAsync(string indexName)
         {
             var command = GetCommand();
-            var sql = $"drop index {indexName} on {TableName}";
-            command.CommandText = sql;
+            command.CommandText = $"drop index {indexName} on {TableName}";
             var rr = await command.ExecuteNonQueryAsync();
             return rr == 0 ? 1 : -1;
         }
@@ -187,12 +174,10 @@ namespace Brochure.Server.MySql
             var query = Query.In("Id", ids.Select(t => t.ToString()).ToArray());
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
-            var sql = $"delete from {TableName} where 1=1 and {param.Sql}";
-            command.CommandText = sql;
+            command.CommandText = $"delete from {TableName} where 1=1 and {param.Sql}";
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
             command.Parameters.AddRange(mysqlParams);
-            var r = await command.ExecuteNonQueryAsync();
-            return r;
+            return await command.ExecuteNonQueryAsync();
         }
 
         public async Task<long> DeleteAsync(Query query)
@@ -201,11 +186,9 @@ namespace Brochure.Server.MySql
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
-            var sql = $"delete from {TableName} where 1=1 and {param.Sql}";
-            command.CommandText = sql;
+            command.CommandText = $"delete from {TableName} where 1=1 and {param.Sql}";
             command.Parameters.AddRange(mysqlParams);
-            var r = await command.ExecuteNonQueryAsync();
-            return r;
+            return await command.ExecuteNonQueryAsync();
         }
 
         public async Task<long> DeleteAsync(Guid id)
@@ -215,8 +198,7 @@ namespace Brochure.Server.MySql
         public async Task<long> GetCountAsync(Query query)
         {
             var command = GetCommand();
-            var sql = $"select count(*) from {TableName} where 1=1 and {query}";
-            command.CommandText = sql;
+            command.CommandText = $"select count(*) from {TableName} where 1=1 and {query}";
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
@@ -232,8 +214,7 @@ namespace Brochure.Server.MySql
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
             IRecord doc = null;
-            var sql = $"select * from {TableName} where 1=1 and {param.Sql}";
-            command.CommandText = sql;
+            command.CommandText = $"select * from {TableName} where 1=1 and {param.Sql}";
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
             command.Parameters.AddRange(mysqlParams);
             var dr = await command.ExecuteReaderAsync();
@@ -282,8 +263,7 @@ namespace Brochure.Server.MySql
             var parse = new QueryParse(_parse);
             var param = parse.Parse(searchParams.Filter);
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
-            var sql = $"select * from {TableName} where 1=1 and {param.Sql} {orderStr} {pageStr}";
-            command.CommandText = sql;
+            command.CommandText = $"select * from {TableName} where 1=1 and {param.Sql} {orderStr} {pageStr}";
             command.Parameters.AddRange(mysqlParams);
             var dr = await command.ExecuteReaderAsync();
             while (dr.Read())
@@ -292,8 +272,7 @@ namespace Brochure.Server.MySql
                 for (int i = 0; i < dr.FieldCount; i++)
                 {
                     var name = dr.GetName(i);
-                    var value = dr[i];
-                    doc[name] = value;
+                    doc[name] = dr[i];
                 }
                 result.Add(doc);
             }
@@ -320,8 +299,7 @@ namespace Brochure.Server.MySql
             var parse = new QueryParse(_parse);
             var param = parse.Parse(searchParams.Filter);
             var mysqlParams = DbUtil.GetMySqlParams(param.Params);
-            var sql = $"select {string.Join(",", aggregates)},{gfield} from {TableName} where 1=1 and {param.Sql} group by {gfield} order by {orderStr} limit {searchParams.StarIndex},{count}";
-            command.CommandText = sql;
+            command.CommandText = $"select {string.Join(",", aggregates)},{gfield} from {TableName} where 1=1 and {param.Sql} group by {gfield} order by {orderStr} limit {searchParams.StarIndex},{count}";
             command.Parameters.AddRange(mysqlParams);
             var dr = await command.ExecuteReaderAsync();
             while (dr.Read())
@@ -330,8 +308,7 @@ namespace Brochure.Server.MySql
                 for (int i = 0; i < dr.FieldCount; i++)
                 {
                     var name = dr.GetName(i);
-                    var value = dr[i];
-                    doc[name] = value;
+                    doc[name] = dr[i];
                 }
                 result.Add(doc);
             }
@@ -356,8 +333,7 @@ namespace Brochure.Server.MySql
             command.CommandText = sqlParams.Sql;
             var paramList = DbUtil.GetMySqlParams(sqlParams.Params);
             command.Parameters.AddRange(paramList);
-            var rr = await command.ExecuteNonQueryAsync();
-            return rr;
+            return await command.ExecuteNonQueryAsync();
         }
         public async Task<long> UpdateAsync(Guid id, IRecord doc)
         {
@@ -369,11 +345,9 @@ namespace Brochure.Server.MySql
             {
                 [idSymbol] = id
             });
-            var sql = $"{paramObj.Sql} where 1=1 and Id={idSymbol}";
-            command.CommandText = sql;
+            command.CommandText = $"{paramObj.Sql} where 1=1 and Id={idSymbol}";
             command.Parameters.AddRange(sqlParams);
-            var rr = await command.ExecuteNonQueryAsync();
-            return rr;
+            return await command.ExecuteNonQueryAsync();
         }
 
         public async Task<long> UpdateAsync(Query query, IRecord doc)
@@ -387,8 +361,7 @@ namespace Brochure.Server.MySql
             var sqlParams = DbUtil.GetMySqlParams(paramDic, param.Params);
             command.CommandText = sql;
             command.Parameters.AddRange(sqlParams);
-            var rr = await command.ExecuteNonQueryAsync();
-            return rr;
+            return await command.ExecuteNonQueryAsync();
         }
 
         #endregion
@@ -405,6 +378,7 @@ namespace Brochure.Server.MySql
         public void Dispose()
         {
             _connection?.Close();
+            _connection?.Dispose();
             _transaction?.Dispose();
         }
         public void BeginTransaction()
