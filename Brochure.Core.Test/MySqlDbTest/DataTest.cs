@@ -53,6 +53,12 @@ namespace Brochure.Core.Test.MySqlDbTest
             var rUser = record.As<UserTable> ();
             Assert.Equal (user.Name, rUser.Name);
             Assert.Equal (user.Id, rUser.Id);
+
+            var records = await GetUserList (new SearchParams (Query.In ("Name", new Guid[]
+            {
+                users[0].Id, users[1].Id
+            })));
+            Assert.Equal (2, record.Count);
         }
 
         [Fact]

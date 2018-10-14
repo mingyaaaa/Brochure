@@ -38,7 +38,7 @@ namespace Brochure.Core
                     var trecord = value as IRecord;
                     if (trecord != null)
                         value = ConverObj (trecord, item.PropertyType);
-                    value = As (obj, item.PropertyType);
+                    value = As (value, item.PropertyType);
                     item.SetValue (obj, value);
                 }
             }
