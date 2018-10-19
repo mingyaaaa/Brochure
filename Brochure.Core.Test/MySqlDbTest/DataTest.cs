@@ -16,12 +16,12 @@ namespace Brochure.Core.Test.MySqlDbTest
     }
     public class DataTest : IDisposable
     {
-        private static DbFactoryAbstract _factory = new MySqlDbFactory("10.0.0.18", "root", "123456", "3306", "test");
+        private static DbFactory _factory = new MySqlDbFactory("10.0.0.18", "root", "123456", "3306", "test");
         private static IDbConnect connect;
         public DataTest()
         {
             if (connect == null)
-                connect = _factory.GetDbConnect();
+                connect = _factory.CreateDbConnect();
         }
 
         [Fact]
