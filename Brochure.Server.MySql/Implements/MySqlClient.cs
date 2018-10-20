@@ -20,7 +20,7 @@ namespace Brochure.Server.MySql.Implements
         {
             TypeMap = new MySqlTypeMap();
         }
-        public MySqlClient(string database = null) : base()
+        public MySqlClient(string database = null) : this()
         {
             DatabaseName = database;
         }
@@ -44,14 +44,19 @@ namespace Brochure.Server.MySql.Implements
 
         public async Task<IDataTableHub> GetDataTableHubAsync(string databaseName = null)
         {
-            if (string.IsNullOrWhiteSpace(databaseName))
-                throw new Exception("指定数据库字段为空");
-            if (DatabaseName != databaseName)
+            if (string.IsNullOrWhiteSpace(DatabaseName))
             {
-                var databasehub = await GetDatabaseHubAsync();
-                await databasehub.ChangeDatabaseAsync(databaseName);
+                if (string.IsNullOrWhiteSpace(databaseName))
+                    throw new Exception("指定数据库字段为空");
                 DatabaseName = databaseName;
             }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(databaseName))
+                    DatabaseName = databaseName;
+            }
+            var databasehub = await GetDatabaseHubAsync();
+            await databasehub.ChangeDatabaseAsync(databaseName);
             if (_tableHub == null)
                 _tableHub = new MySqlTableHub(this);
             return _tableHub;

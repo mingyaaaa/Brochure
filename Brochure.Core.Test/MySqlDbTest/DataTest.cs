@@ -1,10 +1,14 @@
 ﻿using Brochure.Core.Server;
 using Brochure.Server.MySql;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Brochure.Server.MySql.Implements;
+using Brochure.Core.Server.core;
+using Brochure.Core.Server.Enums.sql;
 
 namespace Brochure.Core.Test.MySqlDbTest
 {
@@ -17,11 +21,11 @@ namespace Brochure.Core.Test.MySqlDbTest
     public class DataTest : IDisposable
     {
         private static DbFactory _factory = new MySqlDbFactory("10.0.0.18", "root", "123456", "3306", "test");
-        private static IDbConnect connect;
+        private static IClient client;
         public DataTest()
         {
-            if (connect == null)
-                connect = _factory.CreateDbConnect();
+            DbConnectPool.RegistFactory(_factory, DatabaseType.MySql);
+            client = new MySqlClient();
         }
 
         [Fact]
@@ -29,7 +33,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             await CreateTable();
 
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var user = new UserTable()
             {
                 Name = "User1",
@@ -65,7 +69,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         public async void UpdateData()
         {
             await CreateTable();
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var user = new UserTable();
             user.Name = Guid.NewGuid().ToString();
             user.Age = 32;
@@ -84,7 +88,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             //Given
             await CreateTable();
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             //When
             var user = new UserTable();
             user.Name = "UserName";
@@ -112,16 +116,35 @@ namespace Brochure.Core.Test.MySqlDbTest
             Assert.Equal(1, r);
         }
 
+
+        [Fact]
+        public void Test()
+        {
+            var _connectStr = "Data Source={0};User Id={1};Password={2};pooling=false;CharSet=utf8;port={3};SslMode = none;";
+            var connectString = string.Format(_connectStr, "10.0.0.18", "root", "123456", "3306", "test");
+
+            var aaa = new List<MySqlTransaction>();
+            for (int i = 0; i <= 1; i++)
+            {
+                var connect = new MySqlConnection(connectString);
+                connect.Open();
+                var aa = connect.BeginTransaction();
+                aaa.Add(aa);
+            }
+            Assert.Same(aaa[0], aaa[1]);
+        }
+
+
         private async Task Insert(UserTable usertable)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.InserOneAsync(usertable);
             if (r < -1)
                 throw new Exception();
         }
         private async Task InsertMany(List<UserTable> usertables)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.InserManyAsync(usertables);
             if (r < -1)
                 throw new Exception();
@@ -129,35 +152,35 @@ namespace Brochure.Core.Test.MySqlDbTest
 
         public async Task Update(Guid id, IRecord data)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.UpdateAsync(id, data);
             if (r < -1)
                 throw new Exception();
         }
         public async Task Update(Query query, IRecord data)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.UpdateAsync(query, data);
             if (r < -1)
                 throw new Exception();
         }
         public async Task Delete(Guid id)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.DeleteAsync(id);
             if (r < -1)
                 throw new Exception();
         }
         public async Task Delete(Guid[] ids)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.DeleteAsync(ids);
             if (r < -1)
                 throw new Exception();
         }
         public async Task Delete(Query query)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.DeleteAsync(query);
             if (r < -1)
                 throw new Exception();
@@ -165,25 +188,25 @@ namespace Brochure.Core.Test.MySqlDbTest
 
         public async Task<IRecord> GetUserTable(Guid id)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.GetInfoAsync(id);
             return r;
         }
         public async Task<List<IRecord>> GetUserList(SearchParams searchParams)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.GetListAsync(searchParams);
             return r;
         }
         public async Task<List<IRecord>> GetUserListGroup(List<Aggregate> aggregates, SearchParams searchParams, params string[] strs)
         {
-            var datahub = connect.GetDataHub<UserTable>();
+            var datahub = await client.GetDataHubAsync<UserTable>();
             var r = await datahub.GetListGroupByAsync(aggregates, searchParams, strs);
             return r;
         }
         public async Task CreateTable()
         {
-            var tablehub = connect.GetTableHub();
+            var tablehub = await client.GetDataTableHubAsync();
             await tablehub.RegistTableAsync<UserTable>();
         }
 

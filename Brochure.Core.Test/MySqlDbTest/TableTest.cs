@@ -41,6 +41,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void CreateOrDropTable1()
         {
+            await CreateDatabase();
             try
             {
                 var cc = await client.GetDataTableHubAsync();
@@ -71,6 +72,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void CreateOrDropTable2()
         {
+            await CreateDatabase();
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
             var tableName = DbUtil.GetTableName<TestTable>();
@@ -92,6 +94,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void UpdateTableName()
         {
+            await CreateDatabase();
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
             var tableName = DbUtil.GetTableName<TestTable>();
@@ -110,6 +113,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void CreatetorIndex()
         {
+            await CreateDatabase();
             //Given
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
@@ -126,6 +130,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void DropIndex()
         {
+            await CreateDatabase();
             //Given
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
@@ -144,6 +149,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void AddColumn()
         {
+            await CreateDatabase();
             //Given
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
@@ -160,6 +166,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void DeleteColumn()
         {
+            await CreateDatabase();
             //Given
             var connect = await client.GetDataTableHubAsync("test");
             var tableHub = await client.GetDataTableHubAsync();
@@ -180,6 +187,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void UpdateColumn()
         {
+            await CreateDatabase();
             //Given
             var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
@@ -199,6 +207,8 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void RenameColumn()
         {
+            await CreateDatabase();
+            client.SetDatabase("test");
             //Given
             var tableHub = await client.GetDataTableHubAsync();
             var tableName = DbUtil.GetTableName<TestTable>();
