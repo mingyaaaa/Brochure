@@ -5,6 +5,8 @@ using Brochure.Server.MySql;
 using Brochure.Server.MySql.Implements;
 using System.Threading.Tasks;
 using Xunit;
+using System;
+using Xunit.Abstractions;
 
 namespace Brochure.Core.Test.MySqlDbTest
 {
@@ -16,17 +18,19 @@ namespace Brochure.Core.Test.MySqlDbTest
     }
     public class TableTest
     {
+        private readonly ITestOutputHelper _output;
+
         private static DbFactory _factory = new MySqlDbFactory("10.0.0.18", "root", "123456", "3306");
         private IClient client;
-        public TableTest()
+        public TableTest(ITestOutputHelper output)
         {
             DbConnectPool.RegistFactory(_factory, DatabaseType.MySql);
             client = new MySqlClient();
+            _output = output;
         }
         [Fact]
         public async void CreateAndDropDataBase()
         {
-            //var factory = new MySqlDbFactory ("10.0.0.18", "root", "123456", "3306");
             var databaseHub = await client.GetDatabaseHubAsync();
             var rr = await databaseHub.CreateDataBaseAsync("test1");
             Assert.Equal(1, rr);
@@ -36,6 +40,7 @@ namespace Brochure.Core.Test.MySqlDbTest
             rr = 0;
             rr = await databaseHub.DeleteDataBaseAsync("test1");
             Assert.Equal(1, rr);
+
         }
 
         [Fact]
@@ -73,8 +78,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         public async void CreateOrDropTable2()
         {
             await CreateDatabase();
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
             var isExist = await tableHub.IsExistTableAsync(tableName);
             if (isExist)
@@ -95,8 +99,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         public async void UpdateTableName()
         {
             await CreateDatabase();
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
             var isExist = await tableHub.IsExistTableAsync(tableName);
             if (!isExist)
@@ -115,8 +118,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             await CreateDatabase();
             //Given
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
             await tableHub.CreateTableAsync<TestTable>();
             //When
@@ -132,12 +134,13 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             await CreateDatabase();
             //Given
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
+
             var tableName = DbUtil.GetTableName<TestTable>();
             await tableHub.CreateTableAsync<TestTable>();
             //When
             var dataHub = await client.GetDataHubAsync(tableName);
+
             var index = "aaahhh";
             await dataHub.CreateIndexAsync(new string[] { "Name" }, index, SQLIndex.Unique);
             var r = await dataHub.DeleteIndexAsync(index);
@@ -149,15 +152,11 @@ namespace Brochure.Core.Test.MySqlDbTest
         [Fact]
         public async void AddColumn()
         {
-            await CreateDatabase();
-            //Given
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
+            var dataHub = await client.GetDataHubAsync(tableName);
             await tableHub.CreateTableAsync<TestTable>();
-            var columnHub = await client.GetDataHubAsync(tableName);
-            //When
-            var r = await columnHub.AddColumnsAsync("ccc", "nvarchar(255)", true);
+            var r = await dataHub.AddColumnsAsync("ccc", "nvarchar(255)", true);
             Assert.Equal(1, r);
             await tableHub.DeleteTableAsync(tableName);
             //Then
@@ -168,17 +167,16 @@ namespace Brochure.Core.Test.MySqlDbTest
         {
             await CreateDatabase();
             //Given
-            var connect = await client.GetDataTableHubAsync("test");
-            var tableHub = await client.GetDataTableHubAsync();
+            var tableHub = await client.GetDataTableHubAsync("test");
             var tableName = DbUtil.GetTableName<TestTable>();
             await tableHub.CreateTableAsync<TestTable>();
             //When
             var columnName = "ccc";
-            var columnHub = await client.GetDataHubAsync(tableName);
-            var isExist = await columnHub.IsExistColumnAsync(columnName);
+            var dataHub = await client.GetDataHubAsync(tableName);
+            var isExist = await dataHub.IsExistColumnAsync(columnName);
             if (!isExist)
-                await columnHub.AddColumnsAsync(columnName, "nvarchar(255)", true);
-            var r = await columnHub.DeleteColumnAsync(columnName);
+                await dataHub.AddColumnsAsync(columnName, "nvarchar(255)", true);
+            var r = await dataHub.DeleteColumnAsync(columnName);
             Assert.Equal(1, r);
             await tableHub.DeleteTableAsync(tableName);
             //Then
@@ -211,6 +209,7 @@ namespace Brochure.Core.Test.MySqlDbTest
             client.SetDatabase("test");
             //Given
             var tableHub = await client.GetDataTableHubAsync();
+
             var tableName = DbUtil.GetTableName<TestTable>();
             await tableHub.CreateTableAsync<TestTable>();
             //When
@@ -225,8 +224,21 @@ namespace Brochure.Core.Test.MySqlDbTest
             isExist = await columnHub.IsExistColumnAsync(newName);
             Assert.True(isExist);
             await tableHub.DeleteTableAsync(tableName);
+
             //Then
         }
+        [Fact]
+        private async void Pool()
+        {
+            var connect = await client.GetDatabaseHubAsync();
+            await connect.CreateDataBaseAsync("test2");
+            for (int i = 0; i < 100; i++)
+            {
+                var tableHub = await client.GetDataTableHubAsync("test");
+                tableHub.Dispose();
+            }
+        }
+
 
         private async Task CreateDatabase()
         {

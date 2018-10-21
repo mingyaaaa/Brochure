@@ -5,16 +5,15 @@ using Brochure.Core.Server.Enums.sql;
 using System;
 using System.Data.Common;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace Brochure.Server.MySql.Implements
 {
     public class MySqlClient : IClient, IDbTransaction
     {
-        private IDatabaseHub _databaseHub;
-        private IDataTableHub _tableHub;
-        private IDataHub _dataHub;
         private DbConnection dbConnection;
         private DbTransaction _dbTransaction;
+        private string a;
         public string DatabaseName { get; set; }
         protected MySqlClient()
         {
@@ -34,12 +33,8 @@ namespace Brochure.Server.MySql.Implements
 
         public async Task<IDatabaseHub> GetDatabaseHubAsync()
         {
-            await Task.Run(() =>
-            {
-                if (_databaseHub == null)
-                    _databaseHub = new MySqlDatabaseHub(this);
-            });
-            return _databaseHub;
+            await Task.Delay(0);
+            return new MySqlDatabaseHub(this);
         }
 
         public async Task<IDataTableHub> GetDataTableHubAsync(string databaseName = null)
@@ -56,10 +51,8 @@ namespace Brochure.Server.MySql.Implements
                     DatabaseName = databaseName;
             }
             var databasehub = await GetDatabaseHubAsync();
-            await databasehub.ChangeDatabaseAsync(databaseName);
-            if (_tableHub == null)
-                _tableHub = new MySqlTableHub(this);
-            return _tableHub;
+            await databasehub.ChangeDatabaseAsync(DatabaseName);
+            return new MySqlTableHub(this);
         }
 
         public async Task<IDataHub> GetDataHubAsync<T>() where T : EntityBase
@@ -70,15 +63,11 @@ namespace Brochure.Server.MySql.Implements
 
         public async Task<IDataHub> GetDataHubAsync(string tableName)
         {
-            await Task.Run(() =>
-            {
-                if (DatabaseName == null)
-                    throw new Exception("没有指定数据库");
-                var connection = GetConnection();
-                if (_dataHub == null)
-                    _dataHub = new MySqlDataHub(this, connection, tableName, _dbTransaction);
-            });
-            return _dataHub;
+            await Task.Delay(0);
+            if (string.IsNullOrWhiteSpace(DatabaseName))
+                throw new Exception("没有指定数据库");
+            var connection = GetConnection();
+            return new MySqlDataHub(this, connection, tableName, _dbTransaction);
         }
 
         public void SetDatabase(string databaseName)
@@ -101,8 +90,6 @@ namespace Brochure.Server.MySql.Implements
 
         public void BeginTransaction()
         {
-            var connection = GetConnection();
-            _dbTransaction = connection.BeginTransaction();
             IsBeginTransaction = true;
         }
 

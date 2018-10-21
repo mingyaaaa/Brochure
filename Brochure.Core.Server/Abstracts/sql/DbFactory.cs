@@ -23,16 +23,5 @@ namespace Brochure.Core.Server
 
         public abstract DbConnection CreateDbConnect();
 
-        public override bool Equals(object obj)
-        {
-            var tfactory = obj as DbFactory;
-            if (tfactory == null)
-                return false;
-            return tfactory.Address == Address
-                && tfactory.UserName == UserName
-                && tfactory.Password == Password
-                && tfactory.Port == Port
-                && tfactory.DatabaseName == DatabaseName;
-        }
     }
 }

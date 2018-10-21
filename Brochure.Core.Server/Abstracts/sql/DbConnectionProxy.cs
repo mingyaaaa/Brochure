@@ -7,7 +7,7 @@ namespace Brochure.Core.Server.Abstracts.sql
 {
     public class DbConnectionProxy : DbConnection
     {
-        public event Action<DbConnection> ClosingHander;
+
         private DbConnection dbConnection;
         public DatabaseType DatabaseType { get; }
         public DbConnectionProxy(DbConnection connection, DatabaseType databaseType)
@@ -31,17 +31,19 @@ namespace Brochure.Core.Server.Abstracts.sql
                 throw new Exception("当前指定的数据库为null");
             if (dbConnection.Database != databaseName)
                 dbConnection.ChangeDatabase(databaseName);
+
         }
 
         public override void Close()
         {
-            ClosingHander?.Invoke(this);
-            dbConnection.Close();
+            if (dbConnection.State == ConnectionState.Open)
+                dbConnection?.Close();
         }
 
         public override void Open()
         {
-            dbConnection.Open();
+            if (dbConnection.State == ConnectionState.Closed)
+                dbConnection?.Open();
         }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)

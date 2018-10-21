@@ -25,7 +25,7 @@ namespace Brochure.Core.Test.MySqlDbTest
         public DataTest()
         {
             DbConnectPool.RegistFactory(_factory, DatabaseType.MySql);
-            client = new MySqlClient();
+            client = new MySqlClient(_factory.DatabaseName);
         }
 
         [Fact]

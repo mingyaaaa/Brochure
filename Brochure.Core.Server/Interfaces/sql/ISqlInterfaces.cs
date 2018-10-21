@@ -41,7 +41,7 @@ namespace Brochure.Core.Server
 
         void BeginTransaction();
     }
-    public interface IDatabaseHub
+    public interface IDatabaseHub : IDisposable
     {
         IClient Client { get; }
         /// <summary>
@@ -71,13 +71,9 @@ namespace Brochure.Core.Server
 
     }
 
-    public interface IDataTableHub
+    public interface IDataTableHub : IDisposable
     {
         IClient Client { get; }
-        /// <summary>
-        /// 数据库名
-        /// </summary>
-        string DatabaseName { get; }
         /// <summary>
         /// 判断表是否存在
         /// </summary>
@@ -113,7 +109,7 @@ namespace Brochure.Core.Server
 
     }
 
-    public interface IDataHub
+    public interface IDataHub : IDisposable
     {
         /// <summary>
         /// 客户端

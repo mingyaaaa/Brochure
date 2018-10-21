@@ -293,6 +293,16 @@ namespace Brochure.Server.MySql.Implements
                 dbCommand.Transaction = _dbTransaction;
             return dbCommand;
         }
+
+        public void Dispose()
+        {
+            _dbConnection.Close();
+        }
+
+        ~MySqlDataHub()
+        {
+            _dbConnection.Close();
+        }
         #endregion
     }
 }
