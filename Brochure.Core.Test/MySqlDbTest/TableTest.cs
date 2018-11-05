@@ -235,7 +235,6 @@ namespace Brochure.Core.Test.MySqlDbTest
             for (int i = 0; i < 100; i++)
             {
                 var tableHub = await client.GetDataTableHubAsync("test");
-                tableHub.Dispose();
             }
         }
 

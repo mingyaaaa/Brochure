@@ -25,7 +25,6 @@ namespace Brochure.Core.Server.core
             factory.DatabaseName = databaseName;
             var connect = factory.CreateDbConnect();
             var proxy = new DbConnectionProxy(connect, databaseType);
-            proxy.Open();
             return proxy;
         }
 

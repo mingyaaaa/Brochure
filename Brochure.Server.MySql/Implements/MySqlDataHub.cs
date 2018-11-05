@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
+using Brochure.Core.Server.core;
+using Brochure.Core.Server.Enums.sql;
 
 namespace Brochure.Server.MySql.Implements
 {
@@ -12,12 +14,11 @@ namespace Brochure.Server.MySql.Implements
     {
         private ISqlParse _parse;
         private DbConnection _dbConnection;
-        private DbTransaction _dbTransaction;
-        public MySqlDataHub(IClient client, DbConnection connection, string tableName, DbTransaction dbTransaction)
+        private IDbTransaction _dbTransaction;
+        public MySqlDataHub(IClient client, string tableName, IDbTransaction dbTransaction)
         {
             Client = client;
             _parse = client.SqlParse;
-            _dbConnection = connection;
             TableName = tableName;
             _dbTransaction = dbTransaction;
         }
@@ -30,7 +31,7 @@ namespace Brochure.Server.MySql.Implements
         {
             var command = GetCommand();
             command.CommandText = $"select COUNT(1) from information_schema.columns WHERE table_name = '{TableName}' and column_name = '{columnName}'";
-            var rr = await command.ExecuteScalarAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr.As<int>() == 1;
         }
 
@@ -38,7 +39,7 @@ namespace Brochure.Server.MySql.Implements
         {
             var command = GetCommand();
             command.CommandText = $"alter table {TableName} change column {columnName} {newcolumnName} {typeName}";
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
 
@@ -49,7 +50,7 @@ namespace Brochure.Server.MySql.Implements
             if (isNotNull)
                 sql = $"{sql} not null";
             command.CommandText = sql;
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
 
@@ -57,7 +58,7 @@ namespace Brochure.Server.MySql.Implements
         {
             var command = GetCommand();
             command.CommandText = $"alter table {TableName} drop column {columnName}";
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
         public async Task<long> AddColumnsAsync(string columnName, string typeName, bool isNotNull)
@@ -69,7 +70,7 @@ namespace Brochure.Server.MySql.Implements
                 sql = $"{sql} not null";
             }
             command.CommandText = sql;
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
 
@@ -80,7 +81,7 @@ namespace Brochure.Server.MySql.Implements
         {
             var command = GetCommand();
             command.CommandText = $"create {sqlIndex} {indexName} on {TableName}({string.Join(",", columnNames)})";
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
 
@@ -88,7 +89,7 @@ namespace Brochure.Server.MySql.Implements
         {
             var command = GetCommand();
             command.CommandText = $"drop index {indexName} on {TableName}";
-            var rr = await command.ExecuteNonQueryAsync();
+            var rr = await Excute<int>(command.ExecuteNonQueryAsync, -1);
             return rr == 0 ? 1 : -1;
         }
 
@@ -101,7 +102,7 @@ namespace Brochure.Server.MySql.Implements
             command.CommandText = $"delete from {TableName} where 1=1 and {param.Sql}";
             var mysqlParams = DbUtil.GetMySqlParams(Client.TypeMap, param.Params);
             command.Parameters.AddRange(mysqlParams);
-            return await command.ExecuteNonQueryAsync();
+            return await Excute<int>(command.ExecuteNonQueryAsync, -1);
         }
 
         public async Task<long> DeleteAsync(Query query)
@@ -112,7 +113,7 @@ namespace Brochure.Server.MySql.Implements
             var mysqlParams = DbUtil.GetMySqlParams(Client.TypeMap, param.Params);
             command.CommandText = $"delete from {TableName} where 1=1 and {param.Sql}";
             command.Parameters.AddRange(mysqlParams);
-            return await command.ExecuteNonQueryAsync();
+            return await Excute<int>(command.ExecuteNonQueryAsync, -1);
         }
 
         public async Task<long> DeleteAsync(Guid id)
@@ -121,19 +122,26 @@ namespace Brochure.Server.MySql.Implements
         }
         public async Task<long> GetCountAsync(Query query)
         {
-            var command = GetCommand();
+            //查询无法共用连接
+            var connecttion = DbConnectPool.GetDbConnection(DatabaseType.MySql, Client.DatabaseName);
+            connecttion.Open();
+            var command = connecttion.CreateCommand();
             command.CommandText = $"select count(*) from {TableName} where 1=1 and {query}";
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
             var mysqlParams = DbUtil.GetMySqlParams(Client.TypeMap, param.Params);
             command.Parameters.AddRange(mysqlParams);
             var rr = await command.ExecuteScalarAsync();
+            connecttion.Close();
             return rr.As<int>();
         }
 
         public async Task<IRecord> GetInfoAsync(Guid guid)
         {
-            var command = GetCommand();
+            //查询无法共用连接
+            var connecttion = DbConnectPool.GetDbConnection(DatabaseType.MySql, Client.DatabaseName);
+            connecttion.Open();
+            var command = connecttion.CreateCommand();
             var query = Query.Eq("Id", guid.ToString());
             var parse = new QueryParse(_parse);
             var param = parse.Parse(query);
@@ -152,12 +160,16 @@ namespace Brochure.Server.MySql.Implements
                 }
             }
             dr.Close();
+            connecttion.Close();
             return doc;
         }
 
         public async Task<List<IRecord>> GetListAsync(SearchParams searchParams)
         {
-            var command = GetCommand();
+            //查询无法共用连接
+            var connecttion = DbConnectPool.GetDbConnection(DatabaseType.MySql, Client.DatabaseName);
+            connecttion.Open();
+            var command = connecttion.CreateCommand();
             List<IRecord> result = new List<IRecord>();
             var orderDoc = searchParams.OrderField;
             var orderStr = string.Empty;
@@ -200,11 +212,15 @@ namespace Brochure.Server.MySql.Implements
                 result.Add(doc);
             }
             dr.Close();
+            connecttion.Close();
             return result;
         }
         public async Task<List<IRecord>> GetListGroupByAsync(List<Aggregate> aggregates, SearchParams searchParams, params string[] groupFields)
         {
-            var command = GetCommand();
+            //查询无法共用连接
+            var connecttion = DbConnectPool.GetDbConnection(DatabaseType.MySql, Client.DatabaseName);
+            connecttion.Open();
+            var command = connecttion.CreateCommand();
             List<IRecord> result = null;
             var orderDoc = searchParams.OrderField;
             var orderStr = string.Empty;
@@ -235,6 +251,8 @@ namespace Brochure.Server.MySql.Implements
                 }
                 result.Add(doc);
             }
+            dr.Close();
+            connecttion.Close();
             return result;
 
         }
@@ -242,12 +260,18 @@ namespace Brochure.Server.MySql.Implements
         {
             var tasks = new List<Task<long>>();
             foreach (var item in entities.ToList())
-                tasks.Add(InserOneAsync(item));
+                tasks.Add(Insert(item));
             var rr = await Task.WhenAll(tasks);
+            _dbConnection.Close();
             return rr.Sum(t => t);
         }
 
         public async Task<long> InserOneAsync(EntityBase entity)
+        {
+            return await Excute<long>(() => Insert(entity), -1);
+        }
+
+        private async Task<long> Insert(EntityBase entity)
         {
             var command = GetCommand();
             var dic = entity.AsDictionary();
@@ -258,6 +282,7 @@ namespace Brochure.Server.MySql.Implements
             command.Parameters.AddRange(paramList);
             return await command.ExecuteNonQueryAsync();
         }
+
         public async Task<long> UpdateAsync(Guid id, IRecord doc)
         {
             var command = GetCommand();
@@ -270,7 +295,7 @@ namespace Brochure.Server.MySql.Implements
             });
             command.CommandText = $"{paramObj.Sql} where 1=1 and Id={idSymbol}";
             command.Parameters.AddRange(sqlParams);
-            return await command.ExecuteNonQueryAsync();
+            return await Excute<int>(command.ExecuteNonQueryAsync, -1);
         }
 
         public async Task<long> UpdateAsync(Query query, IRecord doc)
@@ -284,24 +309,47 @@ namespace Brochure.Server.MySql.Implements
             var sqlParams = DbUtil.GetMySqlParams(Client.TypeMap, paramDic, param.Params);
             command.CommandText = sql;
             command.Parameters.AddRange(sqlParams);
-            return await command.ExecuteNonQueryAsync();
+            return await Excute<int>(command.ExecuteNonQueryAsync, -1);
         }
         private DbCommand GetCommand()
         {
+            if (_dbTransaction != null)
+                _dbConnection = _dbTransaction.Transaction.Connection;
+            if (_dbConnection == null)
+                _dbConnection = DbConnectPool.GetDbConnection(DatabaseType.MySql, Client.DatabaseName);
             var dbCommand = _dbConnection.CreateCommand();
-            if (Client.IsBeginTransaction)
-                dbCommand.Transaction = _dbTransaction;
+            if (_dbTransaction != null)
+                dbCommand.Transaction = _dbTransaction.Transaction;
+            _dbConnection.Open();
             return dbCommand;
         }
 
+        private async Task<T> Excute<T>(Func<Task<T>> func, T errorValue)
+        {
+            var r = default(T);
+            try
+            {
+                r = await func?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                r = errorValue;
+            }
+            finally
+            {
+                if (_dbTransaction == null)
+                    _dbConnection?.Close();
+            }
+            return r;
+        }
         public void Dispose()
         {
-            _dbConnection.Close();
+            _dbConnection?.Close();
         }
 
         ~MySqlDataHub()
         {
-            _dbConnection.Close();
+            _dbConnection?.Close();
         }
         #endregion
     }

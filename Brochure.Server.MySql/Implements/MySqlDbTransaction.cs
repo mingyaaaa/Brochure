@@ -3,10 +3,10 @@ using System.Data.Common;
 using Brochure.Core.Server;
 namespace Brochure.Server.MySql.Implements
 {
-    public class DbTransaction : IDbTransaction
+    public class MySqlDbTransaction : IDbTransaction
     {
 
-        public DbTransaction(System.Data.Common.DbTransaction dbTransaction)
+        public MySqlDbTransaction(System.Data.Common.DbTransaction dbTransaction)
         {
             Transaction = dbTransaction;
         }

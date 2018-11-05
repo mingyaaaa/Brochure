@@ -2,17 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data.Common;
+using Brochure.Core.Server.Enums.sql;
 
 namespace Brochure.Core.Server
 {
     public interface IClient
     {
-        bool IsBeginTransaction { get; }
+
         TypeMap TypeMap { get; }
 
         ISqlParse SqlParse { get; }
-
-        DbFactory Factory { get; }
 
         string DatabaseName { get; set; }
         /// <summary>
@@ -30,17 +30,18 @@ namespace Brochure.Core.Server
         /// 获取数据操作中心
         /// </summary>
         /// <returns></returns>
-        Task<IDataHub> GetDataHubAsync<T>() where T : EntityBase;
+        Task<IDataHub> GetDataHubAsync<T>(IDbTransaction dbTransaction = null) where T : EntityBase;
         /// <summary>
         /// 获取数据操作中心
         /// </summary>
         /// <returns></returns>
-        Task<IDataHub> GetDataHubAsync(string tableName);
+        Task<IDataHub> GetDataHubAsync(string tableName, IDbTransaction dbTransaction = null);
 
         void SetDatabase(string databaseName);
 
-        void BeginTransaction();
+        IDbTransaction BeginTransaction();
     }
+
     public interface IDatabaseHub : IDisposable
     {
         IClient Client { get; }
@@ -246,6 +247,7 @@ namespace Brochure.Core.Server
 
     public interface IDbTransaction
     {
+        DbTransaction Transaction { get; }
         void Commit();
         void Rollback();
     }
