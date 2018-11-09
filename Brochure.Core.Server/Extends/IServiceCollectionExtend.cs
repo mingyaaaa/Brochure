@@ -11,8 +11,6 @@ namespace Brochure.Core.Server
             var serverManager = new ServerManager(services);
             //注册Ioc代理
             serverManager.AddSingleton(serverManager);
-            //注册日志
-            serverManager.AddSingleton<ILog, Log>();
             //注册上下文
             serverManager.AddSingleton<IContext, Context>();
             //注册插件管理
