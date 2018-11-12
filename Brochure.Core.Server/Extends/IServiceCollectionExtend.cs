@@ -17,7 +17,6 @@ namespace Brochure.Core.Server
             serverManager.AddSingleton<IPluginManagers, PluginManagers>();
             //注册启动项
             serverManager.AddTransient<ServerBootstrap>();
-
             return serverManager;
         }
     }
