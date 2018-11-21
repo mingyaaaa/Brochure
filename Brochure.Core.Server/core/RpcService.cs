@@ -5,7 +5,7 @@ using Thrift.Transport;
 
 namespace Brochure.Core.Core
 {
-    public class RpcService<T> where T : class
+    public class RpcService
     {
         private int _port;
         private TServerTransport transport;
