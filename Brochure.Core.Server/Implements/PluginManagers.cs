@@ -43,7 +43,7 @@ namespace Brochure.Core.Server
         {
             var bathPath = AppDomain.CurrentDomain.BaseDirectory;
             var pluginPath = Path.Combine(bathPath, "Plugin");
-            if (Directory.Exists(pluginPath))
+            if (!Directory.Exists(pluginPath))
                 Directory.CreateDirectory(pluginPath);
             return pluginPath;
         }
