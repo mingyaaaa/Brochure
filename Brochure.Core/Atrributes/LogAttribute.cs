@@ -15,7 +15,7 @@ namespace Brochure.Core.Atrributes
         }
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var logger = new RpcService<ILogService.Client>();
+            var logger = new RpcClient<ILogService.Client>();
             try
             {
                 await context.Invoke(next);
