@@ -1,6 +1,7 @@
 ﻿using Brochure.Core.Interfaces;
 using Brochure.Core.Server.Implements;
 using Microsoft.Extensions.DependencyInjection;
+using Brochure.Core.Core;
 
 namespace Brochure.Core.Server
 {
@@ -17,6 +18,7 @@ namespace Brochure.Core.Server
             serverManager.AddSingleton<IPluginManagers, PluginManagers>();
             //注册启动项
             serverManager.AddTransient<ServerBootstrap>();
+            DI.ServerManager = serverManager;
             return serverManager;
         }
     }

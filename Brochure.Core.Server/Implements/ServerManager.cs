@@ -2,6 +2,7 @@
 using AspectCore.Injector;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Brochure.Core.Core;
 
 namespace Brochure.Core.Server.Implements
 {
@@ -19,7 +20,8 @@ namespace Brochure.Core.Server.Implements
 
         public IServiceProvider BuildProvider()
         {
-            return Services.Build();
+            DI.ServiceProvider = Services.Build();
+            return DI.ServiceProvider;
         }
     }
 }
