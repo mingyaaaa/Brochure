@@ -3,7 +3,7 @@ using Thrift.Protocol;
 using Thrift.Server;
 using Thrift.Transport;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core.Server
 {
     public class RpcService
     {
@@ -11,6 +11,7 @@ namespace Brochure.Core.Core
         private TServerTransport transport;
         private TMultiplexedProcessor multiProcessor;
         private TServer server;
+        private ServiceStatus status = ServiceStatus.Stop;
         public RpcService(int port)
         {
             _port = port;
@@ -24,13 +25,26 @@ namespace Brochure.Core.Core
         }
         public void Start()
         {
+            if (status == ServiceStatus.Start)
+                return;
             server = server ?? new TThreadPoolServer(multiProcessor, transport);
             server.Serve();
+            status = ServiceStatus.Start;
         }
 
         public void Stop()
         {
+            if (status == ServiceStatus.Stop)
+                return;
             server?.Stop();
+            transport.Close();
+            status = ServiceStatus.Stop;
+
+        }
+        private enum ServiceStatus
+        {
+            Start,
+            Stop,
         }
     }
 }

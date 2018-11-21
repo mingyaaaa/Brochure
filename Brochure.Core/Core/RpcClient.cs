@@ -3,7 +3,7 @@ using System;
 using Thrift.Protocol;
 using Thrift.Transport;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
     public class RpcClient<T> : IDisposable where T : class
     {
