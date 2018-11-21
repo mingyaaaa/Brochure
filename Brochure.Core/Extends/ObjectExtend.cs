@@ -1,10 +1,7 @@
+using LogServer.Server;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
-using Brochure.Core.Core;
-using LogServer.Server;
 
 namespace Brochure.Core
 {
@@ -20,7 +17,7 @@ namespace Brochure.Core
         /// <returns></returns>
         public static T As<T>(this object obj, bool isException = true)
         {
-            var logger = new RpcService<ILogService.Client>();
+            var logger = new RpcClient<ILogService.Client>();
             try
             {
                 if (obj is T)
