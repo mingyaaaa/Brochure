@@ -1,6 +1,6 @@
 ﻿using AspectCore.DynamicProxy;
 using Brochure.Core.Core;
-using Log;
+using LogServer.Server;
 using System;
 using System.Threading.Tasks;
 
@@ -22,7 +22,7 @@ namespace Brochure.Core.Atrributes
             }
             catch (System.Exception e)
             {
-                logger.Client.Error(new Log.Log(_message, DateTime.Now.ToString(), e.StackTrace));
+                logger.Client.Error(new Log(_message, DateTime.Now.ToString(), e.StackTrace));
             }
         }
     }
