@@ -29,7 +29,7 @@ namespace Brochure.Core
                 _port = hostconfig.RpcPort;
                 transport = new TSocket(_host, _port);
                 TProtocol protocol = new TBinaryProtocol(transport);
-                var protocolUserService = new TMultiplexedProtocol(protocol, hostconfig.ServerName);
+                var protocolUserService = new TMultiplexedProtocol(protocol, hostconfig.ServiceKey);
                 Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
                 Open();
             }

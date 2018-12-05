@@ -1,14 +1,13 @@
 ﻿using Brochure.Core.Server;
+using Brochure.Core.Server.core;
+using Brochure.Core.Server.Enums.sql;
 using Brochure.Server.MySql;
-using MySql.Data.MySqlClient;
+using Brochure.Server.MySql.Implements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Brochure.Server.MySql.Implements;
-using Brochure.Core.Server.core;
-using Brochure.Core.Server.Enums.sql;
 
 namespace Brochure.Core.Test.MySqlDbTest
 {
