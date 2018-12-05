@@ -47,7 +47,7 @@ namespace Brochure.Core
         {
             if (transport == null)
                 return;
-            transport.Flush();
+            //transport.Flush();
             if (transport.IsOpen)
                 transport.Close();
         }

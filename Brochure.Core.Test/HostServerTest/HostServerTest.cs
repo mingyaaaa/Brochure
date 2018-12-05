@@ -40,9 +40,9 @@ namespace Brochure.Core.Test.HostServerTest
         [Fact]
         public void TestClient()
         {
-            host = "10.0.0.3";
+            host = "10.0.0.5";
             var client = new RpcClient<IHostService.Client>(host, port, HostServer.ServiceKey.Key).Client;
-            try 
+            try
             {
                 var a = client.GetAddress(HostServer.ServiceKey.Key);
             }
