@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Brochure.Core.Server.Implements
+namespace Brochure.Core.Server
 {
     public class Auths : IAuth
     {

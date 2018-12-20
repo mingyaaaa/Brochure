@@ -1,9 +1,8 @@
-﻿using Brochure.Core.Server.Enums.sql;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 
-namespace Brochure.Core.Server.Abstracts.sql
+namespace Brochure.Core.Server
 {
     public class DbConnectionProxy : DbConnection
     {

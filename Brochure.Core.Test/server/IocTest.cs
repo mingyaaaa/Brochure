@@ -1,4 +1,5 @@
-﻿using Brochure.Core.Server.Implements;
+﻿using AspectCore.Injector;
+using Brochure.Core.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -6,52 +7,69 @@ namespace Brochure.Core.Test.server
 {
     public interface IA
     {
-        string AA (string str);
+        string AA(string str);
     }
     public class A : IA
     {
 
-        public string AA (string str)
+        public string AA(string str)
         {
             return str;
         }
     }
     public interface IB
     {
-        string BB (string str);
+        string BB(string str);
     }
     public class B : IB
     {
 
-        public string BB (string str)
+        public string BB(string str)
         {
             return str;
+        }
+    }
+    public interface IC
+    {
+        void CC();
+    }
+    public class C
+    {
+        private IA _a;
+        public C(IA a)
+        {
+            _a = a;
+        }
+        public void CC()
+        {
         }
     }
     public class IocTest
     {
         [Fact]
-        public void IocScopeTest ()
+        public void IocScopeTest()
         {
-            var server = new ServerManager ();
+            var server = new ServerManager();
             {
-                var provider = server.BuildProvider ();
-                server.AddScoped<IA, A> ();
-                IA a1, a2;
+                server.AddScoped<IB, B>();
+                var provider = server.BuildProvider();
+                var b1 = provider.GetService<IB>();
+                using (var tprovide = provider.CreateScope())
                 {
-                    a1 = provider.GetService<IA> ();
-                    a2 = provider.GetService<IA> ();
+                    var b2 = tprovide.GetService<IB>();
+                    Assert.NotSame(b1, b2);
                 }
-                Assert.Same (a1, a2);
+                var b3 = provider.GetService<IB>();
+                Assert.Same(b1, b3);
             }
             {
-                server.AddTransient<IB, B> ();
-                var provider = server.BuildProvider ();
-
-                var b1 = provider.GetService<IB> ();
-                var b2 = provider.GetService<IB> ();
-                Assert.NotSame (b1, b2);
+                var server1 = new ServerManager();
+                server1.AddSingleton<IA, A>();
+                server1.AddSingleton<C>();
+                var provider = server1.BuildProvider();
+                var a = provider.GetService<C>();
             }
+
         }
     }
 }

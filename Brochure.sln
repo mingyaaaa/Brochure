@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Server.MySql", "Br
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core.Test", "Brochure.Core.Test\Brochure.Core.Test.csproj", "{D608C628-B705-4D26-A035-56F7BFFC5D7D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Server", "Test.Server\Test.Server.csproj", "{6534D81D-ADCF-4CBD-8D9C-8396CD5703EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D608C628-B705-4D26-A035-56F7BFFC5D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D608C628-B705-4D26-A035-56F7BFFC5D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D608C628-B705-4D26-A035-56F7BFFC5D7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6534D81D-ADCF-4CBD-8D9C-8396CD5703EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6534D81D-ADCF-4CBD-8D9C-8396CD5703EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6534D81D-ADCF-4CBD-8D9C-8396CD5703EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6534D81D-ADCF-4CBD-8D9C-8396CD5703EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

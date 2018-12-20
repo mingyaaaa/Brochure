@@ -1,10 +1,9 @@
 ﻿using AspectCore.Extensions.DependencyInjection;
 using AspectCore.Injector;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using Brochure.Core.Core;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Brochure.Core.Server.Implements
+namespace Brochure.Core.Server
 {
     public class ServerManager : IServerManager
     {
@@ -18,7 +17,7 @@ namespace Brochure.Core.Server.Implements
             Services = server.ToServiceContainer();
         }
 
-        public IServiceProvider BuildProvider()
+        public IServiceResolver BuildProvider()
         {
             DI.ServiceProvider = Services.Build();
             return DI.ServiceProvider;

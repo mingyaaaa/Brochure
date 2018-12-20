@@ -22,16 +22,17 @@ namespace Brochure.Core.Server
         }
         public void RegistEvent(string eventName, string serviceKey, Action<object> action)
         {
-            var rpc = new RpcClient<ISubscribeEventService.Client>(serviceKey);
+            var rpc = new RpcClient<ISubscribeEventService.Client>(serviceKey, EventServer.ServiceKey.Key);
             if (rpc.Client.RegistEventType(eventName, _publishServiceKey))
             {
                 var key = eventName + serviceKey;
                 _eventCollection.Add(key, action);
             }
         }
+
         public void RemoveEvent(string eventName, string serviceKey)
         {
-            var rpc = new RpcClient<ISubscribeEventService.Client>(serviceKey);
+            var rpc = new RpcClient<ISubscribeEventService.Client>(serviceKey, EventServer.ServiceKey.Key);
             if (rpc.Client.RemoveEventType(eventName, _publishServiceKey))
             {
                 var key = eventName + serviceKey;

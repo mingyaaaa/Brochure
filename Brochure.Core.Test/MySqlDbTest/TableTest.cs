@@ -1,11 +1,8 @@
 ﻿using Brochure.Core.Server;
-using Brochure.Core.Server.core;
-using Brochure.Core.Server.Enums.sql;
 using Brochure.Server.MySql;
 using Brochure.Server.MySql.Implements;
 using System.Threading.Tasks;
 using Xunit;
-using System;
 using Xunit.Abstractions;
 
 namespace Brochure.Core.Test.MySqlDbTest

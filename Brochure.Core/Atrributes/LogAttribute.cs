@@ -1,5 +1,4 @@
 ﻿using AspectCore.DynamicProxy;
-using Brochure.Core.Core;
 using LogServer.Server;
 using System;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace Brochure.Core.Atrributes
         }
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var logger = new RpcClient<ILogService.Client>();
+            var logger = new RpcClient<ILogService.Client>(LogServer.ServiceKey.Key);
             try
             {
                 await context.Invoke(next);

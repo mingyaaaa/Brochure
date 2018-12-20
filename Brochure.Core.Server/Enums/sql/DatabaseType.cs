@@ -1,4 +1,4 @@
-﻿namespace Brochure.Core.Server.Enums.sql
+﻿namespace Brochure.Core.Server
 {
     public enum DatabaseType
     {

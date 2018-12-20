@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EventServer.Server;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -11,12 +12,14 @@ namespace Brochure.Core.Server
         public static void UseRpcServer(this IApplicationBuilder app, int port, IDictionary<string, TProcessor> processorsServerDic)
         {
             var rpcServer = new RpcService(port);
+            var provider = app.ApplicationServices.CreateScope().ServiceProvider;
+            var publishEventService = provider.GetService<PublicshEventService>();
+            //默认加入事件服务
+            rpcServer.RegisterRpcServer(EventServer.ServiceKey.Key, new IPublishEventService.Processor(publishEventService));
             foreach (var item in processorsServerDic.Keys)
             {
-                rpcServer.RegisterPrcServer(item, processorsServerDic[item]);
-
+                rpcServer.RegisterRpcServer(item, processorsServerDic[item]);
             }
-            var provider = app.ApplicationServices.CreateScope().ServiceProvider;
             var lifeTime = provider.GetService<IApplicationLifetime>();
             lifeTime.ApplicationStarted.Register(() =>
             {

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AspectCore.Injector;
+
 namespace Brochure.Core.Core
 {
     public class DI
     {
         public static IServerManager ServerManager { get; set; }
-        public static IServiceProvider ServiceProvider { get; set; }
+        public static IServiceResolver ServiceProvider { get; set; }
     }
 }

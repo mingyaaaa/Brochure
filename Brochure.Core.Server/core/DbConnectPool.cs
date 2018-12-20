@@ -1,11 +1,8 @@
-﻿using Brochure.Core.Server.Abstracts.sql;
-using Brochure.Core.Server.Enums.sql;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading.Tasks;
 
-namespace Brochure.Core.Server.core
+namespace Brochure.Core.Server
 {
     public static class DbConnectPool
     {

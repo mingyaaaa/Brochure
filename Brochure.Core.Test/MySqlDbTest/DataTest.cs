@@ -1,6 +1,4 @@
 ﻿using Brochure.Core.Server;
-using Brochure.Core.Server.core;
-using Brochure.Core.Server.Enums.sql;
 using Brochure.Server.MySql;
 using Brochure.Server.MySql.Implements;
 using System;

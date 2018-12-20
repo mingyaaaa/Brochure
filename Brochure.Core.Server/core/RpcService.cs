@@ -19,8 +19,9 @@ namespace Brochure.Core.Server
             transport = new TServerSocket(_port);
             TServer server = new TThreadPoolServer(multiProcessor, transport);
         }
-        public void RegisterPrcServer(string serverName, TProcessor processor)
+        public void RegisterRpcServer(string serverName, TProcessor processor)
         {
+            //默认注册一个
             multiProcessor.RegisterProcessor(serverName, processor);
         }
         public void Start()

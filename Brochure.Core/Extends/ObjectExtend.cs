@@ -17,7 +17,7 @@ namespace Brochure.Core
         /// <returns></returns>
         public static T As<T>(this object obj, bool isException = true)
         {
-            var logger = new RpcClient<ILogService.Client>();
+            var logger = new RpcClient<ILogService.Client>(LogServer.ServiceKey.Key);
             try
             {
                 if (obj is T)

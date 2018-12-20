@@ -15,3 +15,4 @@ Brochure.Core.Server/obj/
 /Brochure.Server.MySql/Brochure.Server.MySql.csproj.user
 /.vs
 *.patch
+/Test.Server

@@ -1,7 +1,6 @@
-﻿using Brochure.Core.Interfaces;
-using Brochure.Core.Server.Implements;
+﻿using Brochure.Core.Core;
+using Brochure.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Brochure.Core.Core;
 
 namespace Brochure.Core.Server
 {
@@ -16,6 +15,8 @@ namespace Brochure.Core.Server
             serverManager.AddSingleton<IContext, Context>();
             //注册插件管理
             serverManager.AddSingleton<IPluginManagers, PluginManagers>();
+            serverManager.AddSingleton<EventManager>();
+            serverManager.AddSingleton<PublicshEventService>();
             //注册启动项
             serverManager.AddTransient<ServerBootstrap>();
             DI.ServerManager = serverManager;
