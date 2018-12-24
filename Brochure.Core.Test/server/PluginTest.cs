@@ -1,6 +1,4 @@
 ﻿using Brochure.Core.Server;
-using AspectCore.Injector;
-using Brochure.Core.Server.Implements;
 using Xunit;
 
 namespace Brochure.Core.Test.server
