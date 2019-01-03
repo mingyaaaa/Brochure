@@ -256,12 +256,20 @@ namespace Brochure.Server.MySql.Implements
         }
         public async Task<long> InserManyAsync(IEnumerable<EntityBase> entities)
         {
-            var tasks = new List<Task<long>>();
-            foreach (var item in entities.ToList())
-                tasks.Add(Insert(item));
-            var rr = await Task.WhenAll(tasks);
-            _dbConnection.Close();
-            return rr.Sum(t => t);
+            var command = GetCommand();
+            var list = entities.ToList();
+            var docs = new List<IRecord>();
+            IRecord doc;
+            foreach (var item in list)
+            {
+                doc = new Record(item);
+                docs.Add(doc);
+            }
+            var sqlParams = DbUtil.GetInsertManySql(TableName, docs.ToArray());
+            command.CommandText = sqlParams.Sql;
+            var paramList = DbUtil.GetMySqlParams(Client.TypeMap, sqlParams.Params);
+            command.Parameters.AddRange(paramList);
+            return await command.ExecuteNonQueryAsync();
         }
 
         public async Task<long> InserOneAsync(EntityBase entity)
@@ -272,8 +280,7 @@ namespace Brochure.Server.MySql.Implements
         private async Task<long> Insert(EntityBase entity)
         {
             var command = GetCommand();
-            var dic = entity.AsDictionary();
-            var doc = new Record(dic);
+            var doc = new Record(entity);
             var sqlParams = DbUtil.GetInsertSql(TableName, doc);
             command.CommandText = sqlParams.Sql;
             var paramList = DbUtil.GetMySqlParams(Client.TypeMap, sqlParams.Params);

@@ -82,6 +82,36 @@ namespace Brochure.Server.MySql
             param.Sql = $"{sql}({string.Join(",", fields)}) values({string.Join(",", param.Params.Keys.ToList())})";
             return param;
         }
+        public static IDbParams GetInsertManySql(string tableName, IRecord[] docs)
+        {
+            var sql = $"insert into {tableName} ";
+            var param = new MySqlDbParams();
+            param.Params = new Record();
+            //需要验证传入得IRecord 字段是否一至
+            if (docs == null || docs.Length == 0)
+                throw new ArgumentException("参数错误");
+            var fields = docs.First();
+            var valuesSql = string.Empty;
+            var listSql = new List<string>();
+            foreach (var item in docs)
+            {
+                if (item.Keys.Except(fields.Keys).Count() != 0)
+                    throw new ArgumentException("参数中字段不一致");
+                var index = 0;
+                var fieldlist = new List<string>();
+                foreach (var field in item.Keys)
+                {
+                    var paramsKey = $"{param.ParamSymbol}{field}{index}";
+                    param.Params[paramsKey] = item[field];
+                    fieldlist.Add(paramsKey);
+                    index++;
+                    valuesSql = $"({string.Join(",", fieldlist)})";
+                }
+            }
+            valuesSql = string.Join(",", listSql);
+            param.Sql = $"{sql}({string.Join(",", fields)}) values {valuesSql}";
+            return param;
+        }
         public static IDbParams GetUpdateSql(string tableName, IRecord doc)
         {
             var param = new MySqlDbParams();
