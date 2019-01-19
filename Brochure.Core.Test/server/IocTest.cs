@@ -9,41 +9,67 @@ namespace Brochure.Core.Test.server
     {
         string AA(string str);
     }
+
     public class A : IA
     {
+        public A(string a)
+        {
+        }
 
         public string AA(string str)
         {
             return str;
         }
     }
+
     public interface IB
     {
         string BB(string str);
     }
+
     public class B : IB
     {
-
         public string BB(string str)
         {
             return str;
         }
     }
+
     public interface IC
     {
         void CC();
     }
-    public class C
+
+    public class IIC
     {
-        private IA _a;
-        public C(IA a)
+        public interface IC
+        {
+            void CC();
+        }
+    }
+
+    public class IIC2
+    {
+        public interface IC
+        {
+            void CC();
+        }
+    }
+
+    public class C : IIC.IC
+    {
+        private IEventManager _a;
+
+        public C(IEventManager a)
         {
             _a = a;
         }
+
         public void CC()
         {
         }
     }
+
     public class IocTest
     {
         [Fact]
@@ -64,12 +90,11 @@ namespace Brochure.Core.Test.server
             }
             {
                 var server1 = new ServerManager();
-                server1.AddSingleton<IA, A>();
+                server1.AddSingleton<IEventManager>(new EventManager("a"));
                 server1.AddSingleton<C>();
                 var provider = server1.BuildProvider();
                 var a = provider.GetService<C>();
             }
-
         }
     }
 }

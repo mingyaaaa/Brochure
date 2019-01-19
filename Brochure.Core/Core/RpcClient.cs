@@ -1,25 +1,32 @@
 ﻿using HostServer.Server;
 using System;
-using Thrift.Protocol;
-using Thrift.Transport;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using Thrift;
+using Thrift.Protocols;
+using Thrift.Transports;
+using Thrift.Transports.Client;
 
 namespace Brochure.Core
 {
-    public class RpcClient<T> : IDisposable where T : class
+    public class RpcClient<T> : IDisposable where T : TBaseClient
     {
         private string _host;
         private int _port;
-        private TTransport transport;
+        private TClientTransport transport;
+        private CancellationTokenSource s = new CancellationTokenSource();
+
         public RpcClient(string host, int port, string serverName)
         {
             _host = host;
             _port = port;
-            transport = new TSocket(host, port);
-            TProtocol protocol = new TBinaryProtocol(transport);
+            transport = new TSocketClientTransport(IPAddress.Parse(host), port);
+            TProtocol protocol = new TJsonProtocol(transport);
             var protocolUserService = new TMultiplexedProtocol(protocol, serverName);
             Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
-            Open();
         }
+
         public RpcClient(string serviceKey, string serviceName)
         {
             if (string.IsNullOrWhiteSpace(Config.HostServerAddress))
@@ -30,32 +37,38 @@ namespace Brochure.Core
             {
                 try
                 {
-                    var hostconfig = hostrpc.Client.GetAddress(serviceKey);
+                    var hostconfig = hostrpc.Client.GetAddressAsync(serviceKey, s.Token).ConfigureAwait(false).GetAwaiter().GetResult();
                     _host = hostconfig.Host;
                     _port = hostconfig.RpcPort;
-                    transport = new TSocket(_host, _port);
+                    transport = new TSocketClientTransport(IPAddress.Parse(_host), _port);
                     TProtocol protocol = new TBinaryProtocol(transport);
                     var protocolUserService = new TMultiplexedProtocol(protocol, serviceName);
                     Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
-                    Open();
                 }
                 catch (Exception e)
                 {
                     throw new Exception("无法连接到服务,请确认服务是否注册");
                 }
-
             }
         }
+
         public RpcClient(string serviceKey) : this(serviceKey, serviceKey)
         {
-
         }
-        public void Open()
+
+        public async Task OpenAsync()
         {
-            if (transport == null)
-                return;
-            if (!transport.IsOpen)
-                transport.Open();
+            try
+            {
+                if (transport == null)
+                    return;
+                if (!transport.IsOpen)
+                    await transport.OpenAsync();
+            }
+            catch (Exception)
+            {
+                transport.Close();
+            }
         }
 
         public void Close()
@@ -71,11 +84,12 @@ namespace Brochure.Core
         {
             Close();
         }
+
         ~RpcClient()
         {
             Close();
         }
-        public T Client { get; }
 
+        private T Client { get; }
     }
 }

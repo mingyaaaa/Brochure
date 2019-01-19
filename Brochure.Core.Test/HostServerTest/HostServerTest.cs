@@ -2,6 +2,8 @@
 using EventServer.Server;
 using HostServer.Server;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Brochure.Core.Test.HostServerTest
@@ -9,6 +11,8 @@ namespace Brochure.Core.Test.HostServerTest
     public class HostServerTest
     {
         private IServerManager serverManager;
+        private CancellationTokenSource s = new CancellationTokenSource();
+
         public HostServerTest()
         {
             serverManager = new ServerManager();
@@ -16,32 +20,40 @@ namespace Brochure.Core.Test.HostServerTest
 
         private string host = "127.0.0.1";
         private int port = 8000;
-        public class HostService : IHostService.Iface, ISubscribeEventService.Iface
-        {
 
-            public HostConfig GetAddress(string servicekey)
+        public class HostService : IHostService.IAsync
+        {
+            public async Task<HostConfig> GetAddressAsync(string servicekey, CancellationToken cancellationToken)
             {
+                await Task.Delay(1);
                 return new HostConfig("aa");
             }
 
-            public void RegistAddress(string servicekey, string host, int restPort, int rpcPort)
+            public async Task HealthCheckAsync(string servicekey, string host, int restPort, int rpcPort, CancellationToken cancellationToken)
             {
-
-
+                await Task.Delay(1);
             }
 
-            public bool RegistEventType(string fullTypeName, string key)
+            public async Task RegistAddressAsync(string servicekey, string host, int restPort, int rpcPort, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                await Task.Delay(1);
             }
 
-            public bool RemoveEventType(string fullTypeName, string key)
+            public async Task<bool> RegistEventTypeAsync(string eventName, string eventSourceKey, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                await Task.Delay(1);
+                return true;
+            }
+
+            public async Task<bool> RemoveEventTypeAsync(string eventName, string eventSourceKey, CancellationToken cancellationToken)
+            {
+                await Task.Delay(1);
+                return true;
             }
         }
+
         [Fact]
-        public void TestServer()
+        public async void TestServer()
         {
             serverManager.AddSingleton<IEventManager>(new EventManager("aaa"));
             serverManager.AddSingleton<PublicshEventService>();
@@ -49,27 +61,29 @@ namespace Brochure.Core.Test.HostServerTest
             var publicshService = provider.GetService<PublicshEventService>();
             var rpcServer = new RpcService(port);
             var server = new HostService();
-            rpcServer.RegisterRpcServer(HostServer.ServiceKey.Key, new IHostService.Processor(server));
-            rpcServer.RegisterRpcServer(EventServer.ServiceKey.Key, new IPublishEventService.Processor(publicshService));
-            //  rpcServer.Start();
+            rpcServer.RegisterRpcServerAsync(HostServer.ServiceKey.Key, new IHostService.AsyncProcessor(server));
+            rpcServer.RegisterRpcServerAsync(EventServer.ServiceKey.Key, new IPublishEventService.AsyncProcessor(publicshService));
+            await rpcServer.StartAsync();
         }
+
         [Fact]
-        public void TestClient()
+        public async Task TestClient()
         {
-            Config.HostServerAddress = "localhost";
-            Config.HostServerPort = 8888;
+            Config.HostServerAddress = "127.0.0.1";
+            Config.HostServerPort = 8000;
             var client = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.Key).Client;
             var eventManager = new EventManager("aaa");
             try
             {
-                var a = client.GetAddress(HostServer.ServiceKey.Key);
-                eventManager.RegistEvent("aa", HostServer.ServiceKey.Key, o => { });
-                eventManager.RemoveEvent("bbb", HostServer.ServiceKey.Key);
+                var a = await client.GetAddressAsync(HostServer.ServiceKey.Key, s.Token);
+                await eventManager.RegistEventAsync("aa", HostServer.ServiceKey.Key, o =>
+                 {
+                     int aa = 1;
+                 });
             }
             catch (System.Exception e)
             {
             }
-
         }
 
         [Fact]
@@ -81,6 +95,5 @@ namespace Brochure.Core.Test.HostServerTest
             var publicshService = provider.GetService<PublicshEventService>();
             Assert.NotNull(publicshService);
         }
-
     }
 }

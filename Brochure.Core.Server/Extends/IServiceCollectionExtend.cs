@@ -17,6 +17,7 @@ namespace Brochure.Core.Server
             serverManager.AddSingleton<IPluginManagers, PluginManagers>();
             serverManager.AddSingleton<EventManager>();
             serverManager.AddSingleton<PublicshEventService>();
+
             //注册启动项
             serverManager.AddTransient<ServerBootstrap>();
             DI.ServerManager = serverManager;

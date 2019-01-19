@@ -1,7 +1,11 @@
-﻿using Thrift;
-using Thrift.Protocol;
+﻿using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
+using Thrift;
+using Thrift.Protocols;
 using Thrift.Server;
-using Thrift.Transport;
+using Thrift.Transports;
+using Thrift.Transports.Server;
 
 namespace Brochure.Core.Server
 {
@@ -10,27 +14,32 @@ namespace Brochure.Core.Server
         private int _port;
         private TServerTransport transport;
         private TMultiplexedProcessor multiProcessor;
-        private TServer server;
+        private TBaseServer server;
         private ServiceStatus status = ServiceStatus.Stop;
+        private ITProtocolFactory jsonFactory;
+
         public RpcService(int port)
         {
             _port = port;
             multiProcessor = new TMultiplexedProcessor();
-            transport = new TServerSocket(_port);
-            TServer server = new TThreadPoolServer(multiProcessor, transport);
+            transport = new TServerSocketTransport(_port);
+            jsonFactory = new TJsonProtocol.Factory();
+            var log = new LoggerFactory();
+            server = new AsyncBaseServer(multiProcessor, transport, jsonFactory, jsonFactory, log);
         }
-        public void RegisterRpcServer(string serverName, TProcessor processor)
+
+        public void RegisterRpcServerAsync(string serverName, ITAsyncProcessor processor)
         {
             //默认注册一个
             multiProcessor.RegisterProcessor(serverName, processor);
         }
-        public void Start()
+
+        public async Task StartAsync()
         {
             if (status == ServiceStatus.Start)
                 return;
-            server = server ?? new TThreadPoolServer(multiProcessor, transport);
-            server.Serve();
             status = ServiceStatus.Start;
+            await server.ServeAsync(new CancellationTokenSource().Token);
         }
 
         public void Stop()
@@ -40,8 +49,8 @@ namespace Brochure.Core.Server
             server?.Stop();
             transport.Close();
             status = ServiceStatus.Stop;
-
         }
+
         private enum ServiceStatus
         {
             Start,

@@ -1,4 +1,6 @@
-using LogServer.Server;
+using Brochure.Core.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,8 +10,8 @@ namespace Brochure.Core
     public static class ObjectExtend
     {
         /// <summary>
-        /// 类型转换  
-        /// 转换不成功 回返回默认值 
+        /// 类型转换
+        /// 转换不成功 回返回默认值
         /// </summary>
         /// <param name="obj">转化对象</param>
         /// <param name="exc">异常，如果部位null 则会throw 异常</param>
@@ -17,7 +19,7 @@ namespace Brochure.Core
         /// <returns></returns>
         public static T As<T>(this object obj, bool isException = true)
         {
-            var logger = new RpcClient<ILogService.Client>(LogServer.ServiceKey.Key);
+            var logger = DI.ServiceProvider.GetService<ILoggerFactory>().CreateLogger("As");
             try
             {
                 if (obj is T)
@@ -36,7 +38,7 @@ namespace Brochure.Core
             {
                 if (isException)
                     throw e;
-                logger.Client.Error(new Log(e.Message, DateTime.Now.ToString(), e.StackTrace));
+                logger.LogError(e, e.Message);
                 return (T)(object)default(T);
             }
         }
@@ -56,6 +58,7 @@ namespace Brochure.Core
                 throw new Exception($"{type.FullName}不是集合类型");
             return new List<T>();
         }
+
         public static IDictionary<string, object> AsDictionary(this object obj)
         {
             if (obj == null)

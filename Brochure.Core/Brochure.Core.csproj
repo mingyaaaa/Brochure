@@ -6,11 +6,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="apache-thrift-netcore" Version="0.9.3.2" />
     <PackageReference Include="AspectCore.Core" Version="1.1.0" />
-    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="1.1.0" />
-    <PackageReference Include="HostServer" Version="1.0.0.7" />
-    <PackageReference Include="LogServer" Version="1.0.0.10" />
+    <PackageReference Include="HostServer" Version="1.0.0.12" />
+    <PackageReference Include="LogServer" Version="1.0.0.12" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>

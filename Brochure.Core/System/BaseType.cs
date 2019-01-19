@@ -1,6 +1,6 @@
 ﻿namespace Brochure.Core
 {
-    public class BaseType
+    public static class BaseType
     {
         public const string String = "String";
         public const string Int = "Int32";
