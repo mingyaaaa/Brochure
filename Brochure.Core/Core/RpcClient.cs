@@ -90,6 +90,6 @@ namespace Brochure.Core
             Close();
         }
 
-        private T Client { get; }
+        public T Client { get; }
     }
 }
