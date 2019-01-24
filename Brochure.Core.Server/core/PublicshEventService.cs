@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 namespace Brochure.Core.Server
 {
     public class PublicshEventService : IPublishEventService.IAsync
-
     {
         private IEventManager _eventManager;
 
@@ -16,7 +15,7 @@ namespace Brochure.Core.Server
 
         public async Task InvokeAsync(string eventName, string eventSourceKey, string jsonParams, CancellationToken cancellationToken)
         {
-            var param = JsonUtil.ReadJson(jsonParams);
+            var param = JsonUtil.ConverToJson<object>(jsonParams);
             await _eventManager.InvokeAsync(eventName, eventSourceKey, param);
         }
     }

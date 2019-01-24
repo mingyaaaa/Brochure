@@ -1,7 +1,7 @@
-﻿using HostServer.Server;
+﻿using Brochure.Core.Models;
+using HostServer.Server;
 using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Thrift;
 using Thrift.Protocols;
@@ -15,7 +15,6 @@ namespace Brochure.Core
         private string _host;
         private int _port;
         private TClientTransport transport;
-        private CancellationTokenSource s = new CancellationTokenSource();
 
         public RpcClient(string host, int port, string serverName)
         {
@@ -25,25 +24,27 @@ namespace Brochure.Core
             TProtocol protocol = new TJsonProtocol(transport);
             var protocolUserService = new TMultiplexedProtocol(protocol, serverName);
             Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
+            OpenAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public RpcClient(string serviceKey, string serviceName)
+        public RpcClient(string serviceAppKey, string serviceName)
         {
             if (string.IsNullOrWhiteSpace(Config.HostServerAddress))
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
             if (Config.HostServerPort == 0)
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
-            using (var hostrpc = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.Key))
+            using (var hostrpc = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.HostServiceKey))
             {
                 try
                 {
-                    var hostconfig = hostrpc.Client.GetAddressAsync(serviceKey, s.Token).ConfigureAwait(false).GetAwaiter().GetResult();
+                    var hostconfig = hostrpc.Client.GetAddressAsync(serviceAppKey, CancelTokenSource.Default.Token).ConfigureAwait(false).GetAwaiter().GetResult();
                     _host = hostconfig.Host;
                     _port = hostconfig.RpcPort;
                     transport = new TSocketClientTransport(IPAddress.Parse(_host), _port);
-                    TProtocol protocol = new TBinaryProtocol(transport);
+                    TProtocol protocol = new TJsonProtocol(transport);
                     var protocolUserService = new TMultiplexedProtocol(protocol, serviceName);
                     Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
+                    OpenAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 }
                 catch (Exception e)
                 {
@@ -52,7 +53,7 @@ namespace Brochure.Core
             }
         }
 
-        public RpcClient(string serviceKey) : this(serviceKey, serviceKey)
+        public RpcClient(string serviceAppKey) : this(serviceAppKey, serviceAppKey)
         {
         }
 

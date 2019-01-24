@@ -1,4 +1,5 @@
-﻿using Brochure.Core.Server;
+﻿using Brochure.Core.Models;
+using Brochure.Core.Server;
 using EventServer.Server;
 using HostServer.Server;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +12,13 @@ namespace Brochure.Core.Test.HostServerTest
     public class HostServerTest
     {
         private IServerManager serverManager;
-        private CancellationTokenSource s = new CancellationTokenSource();
 
         public HostServerTest()
         {
             serverManager = new ServerManager();
+            Config.HostServerAddress = "127.0.0.1";
+            Config.HostServerPort = 8000;
+            Config.AppKey = "aaaa";
         }
 
         private string host = "127.0.0.1";
@@ -55,15 +58,16 @@ namespace Brochure.Core.Test.HostServerTest
         [Fact]
         public async void TestServer()
         {
-            serverManager.AddSingleton<IEventManager>(new EventManager("aaa"));
-            serverManager.AddSingleton<PublicshEventService>();
+            serverManager.AddSingleton<IEventManager>(new EventManager(HostServer.ServiceKey.EventServiceKey));
             var provider = serverManager.BuildProvider();
-            var publicshService = provider.GetService<PublicshEventService>();
             var rpcServer = new RpcService(port);
             var server = new HostService();
-            rpcServer.RegisterRpcServerAsync(HostServer.ServiceKey.Key, new IHostService.AsyncProcessor(server));
-            rpcServer.RegisterRpcServerAsync(EventServer.ServiceKey.Key, new IPublishEventService.AsyncProcessor(publicshService));
+            var eventManager = provider.GetService<IEventManager>();
+            //rpcServer.RegiestPublisheEventService(HostServer.ServiceKey.EventServiceKey, eventManager);
+            rpcServer.RegisterRpcServer(HostServer.ServiceKey.EventServiceKey, new IPublishEventService.AsyncProcessor(new PublicshEventService(eventManager)));
             await rpcServer.StartAsync();
+            while (true)
+                await Task.Delay(5000);
         }
 
         [Fact]
@@ -71,15 +75,11 @@ namespace Brochure.Core.Test.HostServerTest
         {
             Config.HostServerAddress = "127.0.0.1";
             Config.HostServerPort = 8000;
-            var client = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.Key).Client;
-            var eventManager = new EventManager("aaa");
+            var client = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.HostServiceKey).Client;
+            var eventManager = new EventManager(HostServer.ServiceKey.EventServiceKey);
             try
             {
-                var a = await client.GetAddressAsync(HostServer.ServiceKey.Key, s.Token);
-                await eventManager.RegistEventAsync("aa", HostServer.ServiceKey.Key, o =>
-                 {
-                     int aa = 1;
-                 });
+                var a = await client.GetAddressAsync(HostServer.ServiceKey.HostServiceKey, CancelTokenSource.Default.Token);
             }
             catch (System.Exception e)
             {
@@ -87,13 +87,26 @@ namespace Brochure.Core.Test.HostServerTest
         }
 
         [Fact]
-        public void TestEventManager()
+        public async void TestEventManager()
         {
-            serverManager.AddSingleton<IEventManager>(new EventManager("aaa"));
-            serverManager.AddSingleton<PublicshEventService>();
+            var server = new RpcService(8002);
+
+            var hostClient = new RpcClient<IHostService.Client>(HostServer.ServiceKey.HostServiceKey);
+            await hostClient.Client.RegistAddressAsync("aaa", Config.HostServerAddress, -1, 8002, new CancellationToken());
+            serverManager.AddSingleton<IEventManager>(new EventManager(HostServer.ServiceKey.EventServiceKey));
             var provider = serverManager.BuildProvider();
-            var publicshService = provider.GetService<PublicshEventService>();
-            Assert.NotNull(publicshService);
+            var eventManager = provider.GetService<IEventManager>();
+            server.RegisterRpcServer(HostServer.ServiceKey.EventServiceKey, new IPublishEventService.AsyncProcessor(new PublicshEventService(eventManager)));
+
+            await eventManager.RegistEventAsync(HostServer.EventType.EventName1, HostServer.ServiceKey.HostServiceKey, (a) =>
+          {
+              var b = 1;
+          });
+
+            await server.StartAsync();
+            while (true)
+                await Task.Delay(5000);
+            //注册事件
         }
     }
 }

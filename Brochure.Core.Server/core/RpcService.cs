@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Threading;
+﻿using Brochure.Core.Models;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Thrift;
 using Thrift.Protocols;
@@ -28,7 +28,7 @@ namespace Brochure.Core.Server
             server = new AsyncBaseServer(multiProcessor, transport, jsonFactory, jsonFactory, log);
         }
 
-        public void RegisterRpcServerAsync(string serverName, ITAsyncProcessor processor)
+        public void RegisterRpcServer(string serverName, ITAsyncProcessor processor)
         {
             //默认注册一个
             multiProcessor.RegisterProcessor(serverName, processor);
@@ -39,7 +39,7 @@ namespace Brochure.Core.Server
             if (status == ServiceStatus.Start)
                 return;
             status = ServiceStatus.Start;
-            await server.ServeAsync(new CancellationTokenSource().Token);
+            await server.ServeAsync(CancelTokenSource.Default.Token);
         }
 
         public void Stop()

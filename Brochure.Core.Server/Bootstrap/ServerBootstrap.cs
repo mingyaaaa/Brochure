@@ -12,6 +12,7 @@ namespace Brochure.Core.Server
         public ServerBootstrap()
         {
         }
+
         public void Start()
         {
             //查询所有的插件信息
@@ -22,19 +23,17 @@ namespace Brochure.Core.Server
             foreach (var configFile in configFiles)
             {
                 //判断权限  如果权限不在 就不加载对应的插件
-                var configPluin = JsonUtil.ReadJson(configFile)?.As<IPlugins>();
+                var configPluin = JsonUtil.ReadJsonFile(configFile)?.As<IPlugins>();
                 if (configPluin == null || !context.PluginAuth.HasAuth(configPluin.Key.ToString()))
                     continue;
                 var plugin = pluginManager.GetPlugin(configFile);
                 if (plugin.Starting())
                     plugin.Start();
             }
-
         }
 
         public void Exit(IPlugins[] plugins)
         {
-
         }
     }
 }

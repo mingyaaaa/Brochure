@@ -23,7 +23,7 @@ namespace Brochure.Core.Core
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            var logger = new RpcClient<ILogService.Client>(LogServer.ServiceKey.Key);
+            var logger = new RpcClient<ILogService.Client>(LogServer.ServiceKey.LogServiceKey);
             var msg = formatter(state, exception);
             var cancellationToken = new CancellationToken();
             var log = new Log(msg, DateTime.Now.ToString(), exception.StackTrace);

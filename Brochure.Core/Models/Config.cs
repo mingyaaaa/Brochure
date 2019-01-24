@@ -4,5 +4,6 @@
     {
         public static string HostServerAddress;
         public static int HostServerPort;
+        public static string AppKey;
     }
 }

@@ -10,9 +10,10 @@ namespace Brochure.Core.Server
         public Auths()
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
-            var jsonRecord = JsonUtil.ReadArrayJson(Path.Combine(basePath, "auth.json"));
+            var jsonRecord = JsonUtil.ReadArrayJsonFile(Path.Combine(basePath, "auth.json"));
             AuthModels = jsonRecord.OfType(t => t.As<AuthModel>());
         }
+
         public List<AuthModel> AuthModels { get; }
     }
 }

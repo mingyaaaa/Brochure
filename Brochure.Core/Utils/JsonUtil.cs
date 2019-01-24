@@ -12,7 +12,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static IRecord ReadJson(string filePath)
+        public static IRecord ReadJsonFile(string filePath)
         {
             if (!File.Exists(filePath))
                 return null;
@@ -21,7 +21,7 @@ namespace Brochure.Core
             return record;
         }
 
-        public static List<IRecord> ReadArrayJson(string filePath)
+        public static List<IRecord> ReadArrayJsonFile(string filePath)
         {
             if (!File.Exists(filePath))
                 return null;
@@ -54,6 +54,18 @@ namespace Brochure.Core
             {
                 return false;
             }
+        }
+
+        public static T ConverToJson<T>(string str)
+        {
+            var record = JsonConvert.DeserializeObject<T>(str);
+            return record;
+        }
+
+        public static string ConverToJsonString(object o)
+        {
+            var str = JsonConvert.SerializeObject(o);
+            return str;
         }
     }
 }
