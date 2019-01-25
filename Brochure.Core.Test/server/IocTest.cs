@@ -90,7 +90,7 @@ namespace Brochure.Core.Test.server
             }
             {
                 var server1 = new ServerManager();
-                server1.AddSingleton(new SubscribeEventManager(HostServer.ServiceKey.EventServiceKey));
+                server1.AddSingleton(new SubscribeEventManager());
                 server1.AddSingleton<C>();
                 var provider = server1.BuildProvider();
                 var a = provider.GetService<C>();

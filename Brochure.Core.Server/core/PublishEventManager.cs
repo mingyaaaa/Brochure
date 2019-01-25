@@ -20,7 +20,7 @@ namespace Brochure.Core.Server
             var service = EventSourceKeyDic[eventName];
             foreach (var item in service)
             {
-                var publish = new RpcClient<IPublishEventService.Client>(item);
+                var publish = new RpcClient<IPublishEventService.Client>(item, EventServer.ServiceKey.PublishEventKey);
                 try
                 {
                     publish.Client.InvokeAsync(eventName, Config.AppKey, JsonUtil.ConverToJsonString(obj), CancelTokenSource.Default.Token);
