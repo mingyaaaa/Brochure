@@ -6,23 +6,14 @@ using System.Threading.Tasks;
 
 namespace Brochure.Core.Server
 {
-    public interface IEventManager
+    public class SubscribeEventManager
     {
-        Task RegistEventAsync(string eventName, string serviceAppKey, Action<object> action);
-
-        Task RemoveEventAsync(string eventName, string serviceAppKey);
-
-        Task InvokeAsync(string eventName, string serviceAppKey, object obj);
-    }
-
-    public class EventManager : IEventManager
-    {
-        private IDictionary<string, Action<object>> _eventCollection;
+        internal IDictionary<string, Action<object>> SubscribeEventCollection;
         private string _eventServiceName;
 
-        public EventManager(string eventServiceName)
+        public SubscribeEventManager(string eventServiceName)
         {
-            _eventCollection = new Dictionary<string, Action<Object>>();
+            SubscribeEventCollection = new Dictionary<string, Action<Object>>();
             _eventServiceName = eventServiceName;
         }
 
@@ -32,7 +23,7 @@ namespace Brochure.Core.Server
             if (await rpc.Client.RegistEventTypeAsync(eventName, Config.AppKey, CancelTokenSource.Default.Token))
             {
                 var key = eventName + serviceAppKey;
-                _eventCollection.Add(key, action);
+                SubscribeEventCollection.Add(key, action);
             }
         }
 
@@ -42,15 +33,8 @@ namespace Brochure.Core.Server
             if (await rpc.Client.RemoveEventTypeAsync(eventName, Config.AppKey, CancelTokenSource.Default.Token))
             {
                 var key = eventName + serviceAppKey;
-                _eventCollection.Remove(key);
+                SubscribeEventCollection.Remove(key);
             }
-        }
-
-        public async Task InvokeAsync(string eventName, string serviceAppKey, object obj)
-        {
-            await Task.Delay(0);
-            var action = _eventCollection[eventName + serviceAppKey];
-            action(obj);
         }
     }
 }

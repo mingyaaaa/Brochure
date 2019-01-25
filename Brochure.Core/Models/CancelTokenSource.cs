@@ -4,11 +4,9 @@ namespace Brochure.Core.Models
 {
     public class CancelTokenSource
     {
-        public CancelTokenSource()
+        static CancelTokenSource()
         {
-            Source = new CancellationTokenSource();
-            Token = Source.Token;
-            Default = this;
+            Default = GetCancelTokenSource();
         }
 
         private CancelTokenSource(CancellationTokenSource source)

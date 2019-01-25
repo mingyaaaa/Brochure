@@ -17,3 +17,4 @@ Brochure.Core.Server/obj/
 *.patch
 /Test.Server
 /ServiceConsole
+/Brochure.Core.Server/Brochure.Core.Server.csproj.user

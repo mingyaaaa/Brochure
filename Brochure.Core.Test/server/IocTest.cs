@@ -58,9 +58,9 @@ namespace Brochure.Core.Test.server
 
     public class C : IIC.IC
     {
-        private IEventManager _a;
+        private SubscribeEventManager _a;
 
-        public C(IEventManager a)
+        public C(SubscribeEventManager a)
         {
             _a = a;
         }
@@ -90,7 +90,7 @@ namespace Brochure.Core.Test.server
             }
             {
                 var server1 = new ServerManager();
-                server1.AddSingleton<IEventManager>(new EventManager(HostServer.ServiceKey.EventServiceKey));
+                server1.AddSingleton(new SubscribeEventManager(HostServer.ServiceKey.EventServiceKey));
                 server1.AddSingleton<C>();
                 var provider = server1.BuildProvider();
                 var a = provider.GetService<C>();

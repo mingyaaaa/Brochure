@@ -6,17 +6,21 @@ namespace Brochure.Core.Server
 {
     public class PublicshEventService : IPublishEventService.IAsync
     {
-        private IEventManager _eventManager;
+        private SubscribeEventManager _eventManager;
 
-        public PublicshEventService(IEventManager eventManager)
+        public PublicshEventService(SubscribeEventManager eventManager)
         {
             _eventManager = eventManager;
         }
 
         public async Task InvokeAsync(string eventName, string eventSourceKey, string jsonParams, CancellationToken cancellationToken)
         {
-            var param = JsonUtil.ConverToJson<object>(jsonParams);
-            await _eventManager.InvokeAsync(eventName, eventSourceKey, param);
+            await Task.Run(() =>
+             {
+                 var param = JsonUtil.ConverToJson<object>(jsonParams);
+                 var action = _eventManager.SubscribeEventCollection[eventName + eventSourceKey];
+                 action(param);
+             });
         }
     }
 }
