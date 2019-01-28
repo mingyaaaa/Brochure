@@ -1,5 +1,4 @@
-﻿using Brochure.Core.Models;
-using HostServer.Server;
+﻿using Brochure.Interface;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -15,6 +14,7 @@ namespace Brochure.Core
         private string _host;
         private int _port;
         private TClientTransport transport;
+        private IHostManager _hostManager { get; }
 
         public RpcClient(string host, int port, string serverName)
         {
@@ -33,24 +33,14 @@ namespace Brochure.Core
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
             if (Config.HostServerPort == 0)
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
-            using (var hostrpc = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.HostServiceKey))
-            {
-                try
-                {
-                    var hostconfig = hostrpc.Client.GetAddressAsync(serviceAppKey, CancelTokenSource.Default.Token).ConfigureAwait(false).GetAwaiter().GetResult();
-                    _host = hostconfig.Host;
-                    _port = hostconfig.RpcPort;
-                    transport = new TSocketClientTransport(IPAddress.Parse(_host), _port);
-                    TProtocol protocol = new TJsonProtocol(transport);
-                    var protocolUserService = new TMultiplexedProtocol(protocol, serviceName);
-                    Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
-                    OpenAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("无法连接到服务,请确认服务是否注册");
-                }
-            }
+            var hostConfig = _hostManager.GetHostAsync(serviceAppKey).ConfigureAwait(false).GetAwaiter().GetResult();
+            _host = hostConfig.HostAddress;
+            _port = hostConfig.RpcPort;
+            transport = new TSocketClientTransport(IPAddress.Parse(_host), _port);
+            TProtocol protocol = new TJsonProtocol(transport);
+            var protocolUserService = new TMultiplexedProtocol(protocol, serviceName);
+            Client = ReflectorUtil.CreateInstance<T>(protocolUserService);
+            OpenAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         public RpcClient(string serviceAppKey) : this(serviceAppKey, serviceAppKey)

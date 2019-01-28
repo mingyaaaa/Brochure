@@ -1,5 +1,4 @@
-﻿using HostServer.Server;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -23,12 +22,6 @@ namespace Brochure.Core.Server
             {
                 rpcServer.Stop();
             });
-        }
-
-        public static async Task ConfigHostService(this IApplicationBuilder app, Func<IHostService.Client, Task> func)
-        {
-            var hostClient = new RpcClient<IHostService.Client>(HostServer.ServiceKey.HostServiceKey);
-            await func(hostClient.Client);
         }
     }
 }

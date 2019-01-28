@@ -17,8 +17,6 @@ namespace Brochure.Core
             return serverManager;
         }
 
-
-
         //public IServerManager AddTransient(Type serviceType, Func<IServiceProvider, object> implementationFactory)
         //{
         //    _services.AddType(serviceType, implementationFactory);
@@ -37,7 +35,7 @@ namespace Brochure.Core
         }
 
         /// <summary>
-        /// 添加依赖来注入   生命周期 ：瞬时 
+        /// 添加依赖来注入   生命周期 ：瞬时
         /// </summary>
         /// <param name="serviceType">实现类</param>
         /// <returns></returns>
@@ -46,6 +44,7 @@ namespace Brochure.Core
             serverManager.Services.AddType(serviceType);
             return serverManager;
         }
+
         /// <summary>
         /// 添加依赖来注入   生命周期 ：瞬时
         /// </summary>
@@ -55,7 +54,6 @@ namespace Brochure.Core
             serverManager.Services.AddType<TService>();
             return serverManager;
         }
-
 
         //public IServerManager AddTransient<TService>(Func<IServiceProvider, TService> implementationFactory)
         //    where TService : class
@@ -123,14 +121,12 @@ namespace Brochure.Core
             return serverManager;
         }
 
-
         //public IServerManager AddScoped<TService>(Func<IServiceProvider, TService> implementationFactory)
         //    where TService : class
         //{
         //    _services.AddScoped<TService>(implementationFactory);
         //   return serverManager;
         //}
-
 
         //public IServerManager AddScoped<TService, TImplementation>(
         //    Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
@@ -152,13 +148,11 @@ namespace Brochure.Core
             return serverManager;
         }
 
-
         //public IServerManager AddSingleton(Type serviceType, Func<IServiceProvider, object> implementationFactory)
         //{
         //    _services.AddSingleton(serviceType, implementationFactory);
         //   return serverManager;
         //}
-
 
         /// <summary>
         /// 添加依赖注入  生命周期 单例
@@ -184,7 +178,6 @@ namespace Brochure.Core
             return serverManager;
         }
 
-
         /// <summary>
         /// 添加依赖注入  生命周期 单例
         /// </summary>
@@ -196,14 +189,12 @@ namespace Brochure.Core
             return serverManager;
         }
 
-
         //public IServerManager AddSingleton<TService>(Func<IServiceProvider, TService> implementationFactory)
         //    where TService : class
         //{
         //    _services.AddSingleton<TService>();
         //   return serverManager;
         //}
-
 
         //public IServerManager AddSingleton<TService, TImplementation>(
         //    Func<IServiceProvider, TImplementation> implementationFactory) where TService : class
@@ -212,7 +203,6 @@ namespace Brochure.Core
         //    _services.AddSingleton<TService, TImplementation>(implementationFactory);
         //   return serverManager;
         //}
-
 
         /// <summary>
         /// 添加依赖注入  生命周期 单例
@@ -225,7 +215,6 @@ namespace Brochure.Core
             serverManager.Services.AddInstance(serviceType, implementationInstance);
             return serverManager;
         }
-
 
         /// <summary>
         /// 添加依赖注入  生命周期 单例

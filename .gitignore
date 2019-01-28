@@ -18,3 +18,6 @@ Brochure.Core.Server/obj/
 /Test.Server
 /ServiceConsole
 /Brochure.Core.Server/Brochure.Core.Server.csproj.user
+/Brochure.Interface/bin/Debug/netcoreapp2.2
+/Brochure.Interface/obj
+/HostManager.Cunsul/obj

@@ -1,9 +1,6 @@
 ﻿using Brochure.Core.Core;
 using Brochure.Core.Interfaces;
-using HostServer.Server;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace Brochure.Core.Server
 {
@@ -18,16 +15,10 @@ namespace Brochure.Core.Server
             serverManager.AddSingleton<IContext, Context>();
             //注册插件管理
             serverManager.AddSingleton<IPluginManagers, PluginManagers>();
+
             //注册启动项
             serverManager.AddTransient<ServerBootstrap>();
             DI.ServerManager = serverManager;
-            return serverManager;
-        }
-
-        public static IServerManager ConfigHostService(this IServerManager serverManager, Func<IHostService.Client, Task> func)
-        {
-            var hostClient = new RpcClient<IHostService.Client>(HostServer.ServiceKey.HostServiceKey);
-            func(hostClient.Client).ConfigureAwait(false).GetAwaiter().GetResult();
             return serverManager;
         }
     }
