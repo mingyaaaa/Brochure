@@ -1,4 +1,6 @@
-﻿using Brochure.Interface;
+﻿using Brochure.Core.Core;
+using Brochure.Interface;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -33,6 +35,8 @@ namespace Brochure.Core
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
             if (Config.HostServerPort == 0)
                 throw new Exception("服务Config服务配置错误,请配置服务注册地址");
+            if (_hostManager == null)
+                _hostManager = DI.ServiceProvider.GetService<HostManagerProvider>().GetHostManager();
             var hostConfig = _hostManager.GetHostAsync(serviceAppKey).ConfigureAwait(false).GetAwaiter().GetResult();
             _host = hostConfig.HostAddress;
             _port = hostConfig.RpcPort;
@@ -56,7 +60,7 @@ namespace Brochure.Core
                 if (!transport.IsOpen)
                     await transport.OpenAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 transport.Close();
             }

@@ -21,3 +21,6 @@ Brochure.Core.Server/obj/
 /Brochure.Interface/bin/Debug/netcoreapp2.2
 /Brochure.Interface/obj
 /HostManager.Cunsul/obj
+/Brochure.DI.AspectCore/obj
+/Brochure.DI.AspectCore/bin/Debug/netcoreapp2.2
+/HostManager.Cunsul/bin/Debug/netcoreapp2.2

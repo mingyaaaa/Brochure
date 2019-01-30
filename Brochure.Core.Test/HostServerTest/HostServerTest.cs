@@ -1,7 +1,11 @@
-﻿using Brochure.Core.Models;
+﻿using Brochure.Core.Core;
+using Brochure.Core.Models;
 using Brochure.Core.Server;
+using Brochure.DI.AspectCore;
+using Brochure.Interface;
 using HostServer;
 using HostServer.Server;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -10,11 +14,11 @@ namespace Brochure.Core.Test.HostServerTest
 {
     public class HostServerTest
     {
-        private IServerManager serverManager;
+        private IDIServiceManager serverManager;
 
         public HostServerTest()
         {
-            serverManager = new ServerManager();
+            serverManager = new AspectCoreDI(new ServiceCollection());
             Config.HostServerAddress = "127.0.0.1";
             Config.HostServerPort = 8000;
             Config.AppKey = "aaaa";
@@ -85,6 +89,11 @@ namespace Brochure.Core.Test.HostServerTest
         [Fact]
         public async void TestEventManager()
         {
+            serverManager.AddSingleton<IHostManager, HostManager>();
+            serverManager.AddSingleton<HostManagerProvider>();
+            DI.ServerManager = serverManager;
+
+            DI.ServiceProvider = serverManager.BuildServiceProvider();
             var server = new RpcService(8002);
             var hostClient = new RpcClient<IHostService.Client>(HostApp.AppKey, ServiceKey.HostServiceKey);
             await hostClient.Client.RegistAddressAsync(Config.AppKey, Config.HostServerAddress, -1, 8002, CancelTokenSource.Default.Token);

@@ -1,5 +1,4 @@
 ﻿using AspectCore.DynamicProxy;
-using Brochure.Core.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace Brochure.Core.Atrributes
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var logger = DI.ServiceProvider.GetService<ILoggerFactory>().CreateLogger(nameof(LogAttribute));
+            var logger = context.ServiceProvider.GetService<ILoggerFactory>().CreateLogger(nameof(LogAttribute));
             try
             {
                 await context.Invoke(next);

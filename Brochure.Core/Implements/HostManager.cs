@@ -18,7 +18,7 @@ namespace Brochure.Core
         {
             await client.OpenAsync();
             var hostconfig = await client.Client.GetAddressAsync(appkey, CancelTokenSource.Default.Token);
-            client.Close();
+            // client.Close();
             return new HostConfiguration
             {
                 HostAddress = hostconfig.Host,

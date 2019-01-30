@@ -1,5 +1,6 @@
 ﻿using AspectCore.Injector;
 using Brochure.Core.Server;
+using Brochure.DI.AspectCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -75,24 +76,25 @@ namespace Brochure.Core.Test.server
         [Fact]
         public void IocScopeTest()
         {
-            var server = new ServerManager();
+            var serviceCollection = new ServiceCollection();
+            var server = new AspectCoreDI(new ServiceCollection());
             {
                 server.AddScoped<IB, B>();
-                var provider = server.BuildProvider();
+                var provider = server.BuildServiceProvider();
                 var b1 = provider.GetService<IB>();
                 using (var tprovide = provider.CreateScope())
                 {
-                    var b2 = tprovide.GetService<IB>();
+                    var b2 = tprovide.ServiceProvider.GetService<IB>();
                     Assert.NotSame(b1, b2);
                 }
                 var b3 = provider.GetService<IB>();
                 Assert.Same(b1, b3);
             }
             {
-                var server1 = new ServerManager();
+                var server1 = new AspectCoreDI(serviceCollection);
                 server1.AddSingleton(new SubscribeEventManager());
                 server1.AddSingleton<C>();
-                var provider = server1.BuildProvider();
+                var provider = server1.BuildServiceProvider();
                 var a = provider.GetService<C>();
             }
         }

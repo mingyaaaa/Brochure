@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Brochure.Core/Brochure.Core.csproj" />
+    <ProjectReference Include="..\Brochure.Interface\Brochure.Interface.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="1.1.0" />

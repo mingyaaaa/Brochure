@@ -1,14 +1,14 @@
 ﻿using Brochure.Core.Core;
 using Brochure.Core.Interfaces;
+using Brochure.Interface;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.Server
 {
     public static class IServiceCollectionExtend
     {
-        public static IServerManager AddBrochureServer(this IServiceCollection services)
+        public static IDIServiceManager AddBrochureServer(this IServiceCollection services, IDIServiceManager serverManager)
         {
-            var serverManager = new ServerManager(services);
             //注册Ioc代理
             serverManager.AddSingleton(serverManager);
             //注册上下文
