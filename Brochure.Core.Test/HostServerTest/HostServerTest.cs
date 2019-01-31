@@ -1,11 +1,11 @@
-﻿using Brochure.Core.Core;
-using Brochure.Core.Models;
+﻿using Brochure.Core.Models;
 using Brochure.Core.Server;
 using Brochure.DI.AspectCore;
 using Brochure.Interface;
 using HostServer;
 using HostServer.Server;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -75,11 +75,19 @@ namespace Brochure.Core.Test.HostServerTest
         {
             Config.HostServerAddress = "127.0.0.1";
             Config.HostServerPort = 8000;
-            var client = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.HostServiceKey).Client;
+            var rpcClient = new RpcClient<IHostService.Client>(Config.HostServerAddress, Config.HostServerPort, HostServer.ServiceKey.HostServiceKey);
             var eventManager = new SubscribeEventManager();
+            var t = 0;
             try
             {
-                var a = await client.GetAddressAsync(HostServer.ServiceKey.HostServiceKey, CancelTokenSource.Default.Token);
+                while (t < 10000000)
+                {
+                    var a = await rpcClient.Client.GetAddressAsync(HostApp.AppKey, CancelTokenSource.Default.Token);
+                    await rpcClient.Client.RegistAddressAsync(Config.AppKey, Config.HostServerAddress, -1, Config.HostServerPort, CancelTokenSource.Default.Token);
+                    await rpcClient.Client.HealthCheckAsync(Config.AppKey, Config.HostServerAddress, -1, Config.HostServerPort, CancelTokenSource.Default.Token);
+                    await Task.Delay(1000);
+                    t++;
+                }
             }
             catch (System.Exception e)
             {
@@ -89,8 +97,8 @@ namespace Brochure.Core.Test.HostServerTest
         [Fact]
         public async void TestEventManager()
         {
-            serverManager.AddSingleton<IHostManager, HostManager>();
-            serverManager.AddSingleton<HostManagerProvider>();
+            serverManager.AddTransient<IHostManager, HostManager>();
+            serverManager.AddTransient<HostManagerProvider>();
             DI.ServerManager = serverManager;
 
             DI.ServiceProvider = serverManager.BuildServiceProvider();
@@ -109,5 +117,37 @@ namespace Brochure.Core.Test.HostServerTest
                 await Task.Delay(5000);
             //注册事件
         }
+    }
+    public class S
+    {
+        public S()
+        {
+            B = ReflectorUtil.CreateInstance<B.BB>();
+        }
+        public string a = "1";
+        public B.BB B;
+        ~S()
+        {
+            Console.Write("释放S");
+        }
+    }
+    public class B
+    {
+        public class BB : IDisposable
+        {
+            public void Dispose()
+            {
+            }
+
+            public async Task WriteS()
+            {
+                await Task.Run(() =>
+                {
+                    Console.Write("S");
+                });
+
+            }
+        }
+
     }
 }

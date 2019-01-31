@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
     public class DbLogger : ILogger, IDisposable
     {

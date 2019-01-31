@@ -1,6 +1,6 @@
 ﻿using Brochure.Interface;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
     public class HostManagerProvider
     {

@@ -1,5 +1,4 @@
-﻿using Brochure.Core.Core;
-using Brochure.Interface;
+﻿using Brochure.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
