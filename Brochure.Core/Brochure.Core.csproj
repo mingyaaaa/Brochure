@@ -10,8 +10,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.Reflection" Version="1.1.0" />
-    <PackageReference Include="HostServer" Version="1.0.0.15" />
-    <PackageReference Include="LogServer" Version="1.0.0.15" />
+    <!-- <PackageReference Include="HostServer" Version="1.0.0.15" />
+    <PackageReference Include="LogServer" Version="1.0.0.15" /> -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>

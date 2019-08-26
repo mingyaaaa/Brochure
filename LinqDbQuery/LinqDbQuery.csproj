@@ -3,6 +3,20 @@
   <PropertyGroup>
   <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.assets.cache" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.cache" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.dgspec.json" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.g.props" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.g.targets" />
+    <None Remove="LinqDbQueryTest\obj\project.assets.json" />
+    <None Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.csprojAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="LinqDbQueryTest\UnitTest1.cs" />
+    <Compile Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.Program.cs" />
+  </ItemGroup>
 </Project>
