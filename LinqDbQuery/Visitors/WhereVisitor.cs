@@ -4,23 +4,24 @@ namespace LinqDbQuery.Visitors
 {
     public class WhereVisitor : ORMVisitor
     {
-        public IDbProvider _dbPrivoder;
-        public WhereVisitor(IDbProvider dbPrivoder)
+
+        public WhereVisitor (IDbProvider dbPrivoder)
         {
             _dbPrivoder = dbPrivoder;
         }
-        protected override Expression VisitBinary(BinaryExpression node)
+        protected override Expression VisitBinary (BinaryExpression node)
         {
-            var left = GetSql(node.Left);
+            var left = GetSql (node.Left);
             var exType = node.NodeType;
-            var right = GetSql(node.Right);
-            sql = _dbPrivoder.GetOperateSymbol(left, exType, right);
+            var right = GetSql (node.Right);
+            sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
             sql = $"where {sql} ";
             return node;
         }
-
-        protected override Expression VisitMethodCall(MethodCallExpression node)
+        protected override Expression VisitMethodCall (MethodCallExpression node)
         {
+            base.VisitMethodCall (node);
+            sql = $"where {sql}";
             return node;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -8,13 +9,12 @@ namespace LinqDbQuery
     {
         string GetParamsSymbol ();
         string GetOperateSymbol (object left, ExpressionType expressionType, object right);
-
         string GetObjectType (object type);
-
         ExpressionVisitor GetVisitor ();
     }
     public class MySqlDbProvider : IDbProvider
     {
+
         public string GetObjectType (object obj)
         {
             string str = string.Empty;

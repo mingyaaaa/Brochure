@@ -19,4 +19,7 @@
     <Compile Remove="LinqDbQueryTest\UnitTest1.cs" />
     <Compile Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.Program.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+  </ItemGroup>
 </Project>

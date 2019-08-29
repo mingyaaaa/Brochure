@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqDbQuery", "LinqDbQuery.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqDbQueryTest", "..\LinqDbQueryTest\LinqDbQueryTest.csproj", "{2B33F9E2-278D-436E-8AE7-256672DBE189}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Utils", "..\Brochure.Utils\Brochure.Utils.csproj", "{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{2B33F9E2-278D-436E-8AE7-256672DBE189}.Release|x64.Build.0 = Release|Any CPU
 		{2B33F9E2-278D-436E-8AE7-256672DBE189}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B33F9E2-278D-436E-8AE7-256672DBE189}.Release|x86.Build.0 = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|x64.Build.0 = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Debug|x86.Build.0 = Debug|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|x64.ActiveCfg = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|x64.Build.0 = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{60BF5E8B-402F-4AD2-8373-ADEDB4A271B8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
