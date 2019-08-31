@@ -44,6 +44,30 @@ namespace LinqDbQueryTest
             sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("where [Peoples].[Name] like '%aaa%'", sql);
 
+            ex = t => t.Name.StartsWith (name);
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where [Peoples].[Name] like '%aaa'", sql);
+
+            ex = t => t.Name.EndsWith (name);
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where [Peoples].[Name] like 'aaa%'", sql);
+
+            ex = t => t.Name == null;
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where [Peoples].[Name] is null", sql);
+
+            ex = t => t.Name != null;
+
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where [Peoples].[Name] is not null", sql);
+            ex = t => t.Age != 1;
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where [Peoples].[Age] < 1 and [Peoples].[Age] > 1", sql);
         }
 
         [TestMethod]
@@ -54,6 +78,17 @@ namespace LinqDbQueryTest
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("select [Peoples].[Name] as NewName,[Peoples].[Age] as NewAge from", sql);
+
+        }
+
+        [TestMethod]
+        public void TestJoinVisitor ()
+        {
+            visitor = new JoinVisitor (typeof (Students), new MySqlDbProvider ());
+            Expression<Func<Peoples, Students, bool>> ex = (p, s) => s.PeopleId == p.Id;
+            visitor.Visit (ex);
+            var sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("join [Students] on [Students].[PeopleId] = [Peoples].[Id]", sql);
         }
     }
 }

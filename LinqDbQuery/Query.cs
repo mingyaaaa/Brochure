@@ -12,6 +12,8 @@ namespace LinqDbQuery
         IQuery<IGrouping<T1, T2>> Groupby<T2> (Expression<Func<T1, T2>> fun);
         IQuery<T1> Orderby (Expression<Func<T1, object>> fun);
         IQuery<T1> Where (Expression<Func<T1, bool>> fun);
+        int Count (Expression<Func<T1, bool>> func);
+        IQuery<T1> Distinct ();
     }
     public interface IQuery<T1, T2>
     {

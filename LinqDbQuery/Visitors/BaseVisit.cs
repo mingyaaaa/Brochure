@@ -62,15 +62,15 @@ namespace LinqDbQuery.Visitors
                     sql = $"{member} in ({listStr})";
                 }
             }
-            else if (node.Method.Name == FuncName.StartWith)
+            else if (node.Method.Name == FuncName.StartsWith)
             {
                 if (call is string)
-                    sql = $"{call} like '%{member}'";
+                    sql = $"{member} like '%{call}'";
             }
-            else if (node.Method.Name == FuncName.EndWith)
+            else if (node.Method.Name == FuncName.EndsWith)
             {
                 if (call is string)
-                    sql = $"{call} like '{member}%'";
+                    sql = $"{member} like '{call}%'";
             }
             return node;
         }

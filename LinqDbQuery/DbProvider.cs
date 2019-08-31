@@ -28,8 +28,22 @@ namespace LinqDbQuery
         public string GetOperateSymbol (object left, ExpressionType expressionType, object right)
         {
             var str = string.Empty;
+            string leftStr = left.ToString ();
+            var rightObject = GetObjectType (right);
             if (expressionType == ExpressionType.Equal)
-                return $"{left.ToString()} = {GetObjectType(right)}";
+            {
+                if (right == null)
+                    return $"{leftStr} is null";
+                else
+                    return $"{leftStr} = {rightObject}";
+            }
+            if (expressionType == ExpressionType.NotEqual)
+            {
+                if (right == null)
+                    return $"{leftStr} is not null";
+                else
+                    return $"{leftStr} < {rightObject} and {leftStr} > {rightObject}";
+            }
             return str;
         }
 
