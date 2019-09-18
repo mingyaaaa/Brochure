@@ -6,7 +6,6 @@ namespace LinqDbQuery.Visitors
 {
     public class SelectVisitor : ORMVisitor
     {
-        public IDbProvider _dbPrivoder;
         public SelectVisitor (IDbProvider dbPrivoder)
         {
             _dbPrivoder = dbPrivoder;
