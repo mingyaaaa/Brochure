@@ -6,15 +6,8 @@ namespace LinqDbQuery
 {
     public class Program
     {
-        private static void Main(string[] args)
-        {
-            Expression<Func<User, bool>> wheretree = t => t.Age == 1;
-            var vis = new WhereVisitor(new MySqlDbProvider());
-            vis.Visit(wheretree);
-
-            Console.WriteLine(vis.GetSql());
-            Console.ReadKey();
-        }
+        private static void Main (string[] args)
+        { }
     }
     public class User
     {

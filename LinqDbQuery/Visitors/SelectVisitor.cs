@@ -6,10 +6,8 @@ namespace LinqDbQuery.Visitors
 {
     public class SelectVisitor : ORMVisitor
     {
-        public SelectVisitor (IDbProvider dbPrivoder)
-        {
-            _dbPrivoder = dbPrivoder;
-        }
+        public SelectVisitor (IDbProvider dbPrivoder) : base (dbPrivoder)
+        { }
         protected override Expression VisitNew (NewExpression node)
         {
             var list = new List<string> ();

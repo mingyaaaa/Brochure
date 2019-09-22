@@ -6,9 +6,8 @@ namespace LinqDbQuery.Visitors
     public class JoinVisitor : ORMVisitor
     {
         private string tableName;
-        public JoinVisitor (Type tableType, IDbProvider dbPrivoder)
+        public JoinVisitor (Type tableType, IDbProvider dbPrivoder) : base (dbPrivoder)
         {
-            _dbPrivoder = dbPrivoder;
             tableName = ReflectedUtli.GetTableName (tableType);
         }
         protected override Expression VisitBinary (BinaryExpression node)

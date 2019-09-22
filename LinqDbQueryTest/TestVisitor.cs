@@ -100,5 +100,18 @@ namespace LinqDbQueryTest
             var sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("group by [Peoples].[Age],[Peoples].[BirthDay]", sql);
         }
+
+        [TestMethod]
+        public void TestParamers ()
+        {
+            visitor = new WhereVisitor (new MySqlDbProvider ());
+            Expression<Func<Peoples, bool>> ex = t => t.Id == "1";
+            var a = visitor.Visit (ex);
+            var sql = visitor.GetSql ().ToString ().Trim ();
+            var parmas = visitor.GetParameters ();
+            Assert.AreEqual (1, parmas.Count ());
+            Assert.AreEqual ("1", parmas.First ().Value);
+            Assert.AreEqual ("where [Peoples].[Id] = @p0", sql);
+        }
     }
 }

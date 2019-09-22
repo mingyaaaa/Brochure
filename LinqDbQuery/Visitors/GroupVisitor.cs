@@ -5,10 +5,8 @@ namespace LinqDbQuery.Visitors
 {
     public class GroupVisitor : ORMVisitor
     {
-        public GroupVisitor (IDbProvider provider)
-        {
-            this._dbPrivoder = provider;
-        }
+        public GroupVisitor (IDbProvider provider) : base (provider)
+        { }
 
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {

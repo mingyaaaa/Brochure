@@ -30,3 +30,7 @@ Brochure.Core.Server/obj/
 /LinqDbQueryTest/bin
 /LinqDbQueryTest/obj
 obj/
+Brochure.Core/.DS_Store
+.DS_Store
+Brochure.Utils/bin
+Brochure.Utils/

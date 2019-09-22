@@ -5,10 +5,8 @@ namespace LinqDbQuery.Visitors
     public class WhereVisitor : ORMVisitor
     {
 
-        public WhereVisitor (IDbProvider dbPrivoder)
-        {
-            _dbPrivoder = dbPrivoder;
-        }
+        public WhereVisitor (IDbProvider dbPrivoder) : base (dbPrivoder)
+        { }
         protected override Expression VisitBinary (BinaryExpression node)
         {
             var left = GetSql (node.Left);
