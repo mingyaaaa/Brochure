@@ -15,7 +15,7 @@ namespace LinqDbQueryTest
 
         public IDbConnection GetDbConnection ()
         {
-            throw new NotImplementedException ();
+            return new MySqlConnection ();
         }
 
         public IDbDataParameter GetDbDataParameter ()
