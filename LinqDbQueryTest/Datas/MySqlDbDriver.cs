@@ -12,6 +12,7 @@ namespace LinqDbQueryTest
             IsUseParamers = true;
         }
         public bool IsUseParamers { get; set; }
+        public Func<DbQueryOption> CreateOption { get; set; }
 
         public IDbConnection GetDbConnection ()
         {

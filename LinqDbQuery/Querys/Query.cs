@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using AspectCore.Injector;
 using LinqDbQuery.Querys;
 using LinqDbQuery.Visitors;
 using Microsoft.Extensions.Logging;
@@ -11,14 +12,14 @@ namespace LinqDbQuery
 {
     public abstract class Query : IQuery
     {
+        protected DbQueryOption option { get; private set; }
 
-        protected QueryOption option { get; private set; }
-
-        public Query () : this (new QueryOption ())
+        public Query ()
         {
-
+            var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
+            this.option = provider.CreateOption.Invoke ();
         }
-        public Query (QueryOption option)
+        public Query (DbQueryOption option)
         {
             this.option = option;
         }
@@ -52,7 +53,7 @@ namespace LinqDbQuery
                 var command = conn.CreateCommand ();
                 command.CommandText = sql;
                 command.CommandTimeout = this.option.Timeout;
-                if (option.DbProvider.IsUseParamers)
+                if (option.IsUseParamers)
                 {
                     foreach (var item in parameters)
                         command.Parameters.Add (item);

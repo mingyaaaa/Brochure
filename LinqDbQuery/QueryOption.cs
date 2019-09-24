@@ -5,20 +5,23 @@ using AspectCore.Injector;
 
 namespace LinqDbQuery
 {
-    public class QueryOption
+    public abstract class DbQueryOption
     {
-        private string connectionStr;
-        public QueryOption ()
+        public bool IsUseParamers { get; set; }
+        public string ConnectionString { get; set; }
+        public int Timeout { get; set; }
+        public DbQueryOption ()
         {
             DbProvider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
         }
-        public int Timeout { get; set; }
 
         public IDbProvider DbProvider { get; private set; }
         public IDbConnection GetDbConnection ()
         {
             var connection = DbProvider.GetDbConnection ();
-            connection.ConnectionString = connectionStr;
+            if (string.IsNullOrWhiteSpace (ConnectionString))
+                throw new Exception ("请设置数据库连接字符串");
+            connection.ConnectionString = ConnectionString;
             return connection;
         }
     }

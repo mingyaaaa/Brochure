@@ -10,8 +10,7 @@ namespace Brochure.Core
             return this;
         }
 
-        public void Dispose ()
-        { }
+        public void Dispose () { }
 
         public bool IsEnabled (LogLevel logLevel)
         {
@@ -40,8 +39,7 @@ namespace Brochure.Core
             return new DbLogger ();
         }
 
-        public void Dispose ()
-        { }
+        public void Dispose () { }
     }
 
     public static class DbLogExtends

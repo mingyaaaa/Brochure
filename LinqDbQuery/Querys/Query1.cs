@@ -10,8 +10,11 @@ namespace LinqDbQuery.Querys
     public class Query<T1> : Query, IQuery<T1>
     {
         private readonly string tableName;
-        public Query () : this (new QueryOption ()) { }
-        public Query (QueryOption option) : base (option)
+        public Query () : base ()
+        {
+
+        }
+        public Query (DbQueryOption option) : base (option)
         {
             this.tableName = ReflectedUtli.GetTableName (typeof (T1));
             var log = DI.Ins.ServiceProvider.Resolve<ILogger<Query>> ();
