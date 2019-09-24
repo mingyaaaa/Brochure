@@ -52,9 +52,13 @@ namespace LinqDbQuery.Querys
             return base.Select<Query<T>> (fun);
         }
 
-        public IQuery<T1> Where (Expression<Func<T1, bool>> fun)
+        public IQuery<T1> WhereAnd (Expression<Func<T1, bool>> fun)
         {
-            return base.Where<Query<T1>> (fun);
+            return base.WhereAnd<Query<T1>> (fun);
+        }
+        public IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun)
+        {
+            return base.WhereOr<Query<T1>> (fun);
         }
     }
 

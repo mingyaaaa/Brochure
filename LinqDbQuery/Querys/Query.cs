@@ -88,13 +88,40 @@ namespace LinqDbQuery
             selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             return this.Copy<T> ();
         }
-        public T Where<T> (Expression fun) where T : Query
+        public T WhereAnd<T> (Expression fun) where T : Query
         {
             var whereVisitor = new WhereVisitor (this.option.DbProvider);
             whereVisitor.Visit (fun);
-            whereSql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            if (string.IsNullOrWhiteSpace (whereSql))
+            {
+                whereSql = sql;
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace (sql))
+                    whereSql = $"{whereSql} and ({sql})";
+            }
             return this as T;
         }
+
+        public T WhereOr<T> (Expression fun) where T : Query
+        {
+            var whereVisitor = new WhereVisitor (this.option.DbProvider);
+            whereVisitor.Visit (fun);
+            var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            if (string.IsNullOrWhiteSpace (whereSql))
+            {
+                whereSql = sql;
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace (sql))
+                    whereSql = $"{whereSql} or ({sql})";
+            }
+            return this as T;
+        }
+
         public T Groupby<T> (Expression fun) where T : Query
         {
             var groupVisit = new GroupVisitor (this.option.DbProvider);

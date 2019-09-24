@@ -15,9 +15,13 @@ namespace LinqDbQuery.Querys
             return base.Select<Query<T>> (fun);
         }
 
-        public IQuery<T1, T2, T3, T4, T5> Where (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
+        public IQuery<T1, T2, T3, T4, T5> WhereAnd (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {
-            return base.Where<Query<T1, T2, T3, T4, T5>> (fun);
+            return base.WhereAnd<Query<T1, T2, T3, T4, T5>> (fun);
+        }
+        public IQuery<T1, T2, T3, T4, T5> WhereOr (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
+        {
+            return base.WhereOr<Query<T1, T2, T3, T4, T5>> (fun);
         }
     }
 }

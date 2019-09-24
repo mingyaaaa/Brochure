@@ -20,9 +20,13 @@ namespace LinqDbQuery.Querys
             return base.Select<Query<T>> (fun);
         }
 
-        public IQuery<T1, T2, T3> Where (Expression<Func<T1, T2, T3, bool>> fun)
+        public IQuery<T1, T2, T3> WhereAnd (Expression<Func<T1, T2, T3, bool>> fun)
         {
-            return base.Where<Query<T1, T2, T3>> (fun);
+            return base.WhereAnd<Query<T1, T2, T3>> (fun);
+        }
+        public IQuery<T1, T2, T3> WhereOr (Expression<Func<T1, T2, T3, bool>> fun)
+        {
+            return base.WhereOr<Query<T1, T2, T3>> (fun);
         }
     }
 }
