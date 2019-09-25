@@ -78,7 +78,15 @@ namespace LinqDbQueryTest
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("select [Peoples].[Name] as NewName,[Peoples].[Age] as NewAge from", sql);
+            ex = t => t.Age;
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("select [Peoples].[Age] from", sql);
 
+            Expression<Func<Peoples, Students, object>> ex2 = (p, s) => new { NewName = p.Name, NewAge = p.Age, s.Class };
+            a = visitor.Visit (ex2);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("select [Peoples].[Name] as NewName,[Peoples].[Age] as NewAge,[Students].[Class] as Class from", sql);
         }
 
         [TestMethod]

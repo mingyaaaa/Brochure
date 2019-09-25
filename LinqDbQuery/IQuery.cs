@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -6,7 +7,7 @@ namespace LinqDbQuery
 {
     public interface IQuery
     {
-
+        string GetSql ();
     }
 
     public interface IQuery<T1> : IQuery
@@ -18,6 +19,15 @@ namespace LinqDbQuery
         IQuery<T1> WhereAnd (Expression<Func<T1, bool>> fun);
         IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun);
         IQuery<T1> Distinct ();
+
+        int Insert (T1 obj);
+
+        int InsertMany (IEnumerable<T1> objs);
+
+        T1 Update (object obj, Expression<Func<T1, bool>> Func);
+
+        int Delete (Expression<Func<T1, bool>> fun);
+
     }
     public interface IQuery<T1, T2>
     {

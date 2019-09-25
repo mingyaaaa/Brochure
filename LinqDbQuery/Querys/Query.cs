@@ -18,24 +18,22 @@ namespace LinqDbQuery
         {
             var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
             this.option = provider.CreateOption.Invoke ();
+            mainTableNames = new List<string> ();
         }
         public Query (DbQueryOption option)
         {
             this.option = option;
+            mainTableNames = new List<string> ();
         }
         protected string selectSql;
         protected string whereSql;
 
-        protected List<string> tableNames;
+        protected List<string> mainTableNames;
 
         protected string groupSql;
         protected string joinSql;
         protected string orderSql;
         protected List<IDbDataParameter> parameters;
-        protected string GetSql ()
-        {
-            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace( whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
-        }
         private string AddWhiteSpace (string str)
         {
             if (!string.IsNullOrWhiteSpace (str))
@@ -45,7 +43,7 @@ namespace LinqDbQuery
 
         public int Count ()
         {
-            selectSql = $"select count(1) from {string.Join(',',tableNames)}";
+            selectSql = $"select count(1) from {JoinTableNames()}";
             var sql = GetSql ();
             var result = -1;
             using (var conn = this.option.GetDbConnection ())
@@ -87,6 +85,9 @@ namespace LinqDbQuery
             var selectVisitor = new SelectVisitor (this.option.DbProvider);
             selectVisitor.Visit (fun);
             selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
+            selectSql = selectSql + JoinTableNames ();
+            if (this is T)
+                return (T) this;
             return this.Copy<T> ();
         }
         public T WhereAnd<T> (Expression fun) where T : Query
@@ -133,16 +134,26 @@ namespace LinqDbQuery
 
         protected T Copy<T> () where T : Query
         {
-            var query = Activator.CreateInstance<T> ();
+            var query = (T) Activator.CreateInstance (typeof (T), option);
             query.selectSql = this.selectSql;
             query.whereSql = this.whereSql;
             query.groupSql = this.groupSql;
             query.joinSql = this.joinSql;
             query.orderSql = this.orderSql;
             query.parameters = this.parameters;
-            query.tableNames = this.tableNames;
+            query.mainTableNames = this.mainTableNames;
             query.option = this.option;
             return query;
+        }
+
+        public string GetSql ()
+        {
+            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace( whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
+        }
+
+        protected string JoinTableNames ()
+        {
+            return string.Join (",", mainTableNames.Select (t => $"[{t}]"));
         }
     }
 

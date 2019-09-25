@@ -12,9 +12,12 @@ namespace LinqDbQuery
         public int Timeout { get; set; }
         public DbQueryOption ()
         {
-            DbProvider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
+            DbProvider = DI.Ins.ServiceProvider.Resolve<IDbProvider> ();
         }
-
+        public DbQueryOption (IDbProvider dbProvider)
+        {
+            DbProvider = dbProvider;
+        }
         public IDbProvider DbProvider { get; private set; }
         public IDbConnection GetDbConnection ()
         {

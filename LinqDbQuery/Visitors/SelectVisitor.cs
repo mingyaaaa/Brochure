@@ -6,8 +6,7 @@ namespace LinqDbQuery.Visitors
 {
     public class SelectVisitor : ORMVisitor
     {
-        public SelectVisitor (IDbProvider dbPrivoder) : base (dbPrivoder)
-        { }
+        public SelectVisitor (IDbProvider dbPrivoder) : base (dbPrivoder) { }
         protected override Expression VisitNew (NewExpression node)
         {
             var list = new List<string> ();
@@ -37,6 +36,7 @@ namespace LinqDbQuery.Visitors
             sql = $"select {string.Join(",", list)} from ";
             return node;
         }
+
         protected override Expression VisitBinary (BinaryExpression node)
         {
             var left = GetSql (node.Left);
@@ -45,6 +45,21 @@ namespace LinqDbQuery.Visitors
             sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
             return node;
         }
+        public override object GetSql (Expression expression = null)
+        {
+            if (expression != null)
+            {
+                return base.GetSql (expression);
+            }
+            else
+            {
+                var sqlStr = sql?.ToString () ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace (sqlStr) && !sqlStr.Contains ("select"))
+                    return $"select {sql} from ";
+                else
+                    return sqlStr;
+            }
 
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace LinqDbQuery.Visitors
         protected IDbProvider _dbPrivoder;
         protected object sql;
         protected List<IDbDataParameter> Parameters;
-        public object GetSql (Expression expression = null)
+        public virtual object GetSql (Expression expression = null)
         {
             if (expression != null)
                 Visit (expression);
