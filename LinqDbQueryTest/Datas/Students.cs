@@ -6,7 +6,7 @@ namespace LinqDbQueryTest
 
         public string School { get; set; }
 
-        public string Class { set; get; }
+        public string ClassId { set; get; }
 
         public string PeopleId { get; set; }
     }
