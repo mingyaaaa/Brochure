@@ -15,8 +15,6 @@ namespace LinqDbQuery.Querys
         }
         public Query (DbQueryOption option) : base (option)
         {
-            var tableName = ReflectedUtli.GetTableName (typeof (T1));
-            mainTableNames.Add (tableName);
             var log = DI.Ins.ServiceProvider.Resolve<ILogger<Query>> ();
         }
 

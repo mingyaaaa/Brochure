@@ -18,12 +18,12 @@ namespace LinqDbQuery
         {
             var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
             this.option = provider.CreateOption.Invoke ();
-            mainTableNames = new List<string> ();
+            InitMainTableNames ();
         }
         public Query (DbQueryOption option)
         {
             this.option = option;
-            mainTableNames = new List<string> ();
+            InitMainTableNames ();
         }
         protected string selectSql;
         protected string whereSql;
@@ -154,6 +154,17 @@ namespace LinqDbQuery
         protected string JoinTableNames ()
         {
             return string.Join (",", mainTableNames.Select (t => $"[{t}]"));
+        }
+
+        private void InitMainTableNames ()
+        {
+            mainTableNames = new List<string> ();
+            var thisTypes = this.GetType ();
+            var types = thisTypes.GetGenericArguments ();
+            foreach (var item in types)
+            {
+                this.mainTableNames.Add (TableUtlis.GetTableName (item));
+            }
         }
     }
 

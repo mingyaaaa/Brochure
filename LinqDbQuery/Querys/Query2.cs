@@ -10,10 +10,7 @@ namespace LinqDbQuery.Querys
         public Query () { }
 
         public Query (DbQueryOption option) : base (option)
-        {
-            mainTableNames.Add (ReflectedUtli.GetTableName (typeof (T1)));
-            mainTableNames.Add (ReflectedUtli.GetTableName (typeof (T2)));
-        }
+        { }
 
         public IQuery<T1, T2, T3> Join<T3> (Expression<Func<T1, T2, T3, bool>> fun)
         {

@@ -8,7 +8,7 @@ namespace LinqDbQuery.Visitors
         private string tableName;
         public JoinVisitor (Type tableType, IDbProvider dbPrivoder) : base (dbPrivoder)
         {
-            tableName = ReflectedUtli.GetTableName (tableType);
+            tableName = TableUtlis.GetTableName (tableType);
         }
         protected override Expression VisitBinary (BinaryExpression node)
         {

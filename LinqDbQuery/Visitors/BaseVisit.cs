@@ -45,7 +45,7 @@ namespace LinqDbQuery.Visitors
             }
             else if (node.Member is PropertyInfo)
             {
-                var tableName = ReflectedUtli.GetTableName ((node.Member as PropertyInfo).DeclaringType);
+                var tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
                 sql = $"[{tableName}].[{node.Member.Name}]";
             }
             return node;

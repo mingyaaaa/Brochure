@@ -40,16 +40,11 @@ namespace LinqDbQueryTest.Querys
             query2.Select ((p, s) => new { p.Id, s.Class });
             sql = query2.GetSql ();
             Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[Class] as Class from [Peoples],[Students]", sql);
-        }
 
-        [TestMethod]
-        public void QuerySelect1 ()
-        {
-            var option = new MySqlOption (provider);
-            var query2 = new Query<Peoples, Students> (option);
-            query2.Select ((p, s) => new { p.Id, s.Class });
-            var sql = query2.GetSql ();
-            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[Class] as Class from [Peoples],[Students]", sql);
+            var query3 = new Query<Peoples, Students, Teachers> (option);
+            query3.Select ((p, s, t) => new { p.Id, s.Class, s.School, t.Job });
+            sql = query3.GetSql ();
+            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[Class] as Class,[Students].[School] as School,[Teachers].[Job] as Job from [Peoples],[Students],[Teachers]", sql);
         }
 
         [TestMethod]
