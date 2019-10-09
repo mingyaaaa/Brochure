@@ -45,7 +45,22 @@ namespace LinqDbQuery.Visitors
             }
             else if (node.Member is PropertyInfo)
             {
-                var tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
+                var tableName = string.Empty;
+                //如果是IGrouping则取第二参数的类型
+                // if (node.Member.DeclaringType == typeof (IGrouping<,>))
+                // {
+                //     var type = node.Member.DeclaringType.GetGenericArguments ().LastOrDefault ();
+                //     if (type == null)
+                //         throw new Exception ("IGrouping类型错误");
+                //     tableName = TableUtlis.GetTableName (type);
+                //     sql = $"[{tableName}].[{node.Member.Name}]";
+                // }
+                // else
+                // {
+                //     tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
+                //     sql = $"[{tableName}].[{node.Member.Name}]";
+                // }
+                tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
                 sql = $"[{tableName}].[{node.Member.Name}]";
             }
             return node;
@@ -64,26 +79,40 @@ namespace LinqDbQuery.Visitors
             {
                 member = GetSql (node.Object);
             }
-            if (node.Method.Name == FuncName.Contains)
-            {
 
-                if (call is string)
-                    sql = $"{member} like '%{call}%'";
-                else if (call is IEnumerable)
-                {
-                    var listStr = string.Join (',', (call as IEnumerable).OfType<object> ().Select (t => _dbPrivoder.GetObjectType (t)));
-                    sql = $"{member} in ({listStr})";
-                }
-            }
-            else if (node.Method.Name == FuncName.StartsWith)
+            switch (node.Method.Name)
             {
-                if (call is string)
-                    sql = $"{member} like '%{call}'";
-            }
-            else if (node.Method.Name == FuncName.EndsWith)
-            {
-                if (call is string)
-                    sql = $"{member} like '{call}%'";
+                case FuncName.Contains:
+                    if (call is string)
+                        sql = $"{member} like '%{call}%'";
+                    else if (call is IEnumerable)
+                    {
+                        var listStr = string.Join (',', (call as IEnumerable).OfType<object> ().Select (t => _dbPrivoder.GetObjectType (t)));
+                        sql = $"{member} in ({listStr})";
+                    }
+                    break;
+                case FuncName.StartsWith:
+                    if (call is string)
+                        sql = $"{member} like '%{call}'";
+                    break;
+                case FuncName.EndsWith:
+                    if (call is string)
+                        sql = $"{member} like '{call}%'";
+                    break;
+                case FuncName.Count:
+                    sql = $"count({call})";
+                    break;
+                case FuncName.Sum:
+                    sql = $"sum({member})";
+                    break;
+                case FuncName.Min:
+                    sql = $"min({member})";
+                    break;
+                case FuncName.Max:
+                    sql = $"max({member})";
+                    break;
+                default:
+                    break;
             }
             return node;
         }

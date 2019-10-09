@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using AspectCore.Injector;
 using LinqDbQuery.Querys;
 using LinqDbQuery.Visitors;
@@ -85,6 +86,28 @@ namespace LinqDbQuery
             var selectVisitor = new SelectVisitor (this.option.DbProvider);
             selectVisitor.Visit (fun);
             selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
+            //如果有group 则需要将Key替换成对应的分组属性
+            if (selectSql.Contains ("[<>f__AnonymousType5`2]") && !string.IsNullOrWhiteSpace (groupSql))
+            {
+                var groupField = groupSql.Replace ("group by", "").Trim ();
+                var groupFields = groupField.Split (',');
+                foreach (var item in groupFields)
+                {
+                    var filed = item.Split ('.') [1];
+                    Regex rx = new Regex ($@"\[<>f__AnonymousType5`2\].\[{filed.Trim('[',']')}\]");
+                    var match = rx.Match (selectSql);
+                    if (match.Length > 0)
+                    {
+                        selectSql = selectSql.Replace (match.Value, item);
+                    }
+                }
+                //selectSql = selectSql.Replace ("[<>f__AnonymousType5`2]", groupField);
+            }
+            if (selectSql.Contains ("[IGrouping`2].[Key]") && !string.IsNullOrWhiteSpace (groupSql))
+            {
+                var groupField = groupSql.Replace ("group by", "").Trim ();
+                selectSql = selectSql.Replace ("[IGrouping`2].[Key]", groupField);
+            }
             selectSql = selectSql + JoinTableNames ();
             if (this is T)
                 return (T) this;
@@ -148,7 +171,7 @@ namespace LinqDbQuery
 
         public string GetSql ()
         {
-            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace( whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
+            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
         }
 
         protected string JoinTableNames ()

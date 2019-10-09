@@ -107,6 +107,11 @@ namespace LinqDbQueryTest
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("group by [Peoples].[Age],[Peoples].[BirthDay]", sql);
+
+            ex = t => t.Age;
+            a = visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("group by [Peoples].[Age]", sql);
         }
 
         [TestMethod]

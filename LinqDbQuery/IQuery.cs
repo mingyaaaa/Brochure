@@ -14,7 +14,7 @@ namespace LinqDbQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T>> fun);
         IQuery<T1, T2> Join<T2> (Expression<Func<T1, T2, bool>> fun);
-        IQuery<IGrouping<T1, T2>> Groupby<T2> (Expression<Func<T1, T2>> fun);
+        IQuery<IGrouping<T2, T1>> Groupby<T2> (Expression<Func<T1, T2>> fun);
         IQuery<T1> Orderby (Expression<Func<T1, object>> fun);
         IQuery<T1> WhereAnd (Expression<Func<T1, bool>> fun);
         IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun);

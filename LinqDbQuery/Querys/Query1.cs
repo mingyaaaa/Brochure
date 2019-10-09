@@ -38,9 +38,9 @@ namespace LinqDbQuery.Querys
             return this;
         }
 
-        public IQuery<System.Linq.IGrouping<T1, T2>> Groupby<T2> (Expression<Func<T1, T2>> fun)
+        public IQuery<System.Linq.IGrouping<T2, T1>> Groupby<T2> (Expression<Func<T1, T2>> fun)
         {
-            return base.Groupby<Query<IGrouping<T1, T2>>> (fun);
+            return base.Groupby<Query<IGrouping<T2, T1>>> (fun);
         }
 
         public int Insert (T1 obj)

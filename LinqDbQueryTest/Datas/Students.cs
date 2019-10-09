@@ -9,5 +9,7 @@ namespace LinqDbQueryTest
         public string ClassId { set; get; }
 
         public string PeopleId { get; set; }
+
+        public int ClassCount { get; set; }
     }
 }

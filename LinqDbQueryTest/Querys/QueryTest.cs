@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using LinqDbQuery.Querys;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,7 +68,22 @@ namespace LinqDbQueryTest.Querys
         }
 
         [TestMethod]
-        public void QueryGroup () { }
+        public void QueryGroup ()
+        {
+            var option = new MySqlOption (provider);
+            var query = new Query<Students> (option);
+            var q = query.Groupby (t => t.School).Select (t => new { School = t.Key, Count = t.Count () });
+            var sql = q.GetSql ();
+            Trace.TraceInformation (sql);
+
+            var q1 = query.Groupby (t => new { t.School, t.ClassId }).Select (t => new { School = t.Key.School, ClassId = t.Key.ClassId, Count = t.Count () });
+            sql = q1.GetSql ();
+            Trace.TraceInformation (sql);
+
+            // var q2 = query.Groupby (t => new { t.School, t.ClassId }).Select (t => new { School = t.Key.School, ClassId = t.Key.ClassId, Count = t.Count (), Sum = t.Sum (p => p.ClassCount) });
+            // sql = q2.GetSql ();
+            // Trace.TraceInformation (sql);
+        }
 
         [TestMethod]
         public void QueryOrder () { }

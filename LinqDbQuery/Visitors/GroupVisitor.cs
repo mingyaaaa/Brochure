@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LinqDbQuery.Visitors
 {
     public class GroupVisitor : ORMVisitor
     {
-        public GroupVisitor (IDbProvider provider) : base (provider)
-        { }
+        public GroupVisitor (IDbProvider provider) : base (provider) { }
 
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {
@@ -37,5 +37,22 @@ namespace LinqDbQuery.Visitors
             sql = $"group by {string.Join(",", list)} ";
             return node;
         }
+        public override object GetSql (Expression expression = null)
+        {
+            if (expression != null)
+            {
+                base.Visit (expression);
+            }
+            else
+            {
+                var str = sql?.ToString () ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace (str) && !str.Contains ("group"))
+                {
+                    sql = $"group by {str}";
+                }
+            }
+            return sql;
+        }
+
     }
 }
