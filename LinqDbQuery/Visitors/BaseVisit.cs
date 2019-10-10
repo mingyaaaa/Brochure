@@ -46,20 +46,6 @@ namespace LinqDbQuery.Visitors
             else if (node.Member is PropertyInfo)
             {
                 var tableName = string.Empty;
-                //如果是IGrouping则取第二参数的类型
-                // if (node.Member.DeclaringType == typeof (IGrouping<,>))
-                // {
-                //     var type = node.Member.DeclaringType.GetGenericArguments ().LastOrDefault ();
-                //     if (type == null)
-                //         throw new Exception ("IGrouping类型错误");
-                //     tableName = TableUtlis.GetTableName (type);
-                //     sql = $"[{tableName}].[{node.Member.Name}]";
-                // }
-                // else
-                // {
-                //     tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
-                //     sql = $"[{tableName}].[{node.Member.Name}]";
-                // }
                 tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
                 sql = $"[{tableName}].[{node.Member.Name}]";
             }

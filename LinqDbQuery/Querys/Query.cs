@@ -66,11 +66,14 @@ namespace LinqDbQuery
         {
             var joinVisitor = new JoinVisitor (type, this.option.DbProvider);
             joinVisitor.Visit (expression);
+            var t_joinSql = string.Empty;
             if (string.IsNullOrWhiteSpace (joinSql))
-                joinSql = $"{joinVisitor.GetSql()}";
+                t_joinSql = $"{joinVisitor.GetSql()}";
             else
-                joinSql = $"{joinSql} {joinVisitor.GetSql()}";
-            return this.Copy<T> ();
+                t_joinSql = $"{joinSql} {joinVisitor.GetSql()}";
+            var tt = this.Copy<T> ();
+            tt.joinSql = t_joinSql;
+            return tt;
         }
 
         protected T Orderby<T> (Expression fun) where T : Query
@@ -85,9 +88,9 @@ namespace LinqDbQuery
         {
             var selectVisitor = new SelectVisitor (this.option.DbProvider);
             selectVisitor.Visit (fun);
-            selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             //如果有group 则需要将Key替换成对应的分组属性
-            if (selectSql.Contains ("[<>f__AnonymousType5`2]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.Contains ("[<>f__AnonymousType5`2]") && !string.IsNullOrWhiteSpace (groupSql))
             {
                 var groupField = groupSql.Replace ("group by", "").Trim ();
                 var groupFields = groupField.Split (',');
@@ -95,23 +98,26 @@ namespace LinqDbQuery
                 {
                     var filed = item.Split ('.') [1];
                     Regex rx = new Regex ($@"\[<>f__AnonymousType5`2\].\[{filed.Trim('[',']')}\]");
-                    var match = rx.Match (selectSql);
+                    var match = rx.Match (t_selectSql);
                     if (match.Length > 0)
                     {
-                        selectSql = selectSql.Replace (match.Value, item);
+                        t_selectSql = t_selectSql.Replace (match.Value, item);
                     }
                 }
-                //selectSql = selectSql.Replace ("[<>f__AnonymousType5`2]", groupField);
             }
-            if (selectSql.Contains ("[IGrouping`2].[Key]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.Contains ("[IGrouping`2].[Key]") && !string.IsNullOrWhiteSpace (groupSql))
             {
                 var groupField = groupSql.Replace ("group by", "").Trim ();
-                selectSql = selectSql.Replace ("[IGrouping`2].[Key]", groupField);
+                t_selectSql = t_selectSql.Replace ("[IGrouping`2].[Key]", groupField);
             }
-            selectSql = selectSql + JoinTableNames ();
+            t_selectSql = t_selectSql + JoinTableNames ();
+            T tt = null;
             if (this is T)
-                return (T) this;
-            return this.Copy<T> ();
+                tt = (T) this;
+            else
+                tt = this.Copy<T> ();
+            tt.selectSql = t_selectSql;
+            return tt;
         }
         public T WhereAnd<T> (Expression fun) where T : Query
         {
@@ -151,8 +157,10 @@ namespace LinqDbQuery
         {
             var groupVisit = new GroupVisitor (this.option.DbProvider);
             groupVisit.Visit (fun);
-            groupSql = groupVisit.GetSql ().ToString ();
-            return this.Copy<T> ();
+            var t_groupSql = groupVisit.GetSql ().ToString ();
+            var tt = this.Copy<T> ();
+            tt.groupSql = t_groupSql;
+            return tt;
         }
 
         protected T Copy<T> () where T : Query
@@ -171,6 +179,10 @@ namespace LinqDbQuery
 
         public string GetSql ()
         {
+            if (string.IsNullOrWhiteSpace (selectSql))
+            {
+                selectSql = $"select * from {JoinTableNames()}";
+            }
             return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
         }
 

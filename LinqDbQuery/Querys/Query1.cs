@@ -24,7 +24,6 @@ namespace LinqDbQuery.Querys
         {
             throw new NotImplementedException ();
         }
-
         public IQuery<T1> Distinct ()
         {
             if (string.IsNullOrWhiteSpace (selectSql))

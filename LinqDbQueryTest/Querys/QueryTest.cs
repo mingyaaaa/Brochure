@@ -32,20 +32,25 @@ namespace LinqDbQueryTest.Querys
         public void QuerySelect ()
         {
             var option = new MySqlOption (provider);
+
             var query = new Query<Students> (option);
-            query.Select (t => t.Id);
+
             var sql = query.GetSql ();
+            Assert.AreEqual ("select * from [Students]", sql);
+
+            var q = query.Select (t => t.Id);
+            sql = q.GetSql ();
             Assert.AreEqual ("select [Students].[Id] from [Students]", sql);
 
             var query2 = new Query<Peoples, Students> (option);
-            query2.Select ((p, s) => new { p.Id, s.ClassId });
-            sql = query2.GetSql ();
-            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[Class] as Class from [Peoples],[Students]", sql);
+            var q2 = query2.Select ((p, s) => new { p.Id, s.ClassId });
+            sql = q2.GetSql ();
+            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[ClassId] as ClassId from [Peoples],[Students]", sql);
 
             var query3 = new Query<Peoples, Students, Teachers> (option);
-            query3.Select ((p, s, t) => new { p.Id, s.ClassId, s.School, t.Job });
-            sql = query3.GetSql ();
-            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[Class] as Class,[Students].[School] as School,[Teachers].[Job] as Job from [Peoples],[Students],[Teachers]", sql);
+            var q3 = query3.Select ((p, s, t) => new { p.Id, s.ClassId, s.School, t.Job });
+            sql = q3.GetSql ();
+            Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[ClassId] as ClassId,[Students].[School] as School,[Teachers].[Job] as Job from [Peoples],[Students],[Teachers]", sql);
         }
 
         [TestMethod]
@@ -59,7 +64,7 @@ namespace LinqDbQueryTest.Querys
 
             var q2 = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Join<Classes> ((s, p, c) => s.ClassId == c.Id).Select ((s, p, c) => new { c.ClassName });
             sql = q2.GetSql ();
-            Assert.AreEqual (@"select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
+            Assert.AreEqual (@"select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
 
             var query2 = new Query<Students, Peoples> (option);
             var q3 = query2.Join<Classes> ((s, p, c) => s.ClassId == c.Id).Select ((s, p, c) => new { c.ClassName });
@@ -74,21 +79,40 @@ namespace LinqDbQueryTest.Querys
             var query = new Query<Students> (option);
             var q = query.Groupby (t => t.School).Select (t => new { School = t.Key, Count = t.Count () });
             var sql = q.GetSql ();
-            Trace.TraceInformation (sql);
+            Assert.AreEqual ("select [Students].[School] as School,count([Students].[School]) as Count from [Students] group by [Students].[School]", sql);
 
             var q1 = query.Groupby (t => new { t.School, t.ClassId }).Select (t => new { School = t.Key.School, ClassId = t.Key.ClassId, Count = t.Count () });
             sql = q1.GetSql ();
-            Trace.TraceInformation (sql);
+            Assert.AreEqual ("select [Students].[School] as School,[Students].[ClassId] as ClassId,count([Students].[ClassId]) as Count from [Students] group by [Students].[School],[Students].[ClassId]", sql);
 
-            // var q2 = query.Groupby (t => new { t.School, t.ClassId }).Select (t => new { School = t.Key.School, ClassId = t.Key.ClassId, Count = t.Count (), Sum = t.Sum (p => p.ClassCount) });
-            // sql = q2.GetSql ();
-            // Trace.TraceInformation (sql);
+            var q2 = query.Groupby (t => new { t.School, t.ClassId }).Select (t => new { School = t.Key.School, ClassId = t.Key.ClassId, Min = t.Min (p => p.ClassCount) });
+            sql = q2.GetSql ();
+            Assert.AreEqual ("select [Students].[School] as School,[Students].[ClassId] as ClassId,min([Students].[ClassCount]) as Min from [Students] group by [Students].[School],[Students].[ClassId]", sql);
+            //Trace.TraceInformation (sql);
         }
 
         [TestMethod]
-        public void QueryOrder () { }
+        public void QueryOrder ()
+        {
+            var option = new MySqlOption (provider);
+            var query = new Query<Students> (option);
+            var q = query.Orderby (t => t.ClassCount);
+            var sql = q.GetSql ();
+            Assert.AreEqual ("select * from [Students] order by [Students].[ClassCount]", sql);
+            var query2 = new Query<Students, Peoples> (option);
+            var q2 = query2.OrderBy ((t, p) => t.ClassCount);
+            sql = q2.GetSql ();
+            Assert.AreEqual ("select * from [Students],[Peoples] order by [Students].[ClassCount]", sql);
+            var q3 = query2.OrderBy ((t, p) => new { t.ClassCount, p.Age });
+            sql = q3.GetSql ();
+            Assert.AreEqual ("select * from [Students],[Peoples] order by [Students].[ClassCount],[Peoples].[Age]", sql);
+            //Trace.TraceInformation (sql);
+        }
 
         [TestMethod]
-        public void QueryWhere () { }
+        public void QueryWhere ()
+        {
+
+        }
     }
 }

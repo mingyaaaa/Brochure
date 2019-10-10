@@ -29,7 +29,7 @@ namespace LinqDbQuery
         int Delete (Expression<Func<T1, bool>> fun);
 
     }
-    public interface IQuery<T1, T2>
+    public interface IQuery<T1, T2> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T>> fun);
         IQuery<T1, T2, T3> Join<T3> (Expression<Func<T1, T2, T3, bool>> fun);
@@ -46,7 +46,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3> WhereOr (Expression<Func<T1, T2, T3, bool>> fun);
         IQuery<T1, T2, T3> OrderBy (Expression<Func<T1, T2, T3, object>> fun);
     }
-    public interface IQuery<T1, T2, T3, T4>
+    public interface IQuery<T1, T2, T3, T4> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T>> fun);
         IQuery<T1, T2, T3, T4, T5> Join<T5> (Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
@@ -54,7 +54,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3, T4> WhereOr (Expression<Func<T1, T2, T3, T4, bool>> fun);
         IQuery<T1, T2, T3, T4> OrderBy (Expression<Func<T1, T2, T3, T4, object>> fun);
     }
-    public interface IQuery<T1, T2, T3, T4, T5>
+    public interface IQuery<T1, T2, T3, T4, T5> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T5, T>> fun);
         IQuery<T1, T2, T3, T4, T5> WhereAnd (Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
