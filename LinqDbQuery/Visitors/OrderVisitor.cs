@@ -5,9 +5,11 @@ namespace LinqDbQuery.Visitors
 {
     public class OrderVisitor : ORMVisitor
     {
-        public OrderVisitor (IDbProvider dbProvider) : base (dbProvider)
-        {
+        private readonly bool isAes;
 
+        public OrderVisitor (IDbProvider dbProvider, bool isAes = true) : base (dbProvider)
+        {
+            this.isAes = isAes;
         }
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {
@@ -21,7 +23,9 @@ namespace LinqDbQuery.Visitors
                 var alis = member.Member.Name;
                 list.Add ($"{field}");
             }
-            sql = $"order by {string.Join(",", list)} from ";
+            sql = $"order by {string.Join(",", list)}";
+            if (!isAes)
+                sql = $"{sql} desc";
             return node;
         }
         protected override Expression VisitNew (NewExpression node)
@@ -36,6 +40,8 @@ namespace LinqDbQuery.Visitors
                 list.Add ($"{GetSql(parms[i])}");
             }
             sql = $"order by {string.Join(",", list)} ";
+            if (!isAes)
+                sql = $"{sql} desc";
             return node;
         }
         public override object GetSql (Expression expression = null)
@@ -50,6 +56,8 @@ namespace LinqDbQuery.Visitors
                 if (!string.IsNullOrWhiteSpace (str) && !str.Contains ("order by"))
                 {
                     sql = $"order by {str}";
+                    if (!isAes)
+                        sql = $"{sql} desc";
                 }
             }
             return sql;

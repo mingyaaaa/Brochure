@@ -76,12 +76,24 @@ namespace LinqDbQuery
             return tt;
         }
 
-        protected T Orderby<T> (Expression fun) where T : Query
+        protected T OrderBy<T> (Expression fun) where T : Query
         {
             var orderVisitor = new OrderVisitor (this.option.DbProvider);
             orderVisitor.Visit (fun);
-            orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
-            return this as T;
+            var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var tt = this as T;
+            tt.orderSql = t_orderSql;
+            return tt;
+        }
+
+        protected T OrderByDesc<T> (Expression fun) where T : Query
+        {
+            var orderVisitor = new OrderVisitor (this.option.DbProvider, false);
+            orderVisitor.Visit (fun);
+            var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var tt = this as T;
+            tt.orderSql = t_orderSql;
+            return tt;
         }
 
         public T Select<T> (Expression fun) where T : Query

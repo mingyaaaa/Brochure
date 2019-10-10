@@ -15,7 +15,8 @@ namespace LinqDbQuery
         IQuery<T> Select<T> (Expression<Func<T1, T>> fun);
         IQuery<T1, T2> Join<T2> (Expression<Func<T1, T2, bool>> fun);
         IQuery<IGrouping<T2, T1>> Groupby<T2> (Expression<Func<T1, T2>> fun);
-        IQuery<T1> Orderby (Expression<Func<T1, object>> fun);
+        IQuery<T1> OrderBy (Expression<Func<T1, object>> fun);
+        IQuery<T1> OrderbyDesc (Expression<Func<T1, object>> fun);
         IQuery<T1> WhereAnd (Expression<Func<T1, bool>> fun);
         IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun);
         IQuery<T1> Distinct ();
@@ -36,6 +37,7 @@ namespace LinqDbQuery
         IQuery<T1, T2> WhereAnd (Expression<Func<T1, T2, bool>> fun);
         IQuery<T1, T2> WhereOr (Expression<Func<T1, T2, bool>> fun);
         IQuery<T1, T2> OrderBy (Expression<Func<T1, T2, object>> fun);
+        IQuery<T1, T2> OrderByDesc (Expression<Func<T1, T2, object>> fun);
 
     }
     public interface IQuery<T1, T2, T3>
@@ -45,6 +47,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3> WhereAnd (Expression<Func<T1, T2, T3, bool>> fun);
         IQuery<T1, T2, T3> WhereOr (Expression<Func<T1, T2, T3, bool>> fun);
         IQuery<T1, T2, T3> OrderBy (Expression<Func<T1, T2, T3, object>> fun);
+        IQuery<T1, T2, T3> OrderByDesc (Expression<Func<T1, T2, T3, object>> fun);
     }
     public interface IQuery<T1, T2, T3, T4> : IQuery
     {
@@ -53,6 +56,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3, T4> WhereAnd (Expression<Func<T1, T2, T3, T4, bool>> fun);
         IQuery<T1, T2, T3, T4> WhereOr (Expression<Func<T1, T2, T3, T4, bool>> fun);
         IQuery<T1, T2, T3, T4> OrderBy (Expression<Func<T1, T2, T3, T4, object>> fun);
+        IQuery<T1, T2, T3, T4> OrderByDesc (Expression<Func<T1, T2, T3, T4, object>> fun);
     }
     public interface IQuery<T1, T2, T3, T4, T5> : IQuery
     {
@@ -60,6 +64,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3, T4, T5> WhereAnd (Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
         IQuery<T1, T2, T3, T4, T5> WhereOr (Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
         IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
+        IQuery<T1, T2, T3, T4, T5> OrderByDesc (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
     }
 
 }

@@ -14,7 +14,12 @@ namespace LinqDbQuery.Querys
 
         public IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {
-            return base.Orderby<Query<T1, T2, T3, T4, T5>> (fun);
+            return base.OrderBy<Query<T1, T2, T3, T4, T5>> (fun);
+        }
+
+        public IQuery<T1, T2, T3, T4, T5> OrderByDesc (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
+        {
+            return base.OrderByDesc<Query<T1, T2, T3, T4, T5>> (fun);
         }
 
         public IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T5, T>> fun)

@@ -57,9 +57,14 @@ namespace LinqDbQuery.Querys
             return base.Join<Query<T1, T2>> (typeof (T2), fun);
         }
 
-        public IQuery<T1> Orderby (Expression<Func<T1, object>> fun)
+        public IQuery<T1> OrderBy (Expression<Func<T1, object>> fun)
         {
-            return base.Orderby<Query<T1>> (fun);
+            return base.OrderBy<Query<T1>> (fun);
+        }
+
+        public IQuery<T1> OrderbyDesc (Expression<Func<T1, object>> fun)
+        {
+            return base.OrderByDesc<Query<T1>> (fun);
         }
 
         public IQuery<T> Select<T> (Expression<Func<T1, T>> fun)

@@ -96,7 +96,7 @@ namespace LinqDbQueryTest.Querys
         {
             var option = new MySqlOption (provider);
             var query = new Query<Students> (option);
-            var q = query.Orderby (t => t.ClassCount);
+            var q = query.OrderBy (t => t.ClassCount);
             var sql = q.GetSql ();
             Assert.AreEqual ("select * from [Students] order by [Students].[ClassCount]", sql);
             var query2 = new Query<Students, Peoples> (option);
