@@ -1,72 +1,66 @@
-﻿using LinqDbQuery;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using LinqDbQuery;
 
 namespace LinqDbQuery.A
 {
     public abstract class Sql
     {
-        private ISqlParse _parse;
-        public Sql(ISqlParse parse)
+        private readonly ISqlParse _parse;
+        protected Sql (ISqlParse parse)
         {
             _parse = parse;
         }
-        protected virtual string ToSql()
+
+        protected virtual string ToSql ()
         {
-            return _parse.Parse(this);
+            return _parse.Parse (this);
         }
-        public override string ToString()
+        public override string ToString ()
         {
-            return ToSql();
+            return ToSql ();
         }
     }
+
     public interface ISqlParse
     {
-        string Parse(Sql sql);
+        string Parse (Sql sql);
     }
+
     public class SelectSql : Sql
     {
         public bool IsSelectAll;
-        public SelectSql(ISqlParse parse) : base(parse)
+        public SelectSql (ISqlParse parse) : base (parse)
         {
-            Colomns = new List<string>();
+            Colomns = new List<string> ();
         }
-        public List<string> Colomns { get; set; }
 
+        public List<string> Colomns { get; set; }
     }
 
     public class TableSql : Sql
     {
-        public TableSql(ISqlParse parse) : base(parse)
-        {
-        }
+        public TableSql (ISqlParse parse) : base (parse) { }
     }
+
     public class JoinSql : Sql
     {
-        public JoinSql(ISqlParse parse) : base(parse)
-        {
-        }
+        public JoinSql (ISqlParse parse) : base (parse) { }
     }
 
     public class WhereSql : Sql
     {
-        public WhereSql(ISqlParse parse) : base(parse)
-        {
-        }
-    }
-    public class GroupSql : Sql
-    {
-        public GroupSql(ISqlParse parse) : base(parse)
-        {
-        }
-    }
-    public class OrderSql : Sql
-    {
-        public OrderSql(ISqlParse parse) : base(parse)
-        {
-        }
+        public WhereSql (ISqlParse parse) : base (parse) { }
     }
 
-    public class UnionSql
+    public class GroupSql : Sql
     {
+        public GroupSql (ISqlParse parse) : base (parse) { }
     }
+
+    public class OrderSql : Sql
+    {
+        public OrderSql (ISqlParse parse) : base (parse) { }
+    }
+
+    public class UnionSql { }
 }

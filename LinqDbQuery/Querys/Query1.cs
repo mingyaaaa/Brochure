@@ -9,13 +9,11 @@ namespace LinqDbQuery.Querys
 {
     public class Query<T1> : Query, IQuery<T1>
     {
-        public Query () : base ()
-        {
+        public Query () : base () { }
 
-        }
         public Query (DbQueryOption option) : base (option)
         {
-            var log = DI.Ins.ServiceProvider.Resolve<ILogger<Query>> ();
+            DI.Ins.ServiceProvider.Resolve<ILogger<Query>> ();
         }
 
         public string Sql { get; protected set; }
@@ -24,6 +22,7 @@ namespace LinqDbQuery.Querys
         {
             throw new NotImplementedException ();
         }
+
         public IQuery<T1> Distinct ()
         {
             if (string.IsNullOrWhiteSpace (selectSql))
@@ -81,10 +80,10 @@ namespace LinqDbQuery.Querys
         {
             return base.WhereAnd<Query<T1>> (fun);
         }
+
         public IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun)
         {
             return base.WhereOr<Query<T1>> (fun);
         }
     }
-
 }

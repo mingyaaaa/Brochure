@@ -6,9 +6,9 @@ namespace LinqDbQuery
 {
     public class Program
     {
-        private static void Main (string[] args)
-        { }
+        private static void Main (string[] args) { }
     }
+
     public class User
     {
         public string Name { get; set; }

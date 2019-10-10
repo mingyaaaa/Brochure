@@ -35,6 +35,7 @@ namespace LinqDbQuery.Querys
         {
             return base.WhereAnd<Query<T1, T2>> (fun);
         }
+
         public IQuery<T1, T2> WhereOr (Expression<Func<T1, T2, bool>> fun)
         {
             return base.WhereOr<Query<T1, T2>> (fun);

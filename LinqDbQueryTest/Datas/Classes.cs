@@ -4,6 +4,5 @@ namespace LinqDbQueryTest.Datas
     {
         public string Id { get; set; }
         public string ClassName { get; set; }
-
     }
 }

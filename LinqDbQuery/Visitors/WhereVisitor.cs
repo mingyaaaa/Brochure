@@ -4,9 +4,8 @@ namespace LinqDbQuery.Visitors
 {
     public class WhereVisitor : ORMVisitor
     {
+        public WhereVisitor (IDbProvider dbPrivoder) : base (dbPrivoder) { }
 
-        public WhereVisitor (IDbProvider dbPrivoder) : base (dbPrivoder)
-        { }
         protected override Expression VisitBinary (BinaryExpression node)
         {
             var left = GetSql (node.Left);
@@ -16,6 +15,7 @@ namespace LinqDbQuery.Visitors
             sql = $"where {sql} ";
             return node;
         }
+
         protected override Expression VisitMethodCall (MethodCallExpression node)
         {
             base.VisitMethodCall (node);

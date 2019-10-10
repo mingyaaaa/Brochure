@@ -20,11 +20,8 @@ namespace LinqDbQuery
 
     public abstract class DbSource
     {
-        public DbSource ()
-        {
+        protected DbSource () { }
 
-        }
         public abstract T GetDbConnection<T> ();
     }
-
 }

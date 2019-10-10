@@ -10,12 +10,10 @@ namespace LinqDbQueryTest
     [TestClass]
     public class TestVisitor
     {
-
         private ORMVisitor visitor;
-        public TestVisitor ()
-        {
 
-        }
+        public TestVisitor ()
+        { }
 
         [TestMethod]
         public void TestWhereVisitor ()

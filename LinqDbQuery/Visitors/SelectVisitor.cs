@@ -7,6 +7,7 @@ namespace LinqDbQuery.Visitors
     public class SelectVisitor : ORMVisitor
     {
         public SelectVisitor (IDbProvider dbPrivoder) : base (dbPrivoder) { }
+
         protected override Expression VisitNew (NewExpression node)
         {
             var list = new List<string> ();
@@ -15,19 +16,18 @@ namespace LinqDbQuery.Visitors
             for (int i = 0; i < parms.Count; i++)
             {
                 var member = members[i];
-                var alisName = member.Name;
                 list.Add ($"{GetSql(parms[i])} as {member.Name}");
             }
             sql = $"select {string.Join(",", list)} from ";
             return node;
         }
+
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {
             var list = new List<string> ();
             for (int i = 0; i < node.Bindings.Count; i++)
             {
-                var member = node.Bindings[i] as MemberAssignment;
-                if (member == null)
+                if (!(node.Bindings[i] is MemberAssignment member))
                     continue;
                 var field = GetSql (member.Expression);
                 var alis = member.Member.Name;
@@ -45,6 +45,7 @@ namespace LinqDbQuery.Visitors
             sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
             return node;
         }
+
         public override object GetSql (Expression expression = null)
         {
             if (expression != null)
@@ -59,7 +60,6 @@ namespace LinqDbQuery.Visitors
                 else
                     return sqlStr;
             }
-
         }
     }
 }

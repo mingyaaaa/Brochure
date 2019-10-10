@@ -30,6 +30,7 @@ namespace LinqDbQuery
         int Delete (Expression<Func<T1, bool>> fun);
 
     }
+
     public interface IQuery<T1, T2> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T>> fun);
@@ -38,8 +39,8 @@ namespace LinqDbQuery
         IQuery<T1, T2> WhereOr (Expression<Func<T1, T2, bool>> fun);
         IQuery<T1, T2> OrderBy (Expression<Func<T1, T2, object>> fun);
         IQuery<T1, T2> OrderByDesc (Expression<Func<T1, T2, object>> fun);
-
     }
+
     public interface IQuery<T1, T2, T3>
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T>> fun);
@@ -49,6 +50,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3> OrderBy (Expression<Func<T1, T2, T3, object>> fun);
         IQuery<T1, T2, T3> OrderByDesc (Expression<Func<T1, T2, T3, object>> fun);
     }
+
     public interface IQuery<T1, T2, T3, T4> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T>> fun);
@@ -58,6 +60,7 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3, T4> OrderBy (Expression<Func<T1, T2, T3, T4, object>> fun);
         IQuery<T1, T2, T3, T4> OrderByDesc (Expression<Func<T1, T2, T3, T4, object>> fun);
     }
+
     public interface IQuery<T1, T2, T3, T4, T5> : IQuery
     {
         IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T5, T>> fun);
@@ -66,5 +69,4 @@ namespace LinqDbQuery
         IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
         IQuery<T1, T2, T3, T4, T5> OrderByDesc (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
     }
-
 }

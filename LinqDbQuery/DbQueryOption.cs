@@ -10,15 +10,19 @@ namespace LinqDbQuery
         public bool IsUseParamers { get; set; }
         public string ConnectionString { get; set; }
         public int Timeout { get; set; }
-        public DbQueryOption ()
+
+        protected DbQueryOption ()
         {
             DbProvider = DI.Ins.ServiceProvider.Resolve<IDbProvider> ();
         }
-        public DbQueryOption (IDbProvider dbProvider)
+
+        protected DbQueryOption (IDbProvider dbProvider)
         {
             DbProvider = dbProvider;
         }
-        public IDbProvider DbProvider { get; private set; }
+
+        public IDbProvider DbProvider { get; }
+
         public IDbConnection GetDbConnection ()
         {
             var connection = DbProvider.GetDbConnection ();

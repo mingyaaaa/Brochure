@@ -1,9 +1,13 @@
 using System;
-namespace LinqDbQuery {
+namespace LinqDbQuery
+{
     [AttributeUsage (AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class TableAttribute : Attribute {
+    public class TableAttribute : Attribute
+    {
         public string Name = "";
-        public TableAttribute (string tableName) {
+
+        public TableAttribute (string tableName)
+        {
             if (string.IsNullOrWhiteSpace (tableName))
                 throw new ArgumentException ("参数错误，表明不能为空");
             Name = tableName;
@@ -11,10 +15,13 @@ namespace LinqDbQuery {
     }
 
     [AttributeUsage (AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class LengthAttribute : Attribute {
+    public class LengthAttribute : Attribute
+    {
         public int Length = 0;
-        public LengthAttribute (int length) {
-            Length = 0;
+
+        public LengthAttribute (int length)
+        {
+            Length = length;
         }
     }
 

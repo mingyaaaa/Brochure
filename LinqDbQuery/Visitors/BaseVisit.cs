@@ -8,10 +8,7 @@ using System.Reflection;
 
 namespace LinqDbQuery.Visitors
 {
-    public abstract class NoSqlVisitor : ExpressionVisitor
-    {
-
-    }
+    public abstract class NoSqlVisitor : ExpressionVisitor { }
 
     public abstract class ORMVisitor : ExpressionVisitor
     {
@@ -20,9 +17,11 @@ namespace LinqDbQuery.Visitors
             _dbPrivoder = dbProvider;
             this.Parameters = new List<IDbDataParameter> ();
         }
+
         protected IDbProvider _dbPrivoder;
         protected object sql;
         protected List<IDbDataParameter> Parameters;
+
         public virtual object GetSql (Expression expression = null)
         {
             if (expression != null)
@@ -39,14 +38,12 @@ namespace LinqDbQuery.Visitors
         {
             if (node.Member is FieldInfo)
             {
-                var obj = (node.Member as FieldInfo).GetValue ((node.Expression as ConstantExpression).Value);
+                var obj = (node.Member as FieldInfo)?.GetValue ((node.Expression as ConstantExpression)?.Value);
                 this.sql = AddParamers (obj);
-
             }
             else if (node.Member is PropertyInfo)
             {
-                var tableName = string.Empty;
-                tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo).DeclaringType);
+                string tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo)?.DeclaringType);
                 sql = $"[{tableName}].[{node.Member.Name}]";
             }
             return node;
@@ -70,7 +67,9 @@ namespace LinqDbQuery.Visitors
             {
                 case FuncName.Contains:
                     if (call is string)
+                    {
                         sql = $"{member} like '%{call}%'";
+                    }
                     else if (call is IEnumerable)
                     {
                         var listStr = string.Join (',', (call as IEnumerable).OfType<object> ().Select (t => _dbPrivoder.GetObjectType (t)));
@@ -102,12 +101,13 @@ namespace LinqDbQuery.Visitors
             }
             return node;
         }
+
         protected override Expression VisitConstant (ConstantExpression node)
         {
-
             sql = AddParamers (node.Value);
             return node;
         }
+
         private object AddParamers (object obj)
         {
             if (!_dbPrivoder.IsUseParamers)
@@ -119,8 +119,6 @@ namespace LinqDbQuery.Visitors
             parms.Value = obj;
             Parameters.Add (parms);
             return parms.ParameterName;
-
         }
     }
-
 }

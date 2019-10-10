@@ -13,19 +13,21 @@ namespace LinqDbQuery
 {
     public abstract class Query : IQuery
     {
-        protected DbQueryOption option { get; private set; }
+        protected DbQueryOption Option { get; private set; }
 
-        public Query ()
+        protected Query ()
         {
             var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
-            this.option = provider.CreateOption.Invoke ();
+            this.Option = provider.CreateOption.Invoke ();
             InitMainTableNames ();
         }
-        public Query (DbQueryOption option)
+
+        protected Query (DbQueryOption option)
         {
-            this.option = option;
+            this.Option = option;
             InitMainTableNames ();
         }
+
         protected string selectSql;
         protected string whereSql;
 
@@ -35,6 +37,7 @@ namespace LinqDbQuery
         protected string joinSql;
         protected string orderSql;
         protected List<IDbDataParameter> parameters;
+
         private string AddWhiteSpace (string str)
         {
             if (!string.IsNullOrWhiteSpace (str))
@@ -47,12 +50,12 @@ namespace LinqDbQuery
             selectSql = $"select count(1) from {JoinTableNames()}";
             var sql = GetSql ();
             var result = -1;
-            using (var conn = this.option.GetDbConnection ())
+            using (var conn = this.Option.GetDbConnection ())
             {
                 var command = conn.CreateCommand ();
                 command.CommandText = sql;
-                command.CommandTimeout = this.option.Timeout;
-                if (option.IsUseParamers)
+                command.CommandTimeout = this.Option.Timeout;
+                if (Option.IsUseParamers)
                 {
                     foreach (var item in parameters)
                         command.Parameters.Add (item);
@@ -64,9 +67,9 @@ namespace LinqDbQuery
 
         protected T Join<T> (Type type, Expression expression) where T : Query
         {
-            var joinVisitor = new JoinVisitor (type, this.option.DbProvider);
+            var joinVisitor = new JoinVisitor (type, this.Option.DbProvider);
             joinVisitor.Visit (expression);
-            var t_joinSql = string.Empty;
+            string t_joinSql;
             if (string.IsNullOrWhiteSpace (joinSql))
                 t_joinSql = $"{joinVisitor.GetSql()}";
             else
@@ -78,7 +81,7 @@ namespace LinqDbQuery
 
         protected T OrderBy<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (this.option.DbProvider);
+            var orderVisitor = new OrderVisitor (this.Option.DbProvider);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this as T;
@@ -88,7 +91,7 @@ namespace LinqDbQuery
 
         protected T OrderByDesc<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (this.option.DbProvider, false);
+            var orderVisitor = new OrderVisitor (this.Option.DbProvider, false);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this as T;
@@ -98,7 +101,7 @@ namespace LinqDbQuery
 
         public T Select<T> (Expression fun) where T : Query
         {
-            var selectVisitor = new SelectVisitor (this.option.DbProvider);
+            var selectVisitor = new SelectVisitor (this.Option.DbProvider);
             selectVisitor.Visit (fun);
             var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             //如果有group 则需要将Key替换成对应的分组属性
@@ -122,18 +125,19 @@ namespace LinqDbQuery
                 var groupField = groupSql.Replace ("group by", "").Trim ();
                 t_selectSql = t_selectSql.Replace ("[IGrouping`2].[Key]", groupField);
             }
-            t_selectSql = t_selectSql + JoinTableNames ();
-            T tt = null;
-            if (this is T)
-                tt = (T) this;
+            t_selectSql += JoinTableNames ();
+            T tt;
+            if (this is T t)
+                tt = t;
             else
                 tt = this.Copy<T> ();
             tt.selectSql = t_selectSql;
             return tt;
         }
+
         public T WhereAnd<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.option.DbProvider);
+            var whereVisitor = new WhereVisitor (this.Option.DbProvider);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             if (string.IsNullOrWhiteSpace (whereSql))
@@ -150,7 +154,7 @@ namespace LinqDbQuery
 
         public T WhereOr<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.option.DbProvider);
+            var whereVisitor = new WhereVisitor (this.Option.DbProvider);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             if (string.IsNullOrWhiteSpace (whereSql))
@@ -167,7 +171,7 @@ namespace LinqDbQuery
 
         public T Groupby<T> (Expression fun) where T : Query
         {
-            var groupVisit = new GroupVisitor (this.option.DbProvider);
+            var groupVisit = new GroupVisitor (this.Option.DbProvider);
             groupVisit.Visit (fun);
             var t_groupSql = groupVisit.GetSql ().ToString ();
             var tt = this.Copy<T> ();
@@ -177,7 +181,7 @@ namespace LinqDbQuery
 
         protected T Copy<T> () where T : Query
         {
-            var query = (T) Activator.CreateInstance (typeof (T), option);
+            var query = (T) Activator.CreateInstance (typeof (T), Option);
             query.selectSql = this.selectSql;
             query.whereSql = this.whereSql;
             query.groupSql = this.groupSql;
@@ -185,7 +189,7 @@ namespace LinqDbQuery
             query.orderSql = this.orderSql;
             query.parameters = this.parameters;
             query.mainTableNames = this.mainTableNames;
-            query.option = this.option;
+            query.Option = this.Option;
             return query;
         }
 

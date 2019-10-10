@@ -5,14 +5,10 @@ namespace LinqDbQueryTest
     [TestClass]
     public class TestExpress
     {
-
         public TestExpress ()
-        {
-
-        }
+        { }
 
         [TestMethod]
-        public void WhereExpress ()
-        { }
+        public void WhereExpress () { }
     }
 }

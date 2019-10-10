@@ -11,6 +11,7 @@ namespace LinqDbQueryTest
         {
             IsUseParamers = true;
         }
+
         public bool IsUseParamers { get; set; }
         public Func<DbQueryOption> CreateOption { get; set; }
 
@@ -34,7 +35,7 @@ namespace LinqDbQueryTest
             else
             {
                 if (obj is string)
-                    str = $"'{obj.ToString()}'";
+                    str = $"'{obj}'";
                 else if (obj is int || obj is double || obj is float)
                     str = obj.ToString ();
             }

@@ -8,9 +8,7 @@ namespace LinqDbQuery.Querys
         public Query () { }
 
         public Query (DbQueryOption option) : base (option)
-        {
-
-        }
+        { }
 
         public IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {
@@ -31,6 +29,7 @@ namespace LinqDbQuery.Querys
         {
             return base.WhereAnd<Query<T1, T2, T3, T4, T5>> (fun);
         }
+
         public IQuery<T1, T2, T3, T4, T5> WhereOr (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {
             return base.WhereOr<Query<T1, T2, T3, T4, T5>> (fun);

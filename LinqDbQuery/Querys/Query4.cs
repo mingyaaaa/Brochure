@@ -8,9 +8,7 @@ namespace LinqDbQuery.Querys
         public Query () { }
 
         public Query (DbQueryOption option) : base (option)
-        {
-
-        }
+        { }
 
         public IQuery<T1, T2, T3, T4, T5> Join<T5> (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {
@@ -36,6 +34,7 @@ namespace LinqDbQuery.Querys
         {
             return base.WhereAnd<Query<T1, T2, T3, T4>> (fun);
         }
+
         public IQuery<T1, T2, T3, T4> WhereOr (Expression<Func<T1, T2, T3, T4, bool>> fun)
         {
             return base.WhereOr<Query<T1, T2, T3, T4>> (fun);
