@@ -54,12 +54,20 @@ namespace LinqDbQueryTest
                 else
                     return $"{leftStr} = {rightObject}";
             }
-            if (expressionType == ExpressionType.NotEqual)
+            else if (expressionType == ExpressionType.NotEqual)
             {
                 if (right == null)
                     return $"{leftStr} is not null";
                 else
                     return $"{leftStr} < {rightObject} and {leftStr} > {rightObject}";
+            }
+            else if (expressionType == ExpressionType.AndAlso)
+            {
+                return $"{left} and {right}";
+            }
+            else if (expressionType == ExpressionType.OrElse)
+            {
+                return $"{left} or {right}";
             }
             return str;
         }

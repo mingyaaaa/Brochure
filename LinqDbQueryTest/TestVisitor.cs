@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using LinqDbQuery;
@@ -12,13 +13,12 @@ namespace LinqDbQueryTest
     {
         private ORMVisitor visitor;
 
-        public TestVisitor ()
-        { }
+        public TestVisitor () { }
 
         [TestMethod]
         public void TestWhereVisitor ()
         {
-            visitor = new WhereVisitor (new MySqlDbProvider ());
+            visitor = new WhereVisitor (new MySqlDbProvider () { IsUseParamers = false });
             Expression<Func<Peoples, bool>> ex = t => t.Id == "1";
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
@@ -66,6 +66,21 @@ namespace LinqDbQueryTest
             visitor.Visit (ex);
             sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("where [Peoples].[Age] < 1 and [Peoples].[Age] > 1", sql);
+
+            ex = t => t.Age == 1 && t.Name == "1";
+            visitor.Visit (ex);
+            sql = visitor.GetSql ().ToString ().Trim ();
+            Assert.AreEqual ("where ([Peoples].[Age] = 1 and [Peoples].[Name] = '1')", sql);
+        }
+
+        [TestMethod]
+        public void a ()
+        {
+            visitor = new WhereVisitor (new MySqlDbProvider () { IsUseParamers = false });
+            Expression<Func<Peoples, bool>> ex = t => t.Age == 1 && (t.Name == "1" || t.Id == "aaa");
+            visitor.Visit (ex);
+            var sql = visitor.GetSql ().ToString ().Trim ();
+            Trace.TraceInformation (sql);
         }
 
         [TestMethod]

@@ -8,11 +8,10 @@ namespace LinqDbQuery.Visitors
 
         protected override Expression VisitBinary (BinaryExpression node)
         {
-            var left = GetSql (node.Left);
+            var left = AddBrackets (GetSql (node.Left).ToString ());
             var exType = node.NodeType;
-            var right = GetSql (node.Right);
+            var right = AddBrackets (GetSql (node.Right).ToString ());
             sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
-            sql = $"where {sql} ";
             return node;
         }
 
@@ -21,6 +20,31 @@ namespace LinqDbQuery.Visitors
             base.VisitMethodCall (node);
             sql = $"where {sql}";
             return node;
+        }
+
+        public override object GetSql (Expression expression = null)
+        {
+            if (expression != null)
+            {
+                return base.GetSql (expression);
+            }
+            else
+            {
+                sql = $"where ({sql}) ";
+                return sql;
+            }
+        }
+
+        /// <summary>
+        /// 添加括号
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private object AddBrackets (string str)
+        {
+            if (str.Contains ("and") || str.Contains ("or"))
+                return $"({str})";
+            return str;
         }
     }
 }

@@ -111,6 +111,22 @@ namespace LinqDbQueryTest.Querys
 
         [TestMethod]
         public void QueryWhere ()
-        { }
+        {
+            var option = new MySqlOption (provider);
+            var query = new Query<Students> (option);
+            var q = query.WhereAnd (t => t.ClassCount == 1 && t.ClassId == "a");
+            var sql = q.GetSql ();
+            var paramss = q.GetDbDataParameters ();
+            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual (2, paramss.Count);
+
+            var a = 1;
+            var astr = "a";
+            var q2 = query.WhereAnd (t => t.ClassCount == a && t.ClassId == astr);
+            sql = q2.GetSql ();
+            paramss = q2.GetDbDataParameters ();
+            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual (2, paramss.Count);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -8,6 +9,7 @@ namespace LinqDbQuery
     public interface IQuery
     {
         string GetSql ();
+        List<IDbDataParameter> GetDbDataParameters ();
     }
 
     public interface IQuery<T1> : IQuery

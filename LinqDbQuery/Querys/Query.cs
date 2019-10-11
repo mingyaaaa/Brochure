@@ -15,16 +15,24 @@ namespace LinqDbQuery
     {
         protected DbQueryOption Option { get; private set; }
 
+        protected List<IDbDataParameter> DbParameters;
+
         protected Query ()
         {
             var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
             this.Option = provider.CreateOption.Invoke ();
-            InitMainTableNames ();
+            InitData ();
         }
 
         protected Query (DbQueryOption option)
         {
             this.Option = option;
+            InitData ();
+        }
+
+        private void InitData ()
+        {
+            DbParameters = new List<IDbDataParameter> ();
             InitMainTableNames ();
         }
 
@@ -140,16 +148,21 @@ namespace LinqDbQuery
             var whereVisitor = new WhereVisitor (this.Option.DbProvider);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            string t_whereSql = string.Empty;
             if (string.IsNullOrWhiteSpace (whereSql))
             {
-                whereSql = sql;
+                t_whereSql = sql;
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace (sql))
-                    whereSql = $"{whereSql} and ({sql})";
+                    t_whereSql = $"{whereSql} and ({sql})";
             }
-            return this as T;
+            var parameters = whereVisitor.GetParameters ();
+            var tt = this.Copy<T> ();
+            tt.whereSql = t_whereSql;
+            tt.DbParameters.AddRange (parameters);
+            return tt;
         }
 
         public T WhereOr<T> (Expression fun) where T : Query
@@ -157,16 +170,21 @@ namespace LinqDbQuery
             var whereVisitor = new WhereVisitor (this.Option.DbProvider);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            string t_whereSql = string.Empty;
             if (string.IsNullOrWhiteSpace (whereSql))
             {
-                whereSql = sql;
+                t_whereSql = sql;
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace (sql))
-                    whereSql = $"{whereSql} or ({sql})";
+                    t_whereSql = $"{whereSql} or ({sql})";
             }
-            return this as T;
+            var parameters = whereVisitor.GetParameters ();
+            var tt = this.Copy<T> ();
+            tt.whereSql = t_whereSql;
+            tt.DbParameters.AddRange (parameters);
+            return tt;
         }
 
         public T Groupby<T> (Expression fun) where T : Query
@@ -190,6 +208,7 @@ namespace LinqDbQuery
             query.parameters = this.parameters;
             query.mainTableNames = this.mainTableNames;
             query.Option = this.Option;
+            query.DbParameters = new List<IDbDataParameter> (this.DbParameters);
             return query;
         }
 
@@ -200,6 +219,11 @@ namespace LinqDbQuery
                 selectSql = $"select * from {JoinTableNames()}";
             }
             return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
+        }
+
+        public List<IDbDataParameter> GetDbDataParameters ()
+        {
+            return DbParameters;
         }
 
         protected string JoinTableNames ()
