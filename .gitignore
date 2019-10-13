@@ -1,7 +1,7 @@
 ﻿################################################################################
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
-Brochure.Core/bin/
+/Brochure.Core/bin/
 Brochure.Core/obj/
 Brochure.Core.Test/bin/
 Brochure.Core.Test/obj/

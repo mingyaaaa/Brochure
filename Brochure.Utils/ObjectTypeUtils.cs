@@ -10,9 +10,7 @@ namespace LinqDbQuery
             ///如果是string 则不是集合接口
             if (obj is string)
                 return false;
-            if (obj is IEnumerable)
-                return true;
-            return false;
+            return obj is IEnumerable;
         }
     }
 }
