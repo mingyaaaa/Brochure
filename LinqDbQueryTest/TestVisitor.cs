@@ -70,7 +70,7 @@ namespace LinqDbQueryTest
             ex = t => t.Age == 1 && t.Name == "1";
             visitor.Visit (ex);
             sql = visitor.GetSql ().ToString ().Trim ();
-            Assert.AreEqual ("where ([Peoples].[Age] = 1 and [Peoples].[Name] = '1')", sql);
+            Assert.AreEqual ("where [Peoples].[Age] = 1 and [Peoples].[Name] = '1'", sql);
         }
 
         [TestMethod]
@@ -99,7 +99,7 @@ namespace LinqDbQueryTest
             Expression<Func<Peoples, Students, object>> ex2 = (p, s) => new { NewName = p.Name, NewAge = p.Age, s.ClassId };
             a = visitor.Visit (ex2);
             sql = visitor.GetSql ().ToString ().Trim ();
-            Assert.AreEqual ("select [Peoples].[Name] as NewName,[Peoples].[Age] as NewAge,[Students].[Class] as Class from", sql);
+            Assert.AreEqual ("select [Peoples].[Name] as NewName,[Peoples].[Age] as NewAge,[Students].[ClassId] as ClassId from", sql);
         }
 
         [TestMethod]

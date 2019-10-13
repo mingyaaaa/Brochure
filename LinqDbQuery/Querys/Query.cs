@@ -92,7 +92,7 @@ namespace LinqDbQuery
             var orderVisitor = new OrderVisitor (this.Option.DbProvider);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
-            var tt = this as T;
+            var tt = this.Copy<T> ();
             tt.orderSql = t_orderSql;
             return tt;
         }
@@ -102,7 +102,7 @@ namespace LinqDbQuery
             var orderVisitor = new OrderVisitor (this.Option.DbProvider, false);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
-            var tt = this as T;
+            var tt = this.Copy<T> ();
             tt.orderSql = t_orderSql;
             return tt;
         }
@@ -145,7 +145,7 @@ namespace LinqDbQuery
 
         public T WhereAnd<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.Option.DbProvider);
+            var whereVisitor = new WhereVisitor (this.Option.DbProvider, this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;
@@ -156,12 +156,14 @@ namespace LinqDbQuery
             else
             {
                 if (!string.IsNullOrWhiteSpace (sql))
-                    t_whereSql = $"{whereSql} and ({sql})";
+                {
+                    t_whereSql = $"{whereSql} and ({sql.Replace("where ","")})";
+                }
             }
             var parameters = whereVisitor.GetParameters ();
             var tt = this.Copy<T> ();
             tt.whereSql = t_whereSql;
-            tt.DbParameters.AddRange (parameters);
+            tt.DbParameters = parameters.ToList ();
             return tt;
         }
 
@@ -178,12 +180,12 @@ namespace LinqDbQuery
             else
             {
                 if (!string.IsNullOrWhiteSpace (sql))
-                    t_whereSql = $"{whereSql} or ({sql})";
+                    t_whereSql = $"{whereSql} or ({sql.Replace("where ","")})";
             }
             var parameters = whereVisitor.GetParameters ();
             var tt = this.Copy<T> ();
             tt.whereSql = t_whereSql;
-            tt.DbParameters.AddRange (parameters);
+            tt.DbParameters = parameters.ToList ();
             return tt;
         }
 

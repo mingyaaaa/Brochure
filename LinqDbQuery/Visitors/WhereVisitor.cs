@@ -1,26 +1,32 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq.Expressions;
 
 namespace LinqDbQuery.Visitors
 {
     public class WhereVisitor : ORMVisitor
     {
-        public WhereVisitor (IDbProvider dbPrivoder) : base (dbPrivoder) { }
+
+        public WhereVisitor (IDbProvider dbPrivoder, IEnumerable<IDbDataParameter> pams = null) : base (dbPrivoder)
+        {
+            this.Parameters.AddRange (pams??new List<IDbDataParameter> ());
+        }
 
         protected override Expression VisitBinary (BinaryExpression node)
         {
-            var left = AddBrackets (GetSql (node.Left).ToString ());
+            var left = AddBrackets (GetSql (node.Left));
             var exType = node.NodeType;
-            var right = AddBrackets (GetSql (node.Right).ToString ());
+            var right = AddBrackets (GetSql (node.Right));
             sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
             return node;
         }
 
-        protected override Expression VisitMethodCall (MethodCallExpression node)
-        {
-            base.VisitMethodCall (node);
-            sql = $"where {sql}";
-            return node;
-        }
+        // protected override Expression VisitMethodCall (MethodCallExpression node)
+        // {
+        //     base.VisitMethodCall (node);
+        //     sql = $"where {sql}";
+        //     return node;
+        // }
 
         public override object GetSql (Expression expression = null)
         {
@@ -30,7 +36,7 @@ namespace LinqDbQuery.Visitors
             }
             else
             {
-                sql = $"where ({sql}) ";
+                sql = $"where {sql}";
                 return sql;
             }
         }
@@ -40,11 +46,16 @@ namespace LinqDbQuery.Visitors
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        private object AddBrackets (string str)
+        private object AddBrackets (object obj)
         {
-            if (str.Contains ("and") || str.Contains ("or"))
-                return $"({str})";
-            return str;
+            if (obj is string)
+            {
+                var str = obj.ToString ();
+                if (str.Contains ("and") || str.Contains ("or"))
+                    return $"({str})";
+                return str;
+            }
+            return obj;
         }
     }
 }
