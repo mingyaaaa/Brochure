@@ -9,6 +9,8 @@ Brochure.Server.MySql/bin/
 Brochure.Server.MySql/obj/
 Brochure.Core.Server/bin/
 Brochure.Core.Server/obj/
+Brochure.Utils/bin/
+Brochure.Utils/obj/
 .vscode/
 /.vs/Brochure
 /Brochure.Core/.vs/Brochure.Core
@@ -29,8 +31,5 @@ Brochure.Core.Server/obj/
 /LinqDbQuery/.vs
 /LinqDbQueryTest/bin
 /LinqDbQueryTest/obj
-obj/
 Brochure.Core/.DS_Store
 .DS_Store
-Brochure.Utils/bin
-Brochure.Utils/
