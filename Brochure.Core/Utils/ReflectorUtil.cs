@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Brochure.Core
 {
-    public class ReflectorUtil
+    public static class ReflectorUtil
     {
         /// <summary>
         /// 根据接口获取指定的类型

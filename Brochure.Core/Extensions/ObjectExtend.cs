@@ -19,8 +19,8 @@ namespace Brochure.Core
             // var logger = DI.ServiceProvider.GetService<ILoggerFactory>().CreateLogger("As");
             try
             {
-                if (obj is T)
-                    return (T) obj;
+                if (obj is T t)
+                    return t;
                 var type = typeof (T);
                 //实现接口IBConverable的类使用 接口转换器
                 var interfaceType = obj.GetType ().GetInterface ($"IBConverables`1");
@@ -31,10 +31,8 @@ namespace Brochure.Core
                 }
                 return (T) ConverUtil.As (obj, type);
             }
-            catch (System.Exception e)
+            catch (System.Exception) when (!isException)
             {
-                if (isException)
-                    throw e;
                 //   logger.LogError(e, e.Message);
                 return (T) (object) default (T);
             }

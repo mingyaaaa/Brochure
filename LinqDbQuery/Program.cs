@@ -4,7 +4,7 @@ using LinqDbQuery.Visitors;
 
 namespace LinqDbQuery
 {
-    public class Program
+    public static class Program
     {
         private static void Main (string[] args) { }
     }

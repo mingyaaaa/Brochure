@@ -2,7 +2,7 @@ using System;
 using System.IO;
 namespace Brochure.Utils
 {
-    public class ApplicationUtils
+    public static class ApplicationUtils
     {
         public static string GetPluginsPath ()
         {

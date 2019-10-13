@@ -1,6 +1,6 @@
 ﻿namespace LinqDbQuery
 {
-    public class QueryOperationType
+    public static class QueryOperationType
     {
         public const string Eq = "=";
         public const string In = "in";
