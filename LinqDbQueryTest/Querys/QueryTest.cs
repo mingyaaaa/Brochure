@@ -64,7 +64,7 @@ namespace LinqDbQueryTest.Querys
 
             var q2 = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Join<Classes> ((s, p, c) => s.ClassId == c.Id).Select ((s, p, c) => new { c.ClassName });
             sql = q2.GetSql ();
-            Assert.AreEqual (@"select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
+            Assert.AreEqual ("select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
 
             var query2 = new Query<Students, Peoples> (option);
             var q3 = query2.Join<Classes> ((s, _, c) => s.ClassId == c.Id).Select ((_, peoples, c) => new { c.ClassName });

@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core", "Brochure.Core\Brochure.Core.csproj", "{1284BB38-1037-4322-85D4-2D72069CF270}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqDbQuery", "LinqDbQuery\LinqDbQuery.csproj", "{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core.Server", "Brochure.Core.Server\Brochure.Core.Server.csproj", "{CC8ECA06-8530-4AD7-AB35-D2024B002BA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Core", "Borchure.Core\Brochure.Core.csproj", "{CD2AF5DB-6594-4786-B992-6262B87DB29E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Server.MySql", "Brochure.Server.MySql\Brochure.Server.MySql.csproj", "{27522852-8745-4884-B5EC-79C881028B2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Utils", "Brochure.Utils\Brochure.Utils.csproj", "{E012E0F3-56A5-485C-81F0-F932799B0C8B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core.Test", "Brochure.Core.Test\Brochure.Core.Test.csproj", "{D608C628-B705-4D26-A035-56F7BFFC5D7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqDbQueryTest", "LinqDbQueryTest\LinqDbQueryTest.csproj", "{4CDDE020-A1C3-45FC-ACBF-F625ABA91301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Interface", "Brochure.Interface\Brochure.Interface.csproj", "{FBD724D0-B0CD-4FFE-B275-7249295B3468}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostManager.Consul", "HostManager.Cunsul\HostManager.Consul.csproj", "{33B9F577-69E6-4D1B-BBFD-B3C85EA30AF3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.DI.AspectCore", "Brochure.DI.AspectCore\Brochure.DI.AspectCore.csproj", "{9FF40F02-4256-4044-880C-9FD9C5262A1A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,11 +47,30 @@ Global
 		{9FF40F02-4256-4044-880C-9FD9C5262A1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FF40F02-4256-4044-880C-9FD9C5262A1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FF40F02-4256-4044-880C-9FD9C5262A1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2AF5DB-6594-4786-B992-6262B87DB29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2AF5DB-6594-4786-B992-6262B87DB29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2AF5DB-6594-4786-B992-6262B87DB29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2AF5DB-6594-4786-B992-6262B87DB29E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E012E0F3-56A5-485C-81F0-F932799B0C8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E012E0F3-56A5-485C-81F0-F932799B0C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E012E0F3-56A5-485C-81F0-F932799B0C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E012E0F3-56A5-485C-81F0-F932799B0C8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3BF9EAD7-5F0B-4F5E-B229-07A76F610988}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
 	EndGlobalSection
 EndGlobal
