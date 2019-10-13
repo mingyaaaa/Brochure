@@ -42,6 +42,7 @@ namespace Brochure.Core
             }
             return result;
         }
+
         public static IDictionary<T2, IEnumerable<T3>> AsDictionary<T1, T2, T3> (this IEnumerable<T1> list, Func<T1, T2> funcKey, Func<T1, T3> funcValues = null)
         where T1 : class
         where T3 : class

@@ -244,5 +244,4 @@ namespace LinqDbQuery
             }
         }
     }
-
 }

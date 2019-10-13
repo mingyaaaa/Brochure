@@ -14,22 +14,27 @@ namespace Brochure.Core
     public class Record : IRecord, ISerializable
     {
         private readonly IDictionary<string, object> _dic;
+
         /// <summary>
         /// 添加时执行
         /// </summary>
         public Action AddHander;
+
         /// <summary>
         /// 修改数据时执行
         /// </summary>
         public Action UpdateHander;
+
         /// <summary>
         /// 移除数据是执行
         /// </summary>
         public Action RemoveHander;
+
         public Record (object obj)
         {
             _dic = obj.AsDictionary ();
         }
+
         public Record ()
         {
             _dic = new Dictionary<string, object> ();
@@ -42,13 +47,14 @@ namespace Brochure.Core
             {
                 _dic[item.Name] = item.Value;
             }
-
         }
+
         /// <summary>
         /// 获取Key的集合
         /// </summary>
         /// <returns></returns>
         public IEnumerable<string> Keys { get { return _dic.Keys; } }
+
         /// <summary>
         /// 获取Value的集合
         /// </summary>
@@ -81,6 +87,7 @@ namespace Brochure.Core
                     UpdateHander?.Invoke ();
             }
         }
+
         /// <summary>
         /// 添加值
         /// </summary>
@@ -91,10 +98,12 @@ namespace Brochure.Core
             _dic.Add (key, obj);
             AddHander?.Invoke ();
         }
+
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator ()
         {
             return _dic.GetEnumerator ();
         }
+
         /// <summary>
         /// 根据Key值移除数据
         /// </summary>
@@ -106,6 +115,7 @@ namespace Brochure.Core
                 _dic.Remove (key);
             RemoveHander?.Invoke ();
         }
+
         /// <summary>
         /// 批量移除数据
         /// </summary>
@@ -134,6 +144,7 @@ namespace Brochure.Core
         {
             return _dic.ContainsKey (key);
         }
+
         public override string ToString ()
         {
             if (_dic == null)
@@ -149,6 +160,7 @@ namespace Brochure.Core
             }
         }
     }
+
     public interface IRecord : IEnumerator
     {
         void Add (string key, object obj);

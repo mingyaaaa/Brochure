@@ -12,12 +12,12 @@ namespace Brochure.Core
             if (string.IsNullOrWhiteSpace (str))
                 return (T) (object) null;
             var type = typeof (T);
-            object result = null;
             List<Type> types = null;
             if (type.IsInterface)
                 types = ReflectorUtil.GetTypeByInterface (type.Assembly, type);
             else if (type.IsAbstract)
                 types = ReflectorUtil.GetTypeByClass (type.Assembly, type);
+            object result;
             if (types != null)
             {
                 var first = types.FirstOrDefault ();
@@ -32,6 +32,7 @@ namespace Brochure.Core
 
             return (T) result;
         }
+
         public static IEnumerable<T> AsEnumerable<T> (this string str)
         {
             if (string.IsNullOrWhiteSpace (str))

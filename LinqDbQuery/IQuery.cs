@@ -30,7 +30,6 @@ namespace LinqDbQuery
         T1 Update (object obj, Expression<Func<T1, bool>> Func);
 
         int Delete (Expression<Func<T1, bool>> fun);
-
     }
 
     public interface IQuery<T1, T2> : IQuery

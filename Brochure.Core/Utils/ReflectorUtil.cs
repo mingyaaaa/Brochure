@@ -23,8 +23,8 @@ namespace Brochure.Core
             }
 
             return listobject;
-
         }
+
         /// <summary>
         /// 根据接口获取指定的类型
         /// </summary>
@@ -42,6 +42,7 @@ namespace Brochure.Core
 
             return list;
         }
+
         public static List<object> GetObjectByClass (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
@@ -55,6 +56,7 @@ namespace Brochure.Core
 
             return listobject;
         }
+
         public static List<Type> GetTypeByClass (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
@@ -68,6 +70,7 @@ namespace Brochure.Core
 
             return list;
         }
+
         public static T CreateInstance<T> (params object[] parms) where T : class
         {
             var type = typeof (T);

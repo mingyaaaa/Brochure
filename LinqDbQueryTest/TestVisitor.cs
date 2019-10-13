@@ -36,7 +36,7 @@ namespace LinqDbQueryTest
             sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("where [Peoples].[Age] in (1,10,2)", sql);
 
-            var name = "aaa";
+            const string name = "aaa";
             ex = t => t.Name.Contains (name);
             visitor.Visit (ex);
             sql = visitor.GetSql ().ToString ().Trim ();
@@ -71,16 +71,6 @@ namespace LinqDbQueryTest
             visitor.Visit (ex);
             sql = visitor.GetSql ().ToString ().Trim ();
             Assert.AreEqual ("where [Peoples].[Age] = 1 and [Peoples].[Name] = '1'", sql);
-        }
-
-        [TestMethod]
-        public void a ()
-        {
-            visitor = new WhereVisitor (new MySqlDbProvider () { IsUseParamers = false });
-            Expression<Func<Peoples, bool>> ex = t => t.Age == 1 && (t.Name == "1" || t.Id == "aaa");
-            visitor.Visit (ex);
-            var sql = visitor.GetSql ().ToString ().Trim ();
-            Trace.TraceInformation (sql);
         }
 
         [TestMethod]

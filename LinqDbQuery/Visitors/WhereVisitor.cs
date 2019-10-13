@@ -6,7 +6,6 @@ namespace LinqDbQuery.Visitors
 {
     public class WhereVisitor : ORMVisitor
     {
-
         public WhereVisitor (IDbProvider dbPrivoder, IEnumerable<IDbDataParameter> pams = null) : base (dbPrivoder)
         {
             this.Parameters.AddRange (pams??new List<IDbDataParameter> ());

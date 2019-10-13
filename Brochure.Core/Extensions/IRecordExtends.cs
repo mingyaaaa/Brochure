@@ -15,6 +15,7 @@ namespace Brochure.Core
             }
             return record;
         }
+
         public static IRecord UpdateMerge (this IRecord record, IRecord newRecord)
         {
             var keys = record.Keys.ToList ();

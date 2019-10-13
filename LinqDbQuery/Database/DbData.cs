@@ -7,17 +7,18 @@ namespace LinqDbQuery.Database
 {
     public abstract class DbData
     {
-        public DbData ()
+        protected DbData ()
         {
             Provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
         }
 
-        public DbData (IDbProvider provider)
+        protected DbData (IDbProvider provider)
         {
             Provider = provider;
         }
 
         protected IDbProvider Provider;
+
         public virtual int Insert<T> (T obj)
         {
             return -1;
@@ -37,6 +38,5 @@ namespace LinqDbQuery.Database
         {
             return -1;
         }
-
     }
 }

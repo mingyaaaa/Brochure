@@ -6,10 +6,12 @@ namespace Brochure.Core
     public class Sequence
     {
         public IDictionary<string, int> seqDic;
+
         public Sequence ()
         {
             seqDic = new Dictionary<string, int> ();
         }
+
         public string GetSequence (string str)
         {
             var count = 0;
@@ -20,6 +22,7 @@ namespace Brochure.Core
             seqDic[str] = count;
             return str + seqDic[str];
         }
+
         public static string GetRecordSequence (IRecord record, string str)
         {
             var dic = new Dictionary<string, int> ();

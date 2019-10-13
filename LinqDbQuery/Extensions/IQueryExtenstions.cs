@@ -7,7 +7,6 @@ namespace LinqDbQuery.Extensions
     {
         public static int Insert<T> (T obj)
         {
-
             return -1;
         }
 
@@ -16,7 +15,9 @@ namespace LinqDbQuery.Extensions
             return -1;
         }
 
-        public static T Update<T> (object obj, Expression<Func<T, bool>> Func)
+        public static T Update<T> (
+            object obj,
+            Expression<Func<T, bool>> Func)
         {
             return (T) (object) null;
         }

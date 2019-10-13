@@ -62,12 +62,12 @@ namespace LinqDbQueryTest.Querys
             var sql = q.GetSql ();
             Assert.AreEqual ("select [Students].[ClassId] as ClassId,[Students].[Id] as StudentId,[Peoples].[Id] as PeopleId,[Peoples].[Name] as Name from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id]", sql);
 
-            var q2 = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Join<Classes> ((s, p, c) => s.ClassId == c.Id).Select ((s, p, c) => new { c.ClassName });
+            var q2 = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Join<Classes> ((s, _, c) => s.ClassId == c.Id).Select ((_, __, c) => new { c.ClassName });
             sql = q2.GetSql ();
             Assert.AreEqual ("select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
 
             var query2 = new Query<Students, Peoples> (option);
-            var q3 = query2.Join<Classes> ((s, _, c) => s.ClassId == c.Id).Select ((_, peoples, c) => new { c.ClassName });
+            var q3 = query2.Join<Classes> ((s, _, c) => s.ClassId == c.Id).Select ((_, __, c) => new { c.ClassName });
             sql = q3.GetSql ();
             Assert.AreEqual ("select [Classes].[ClassName] as ClassName from [Students],[Peoples] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
         }
@@ -120,8 +120,8 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1)", sql);
             Assert.AreEqual (2, paramss.Count);
 
-            var a = 1;
-            var astr = "a";
+            const int a = 1;
+            const string astr = "a";
             var q2 = query.WhereAnd (t => t.ClassCount == a && t.ClassId == astr);
             sql = q2.GetSql ();
             paramss = q2.GetDbDataParameters ();
@@ -147,8 +147,8 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1)", sql);
             Assert.AreEqual (2, paramss.Count);
 
-            var a = 1;
-            var astr = "a";
+            const int a = 1;
+            const string astr = "a";
             var q2 = query.WhereOr (t => t.ClassCount == a && t.ClassId == astr);
             sql = q2.GetSql ();
             paramss = q2.GetDbDataParameters ();

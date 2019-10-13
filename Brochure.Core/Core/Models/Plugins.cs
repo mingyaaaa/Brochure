@@ -16,26 +16,22 @@ namespace Brochure.Core
         public string Author { get; }
         public string AssemblyName { get; }
         public List<Guid> DependencesKey { get; }
+
         public virtual bool Starting ()
         {
             return true;
         }
 
-        public virtual void Started ()
-        {
-
-        }
+        public virtual void Started () { }
 
         public virtual bool Exiting ()
         {
             return true;
         }
 
-        public virtual void Exited ()
-        {
-
-        }
+        public virtual void Exited () { }
     }
+
     public interface IPlugins
     {
         void Start ();
@@ -50,6 +46,5 @@ namespace Brochure.Core
         void Started ();
         bool Exiting ();
         void Exited ();
-
     }
 }

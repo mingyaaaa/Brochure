@@ -7,7 +7,8 @@ namespace Brochure.Core
 {
     public class PluginManagers : IPluginManagers
     {
-        private IDictionary<Guid, IPlugins> pluginDic;
+        private readonly IDictionary<Guid, IPlugins> pluginDic;
+
         public PluginManagers ()
         {
             pluginDic = new Dictionary<Guid, IPlugins> ();

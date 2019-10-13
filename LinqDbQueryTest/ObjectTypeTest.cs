@@ -10,14 +10,16 @@ namespace LinqDbQueryTest
         [TestMethod]
         public void TestIEnumerable ()
         {
-            var i = 1;
-            var str = "aaa";
+            const int i = 1;
+            const string str = "aaa";
             Assert.IsFalse (ObjectTypeUtils.IsIEnumerable (i));
             Assert.IsFalse (ObjectTypeUtils.IsIEnumerable (str));
             var a = new int[] { 1, 2, 3 };
             Assert.IsTrue (ObjectTypeUtils.IsIEnumerable (a));
-            var list = new List<int> ();
-            list.Add (i);
+            var list = new List<int>
+            {
+                i
+            };
             Assert.IsTrue (ObjectTypeUtils.IsIEnumerable (list));
         }
     }
