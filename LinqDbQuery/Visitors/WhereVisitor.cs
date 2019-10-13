@@ -21,13 +21,6 @@ namespace LinqDbQuery.Visitors
             return node;
         }
 
-        // protected override Expression VisitMethodCall (MethodCallExpression node)
-        // {
-        //     base.VisitMethodCall (node);
-        //     sql = $"where {sql}";
-        //     return node;
-        // }
-
         public override object GetSql (Expression expression = null)
         {
             if (expression != null)

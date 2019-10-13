@@ -5,22 +5,25 @@ namespace LinqDbQuery.Extensions
 {
     public static class IQueryExtenstions
     {
-        public static int Insert<T> (this IQuery<T> query, T obj)
+        public static int Insert<T> (T obj)
         {
+
             return -1;
         }
-        public static int InsertMany<T> (this IQuery<T> query, IEnumerable<T> objs)
-        {
-            return -1;
-        }
-        public static T Update<T> (this IQuery<T> query, object obj, Expression<Func<T, bool>> Func)
-        {
-            return (T) (object) null;
-        }
-        public static int Delete<T> (this IQuery<T> query, Expression<Func<T, bool>> fun)
+
+        public static int InsertMany<T> (IEnumerable<T> objs)
         {
             return -1;
         }
 
+        public static T Update<T> (object obj, Expression<Func<T, bool>> Func)
+        {
+            return (T) (object) null;
+        }
+
+        public static int Delete<T> (Expression<Func<T, bool>> fun)
+        {
+            return -1;
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace LinqDbQueryTest
                 if (right == null)
                     return $"{leftStr} is not null";
                 else
-                    return $"{leftStr} < {rightObject} and {leftStr} > {rightObject}";
+                    return $"{leftStr} != {rightObject}";
             }
             else if (expressionType == ExpressionType.AndAlso)
             {
