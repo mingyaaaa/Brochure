@@ -23,7 +23,7 @@ namespace Brochure.Core
             return result;
         }
 
-        public static string Join<T> (this IEnumerable<T> list, string separator, Func<T, string> fun)
+        public static string Join<T> (this IEnumerable<T> list, string separator, Func<T, string> fun = null)
         {
             if (fun == null)
                 fun = t => t.ToString ();
