@@ -5,10 +5,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using AspectCore.Injector;
+using Brochure.Core;
 using LinqDbQuery.Querys;
 using LinqDbQuery.Visitors;
 using Microsoft.Extensions.Logging;
-
 namespace LinqDbQuery
 {
     public abstract class Query : IQuery
@@ -63,7 +63,7 @@ namespace LinqDbQuery
                 var command = conn.CreateCommand ();
                 command.CommandText = sql;
                 command.CommandTimeout = this.Option.Timeout;
-                if (Option.IsUseParamers)
+                if (Option.DbProvider.IsUseParamers)
                 {
                     foreach (var item in parameters)
                         command.Parameters.Add (item);
@@ -113,25 +113,21 @@ namespace LinqDbQuery
             selectVisitor.Visit (fun);
             var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             //如果有group 则需要将Key替换成对应的分组属性
-            if (t_selectSql.Contains ("[<>f__AnonymousType5`2]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.ContainsReg (@"\[<>f__AnonymousType[0-9]`[0-9]\]") && !string.IsNullOrWhiteSpace (groupSql))
             {
                 var groupField = groupSql.Replace ("group by", "").Trim ();
                 var groupFields = groupField.Split (',');
                 foreach (var item in groupFields)
                 {
                     var filed = item.Split ('.') [1];
-                    Regex rx = new Regex ($@"\[<>f__AnonymousType5`2\].\[{filed.Trim('[',']')}\]");
-                    var match = rx.Match (t_selectSql);
-                    if (match.Length > 0)
-                    {
-                        t_selectSql = t_selectSql.Replace (match.Value, item);
-                    }
+                    t_selectSql = t_selectSql.ReplaceReg ($@"\[<>f__AnonymousType[0-9]`[0-9]\].\[{filed.Trim('[',']')}\]", item);
                 }
             }
-            if (t_selectSql.Contains ("[IGrouping`2].[Key]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.ContainsReg (@"\[IGrouping`[0-9]\].\[Key\]") && !string.IsNullOrWhiteSpace (groupSql))
             {
                 var groupField = groupSql.Replace ("group by", "").Trim ();
-                t_selectSql = t_selectSql.Replace ("[IGrouping`2].[Key]", groupField);
+
+                t_selectSql = t_selectSql.ReplaceReg (@"\[IGrouping`[0-9]\].\[Key\]", groupField);
             }
             t_selectSql += JoinTableNames ();
             T tt;
@@ -169,7 +165,7 @@ namespace LinqDbQuery
 
         public T WhereOr<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.Option.DbProvider);
+            var whereVisitor = new WhereVisitor (this.Option.DbProvider, this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;

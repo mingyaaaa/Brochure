@@ -27,6 +27,8 @@ namespace LinqDbQueryTest
 
         public string GetObjectType (object obj)
         {
+            if (obj == null)
+                return null;
             string str = string.Empty;
             if (IsUseParamers)
             {

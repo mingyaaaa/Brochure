@@ -17,18 +17,6 @@ namespace LinqDbQueryTest.Querys
         }
 
         [TestMethod]
-        public void QueryInsert () { }
-
-        [TestMethod]
-        public void QueryInsertMany () { }
-
-        [TestMethod]
-        public void QueryUpdate () { }
-
-        [TestMethod]
-        public void QueryDelete () { }
-
-        [TestMethod]
         public void QuerySelect ()
         {
             var option = new MySqlOption (provider);
@@ -117,7 +105,7 @@ namespace LinqDbQueryTest.Querys
             var q = query.WhereAnd (t => t.ClassCount == 1 && t.ClassId == "a");
             var sql = q.GetSql ();
             var paramss = q.GetDbDataParameters ();
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1", sql);
             Assert.AreEqual (2, paramss.Count);
 
             const int a = 1;
@@ -125,14 +113,14 @@ namespace LinqDbQueryTest.Querys
             var q2 = query.WhereAnd (t => t.ClassCount == a && t.ClassId == astr);
             sql = q2.GetSql ();
             paramss = q2.GetDbDataParameters ();
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1", sql);
             Assert.AreEqual (2, paramss.Count);
 
             var q3 = q2.WhereAnd (t => t.Id == "c");
             sql = q3.GetSql ();
             paramss = q3.GetDbDataParameters ();
             Trace.TraceInformation (sql);
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1) and (where ([Students].[Id] = @p2))", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 and [Students].[ClassId] = @p1 and ([Students].[Id] = @p2)", sql);
             Assert.AreEqual (3, paramss.Count);
         }
 
@@ -141,26 +129,34 @@ namespace LinqDbQueryTest.Querys
         {
             var option = new MySqlOption (provider);
             var query = new Query<Students> (option);
-            var q = query.WhereOr (t => t.ClassCount == 1 && t.ClassId == "a");
+            var q = query.WhereOr (t => t.ClassCount == 1 || t.ClassId == "a");
             var sql = q.GetSql ();
             var paramss = q.GetDbDataParameters ();
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1", sql);
             Assert.AreEqual (2, paramss.Count);
 
             const int a = 1;
             const string astr = "a";
-            var q2 = query.WhereOr (t => t.ClassCount == a && t.ClassId == astr);
+            var q2 = query.WhereOr (t => t.ClassCount == a || t.ClassId == astr);
             sql = q2.GetSql ();
             paramss = q2.GetDbDataParameters ();
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1)", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1", sql);
             Assert.AreEqual (2, paramss.Count);
 
             var q3 = q2.WhereOr (t => t.Id == "c");
             sql = q3.GetSql ();
             paramss = q3.GetDbDataParameters ();
             Trace.TraceInformation (sql);
-            Assert.AreEqual ("select * from [Students] where ([Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1) or (([Students].[Id] = @p2))", sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1 or ([Students].[Id] = @p2)", sql);
             Assert.AreEqual (3, paramss.Count);
+
+            var q4 = q2.WhereAnd (t => t.Id == "c");
+            sql = q4.GetSql ();
+            paramss = q4.GetDbDataParameters ();
+            Trace.TraceInformation (sql);
+            Assert.AreEqual ("select * from [Students] where [Students].[ClassCount] = @p0 or [Students].[ClassId] = @p1 and ([Students].[Id] = @p2)", sql);
+            Assert.AreEqual (3, paramss.Count);
+
         }
     }
 }

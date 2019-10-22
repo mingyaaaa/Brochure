@@ -7,7 +7,6 @@ namespace LinqDbQuery
 {
     public abstract class DbQueryOption
     {
-        public bool IsUseParamers { get; set; }
         public string ConnectionString { get; set; }
         public int Timeout { get; set; }
 

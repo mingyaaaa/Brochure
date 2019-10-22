@@ -22,9 +22,7 @@ namespace LinqDbQuery.Database
 
         public virtual int Insert<T> (T obj)
         {
-            var record = obj.As<IRecord> ();
-            var tableName = TableUtlis.GetTableName<T> ();
-            var sqlTuple = GetInsertSql (tableName, record);
+            var sqlTuple = GetInsertSql (obj);
             var sql = sqlTuple.Item1;
             var parms = sqlTuple.Item2;
             var connect = Option.DbProvider.GetDbConnection ();
@@ -43,8 +41,7 @@ namespace LinqDbQuery.Database
             var i = 0;
             foreach (var item in list)
             {
-                var record = item.As<IRecord> ();
-                var sqlTuple = GetInsertSql (tableName, record);
+                var sqlTuple = GetInsertSql (item);
                 var sql = sqlTuple.Item1;
                 if (i == 0)
                 {
@@ -72,28 +69,28 @@ namespace LinqDbQuery.Database
 
         public virtual int Update<T> (object obj, Expression<Func<T, bool>> whereFunc)
         {
-            var whereSql = string.Empty;
-            var parms = new List<IDbDataParameter> ();
-            if (whereFunc != null)
-            {
-                var whereVisitor = new WhereVisitor (Option.DbProvider);
-                whereVisitor.Visit (whereFunc);
-                whereSql = whereVisitor.GetSql ().ToString ();
-                parms.AddRange (whereVisitor.GetParameters ());
-            }
-            var tableName = TableUtlis.GetTableName<T> ();
-            var sqlTuple = GetUpdateSql (tableName, obj.As<IRecord> ());
-            var sql = sqlTuple.Item1 + whereSql;
-            parms.AddRange (sqlTuple.Item2);
+            var sqlTuple = GetUpdateSql<T> (obj, whereFunc);
+            var sql = sqlTuple.Item1;
             var connect = Option.DbProvider.GetDbConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
-            command.Parameters.AddRange (parms);
+            command.Parameters.AddRange (sqlTuple.Item2);
             return command.ExecuteNonQuery ();
         }
 
         public virtual int Delete<T> (Expression<Func<T, bool>> whereFunc)
         {
+            var tuple = GetDeleteSql<T> (whereFunc);
+            var sql = tuple.Item1;
+            var connect = Option.DbProvider.GetDbConnection ();
+            var command = connect.CreateCommand ();
+            command.CommandText = sql;
+            command.Parameters.AddRange (tuple.Item2);
+            return command.ExecuteNonQuery ();
+        }
+
+        protected virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (Expression<Func<T, bool>> whereFunc)
+        {
             var whereSql = string.Empty;
             var parms = new List<IDbDataParameter> ();
             if (whereFunc != null)
@@ -104,66 +101,83 @@ namespace LinqDbQuery.Database
                 parms.AddRange (whereVisitor.GetParameters ());
             }
             var tableName = TableUtlis.GetTableName<T> ();
-            var sql = $"delete from {tableName} {whereSql}";
-            var connect = Option.DbProvider.GetDbConnection ();
-            var command = connect.CreateCommand ();
-            command.CommandText = sql;
-            command.Parameters.AddRange (parms);
-            return command.ExecuteNonQuery ();
+            var sql = $"delete from [{tableName}] {whereSql}";
+            return Tuple.Create (sql, parms);
         }
 
-        private Tuple<string, List<IDbDataParameter>> GetInsertSql (string tableName, IRecord doc)
+        protected virtual Tuple<string, List<IDbDataParameter>> GetInsertSql<T> (T obj)
         {
-            var sql = $"insert into {tableName} ";
+            var doc = obj.As<IRecord> ();
+            var tableName = TableUtlis.GetTableName<T> ();
+            var sql = $"insert into [{tableName}]";
             var pams = new List<IDbDataParameter> ();
-            var fields = doc.Keys.ToList ();
+            var fields = new List<string> ();
             var valueList = new List<string> ();
-            foreach (var item in fields)
+            foreach (var item in doc.Keys.ToList ())
             {
-                if (Option.IsUseParamers)
+                if (Option.DbProvider.IsUseParamers)
                 {
                     var paramsKey = $"{Option.DbProvider.GetParamsSymbol()}{item}";
                     var param = Option.DbProvider.GetDbDataParameter ();
                     param.ParameterName = item;
                     param.Value = doc[item];
-                    pams.Add (param);
+                    if (param.Value != null)
+                    {
+                        fields.Add ($"[{item}]");
+                        pams.Add (param);
+                    }
                 }
                 else
                 {
-                    valueList.Add (Option.DbProvider.GetObjectType (doc[item]));
+                    var t_value = Option.DbProvider.GetObjectType (doc[item]);
+                    if (t_value != null)
+                    {
+                        valueList.Add (t_value);
+                        fields.Add ($"[{item}]");
+                    }
                 }
             }
-            if (Option.IsUseParamers)
+            if (Option.DbProvider.IsUseParamers)
                 sql = $"{sql}({fields.Join(",")}) values({pams.Join(",",t=>t.ParameterName)})";
             else
                 sql = $"{sql}({fields.Join(",")}) values({valueList.Join(",")})";
             return Tuple.Create (sql, pams);
         }
 
-        private Tuple<string, List<IDbDataParameter>> GetUpdateSql (string tableName, IRecord doc)
+        protected virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T> (object obj, Expression<Func<T, bool>> whereFunc)
         {
-            var pams = new List<IDbDataParameter> ();
-            var sql = $"update {tableName} set ";
+            var whereSql = string.Empty;
+            var parms = new List<IDbDataParameter> ();
+            if (whereFunc != null)
+            {
+                var whereVisitor = new WhereVisitor (Option.DbProvider);
+                whereVisitor.Visit (whereFunc);
+                whereSql = whereVisitor.GetSql ().ToString ();
+                parms.AddRange (whereVisitor.GetParameters ());
+            }
+            var tableName = TableUtlis.GetTableName<T> ();
+            var doc = obj.As<IRecord> ();
+            var sql = $"update [{tableName}] set ";
             var fieldList = new List<string> ();
             foreach (var item in doc.Keys.ToList ())
             {
                 var fieldStr = string.Empty;
-                if (Option.IsUseParamers)
+                if (Option.DbProvider.IsUseParamers)
                 {
                     var param = Option.DbProvider.GetDbDataParameter ();
                     param.ParameterName = $"{Option.DbProvider.GetParamsSymbol()}{item}";
                     param.Value = doc[item];
-                    fieldStr = $"{item}={param.ParameterName}";
-                    pams.Add (param);
+                    fieldStr = $"[{item}]={param.ParameterName}";
+                    parms.Add (param);
                 }
                 else
                 {
-                    fieldStr = $"{item}={Option.DbProvider.GetObjectType(doc[item])}";
+                    fieldStr = $"[{item}]={Option.DbProvider.GetObjectType(doc[item])}";
                 }
                 fieldList.Add (fieldStr);
             }
-            sql = $"{sql}{fieldList.Join(",")}";
-            return Tuple.Create (sql, pams);
+            sql = $"{sql}{fieldList.Join(",")} {whereSql}";
+            return Tuple.Create (sql, parms);
         }
     }
 }
