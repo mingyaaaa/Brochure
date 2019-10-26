@@ -16,7 +16,10 @@ namespace LinqDbQuery.Database
             return Task.Run (() => IsExistColumn (columnName));
         }
 
-        public abstract bool IsExistColumn (string columnName);
+        public virtual bool IsExistColumn (string columnName)
+        {
+            return false;
+        }
 
         public Task<long> RenameColumnAsync (string columnName, string newcolumnName, string typeName)
         {

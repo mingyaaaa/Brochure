@@ -65,7 +65,7 @@ namespace LinqDbQueryTest
             ex = t => t.Age != 1;
             visitor.Visit (ex);
             sql = visitor.GetSql ().ToString ().Trim ();
-            Assert.AreEqual ("where [Peoples].[Age] < 1 and [Peoples].[Age] > 1", sql);
+            Assert.AreEqual ("where [Peoples].[Age] != 1", sql);
 
             ex = t => t.Age == 1 && t.Name == "1";
             visitor.Visit (ex);
