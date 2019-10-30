@@ -2,10 +2,9 @@ using LinqDbQuery;
 
 namespace LinqDbQueryTest.Datas
 {
-    public class MySqlOption : DbQueryOption
+    public class MySqlOption : DbOption
     {
-        public MySqlOption ()
-        { }
+        public MySqlOption () { }
 
         public MySqlOption (IDbProvider dbProvider) : base (dbProvider) { }
     }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-
-namespace Brochure.Core
+using Brochure.Abstract;
+namespace Brochure.Utils
 {
     public static class JsonUtil
     {

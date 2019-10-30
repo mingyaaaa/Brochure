@@ -33,3 +33,9 @@ Brochure.Utils/obj/
 /LinqDbQueryTest/obj
 Brochure.Core/.DS_Store
 .DS_Store
+Brochure.Abstract/bin
+Brochure.Abstract/obj
+Brochure.Extensions/bin
+Brochure.Extensions/obj
+Brochure.Test/bin
+Brochure.Test/obj

@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Brochure.Abstract
+{
+    public interface IRecord : IEnumerator, IObjectConver
+    {
+        void Add (string key, object obj);
+
+        object this [string key] { get; set; }
+
+        IEnumerable<string> Keys { get; }
+
+        IEnumerable<object> Values { get; }
+        void Remove (string key);
+        bool ContainsKey (string key);
+    }
+}

@@ -1,6 +1,6 @@
 using System;
 
-namespace Brochure.Core
+namespace Brochure.Abstract
 {
     /// <summary>
     /// 转化时 需要忽略的属性

@@ -1,4 +1,4 @@
-﻿namespace Brochure.Core
+﻿namespace Brochure.Abstract
 {
     public interface IBConverables<T>
     {

@@ -8,4 +8,8 @@
     <PackageReference Include="System.Text.Json" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+  </ItemGroup>
+
 </Project>

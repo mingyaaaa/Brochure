@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.NetworkInformation;
 
-namespace Brochure.Core.Utils
+namespace Brochure.Utils
 {
     public static class SystemUtil
     {

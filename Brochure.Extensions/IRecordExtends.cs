@@ -1,6 +1,7 @@
 ﻿using System.Linq;
+using Brochure.Abstract;
 
-namespace Brochure.Core
+namespace Brochure.Extensions
 {
     public static class IRecordExtends
     {

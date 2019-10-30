@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Brochure.Abstract;
 
 namespace Brochure.Core
 {
@@ -30,21 +31,5 @@ namespace Brochure.Core
         }
 
         public virtual void Exited () { }
-    }
-
-    public interface IPlugins
-    {
-        void Start ();
-        void Exit ();
-        Guid Key { get; }
-        string Name { get; }
-        long Version { get; }
-        string Author { get; }
-        string AssemblyName { get; }
-        List<Guid> DependencesKey { get; }
-        bool Starting ();
-        void Started ();
-        bool Exiting ();
-        void Exited ();
     }
 }

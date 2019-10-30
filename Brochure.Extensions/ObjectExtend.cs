@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Brochure.Abstract;
 
-namespace Brochure.Core
+namespace Brochure.Extensions
 {
     public static class ObjectExtend
     {
@@ -29,7 +30,13 @@ namespace Brochure.Core
                     if (obj is IBConverables<T> ibConver)
                         return ibConver.Conver ();
                 }
-                return (T) ConverUtil.As (obj, type);
+                //处理IObjectConver
+                var iObjectConver = type.GetInterface ($"IObjectConver");
+                if (iObjectConver != null)
+                {
+                    return ObjectConverCollection.ConvertFromObject<T> (obj);
+                }
+                return (T) As (obj, type);
             }
             catch (System.Exception) when (!isException)
             {
@@ -80,6 +87,33 @@ namespace Brochure.Core
                 result.Add (item.Name, item.GetValue (obj));
             }
             return result;
+        }
+
+        internal static object As (object obj, Type type)
+        {
+            if (obj == null)
+                return (object) null;
+            if (obj is Enum)
+                obj = (int) obj;
+            if (type == typeof (Guid))
+                return Guid.Parse (obj.ToString ());
+            //如果是基本类型 使用基本类型转换
+            {
+                if (type.Name == nameof (TypeCode.String))
+                    return obj.ToString ();
+                else if (type.Name == nameof (TypeCode.Int32))
+                    return int.Parse (obj.ToString ());
+                else if (type.Name == nameof (TypeCode.Double))
+                    return double.Parse (obj.ToString ());
+                else if (type.Name == nameof (TypeCode.Single))
+                    return float.Parse (obj.ToString ());
+                else if (type.Name == nameof (TypeCode.DateTime))
+                    return DateTime.Parse (obj.ToString ());
+                else if (type.BaseType == typeof (Enum))
+                    return Enum.Parse (type, obj.ToString ());
+            }
+            //如果是系统其他类型  则使用系统的转换器
+            return (object) Convert.ChangeType (obj, type);
         }
     }
 }

@@ -4,49 +4,79 @@ namespace LinqDbQuery.Database
 {
     public abstract class DbColumns
     {
-        protected DbQueryOption Option;
+        protected DbOption Option;
+        private readonly DbSql _dbSql;
 
-        protected DbColumns (DbQueryOption option)
+        protected DbColumns (DbOption option, DbSql dbSql)
         {
             Option = option;
+            this._dbSql = dbSql;
         }
 
-        public Task<bool> IsExistColumnAsync (string columnName)
+        public Task<bool> IsExistColumnAsync (string tableName, string columnName)
         {
-            return Task.Run (() => IsExistColumn (columnName));
+            return Task.Run (() => IsExistColumn (tableName, columnName));
         }
 
-        public virtual bool IsExistColumn (string columnName)
+        public virtual bool IsExistColumn (string tableName, string columnName)
         {
-            return false;
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetColumsNameCountSql (Option.DatabaseName, tableName, columnName);
+            var r = (int) command.ExecuteScalar ();
+            return r >= 1;
         }
 
-        public Task<long> RenameColumnAsync (string columnName, string newcolumnName, string typeName)
+        public Task<long> RenameColumnAsync (string tableName, string columnName, string newcolumnName, TypeCode typeName)
         {
-            return Task.Run (() => RenameColumn (columnName, newcolumnName, typeName));
+            return Task.Run (() => RenameColumn (tableName, columnName, newcolumnName, typeName));
         }
 
-        public abstract long RenameColumn (string columnName, string newcolumnName, string typeName);
-
-        public Task<long> UpdateColumnAsync (string columnName, string typeName, bool isNotNull)
+        public virtual long RenameColumn (string tableName, string columnName, string newcolumnName, TypeCode typeCode)
         {
-            return Task.Run (() => UpdateColumn (columnName, typeName, isNotNull));
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetRenameColumnNameSql (tableName, columnName, newcolumnName, typeCode);
+            return command.ExecuteNonQuery ();
         }
 
-        public abstract long UpdateColumn (string columnName, string typeName, bool isNotNull);
-
-        public Task<long> DeleteColumnAsync (string columnName)
+        public Task<long> UpdateColumnAsync (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
-            return Task.Run (() => DeleteColumn (columnName));
+            return Task.Run (() => UpdateColumn (tableName, columnName, typeCode, isNotNull));
         }
 
-        public abstract long DeleteColumn (string columnName);
-
-        public Task<long> AddColumnsAsync (string columnName, string typeName, bool isNotNull)
+        public virtual long UpdateColumn (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
-            return Task.Run (() => AddColumns (columnName, typeName, isNotNull));
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetUpdateColumnSql (tableName, columnName, typeCode, isNotNull);
+            return command.ExecuteNonQuery ();
         }
 
-        public abstract long AddColumns (string columnName, string typeName, bool isNotNull);
+        public Task<long> DeleteColumnAsync (string tableName, string columnName)
+        {
+            return Task.Run (() => DeleteColumn (tableName, columnName));
+        }
+
+        public virtual long DeleteColumn (string tableName, string columnName)
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetDeleteColumnSql (tableName, columnName);
+            return command.ExecuteNonQuery ();
+        }
+
+        public Task<long> AddColumnsAsync (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        {
+            return Task.Run (() => AddColumns (tableName, columnName, typeCode, isNotNull));
+        }
+
+        public virtual long AddColumns (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetAddllColumnSql (tableName, columnName, typeCode, isNotNull);
+            return command.ExecuteNonQuery ();
+        }
     }
 }

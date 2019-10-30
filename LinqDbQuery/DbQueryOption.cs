@@ -5,17 +5,19 @@ using AspectCore.Injector;
 
 namespace LinqDbQuery
 {
-    public abstract class DbQueryOption
+    public abstract class DbOption
     {
-        public string ConnectionString { get; set; }
+        protected string ConnectionString { get; set; }
         public int Timeout { get; set; }
 
-        protected DbQueryOption ()
+        public string DatabaseName { get; set; }
+
+        protected DbOption ()
         {
             DbProvider = DI.Ins.ServiceProvider.Resolve<IDbProvider> ();
         }
 
-        protected DbQueryOption (IDbProvider dbProvider)
+        protected DbOption (IDbProvider dbProvider)
         {
             DbProvider = dbProvider;
         }
@@ -28,6 +30,7 @@ namespace LinqDbQuery
             if (string.IsNullOrWhiteSpace (ConnectionString))
                 throw new Exception ("请设置数据库连接字符串");
             connection.ConnectionString = ConnectionString;
+            DatabaseName = connection.Database;
             return connection;
         }
     }

@@ -7,8 +7,7 @@ namespace LinqDbQuery.Querys
     {
         public Query () { }
 
-        public Query (DbQueryOption option) : base (option)
-        { }
+        public Query (DbOption option) : base (option) { }
 
         public IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {

@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LinqDbQuery\LinqDbQuery.csproj" />
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+    <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>
 
 <ItemGroup>

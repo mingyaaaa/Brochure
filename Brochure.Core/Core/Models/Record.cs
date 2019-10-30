@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using Brochure.Abstract;
 
 namespace Brochure.Core
 {
@@ -30,9 +31,9 @@ namespace Brochure.Core
         /// </summary>
         public Action RemoveHander;
 
-        public Record (object obj)
+        public Record (IDictionary<string, object> dictionary)
         {
-            _dic = obj.AsDictionary ();
+            _dic = dictionary;
         }
 
         public Record ()
@@ -159,18 +160,11 @@ namespace Brochure.Core
                 info.AddValue (item.Key, item.Value);
             }
         }
+
+        public object ConvertFromObject (object obj)
+        {
+            return new Record (obj.AsDictionary ());
+        }
     }
 
-    public interface IRecord : IEnumerator
-    {
-        void Add (string key, object obj);
-
-        object this [string key] { get; set; }
-
-        IEnumerable<string> Keys { get; }
-
-        IEnumerable<object> Values { get; }
-        void Remove (string key);
-        bool ContainsKey (string key);
-    }
 }

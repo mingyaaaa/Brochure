@@ -4,16 +4,17 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Brochure.Core;
+using Brochure.Abstract;
+using Brochure.Extensions;
 using LinqDbQuery.Visitors;
 namespace LinqDbQuery.Database
 {
     public abstract class DbSql
     {
-        protected DbQueryOption Option;
+        protected DbOption Option;
         private readonly TypeMap _typeMap;
 
-        protected DbSql (DbQueryOption dbOption)
+        protected DbSql (DbOption dbOption)
         {
             this.Option = dbOption;
             _typeMap = dbOption.DbProvider.GetTypeMap ();
@@ -240,9 +241,11 @@ namespace LinqDbQuery.Database
                 sql = $"{sql} not null";
             return sql;
         }
-        public virtual string GetAdllColumnSql (string tableName, string columnName, string typeName, bool isNotNull)
+
+        public virtual string GetAddllColumnSql (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
-            var sql = $"alter table {tableName} add column {columnName} {typeName}";
+            var sqlType = _typeMap.GetSqlType (typeCode.ToString ());
+            var sql = $"alter table {tableName} add column {columnName} {sqlType}";
             if (isNotNull)
             {
                 sql = $"{sql} not null";

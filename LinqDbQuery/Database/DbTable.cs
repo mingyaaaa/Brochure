@@ -3,39 +3,66 @@ namespace LinqDbQuery.Database
 {
     public abstract class DbTable
     {
-        protected DbQueryOption Option;
+        protected DbOption Option;
+        private readonly DbSql dbSql;
 
-        protected DbTable (DbQueryOption option)
+        protected DbTable (DbOption option, DbSql dbSql)
         {
             Option = option;
+            this.dbSql = dbSql;
         }
 
-        public Task<long> CreateTableAsync (string tableName)
+        public Task<long> CreateTableAsync<T> ()
         {
-            return Task.Run (() => CreateTable (tableName));
+            return Task.Run (() => CreateTable<T> ());
         }
 
-        public abstract long CreateTable (string tableName);
+        public virtual long CreateTable<T> ()
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = dbSql.GetCreateTableSql<T> ();
+            return command.ExecuteNonQuery ();
+        }
 
         public Task<bool> IsExistTableAsync (string tableName)
         {
             return Task.Run (() => IsExistTable (tableName));
         }
 
-        public abstract bool IsExistTable (string tableName);
+        public virtual bool IsExistTable (string tableName)
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = dbSql.GetTableNameCountSql (tableName);
+            var r = (int) command.ExecuteScalar ();
+            return r >= 1;
+        }
 
         public Task<long> DeleteTableAsync (string tableName)
         {
             return Task.Run (() => DeleteTable (tableName));
         }
 
-        public abstract long DeleteTable (string tableName);
-
-        public Task<long> UpdateTableNameAsync (string tableName)
+        public virtual long DeleteTable (string tableName)
         {
-            return Task.Run (() => UpdateTableName (tableName));
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = dbSql.GetDeleteTableSql (tableName);
+            return command.ExecuteNonQuery ();
         }
 
-        public abstract long UpdateTableName (string tableName);
+        public Task<long> UpdateTableNameAsync (string tableName, string newTableName)
+        {
+            return Task.Run (() => UpdateTableName (tableName, newTableName));
+        }
+
+        public virtual long UpdateTableName (string tableName, string newTableName)
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = dbSql.GetUpdateTableNameSql (tableName, newTableName);
+            return command.ExecuteNonQuery ();
+        }
     }
 }

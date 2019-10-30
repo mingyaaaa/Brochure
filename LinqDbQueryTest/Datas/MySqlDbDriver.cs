@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Linq.Expressions;
 using LinqDbQuery;
+using LinqDbQueryTest.MySql;
 using MySql.Data.MySqlClient;
 namespace LinqDbQueryTest
 {
@@ -13,7 +14,7 @@ namespace LinqDbQueryTest
         }
 
         public bool IsUseParamers { get; set; }
-        public Func<DbQueryOption> CreateOption { get; set; }
+        public Func<DbOption> CreateOption { get; set; }
 
         public IDbConnection GetDbConnection ()
         {
@@ -77,6 +78,11 @@ namespace LinqDbQueryTest
         public string GetParamsSymbol ()
         {
             return "@";
+        }
+
+        public TypeMap GetTypeMap ()
+        {
+            return new MySqlTypeMap ();
         }
 
         public ExpressionVisitor GetVisitor ()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Brochure.Utils;
 using LinqDbQuery;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -3,23 +3,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using AspectCore.Injector;
-using Brochure.Core;
+using Brochure.Extensions;
 using LinqDbQuery.Extensions;
-using LinqDbQuery.Visitors;
-
 namespace LinqDbQuery.Database
 {
     public abstract class DbData
     {
-        protected DbData (DbQueryOption dbOption, DbSql dbSql)
+        protected DbData (DbOption dbOption, DbSql dbSql)
         {
             Option = dbOption;
             this._dbSql = dbSql;
         }
 
-        protected DbQueryOption Option;
+        protected DbOption Option;
         private readonly DbSql _dbSql;
 
         public virtual int Insert<T> (T obj)

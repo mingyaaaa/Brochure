@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using AspectCore.Injector;
-using Brochure.Core;
-using LinqDbQuery.Querys;
+using Brochure.Extensions;
 using LinqDbQuery.Visitors;
-using Microsoft.Extensions.Logging;
 namespace LinqDbQuery
 {
     public abstract class Query : IQuery
     {
-        protected DbQueryOption Option { get; private set; }
+        protected DbOption Option { get; private set; }
 
         protected List<IDbDataParameter> DbParameters;
 
@@ -24,7 +21,7 @@ namespace LinqDbQuery
             InitData ();
         }
 
-        protected Query (DbQueryOption option)
+        protected Query (DbOption option)
         {
             this.Option = option;
             InitData ();

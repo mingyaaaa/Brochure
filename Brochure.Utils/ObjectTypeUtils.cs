@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-namespace LinqDbQuery
+namespace Brochure.Utils
 {
     public static class ObjectTypeUtils
     {

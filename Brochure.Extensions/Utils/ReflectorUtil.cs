@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Brochure.Core
+namespace Brochure.Extensions
 {
-    public static class ReflectorUtil
+    internal static class ReflectorUtil
     {
         /// <summary>
         /// 根据接口获取指定的类型

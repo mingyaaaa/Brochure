@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Brochure.Core.Extends
+namespace Brochure.Extensions
 {
     public static class IDictionaryExtend
     {

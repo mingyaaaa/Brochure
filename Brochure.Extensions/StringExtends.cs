@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Brochure.Core
+namespace Brochure.Extensions
 {
     public static class StringExtends
     {

@@ -11,7 +11,7 @@ namespace LinqDbQuery.Querys
     {
         public Query () : base () { }
 
-        public Query (DbQueryOption option) : base (option)
+        public Query (DbOption option) : base (option)
         {
             DI.Ins.ServiceProvider.Resolve<ILogger<Query>> ();
         }

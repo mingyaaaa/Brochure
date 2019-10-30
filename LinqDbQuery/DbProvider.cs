@@ -15,7 +15,7 @@ namespace LinqDbQuery
         string GetObjectType (object type);
         IDbConnection GetDbConnection ();
         ExpressionVisitor GetVisitor ();
-        Func<DbQueryOption> CreateOption { get; set; }
+        Func<DbOption> CreateOption { get; set; }
         TypeMap GetTypeMap ();
     }
 

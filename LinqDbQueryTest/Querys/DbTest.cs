@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Brochure.Core;
+using Brochure.Extensions;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,12 +15,13 @@ namespace LinqDbQueryTest.Querys
         {
             provider = new MySqlDbProvider () { IsUseParamers = false };
             option = new MySqlOption (provider);
+            ObjectConverCollection.RegistObjectConver<Record> ();
         }
 
         [TestMethod]
         public void TestDbData ()
         {
-            var dbData = new MySqlDbData (option);
+            var dbData = new MySqlDbData (option, new MySqlDbSql (option));
             var obj = new Students ()
             {
                 ClassCount = 1,

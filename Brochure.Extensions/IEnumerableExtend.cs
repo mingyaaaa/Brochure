@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Brochure.Core
+namespace Brochure.Extensions
 {
     public static class IEnumerableExtend
     {

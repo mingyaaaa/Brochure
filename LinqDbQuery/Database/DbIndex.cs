@@ -3,25 +3,39 @@ namespace LinqDbQuery.Database
 {
     public abstract class DbIndex
     {
-        protected DbQueryOption Option;
+        protected DbOption Option;
+        private readonly DbSql _dbSql;
 
-        protected DbIndex (DbQueryOption option)
+        protected DbIndex (DbOption option, DbSql dbSql)
         {
             Option = option;
+            this._dbSql = dbSql;
         }
 
-        public Task<long> CreateIndexAsync (string[] columnNames, string indexName, string sqlIndex)
+        public Task<long> CreateIndexAsync (string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
-            return Task.Run (() => CreateIndex (columnNames, indexName, sqlIndex));
+            return Task.Run (() => CreateIndex (tableName, columnNames, indexName, sqlIndex));
         }
 
-        public abstract long CreateIndex (string[] columnNames, string indexName, string sqlIndex);
-
-        public Task<long> DeleteIndexAsync (string indexName)
+        public virtual long CreateIndex (string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
-            return Task.Run (() => DeleteIndex (indexName));
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetCreateIndexSql (tableName, columnNames, indexName, sqlIndex);
+            return command.ExecuteNonQuery ();
         }
 
-        public abstract long DeleteIndex (string indexName);
+        public Task<long> DeleteIndexAsync (string tableName, string indexName)
+        {
+            return Task.Run (() => DeleteIndex (tableName, indexName));
+        }
+
+        public virtual long DeleteIndex (string tableName, string indexName)
+        {
+            var connection = Option.GetDbConnection ();
+            var command = connection.CreateCommand ();
+            command.CommandText = _dbSql.GetDeleteIndexSql (tableName, indexName);
+            return command.ExecuteNonQuery ();
+        }
     }
 }
