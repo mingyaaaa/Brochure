@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Brochure.Abstract;
@@ -6,11 +7,11 @@ namespace Brochure.Core
 {
     public class Sequence
     {
-        public IDictionary<string, int> seqDic;
+        public ConcurrentDictionary<string, int> seqDic;
 
         public Sequence ()
         {
-            seqDic = new Dictionary<string, int> ();
+            seqDic = new ConcurrentDictionary<string, int> ();
         }
 
         public string GetSequence (string str)
