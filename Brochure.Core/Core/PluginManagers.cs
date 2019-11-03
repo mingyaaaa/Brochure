@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,21 +9,21 @@ namespace Brochure.Core
 {
     public class PluginManagers : IPluginManagers
     {
-        private readonly IDictionary<Guid, IPlugins> pluginDic;
+        private readonly ConcurrentDictionary<Guid, IPlugins> pluginDic;
 
         public PluginManagers ()
         {
-            pluginDic = new Dictionary<Guid, IPlugins> ();
+            pluginDic = new ConcurrentDictionary<Guid, IPlugins> ();
         }
 
         public void Regist (IPlugins plugin)
         {
-            pluginDic.Add (plugin.Key, plugin);
+            pluginDic.TryAdd (plugin.Key, plugin);
         }
 
         public void Remove (IPlugins plugin)
         {
-            pluginDic.Remove (plugin.Key);
+            pluginDic.TryRemove (plugin.Key, out var _);
         }
 
         public IPlugins GetPlugin (Guid key)
@@ -33,15 +34,6 @@ namespace Brochure.Core
         public List<IPlugins> GetPlugins ()
         {
             return pluginDic.Values.ToList ();
-        }
-
-        public static string GetPluginPath ()
-        {
-            var bathPath = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginPath = Path.Combine (bathPath, "Plugin");
-            if (Directory.Exists (pluginPath))
-                Directory.CreateDirectory (pluginPath);
-            return pluginPath;
         }
     }
 }

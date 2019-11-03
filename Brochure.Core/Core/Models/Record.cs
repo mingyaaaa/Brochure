@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Brochure.Abstract;
 
 namespace Brochure.Core
@@ -11,24 +12,26 @@ namespace Brochure.Core
     /// 文档类型
     /// </summary>
     /// <typeparam name="BDocument"></typeparam>
-    [Serializable]
-    public class Record : IRecord, ISerializable
+    public class Record : IRecord
     {
         private readonly IDictionary<string, object> _dic;
 
         /// <summary>
         /// 添加时执行
         /// </summary>
+        [IgnoreDataMember]
         public Action AddHander;
 
         /// <summary>
         /// 修改数据时执行
         /// </summary>
+        [IgnoreDataMember]
         public Action UpdateHander;
 
         /// <summary>
         /// 移除数据是执行
         /// </summary>
+        [IgnoreDataMember]
         public Action RemoveHander;
 
         public Record (IDictionary<string, object> dictionary)
@@ -54,14 +57,17 @@ namespace Brochure.Core
         /// 获取Key的集合
         /// </summary>
         /// <returns></returns>
+        [IgnoreDataMember]
         public IEnumerable<string> Keys { get { return _dic.Keys; } }
 
         /// <summary>
         /// 获取Value的集合
         /// </summary>
         /// <returns></returns>
+        [IgnoreDataMember]
         public IEnumerable<object> Values { get { return _dic.Values; } }
 
+        [IgnoreDataMember]
         public object Current { get; set; }
 
         /// <summary>
@@ -153,16 +159,9 @@ namespace Brochure.Core
             return JsonSerializer.Serialize (_dic);
         }
 
-        public void GetObjectData (SerializationInfo info, StreamingContext context)
-        {
-            foreach (var item in _dic)
-            {
-                info.AddValue (item.Key, item.Value);
-            }
-        }
-
         public object ConvertFromObject (object obj)
         {
+
             return new Record (obj.AsDictionary ());
         }
     }

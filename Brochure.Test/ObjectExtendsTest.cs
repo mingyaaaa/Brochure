@@ -1,8 +1,11 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using Brochure.Abstract;
+using Brochure.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+
 namespace Brochure.Core.Test
 {
     public enum TestEnum
@@ -27,167 +30,169 @@ namespace Brochure.Core.Test
 
     public class C : IBConverables<B>
     {
-        public B Conver()
+        public B Conver ()
         {
-            return new B()
+            return new B ()
             {
                 BStr = "C"
             };
         }
     }
+
+    [TestClass]
     public class AsTest
     {
-        [Fact]
-        public void StringTo()
+        [TestMethod]
+        public void StringTo ()
         {
             var str = "1";
-            Assert.Equal(1, str.As<int>());
+            Assert.AreEqual (1, str.As<int> ());
             str = "aaa";
             try
             {
-                str.As<int>();
+                str.As<int> ();
 
-                Assert.True(false);
+                Assert.IsTrue (false);
             }
             catch (Exception)
             {
-                Assert.True(true);
+                Assert.IsTrue (true);
             }
             str = "1.34";
-            Assert.Equal(0, str.As<int>());
-            Assert.Equal(1.34, str.As<double>());
+            Assert.AreEqual (0, str.As<int> ());
+            Assert.AreEqual (1.34, str.As<double> ());
             var date = "1992.3.6 13:6:7";
             date = "1992.3.6";
-            Assert.Equal(1992, date.As<DateTime>().Year);
+            Assert.AreEqual (1992, date.As<DateTime> ().Year);
             date = "1992.3.6 25:6:7";
             try
             {
-                date.As<DateTime>();
-                Assert.True(false);
+                date.As<DateTime> ();
+                Assert.IsTrue (false);
             }
             catch (Exception)
             {
-                Assert.True(true);
+                Assert.IsTrue (true);
             }
         }
 
-        [Fact]
-        public void EnumTo()
+        [TestMethod]
+        public void EnumTo ()
         {
             //测试枚举
             var te = TestEnum.a;
-            Assert.Equal(1, te.As<int>());
+            Assert.AreEqual (1, te.As<int> ());
             var i = 1;
-            Assert.Equal(TestEnum.a, i.As<TestEnum>());
+            Assert.AreEqual (TestEnum.a, i.As<TestEnum> ());
             i = 3;
             try
             {
-                Assert.Equal(TestEnum.a, i.As<TestEnum>());
-                Assert.True(false);
+                Assert.AreEqual (TestEnum.a, i.As<TestEnum> ());
+                Assert.IsTrue (false);
             }
             catch (Exception)
             {
-                Assert.True(true);
+                Assert.IsTrue (true);
             }
         }
 
-        [Fact]
-        public void IntTo()
+        [TestMethod]
+        public void IntTo ()
         {
             var i = 1;
-            Assert.Equal(1, i.As<int>());
-            Assert.Equal(1, i.As<double>());
-            Assert.Equal("1", i.As<string>());
+            Assert.AreEqual (1, i.As<int> ());
+            Assert.AreEqual (1, i.As<double> ());
+            Assert.AreEqual ("1", i.As<string> ());
         }
 
-        [Fact]
-        public void DoubleTo()
+        [TestMethod]
+        public void DoubleTo ()
         {
             var d = 1.3;
-            Assert.Equal(1, (int)d);
+            Assert.AreEqual (1, (int) d);
             //double 无法直接转int
             try
             {
-                d.As<int>();
-                Assert.True(false);
+                d.As<int> ();
+                Assert.IsTrue (false);
             }
             catch (Exception)
             {
-                Assert.True(true);
+                Assert.IsTrue (true);
             }
 
-            Assert.Equal(1.3, d.As<double>());
-            Assert.Equal("1.3", d.As<string>());
+            Assert.AreEqual (1.3, d.As<double> ());
+            Assert.AreEqual ("1.3", d.As<string> ());
         }
 
-        [Fact]
-        public void DateTimeTo()
+        [TestMethod]
+        public void DateTimeTo ()
         {
             //Given
             var date = DateTime.Now;
-            date.As<string>();
+            date.As<string> ();
             try
             {
-                date.As<int>();
-                Assert.True(false);
+                date.As<int> ();
+                Assert.IsTrue (false);
             }
             catch (Exception)
             {
-                Assert.True(true);
+                Assert.IsTrue (true);
             }
             //When
 
             //Then
         }
 
-        [Fact]
-        public void NUllTo()
+        [TestMethod]
+        public void NUllTo ()
         {
             object obj = null;
-            Assert.Equal(0, obj.As<int>());
-            Assert.Equal(0, obj.As<double>());
-            Assert.Null(obj.As<string>());
-            Assert.Equal(default(DateTime), obj.As<DateTime>());
+            Assert.AreEqual (0, obj.As<int> ());
+            Assert.AreEqual (0, obj.As<double> ());
+            Assert.IsNull (obj.As<string> ());
+            Assert.AreEqual (default (DateTime), obj.As<DateTime> ());
 
         }
 
-        [Fact]
-        public void RecordTo()
+        [TestMethod]
+        public void RecordTo ()
         {
-            var a = new A();
+            var a = new A ();
             a.AStr = "AStr";
             a.C = 0;
             a.DateTime = DateTime.Now;
-            var b = new B();
+            var b = new B ();
             b.BStr = "BStr";
             b.C = 1;
-            b.DateTime = DateTime.Now.AddDays(-1);
+            b.DateTime = DateTime.Now.AddDays (-1);
             a.BObject = b;
-            var ar = a.As<IRecord>();
-            Assert.True(ar.ContainsKey(nameof(a.AStr)));
-            Assert.True(ar.ContainsKey(nameof(a.BObject)));
-            Assert.True(ar.ContainsKey(nameof(a.C)));
-            Assert.True(ar.ContainsKey(nameof(a.DateTime)));
-            Assert.Equal(a.AStr, ar[nameof(a.AStr)]);
-            Assert.Equal(a.C, ar[nameof(a.C)]);
-            Assert.Equal(a.DateTime, ar[nameof(a.DateTime)]);
-            Assert.Equal(a.AStr, ar[nameof(a.AStr)]);
-            var br = ar[nameof(a.BObject)].As<IRecord>();
-            Assert.Equal(b.BStr, br[nameof(b.BStr)]);
-            Assert.Equal(b.C, br[nameof(b.C)]);
-            Assert.Equal(b.DateTime, br[nameof(b.DateTime)]);
+            var ar = a.As<IRecord> ();
+            Assert.IsTrue (ar.ContainsKey (nameof (a.AStr)));
+            Assert.IsTrue (ar.ContainsKey (nameof (a.BObject)));
+            Assert.IsTrue (ar.ContainsKey (nameof (a.C)));
+            Assert.IsTrue (ar.ContainsKey (nameof (a.DateTime)));
+            Assert.AreEqual (a.AStr, ar[nameof (a.AStr)]);
+            Assert.AreEqual (a.C, ar[nameof (a.C)]);
+            Assert.AreEqual (a.DateTime, ar[nameof (a.DateTime)]);
+            Assert.AreEqual (a.AStr, ar[nameof (a.AStr)]);
+            var br = ar[nameof (a.BObject)].As<IRecord> ();
+            Assert.AreEqual (b.BStr, br[nameof (b.BStr)]);
+            Assert.AreEqual (b.C, br[nameof (b.C)]);
+            Assert.AreEqual (b.DateTime, br[nameof (b.DateTime)]);
         }
 
-        [Fact]
-        public void JsonTo()
+        [TestMethod]
+        public void JsonTo ()
         {
             string json = "{\"aa\":1}";
-            var obj = json.AsObject<IRecord>();
-            Assert.True(obj.ContainsKey("aa"));
-            Assert.Equal(1, obj["aa"].As<int>());
-            obj = json.As<IRecord>();
-            Assert.True(obj.ContainsKey("aa"));
-            Assert.Equal(1, obj["aa"].As<int>());
+            var obj = json.AsObject<IRecord> ();
+            Assert.IsTrue (obj.ContainsKey ("aa"));
+            Assert.AreEqual (1, obj["aa"].As<int> ());
+            obj = json.As<IRecord> ();
+            Assert.IsTrue (obj.ContainsKey ("aa"));
+            Assert.AreEqual (1, obj["aa"].As<int> ());
 
             var jsonArray = new string[]
             {
@@ -195,9 +200,9 @@ namespace Brochure.Core.Test
                 "b",
                 "c"
             };
-            json = JsonConvert.SerializeObject(jsonArray);
-            var array = json.AsEnumerable<string>().ToArray();
-            Assert.Equal(3, array.Length);
+            json = JsonConvert.SerializeObject (jsonArray);
+            var array = json.AsEnumerable<string> ().ToArray ();
+            Assert.AreEqual (3, array.Length);
 
             var recordArray = new List<IRecord>
             {
@@ -215,23 +220,23 @@ namespace Brochure.Core.Test
                 },
             };
 
-            json = JsonConvert.SerializeObject(recordArray);
-            var records = json.AsEnumerable<IRecord>().ToArray();
-            Assert.Equal(3, records.Length);
-            Assert.True(records[0].ContainsKey("a"));
-            Assert.Equal(1, records[0]["a"].As<int>());
-            records = json.AsEnumerable<IRecord>().ToArray();
-            Assert.Equal(3, records.Length);
-            Assert.True(records[0].ContainsKey("a"));
-            Assert.Equal(1, records[0]["a"].As<int>());
+            json = JsonConvert.SerializeObject (recordArray);
+            var records = json.AsEnumerable<IRecord> ().ToArray ();
+            Assert.AreEqual (3, records.Length);
+            Assert.IsTrue (records[0].ContainsKey ("a"));
+            Assert.AreEqual (1, records[0]["a"].As<int> ());
+            records = json.AsEnumerable<IRecord> ().ToArray ();
+            Assert.AreEqual (3, records.Length);
+            Assert.IsTrue (records[0].ContainsKey ("a"));
+            Assert.AreEqual (1, records[0]["a"].As<int> ());
         }
 
-        [Fact]
-        public void IBConverTo()
+        [TestMethod]
+        public void IBConverTo ()
         {
-            var c = new C();
-            var b = c.As<B>();
-            Assert.Equal("C", b.BStr);
+            var c = new C ();
+            var b = c.As<B> ();
+            Assert.AreEqual ("C", b.BStr);
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Brochure.Abstract;
-
 namespace Brochure.Extensions
 {
     public static class ObjectExtend
@@ -34,7 +33,7 @@ namespace Brochure.Extensions
                 var iObjectConver = type.GetInterface ($"IObjectConver");
                 if (iObjectConver != null)
                 {
-                    return ObjectConverCollection.ConvertFromObject<T> (obj);
+                    return Abstract.ObjectConverCollection.ConvertFromObject<T> (obj);
                 }
                 return (T) As (obj, type);
             }

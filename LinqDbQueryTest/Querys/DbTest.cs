@@ -1,9 +1,9 @@
 using System.Diagnostics;
+using System.Runtime.Loader;
+using Brochure.Abstract;
 using Brochure.Core;
-using Brochure.Extensions;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace LinqDbQueryTest.Querys
 {
     [TestClass]

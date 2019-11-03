@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using Brochure.Abstract;
 
-namespace Brochure.Extensions
+namespace Brochure.Abstract
 {
     public static class ObjectConverCollection
     {

@@ -5,7 +5,7 @@ using Brochure.Abstract;
 
 namespace Brochure.Core
 {
-    public static class ObjectExtend
+    internal static class ObjectExtend
     {
         /// <summary>
         /// 类型转换
@@ -15,7 +15,7 @@ namespace Brochure.Core
         /// <param name="exc">异常，如果部位null 则会throw 异常</param>
         /// <typeparam name="T">目标类型</typeparam>
         /// <returns></returns>
-        public static T As<T> (this object obj, bool isException = true)
+        internal static T As<T> (this object obj, bool isException = true)
         {
             // var logger = DI.ServiceProvider.GetService<ILoggerFactory>().CreateLogger("As");
             try
@@ -30,6 +30,12 @@ namespace Brochure.Core
                     if (obj is IBConverables<T> ibConver)
                         return ibConver.Conver ();
                 }
+                //处理IObjectConver
+                var iObjectConver = type.GetInterface ($"IObjectConver");
+                if (iObjectConver != null)
+                {
+                    return ObjectConverCollection.ConvertFromObject<T> (obj);
+                }
                 return (T) As (obj, type);
             }
             catch (System.Exception) when (!isException)
@@ -39,7 +45,7 @@ namespace Brochure.Core
             }
         }
 
-        public static IEnumerable<T> AsEnumerable<T> (this object obj, bool isException = true)
+        internal static IEnumerable<T> AsEnumerable<T> (this object obj, bool isException = true)
         {
             if (obj == null)
                 return new List<T> ();
@@ -55,7 +61,7 @@ namespace Brochure.Core
             return new List<T> ();
         }
 
-        public static IDictionary<string, object> AsDictionary (this object obj)
+        internal static IDictionary<string, object> AsDictionary (this object obj)
         {
             if (obj == null)
                 throw new ArgumentNullException (nameof (obj), "参数为空");

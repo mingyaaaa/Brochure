@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Loader;
 using Brochure.Abstract;
+using Brochure.Core.Core;
 
 namespace Brochure.Core
 {
     public class Plugins : IPlugins
     {
-        public Plugins () { }
-        public void Start () { }
+        private readonly AssemblyLoadContext assemblyContext;
 
-        public void Exit () { }
+        public Plugins (AssemblyLoadContext assemblyContext)
+        {
+            this.assemblyContext = assemblyContext;
+        }
+
+        public Plugins () : this (new PluginsLoadContext ()) { }
+
+        public virtual void Start () { }
+
+        public virtual void Exit ()
+        {
+            this.assemblyContext.Unload ();
+        }
 
         public Guid Key { get; }
         public string Name { get; }
