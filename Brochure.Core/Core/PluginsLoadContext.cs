@@ -1,5 +1,5 @@
 using System.Runtime.Loader;
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
     public class PluginsLoadContext : AssemblyLoadContext
     {

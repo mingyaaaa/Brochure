@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json;
 using Brochure.Abstract;
 namespace Brochure.Extensions
 {
@@ -16,11 +17,12 @@ namespace Brochure.Extensions
         /// <returns></returns>
         public static T As<T> (this object obj, bool isException = true)
         {
-            // var logger = DI.ServiceProvider.GetService<ILoggerFactory>().CreateLogger("As");
             try
             {
                 if (obj is T t)
                     return t;
+                if (obj is IRecord)
+                    return JsonSerializer.Deserialize<T> (obj.ToString ());
                 var type = typeof (T);
                 //实现接口IBConverable的类使用 接口转换器
                 var interfaceType = obj.GetType ().GetInterface ($"IBConverables`1");
@@ -39,7 +41,6 @@ namespace Brochure.Extensions
             }
             catch (System.Exception) when (!isException)
             {
-                //   logger.LogError(e, e.Message);
                 return (T) (object) default (T);
             }
         }

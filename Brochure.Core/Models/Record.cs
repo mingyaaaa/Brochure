@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Brochure.Abstract;
-
+using Brochure.Extensions;
 namespace Brochure.Core
 {
     /// <summary>

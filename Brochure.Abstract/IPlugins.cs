@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Brochure.Abstract
 {
@@ -17,6 +18,8 @@ namespace Brochure.Abstract
         void Started ();
         bool Exiting ();
         void Exited ();
+
+        Assembly GetAssembly ();
     }
 
 }
