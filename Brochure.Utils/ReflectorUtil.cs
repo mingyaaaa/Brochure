@@ -17,6 +17,8 @@ namespace Brochure.Utils
             var listobject = new List<object> ();
             foreach (var item in types)
             {
+                if (item.IsAbstract || item.IsInterface)
+                    continue;
                 var tinterfaces = item.GetInterfaces ();
                 if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
                     listobject.Add (assembly.CreateInstance (item.FullName));
@@ -35,6 +37,8 @@ namespace Brochure.Utils
             var list = new List<Type> ();
             foreach (var item in types)
             {
+                if (item.IsAbstract || item.IsInterface)
+                    continue;
                 var tinterfaces = item.GetInterfaces ();
                 if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
                     list.Add (item);
@@ -47,13 +51,15 @@ namespace Brochure.Utils
         {
             var types = assembly.GetTypes ();
             var listobject = new List<object> ();
-
             foreach (var item in types)
             {
-                if (!string.IsNullOrWhiteSpace (item.FullName) && item.BaseType?.FullName == type.FullName)
+                if (item.IsAbstract || item.IsInterface)
+                    continue;
+                if (HasTargetType (item, type.FullName))
+                {
                     listobject.Add (assembly.CreateInstance (item.FullName));
+                }
             }
-
             return listobject;
         }
 
@@ -61,13 +67,15 @@ namespace Brochure.Utils
         {
             var types = assembly.GetTypes ();
             var list = new List<Type> ();
-
             foreach (var item in types)
             {
-                if (!string.IsNullOrWhiteSpace (item.FullName) && item.BaseType?.FullName == type.FullName)
+                if (item.IsAbstract || item.IsInterface)
+                    continue;
+                if (HasTargetType (item, type.FullName))
+                {
                     list.Add (item);
+                }
             }
-
             return list;
         }
 
@@ -82,6 +90,21 @@ namespace Brochure.Utils
             }
             var constructor = typeinfo.GetConstructor (paramsTypes.ToArray ());
             return (T) constructor?.Invoke (parms);
+        }
+
+        private static bool HasTargetType (Type type, string targetTypeFullName)
+        {
+            if (type.BaseType?.FullName == targetTypeFullName)
+                return true;
+            var interfaces = type.GetInterfaces ();
+            foreach (var item in interfaces)
+            {
+                if (item.FullName == targetTypeFullName)
+                    return true;
+                if (HasTargetType (item, targetTypeFullName))
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -49,13 +49,6 @@ namespace Brochure.Core
         }
 
         public virtual void Exited () { }
-
-        public Assembly GetAssembly ()
-        {
-            var assemblyPath = Path.Combine (pluginBathPath, Name, AssemblyName);
-            return assemblyContext.LoadFromAssemblyPath (assemblyPath);
-        }
-
         public AssemblyLoadContext GetAssemblyLoadContext ()
         {
             return assemblyContext;

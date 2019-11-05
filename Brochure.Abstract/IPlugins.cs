@@ -18,8 +18,6 @@ namespace Brochure.Abstract
         void Started ();
         bool Exiting ();
         void Exited ();
-
-        Assembly GetAssembly ();
     }
 
 }
