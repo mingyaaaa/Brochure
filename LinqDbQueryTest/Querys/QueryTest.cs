@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Linq;
+using Brochure.LinqDbQuery.MySql;
 using LinqDbQuery.Querys;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

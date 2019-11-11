@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using LinqDbQuery;
 
-namespace LinqDbQueryTest.MySql
+namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlTypeMap : TypeMap
     {

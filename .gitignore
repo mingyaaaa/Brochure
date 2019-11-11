@@ -41,3 +41,5 @@ Brochure.Test/bin
 Brochure.Test/obj
 Brochure.Server.Main/bin/
 Brochure.Server.Main/obj/
+**/bin/
+**/obj/

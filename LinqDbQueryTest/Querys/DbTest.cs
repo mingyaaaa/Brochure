@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Runtime.Loader;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.LinqDbQuery.MySql;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LinqDbQueryTest.Querys
@@ -11,11 +12,14 @@ namespace LinqDbQueryTest.Querys
     {
         public MySqlDbProvider provider { get; }
         private MySqlOption option;
+
+        private MySqlDbSql dbSql;
         public DbTest ()
         {
             provider = new MySqlDbProvider () { IsUseParamers = false };
             option = new MySqlOption (provider);
             ObjectConverCollection.RegistObjectConver<Record> ();
+            dbSql = new MySqlDbSql (option);
         }
 
         [TestMethod]
@@ -28,16 +32,16 @@ namespace LinqDbQueryTest.Querys
                 ClassId = "11",
                 School = "dd",
             };
-            var sql = dbData.GetNewInsertSql (obj);
-            Assert.AreEqual ("insert into [Students]([School],[ClassId],[ClassCount]) values('dd','11',1)", sql);
+            var sql = dbSql.GetInsertSql (obj);
+            Assert.AreEqual ("insert into [Students]([School],[ClassId],[ClassCount]) values('dd','11',1)", sql.Item1);
 
-            sql = dbData.GetNewDeleteSql<Students> (t => t.ClassId == "1" && t.ClassCount == 2);
-            Assert.AreEqual ("delete from [Students] where [Students].[ClassId] = '1' and [Students].[ClassCount] = 2", sql);
-            sql = dbData.GetNewUpdateSql<Students> (new
+            sql = dbSql.GetDeleteSql<Students> (t => t.ClassId == "1" && t.ClassCount == 2);
+            Assert.AreEqual ("delete from [Students] where [Students].[ClassId] = '1' and [Students].[ClassCount] = 2", sql.Item1);
+            sql = dbSql.GetUpdateSql<Students> (new
             {
                 ClassId = "2"
             }, t => t.Id == "aa");
-            Trace.TraceInformation (sql);
+            Trace.TraceInformation (sql.Item1);
         }
 
     }

@@ -2,9 +2,9 @@ using System;
 using System.Data;
 using System.Linq.Expressions;
 using LinqDbQuery;
-using LinqDbQueryTest.MySql;
 using MySql.Data.MySqlClient;
-namespace LinqDbQueryTest
+
+namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbProvider : IDbProvider
     {

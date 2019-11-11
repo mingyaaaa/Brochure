@@ -1,11 +1,10 @@
+using System;
 using LinqDbQuery;
 
-namespace LinqDbQueryTest.Datas
+namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlOption : DbOption
     {
-        public MySqlOption () { }
-
         public MySqlOption (IDbProvider dbProvider) : base (dbProvider) { }
     }
 }
