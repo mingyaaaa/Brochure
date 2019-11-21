@@ -1,10 +1,11 @@
 using System;
+using LinqDbQuery;
 using LinqDbQuery.Database;
 
 namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbSql : DbSql
     {
-        public MySqlDbSql (global::LinqDbQuery.DbOption dbOption) : base (dbOption) { }
+        public MySqlDbSql (IDbProvider dbProvider) : base (dbProvider) { }
     }
 }

@@ -22,7 +22,7 @@ namespace LinqDbQueryTest.Querys
         {
             var option = new MySqlOption (provider);
 
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
 
             var sql = query.GetSql ();
             Assert.AreEqual ("select * from [Students]", sql);
@@ -31,12 +31,12 @@ namespace LinqDbQueryTest.Querys
             sql = q.GetSql ();
             Assert.AreEqual ("select [Students].[Id] from [Students]", sql);
 
-            var query2 = new Query<Peoples, Students> (option);
+            var query2 = new Query<Peoples, Students> (provider);
             var q2 = query2.Select ((p, s) => new { p.Id, s.ClassId });
             sql = q2.GetSql ();
             Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[ClassId] as ClassId from [Peoples],[Students]", sql);
 
-            var query3 = new Query<Peoples, Students, Teachers> (option);
+            var query3 = new Query<Peoples, Students, Teachers> (provider);
             var q3 = query3.Select ((p, s, t) => new { p.Id, s.ClassId, s.School, t.Job });
             sql = q3.GetSql ();
             Assert.AreEqual ("select [Peoples].[Id] as Id,[Students].[ClassId] as ClassId,[Students].[School] as School,[Teachers].[Job] as Job from [Peoples],[Students],[Teachers]", sql);
@@ -46,7 +46,7 @@ namespace LinqDbQueryTest.Querys
         public void QueryJoin ()
         {
             var option = new MySqlOption (provider);
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
             var q = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Select ((s, p) => new { s.ClassId, StudentId = s.Id, PeopleId = p.Id, p.Name });
             var sql = q.GetSql ();
             Assert.AreEqual ("select [Students].[ClassId] as ClassId,[Students].[Id] as StudentId,[Peoples].[Id] as PeopleId,[Peoples].[Name] as Name from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id]", sql);
@@ -55,7 +55,7 @@ namespace LinqDbQueryTest.Querys
             sql = q2.GetSql ();
             Assert.AreEqual ("select [Classes].[ClassName] as ClassName from [Students] join [Peoples] on [Students].[PeopleId] = [Peoples].[Id] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
 
-            var query2 = new Query<Students, Peoples> (option);
+            var query2 = new Query<Students, Peoples> (provider);
             var q3 = query2.Join<Classes> ((s, _, c) => s.ClassId == c.Id).Select ((_, __, c) => new { c.ClassName });
             sql = q3.GetSql ();
             Assert.AreEqual ("select [Classes].[ClassName] as ClassName from [Students],[Peoples] join [Classes] on [Students].[ClassId] = [Classes].[Id]", sql);
@@ -65,7 +65,7 @@ namespace LinqDbQueryTest.Querys
         public void QueryGroup ()
         {
             var option = new MySqlOption (provider);
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
             var q = query.Groupby (t => t.School).Select (t => new { School = t.Key, Count = t.Count () });
             var sql = q.GetSql ();
             Assert.AreEqual ("select [Students].[School] as School,count([Students].[School]) as Count from [Students] group by [Students].[School]", sql);
@@ -84,11 +84,11 @@ namespace LinqDbQueryTest.Querys
         public void QueryOrder ()
         {
             var option = new MySqlOption (provider);
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
             var q = query.OrderBy (t => t.ClassCount);
             var sql = q.GetSql ();
             Assert.AreEqual ("select * from [Students] order by [Students].[ClassCount]", sql);
-            var query2 = new Query<Students, Peoples> (option);
+            var query2 = new Query<Students, Peoples> (provider);
             var q2 = query2.OrderBy ((t, _) => t.ClassCount);
             sql = q2.GetSql ();
             Assert.AreEqual ("select * from [Students],[Peoples] order by [Students].[ClassCount]", sql);
@@ -102,7 +102,7 @@ namespace LinqDbQueryTest.Querys
         public void QueryWhereAnd ()
         {
             var option = new MySqlOption (provider);
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
             var q = query.WhereAnd (t => t.ClassCount == 1 && t.ClassId == "a");
             var sql = q.GetSql ();
             var paramss = q.GetDbDataParameters ();
@@ -129,7 +129,7 @@ namespace LinqDbQueryTest.Querys
         public void QueryWhereOr ()
         {
             var option = new MySqlOption (provider);
-            var query = new Query<Students> (option);
+            var query = new Query<Students> (provider);
             var q = query.WhereOr (t => t.ClassCount == 1 || t.ClassId == "a");
             var sql = q.GetSql ();
             var paramss = q.GetDbDataParameters ();

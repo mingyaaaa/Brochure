@@ -23,7 +23,7 @@ namespace LinqDbQuery.Database
             var sqlTuple = _dbSql.GetInsertSql (obj);
             var sql = sqlTuple.Item1;
             var parms = sqlTuple.Item2;
-            var connect = Option.DbProvider.GetDbConnection ();
+            var connect = Option.GetDbConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (parms);
@@ -58,7 +58,7 @@ namespace LinqDbQuery.Database
                 }
                 i++;
             }
-            var connect = Option.DbProvider.GetDbConnection ();
+            var connect = Option.GetDbConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sqlList.Join (";", null);
             command.Parameters.AddRange (parms);
@@ -69,7 +69,7 @@ namespace LinqDbQuery.Database
         {
             var sqlTuple = _dbSql.GetUpdateSql<T> (obj, whereFunc);
             var sql = sqlTuple.Item1;
-            var connect = Option.DbProvider.GetDbConnection ();
+            var connect = Option.GetDbConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (sqlTuple.Item2);
@@ -80,7 +80,7 @@ namespace LinqDbQuery.Database
         {
             var tuple = _dbSql.GetDeleteSql<T> (whereFunc);
             var sql = tuple.Item1;
-            var connect = Option.DbProvider.GetDbConnection ();
+            var connect = Option.GetDbConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (tuple.Item2);

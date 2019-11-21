@@ -14,17 +14,11 @@ namespace LinqDbQuery
 
         protected List<IDbDataParameter> DbParameters;
 
-        protected Query ()
+        protected Query (IDbProvider dbProvider)
         {
-            var provider = DI.Ins.ServiceProvider.ResolveRequired<IDbProvider> ();
-            this.Option = provider.CreateOption.Invoke ();
+            // this.Option = option;
             InitData ();
-        }
-
-        protected Query (DbOption option)
-        {
-            this.Option = option;
-            InitData ();
+            this.dbProvider = dbProvider;
         }
 
         private void InitData ()
@@ -42,6 +36,7 @@ namespace LinqDbQuery
         protected string joinSql;
         protected string orderSql;
         protected List<IDbDataParameter> parameters;
+        private readonly IDbProvider dbProvider;
 
         private string AddWhiteSpace (string str)
         {
@@ -60,7 +55,7 @@ namespace LinqDbQuery
                 var command = conn.CreateCommand ();
                 command.CommandText = sql;
                 command.CommandTimeout = this.Option.Timeout;
-                if (Option.DbProvider.IsUseParamers)
+                if (dbProvider.IsUseParamers)
                 {
                     foreach (var item in parameters)
                         command.Parameters.Add (item);
@@ -72,7 +67,7 @@ namespace LinqDbQuery
 
         protected T Join<T> (Type type, Expression expression) where T : Query
         {
-            var joinVisitor = new JoinVisitor (type, this.Option.DbProvider);
+            var joinVisitor = new JoinVisitor (type, dbProvider);
             joinVisitor.Visit (expression);
             string t_joinSql;
             if (string.IsNullOrWhiteSpace (joinSql))
@@ -86,7 +81,7 @@ namespace LinqDbQuery
 
         protected T OrderBy<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (this.Option.DbProvider);
+            var orderVisitor = new OrderVisitor (dbProvider);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this.Copy<T> ();
@@ -96,7 +91,7 @@ namespace LinqDbQuery
 
         protected T OrderByDesc<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (this.Option.DbProvider, false);
+            var orderVisitor = new OrderVisitor (dbProvider, false);
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this.Copy<T> ();
@@ -106,7 +101,7 @@ namespace LinqDbQuery
 
         public T Select<T> (Expression fun) where T : Query
         {
-            var selectVisitor = new SelectVisitor (this.Option.DbProvider);
+            var selectVisitor = new SelectVisitor (dbProvider);
             selectVisitor.Visit (fun);
             var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             //如果有group 则需要将Key替换成对应的分组属性
@@ -138,7 +133,7 @@ namespace LinqDbQuery
 
         public T WhereAnd<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.Option.DbProvider, this.DbParameters);
+            var whereVisitor = new WhereVisitor (dbProvider, this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;
@@ -162,7 +157,7 @@ namespace LinqDbQuery
 
         public T WhereOr<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (this.Option.DbProvider, this.DbParameters);
+            var whereVisitor = new WhereVisitor (dbProvider, this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;
@@ -184,7 +179,7 @@ namespace LinqDbQuery
 
         public T Groupby<T> (Expression fun) where T : Query
         {
-            var groupVisit = new GroupVisitor (this.Option.DbProvider);
+            var groupVisit = new GroupVisitor (dbProvider);
             groupVisit.Visit (fun);
             var t_groupSql = groupVisit.GetSql ().ToString ();
             var tt = this.Copy<T> ();

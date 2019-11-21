@@ -14,7 +14,6 @@ namespace Brochure.LinqDbQuery.MySql
         }
 
         public bool IsUseParamers { get; set; }
-        public Func<DbOption> CreateOption { get; set; }
 
         public IDbConnection GetDbConnection ()
         {
@@ -88,6 +87,11 @@ namespace Brochure.LinqDbQuery.MySql
         public ExpressionVisitor GetVisitor ()
         {
             throw new NotImplementedException ();
+        }
+
+        public DbOption CreateOption ()
+        {
+            return new MySqlOption (this);
         }
     }
 }

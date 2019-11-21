@@ -5,9 +5,7 @@ namespace LinqDbQuery.Querys
 {
     public class Query<T1, T2, T3, T4, T5> : Query, IQuery<T1, T2, T3, T4, T5>
     {
-        public Query () { }
-
-        public Query (DbOption option) : base (option) { }
+        public Query (IDbProvider dbprovider) : base (dbprovider) { }
 
         public IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {

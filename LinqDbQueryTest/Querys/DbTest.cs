@@ -4,6 +4,7 @@ using System.Runtime.Loader;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.LinqDbQuery.MySql;
+using LinqDbQuery;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace LinqDbQueryTest.Querys
@@ -11,22 +12,22 @@ namespace LinqDbQueryTest.Querys
     [TestClass]
     public class DbTest
     {
-        public MySqlDbProvider provider { get; }
-        private MySqlOption option;
+        public IDbProvider provider { get; }
+        private readonly DbOption option;
 
-        private MySqlDbSql dbSql;
+        private readonly DbSql dbSql;
         public DbTest ()
         {
             provider = new MySqlDbProvider () { IsUseParamers = false };
-            option = new MySqlOption (provider);
+            option = provider.CreateOption ();
             ObjectConverCollection.RegistObjectConver<Record> ();
-            dbSql = new MySqlDbSql (option);
+            dbSql = new MySqlDbSql (provider);
         }
 
         [TestMethod]
         public void TestDbData ()
         {
-            var dbData = new MySqlDbData (option);
+            var dbData = new MySqlDbData (provider, option);
             var obj = new Students ()
             {
                 ClassCount = 1,

@@ -8,17 +8,19 @@ using Brochure.Abstract;
 using Brochure.Extensions;
 using LinqDbQuery.Atrributes;
 using LinqDbQuery.Visitors;
-namespace LinqDbQuery.Database
+namespace LinqDbQuery
 {
     public abstract class DbSql
     {
         protected DbOption Option;
         private readonly TypeMap _typeMap;
+        protected readonly IDbProvider dbProvider;
 
-        protected DbSql (DbOption dbOption)
+        protected DbSql (IDbProvider dbProvider)
         {
-            this.Option = dbOption;
-            _typeMap = dbOption.DbProvider.GetTypeMap ();
+            this.Option = dbProvider.CreateOption ();
+            _typeMap = dbProvider.GetTypeMap ();
+            this.dbProvider = dbProvider;
         }
 
         public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (Expression<Func<T, bool>> whereFunc)
@@ -27,7 +29,7 @@ namespace LinqDbQuery.Database
             var parms = new List<IDbDataParameter> ();
             if (whereFunc != null)
             {
-                var whereVisitor = new WhereVisitor (Option.DbProvider);
+                var whereVisitor = new WhereVisitor (dbProvider);
                 whereVisitor.Visit (whereFunc);
                 whereSql = whereVisitor.GetSql ().ToString ();
                 parms.AddRange (whereVisitor.GetParameters ());
@@ -47,10 +49,10 @@ namespace LinqDbQuery.Database
             var valueList = new List<string> ();
             foreach (var item in doc.Keys.ToList ())
             {
-                if (Option.DbProvider.IsUseParamers)
+                if (dbProvider.IsUseParamers)
                 {
-                    var paramsKey = $"{Option.DbProvider.GetParamsSymbol()}{item}";
-                    var param = Option.DbProvider.GetDbDataParameter ();
+                    var paramsKey = $"{dbProvider.GetParamsSymbol()}{item}";
+                    var param = dbProvider.GetDbDataParameter ();
                     param.ParameterName = item;
                     param.Value = doc[item];
                     if (param.Value != null)
@@ -61,7 +63,7 @@ namespace LinqDbQuery.Database
                 }
                 else
                 {
-                    var t_value = Option.DbProvider.GetObjectType (doc[item]);
+                    var t_value = dbProvider.GetObjectType (doc[item]);
                     if (t_value != null)
                     {
                         valueList.Add (t_value);
@@ -69,7 +71,7 @@ namespace LinqDbQuery.Database
                     }
                 }
             }
-            if (Option.DbProvider.IsUseParamers)
+            if (dbProvider.IsUseParamers)
                 sql = $"{sql}({fields.Join(",")}) values({pams.Join(",",t=>t.ParameterName)})";
             else
                 sql = $"{sql}({fields.Join(",")}) values({valueList.Join(",")})";
@@ -82,7 +84,7 @@ namespace LinqDbQuery.Database
             var parms = new List<IDbDataParameter> ();
             if (whereFunc != null)
             {
-                var whereVisitor = new WhereVisitor (Option.DbProvider);
+                var whereVisitor = new WhereVisitor (dbProvider);
                 whereVisitor.Visit (whereFunc);
                 whereSql = whereVisitor.GetSql ().ToString ();
                 parms.AddRange (whereVisitor.GetParameters ());
@@ -94,17 +96,17 @@ namespace LinqDbQuery.Database
             foreach (var item in doc.Keys.ToList ())
             {
                 var fieldStr = string.Empty;
-                if (Option.DbProvider.IsUseParamers)
+                if (dbProvider.IsUseParamers)
                 {
-                    var param = Option.DbProvider.GetDbDataParameter ();
-                    param.ParameterName = $"{Option.DbProvider.GetParamsSymbol()}{item}";
+                    var param = dbProvider.GetDbDataParameter ();
+                    param.ParameterName = $"{dbProvider.GetParamsSymbol()}{item}";
                     param.Value = doc[item];
                     fieldStr = $"[{item}]={param.ParameterName}";
                     parms.Add (param);
                 }
                 else
                 {
-                    fieldStr = $"[{item}]={Option.DbProvider.GetObjectType(doc[item])}";
+                    fieldStr = $"[{item}]={dbProvider.GetObjectType(doc[item])}";
                 }
                 fieldList.Add (fieldStr);
             }

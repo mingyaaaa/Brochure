@@ -5,9 +5,8 @@ namespace LinqDbQuery.Querys
 {
     public class Query<T1, T2, T3, T4> : Query, IQuery<T1, T2, T3, T4>
     {
-        public Query () { }
 
-        public Query (DbOption option) : base (option) { }
+        public Query (IDbProvider dbProvider) : base (dbProvider) { }
 
         public IQuery<T1, T2, T3, T4, T5> Join<T5> (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {

@@ -8,14 +8,14 @@ namespace LinqDbQuery
 {
     public interface IDbProvider
     {
-        bool IsUseParamers { get; set; }
+        bool IsUseParamers { get; }
         string GetParamsSymbol ();
         IDbDataParameter GetDbDataParameter ();
         string GetOperateSymbol (object left, ExpressionType expressionType, object right);
         string GetObjectType (object type);
         IDbConnection GetDbConnection ();
         ExpressionVisitor GetVisitor ();
-        Func<DbOption> CreateOption { get; set; }
+        DbOption CreateOption ();
         TypeMap GetTypeMap ();
     }
 
