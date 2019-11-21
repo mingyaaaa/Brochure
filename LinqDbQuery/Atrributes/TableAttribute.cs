@@ -13,18 +13,4 @@ namespace LinqDbQuery
             Name = tableName;
         }
     }
-
-    [AttributeUsage (AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class LengthAttribute : Attribute
-    {
-        public int Length = 0;
-
-        public LengthAttribute (int length)
-        {
-            Length = length;
-        }
-    }
-
-    [AttributeUsage (AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class NotNullAttribute : Attribute { }
 }

@@ -13,6 +13,8 @@ namespace Brochure.LinqDbQuery.MySql
             MapDic.Add (typeof (string).Name, "nvarchar");
             MapDic.Add (typeof (DateTime).Name, "datetime");
             MapDic.Add (typeof (Guid).Name, "nvarchar(36)");
+            //-1代表false 1代表true
+            MapDic.Add (typeof (bool).Name, "decimal(1)");
         }
     }
 }

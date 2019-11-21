@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Brochure.Abstract;
 using Brochure.Extensions;
+using LinqDbQuery.Atrributes;
 using LinqDbQuery.Visitors;
 namespace LinqDbQuery.Database
 {
@@ -148,6 +149,7 @@ namespace LinqDbQuery.Database
             var props = typeInfo.GetRuntimeProperties ();
             var columSqls = new List<string> ();
             var tableName = TableUtlis.GetTableName<T> ();
+            var keys = new List<string> ();
             foreach (var item in props)
             {
                 var pType = item.PropertyType.Name;
@@ -161,21 +163,30 @@ namespace LinqDbQuery.Database
                 }
                 else if (item.Name == "Id")
                 {
-                    columSql = $"Id nvarchar(36) not null UNIQUE";
+                    columSql = $"Id nvarchar(36)";
                     columSqls.Add (columSql);
                     continue;
                 }
                 var igAttribute = item.GetCustomAttribute (typeof (IngoreAttribute), true);
                 if (igAttribute != null)
                     continue;
-                if (item.GetCustomAttribute (typeof (LengthAttribute), true) is LengthAttribute lengthAttribute)
+                if (item.GetCustomAttribute (typeof (ColumnAttribute), true) is ColumnAttribute columnAttribute)
                 {
+                    if (string.IsNullOrWhiteSpace (columnAttribute.Name)) { columSql = columSql.Replace (item.Name, columnAttribute.Name); }
                     if (pType == nameof (TypeCode.Double) || pType == nameof (TypeCode.Single))
-                        columSql = $"{columSql}({lengthAttribute.Length},6)";
+                    {
+                        var length = columnAttribute.Length == -1 ? 15 : columnAttribute.Length;
+                        columSql = $"{columSql}({length},6)";
+                    }
                     else if (pType == nameof (TypeCode.DateTime) || pType == nameof (TypeCode.Byte))
+                    {
                         columSql = $"{columSql}";
+                    }
                     else
-                        columSql = $"{columSql}({lengthAttribute.Length})";
+                    {
+                        var length = columnAttribute.Length == -1 ? 255 : columnAttribute.Length;
+                        columSql = $"{columSql}({length})";
+                    }
                 }
                 else
                 {
@@ -186,13 +197,18 @@ namespace LinqDbQuery.Database
                     else
                         columSql = $"{columSql}({255})";
                 }
-
+                if (item.GetCustomAttribute (typeof (KeyAttribute), true) is KeyAttribute _)
+                {
+                    keys.Add (item.Name);
+                }
                 var isNotNullAttribute = item.GetCustomAttribute (typeof (NotNullAttribute), true);
                 if (isNotNullAttribute != null)
                     columSql = $"{columSql} not null";
                 columSqls.Add (columSql);
             }
-            columSqls.Add ($"PRIMARY KEY ( SequenceId )");
+            if (keys.Count == 0) { columSqls.Add ($"PRIMARY KEY ( Id )"); }
+            else if (keys.Count == 1) { columSqls.Add ($"PRIMARY KEY ( {keys[0]} )"); }
+            else { throw new NotSupportedException ("暂时不支持联合主键，请使用联合唯一索引代替"); }
             if (string.IsNullOrWhiteSpace (tableName))
                 throw new Exception ("当前TabelName的值为null 无法创建表");
             var sql = $@"create table {tableName}({string.Join(",", columSqls)})";
@@ -206,7 +222,7 @@ namespace LinqDbQuery.Database
 
         public virtual string GetUpdateTableNameSql (string oldName, string newName)
         {
-            return $"alter table {oldName} rename {newName};";
+            return $"alter table {oldName} rename {newName}";
         }
 
         public virtual string GetDeleteTableSql (string tableName)
@@ -227,25 +243,36 @@ namespace LinqDbQuery.Database
             return $"select COUNT(1) from information_schema.columns WHERE table_schema='{databaseName}' and table_name = '{tableName}' and column_name = '{columnName}'";
         }
 
-        public virtual string GetRenameColumnNameSql (string tableName, string odlName, string newName, TypeCode typeCode)
+        public virtual string GetRenameColumnNameSql (string tableName, string odlName, string newName, TypeCode typeCode, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType (typeCode.ToString ());
-            return $"alter table {tableName} change column {odlName} {newName} {sqlType}";
+            if (length < 0)
+                throw new ArgumentException ("长度不能为小于0");
+            var lengthStr = GetLengthStr (length, typeCode);
+            return $"alter table {tableName} change column {odlName} {newName} {sqlType}{lengthStr}";
         }
 
-        public virtual string GetUpdateColumnSql (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        public virtual string GetUpdateColumnSql (string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType (typeCode.ToString ());
             var sql = $"alter table {tableName} modify {columnName} {sqlType}";
+            if (length < 0)
+                throw new ArgumentException ("长度不能为小于0");
+            var lengthStr = GetLengthStr (length, typeCode);
+            sql = $"{sql}{lengthStr}";
             if (isNotNull)
                 sql = $"{sql} not null";
             return sql;
         }
 
-        public virtual string GetAddllColumnSql (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        public virtual string GetAddllColumnSql (string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType (typeCode.ToString ());
             var sql = $"alter table {tableName} add column {columnName} {sqlType}";
+            if (length < 0)
+                throw new ArgumentException ("长度不能为小于0");
+            var lengthStr = GetLengthStr (length, typeCode);
+            sql = $"{sql}{lengthStr}";
             if (isNotNull)
             {
                 sql = $"{sql} not null";
@@ -271,5 +298,24 @@ namespace LinqDbQuery.Database
             return $"drop index {indexName} on {tableName}";
         }
         #endregion
+
+        private string GetLengthStr (int length, TypeCode code)
+        {
+
+            if (code == TypeCode.Double || code == TypeCode.Single)
+            {
+                length = length <= 0 ? 15 : length;
+                return $"({length},6)";
+            }
+            else if (code != TypeCode.DateTime &&
+                code != TypeCode.Byte &&
+                code != TypeCode.Boolean
+            )
+            {
+                length = length <= 0 ? 255 : length;
+                return $"({length})";
+            }
+            return string.Empty;
+        }
     }
 }
