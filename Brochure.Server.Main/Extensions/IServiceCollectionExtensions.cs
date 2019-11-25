@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
@@ -10,47 +11,54 @@ using Brochure.Core.Models;
 using Brochure.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 namespace Brochure.Server.Main
 {
     internal static class IServiceCollectionExtensions
     {
-        internal static IServiceCollection AddPlugins (this IServiceCollection service, IMvcBuilder mvcBuilder)
+        /// <summary>
+        /// 添加插件
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="mvcBuilder"></param>
+        /// <param name="loggerFactory"></param>
+        /// <returns></returns>
+        internal static IServiceCollection AddPlugins (this IServiceCollection service, IMvcBuilder mvcBuilder, ILoggerFactory loggerFactory)
         {
-            //处理插件
-            service.AddTransient<IPluginManagers, PluginManagers> ();
+            var logger = loggerFactory.CreateLogger ("AddPlugins");
+            //处理插件           
+            var manager = new PluginManagers ();
             var pluginBathPath = PluginUtils.GetBasePluginsPath ();
-            var allPluginPath = Directory.GetFiles (pluginBathPath, "plugin.config");
-            var configBuilder = new ConfigurationBuilder ();
-            var pluginTypeDic = new Dictionary<string, Tuple<ServiceDescriptor, Assembly>> ();
-            foreach (var pluginPath in allPluginPath)
-            {
-                var pluginConfig = configBuilder.AddJsonFile (pluginPath).Build ().Get<PluginConfig> ();
-                var locadContext = new PluginsLoadContext ();
-                var assemably = locadContext.LoadFromAssemblyPath (Path.Combine (pluginBathPath, pluginConfig.Name, pluginConfig.AssemblyName));
-                var allPluginTypes = ReflectorUtil.GetTypeByClass (assemably, typeof (Plugins));
-                if (allPluginTypes.Count == 0)
-                    throw new Exception ("请实现基于Plugins的插件类");
-                if (allPluginTypes.Count == 2)
-                    throw new Exception ("存在多个Plugins实现类");
-                var pluginType = allPluginTypes[0];
-                var serviceDescriptor = ServiceDescriptor.Singleton (typeof (Plugins), pluginType);
-                service.Add (serviceDescriptor);
-                pluginTypeDic.Add (pluginType.FullName, Tuple.Create (serviceDescriptor, assemably));
-            }
-            var provider = service.BuildServiceProvider ();
-            var allPlugin = provider.GetServices<Plugins> ().ToList ();
+            var allPlugin = PluginManagers.ResolvePlugins (pluginBathPath, service);
             foreach (var item in allPlugin)
             {
-                var tuple = pluginTypeDic[item.GetType ().FullName];
-                if (item.Starting ())
+                var task = Task.Run (async () =>
                 {
-                    var assemably = tuple.Item2;
-                    mvcBuilder.AddApplicationPart (assemably);
-                }
-                else
-                {
-                    service.Remove (tuple.Item1);
-                }
+                    try
+                    {
+                        var r = await item.StartingAsync ();
+                        if (r)
+                        {
+                            await item.StartAsync ();
+                            mvcBuilder.AddApplicationPart (item.Assembly);
+                            manager.Regist (item);
+                        }
+                        else
+                        {
+                            r = await item.ExitingAsync ();
+                            if (r)
+                                await item.ExitAsync ();
+                            logger.LogError ($"{item.Name}插件加载失败");
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        logger.LogError (e, $"{item.Name}插件加载失败");
+                    }
+                    return Task.CompletedTask;
+                });
+                task.ConfigureAwait (false).GetAwaiter ().GetResult ();
             }
             return service;
         }

@@ -1,23 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Brochure.Abstract
 {
     public interface IPlugins
     {
-        void Start ();
-        void Exit ();
+        Task StartAsync ();
+
+        Task ExitAsync ();
         Guid Key { get; }
         string Name { get; }
         long Version { get; }
         string Author { get; }
         string AssemblyName { get; }
+        Assembly Assembly { get; }
         List<Guid> DependencesKey { get; }
-        bool Starting ();
-        void Started ();
-        bool Exiting ();
-        void Exited ();
+
+        Task<bool> StartingAsync ();
+        Task<bool> ExitingAsync ();
     }
 
 }

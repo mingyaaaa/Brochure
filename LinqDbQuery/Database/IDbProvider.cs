@@ -18,11 +18,4 @@ namespace LinqDbQuery
         DbOption CreateOption ();
         TypeMap GetTypeMap ();
     }
-
-    public abstract class DbSource
-    {
-        protected DbSource () { }
-
-        public abstract T GetDbConnection<T> ();
-    }
 }

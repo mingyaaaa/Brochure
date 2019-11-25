@@ -4,27 +4,33 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using Brochure.Extensions;
+using LinqDbQuery.Atrributes;
 using LinqDbQuery.Extensions;
 namespace LinqDbQuery.Database
 {
-    public abstract class DbData
+    public abstract class DbData : IDisposable
     {
-        protected DbData (DbOption dbOption, DbSql dbSql)
+        private IDbConnection dbConnection;
+
+        protected DbData (DbOption dbOption, DbSql dbSql, TransactionManager transactionManager)
         {
             Option = dbOption;
             this._dbSql = dbSql;
+            dbConnection = Option.GetDbConnection ();
+            this.transactionManager = transactionManager;
         }
 
         protected DbOption Option;
         private readonly DbSql _dbSql;
+        private readonly TransactionManager transactionManager;
 
+        [Transaction]
         public virtual int Insert<T> (T obj)
         {
             var sqlTuple = _dbSql.GetInsertSql (obj);
             var sql = sqlTuple.Item1;
             var parms = sqlTuple.Item2;
-            var connect = Option.GetDbConnection ();
-            var command = connect.CreateCommand ();
+            var command = CreateDbCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (parms);
             return command.ExecuteNonQuery ();
@@ -58,8 +64,8 @@ namespace LinqDbQuery.Database
                 }
                 i++;
             }
-            var connect = Option.GetDbConnection ();
-            var command = connect.CreateCommand ();
+
+            var command = CreateDbCommand ();
             command.CommandText = sqlList.Join (";", null);
             command.Parameters.AddRange (parms);
             return command.ExecuteNonQuery ();
@@ -69,8 +75,7 @@ namespace LinqDbQuery.Database
         {
             var sqlTuple = _dbSql.GetUpdateSql<T> (obj, whereFunc);
             var sql = sqlTuple.Item1;
-            var connect = Option.GetDbConnection ();
-            var command = connect.CreateCommand ();
+            var command = CreateDbCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (sqlTuple.Item2);
             return command.ExecuteNonQuery ();
@@ -80,11 +85,20 @@ namespace LinqDbQuery.Database
         {
             var tuple = _dbSql.GetDeleteSql<T> (whereFunc);
             var sql = tuple.Item1;
-            var connect = Option.GetDbConnection ();
-            var command = connect.CreateCommand ();
+            var command = CreateDbCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (tuple.Item2);
             return command.ExecuteNonQuery ();
+        }
+
+        public void Dispose () { }
+
+        private IDbCommand CreateDbCommand ()
+        {
+            var connect = Option.GetDbConnection ();
+            var command = connect.CreateCommand ();
+            command.Transaction = transactionManager.GetDbTransaction ();
+            return command;
         }
     }
 }

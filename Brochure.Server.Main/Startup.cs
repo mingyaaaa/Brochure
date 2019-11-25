@@ -25,7 +25,10 @@ namespace Brochure.Server.Main
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services)
         {
-            services.AddControllers ();
+            var mvcBuilder = services.AddControllers ();
+            var provider = services.BuildServiceProvider ();
+            var loggerFactory = provider.GetService<ILoggerFactory> ();
+            services.AddPlugins (mvcBuilder, loggerFactory);
 
         }
 

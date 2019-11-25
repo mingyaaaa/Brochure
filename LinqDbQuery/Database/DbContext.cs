@@ -23,34 +23,38 @@ namespace LinqDbQuery
             dbOption = dbProvider.CreateOption ();
         }
 
-        // public DbOption GetDbOption ()
-        // {
-        //     return dbOption;
-        // }
+        public DbOption GetDbOption ()
+        {
+            return dbOption;
+        }
 
-        // public DbData GetDbData ()
-        // {
-        //     return this.dbData;
-        // }
+        public DbData GetDbData ()
+        {
+            return this.dbData;
+        }
 
-        // public DbDatabase GetDatabase ()
-        // {
-        //     return dbDatabase;
-        // }
+        public DbDatabase GetDatabase ()
+        {
+            return dbDatabase;
+        }
 
-        // public DbTable GetDbTable ()
-        // {
-        //     return dbTable;
-        // }
+        public DbTable GetDbTable ()
+        {
+            return dbTable;
+        }
 
-        // public DbColumns GetColumns ()
-        // {
-        //     return dbColumns;
-        // }
+        public DbColumns GetColumns ()
+        {
+            return dbColumns;
+        }
 
-        // public DbIndex GetDbIndex ()
-        // {
-        //     return dbIndex;
-        // }
+        public DbIndex GetDbIndex ()
+        {
+            return dbIndex;
+        }
+        public IDbProvider GetDbProvider ()
+        {
+            return this.dbProvider;
+        }
     }
 }
