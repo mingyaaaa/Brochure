@@ -19,7 +19,7 @@ namespace LinqDbQuery.Database
             transactions = new List<ITransaction> ();
         }
 
-        public void AddTransaction (ITransaction transaction)
+        public virtual void AddTransaction (ITransaction transaction)
         {
             lock (lockObj)
             {
@@ -29,7 +29,7 @@ namespace LinqDbQuery.Database
 
         public bool IsEmpty { get { return transactions.Count == 0; } }
 
-        public void RemoveTransaction (ITransaction transaction)
+        public virtual void RemoveTransaction (ITransaction transaction)
         {
             lock (lockObj)
             {
@@ -37,7 +37,7 @@ namespace LinqDbQuery.Database
             }
         }
 
-        public IDbTransaction GetDbTransaction ()
+        public virtual IDbTransaction GetDbTransaction ()
         {
             IDbTransaction dbTransaction = null;
             foreach (var item in transactions)

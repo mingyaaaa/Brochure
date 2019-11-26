@@ -12,7 +12,11 @@ namespace LinqDbQuery
         private readonly DbOption dbOption;
         private readonly DbData dbData;
 
-        public DbContext (DbDatabase dbDatabase, DbTable dbTable, DbColumns dbColumns, DbIndex dbIndex, DbData dbData, IDbProvider dbProvider)
+        public DbContext (DbDatabase dbDatabase,
+            DbTable dbTable, DbColumns dbColumns,
+            DbIndex dbIndex, DbData dbData,
+            DbOption dbOption,
+            IDbProvider dbProvider)
         {
             this.dbData = dbData;
             this.dbIndex = dbIndex;
@@ -20,7 +24,7 @@ namespace LinqDbQuery
             this.dbTable = dbTable;
             this.dbDatabase = dbDatabase;
             this.dbProvider = dbProvider;
-            dbOption = dbProvider.CreateOption ();
+            this.dbOption = dbOption;
         }
 
         public DbOption GetDbOption ()

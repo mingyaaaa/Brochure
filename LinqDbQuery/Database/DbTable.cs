@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using LinqDbQuery.Atrributes;
+
 namespace LinqDbQuery.Database
 {
     public abstract class DbTable
@@ -12,11 +14,13 @@ namespace LinqDbQuery.Database
             this.dbSql = dbSql;
         }
 
+        [Transaction]
         public Task<long> CreateTableAsync<T> ()
         {
             return Task.Run (() => CreateTable<T> ());
         }
 
+        [Transaction]
         public virtual long CreateTable<T> ()
         {
             var connection = Option.GetDbConnection ();
@@ -39,11 +43,13 @@ namespace LinqDbQuery.Database
             return r >= 1;
         }
 
+        [Transaction]
         public Task<long> DeleteTableAsync (string tableName)
         {
             return Task.Run (() => DeleteTable (tableName));
         }
 
+        [Transaction]
         public virtual long DeleteTable (string tableName)
         {
             var connection = Option.GetDbConnection ();
@@ -52,11 +58,13 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public Task<long> UpdateTableNameAsync (string tableName, string newTableName)
         {
             return Task.Run (() => UpdateTableName (tableName, newTableName));
         }
 
+        [Transaction]
         public virtual long UpdateTableName (string tableName, string newTableName)
         {
             var connection = Option.GetDbConnection ();

@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Linq;
 using Brochure.LinqDbQuery.MySql;
+using LinqDbQuery.Database;
 using LinqDbQuery.Querys;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace LinqDbQueryTest.Querys
 {
@@ -11,16 +13,17 @@ namespace LinqDbQueryTest.Querys
     public class QueryTest
     {
         private readonly MySqlDbProvider provider;
-
+        private Mock<TransactionManager> transactionManager;
         public QueryTest ()
         {
             provider = new MySqlDbProvider ();
+            transactionManager = new Mock<TransactionManager> ();
         }
 
         [TestMethod]
         public void QuerySelect ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
 
             var query = new Query<Students> (provider);
 
@@ -45,7 +48,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void QueryJoin ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
             var query = new Query<Students> (provider);
             var q = query.Join<Peoples> ((s, p) => s.PeopleId == p.Id).Select ((s, p) => new { s.ClassId, StudentId = s.Id, PeopleId = p.Id, p.Name });
             var sql = q.GetSql ();
@@ -64,7 +67,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void QueryGroup ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
             var query = new Query<Students> (provider);
             var q = query.Groupby (t => t.School).Select (t => new { School = t.Key, Count = t.Count () });
             var sql = q.GetSql ();
@@ -83,7 +86,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void QueryOrder ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
             var query = new Query<Students> (provider);
             var q = query.OrderBy (t => t.ClassCount);
             var sql = q.GetSql ();
@@ -101,7 +104,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void QueryWhereAnd ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
             var query = new Query<Students> (provider);
             var q = query.WhereAnd (t => t.ClassCount == 1 && t.ClassId == "a");
             var sql = q.GetSql ();
@@ -128,7 +131,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void QueryWhereOr ()
         {
-            var option = new MySqlOption (provider);
+            var option = new MySqlOption (provider, transactionManager.Object);
             var query = new Query<Students> (provider);
             var q = query.WhereOr (t => t.ClassCount == 1 || t.ClassId == "a");
             var sql = q.GetSql ();

@@ -15,7 +15,6 @@ namespace LinqDbQuery
         string GetObjectType (object type);
         IDbConnection GetDbConnection ();
         ExpressionVisitor GetVisitor ();
-        DbOption CreateOption ();
         TypeMap GetTypeMap ();
     }
 }

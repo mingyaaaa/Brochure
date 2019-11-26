@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using LinqDbQuery.Atrributes;
+
 namespace LinqDbQuery.Database
 {
     public abstract class DbColumns
@@ -18,6 +20,7 @@ namespace LinqDbQuery.Database
             return Task.Run (() => IsExistColumn (tableName, columnName));
         }
 
+        [Transaction]
         public virtual bool IsExistColumn (string tableName, string columnName)
         {
             var connection = Option.GetDbConnection ();
@@ -27,11 +30,13 @@ namespace LinqDbQuery.Database
             return r >= 1;
         }
 
+        [Transaction]
         public Task<long> RenameColumnAsync (string tableName, string columnName, string newcolumnName, TypeCode typeName)
         {
             return Task.Run (() => RenameColumn (tableName, columnName, newcolumnName, typeName));
         }
 
+        [Transaction]
         public virtual long RenameColumn (string tableName, string columnName, string newcolumnName, TypeCode typeCode)
         {
             var connection = Option.GetDbConnection ();
@@ -40,11 +45,13 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public Task<long> UpdateColumnAsync (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
             return Task.Run (() => UpdateColumn (tableName, columnName, typeCode, isNotNull));
         }
 
+        [Transaction]
         public virtual long UpdateColumn (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
             var connection = Option.GetDbConnection ();

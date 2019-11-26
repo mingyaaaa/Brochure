@@ -88,10 +88,5 @@ namespace Brochure.LinqDbQuery.MySql
         {
             throw new NotImplementedException ();
         }
-
-        public DbOption CreateOption ()
-        {
-            return new MySqlOption (this);
-        }
     }
 }

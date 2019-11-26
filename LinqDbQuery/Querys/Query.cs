@@ -189,7 +189,7 @@ namespace LinqDbQuery
 
         protected T Copy<T> () where T : Query
         {
-            var query = (T) Activator.CreateInstance (typeof (T), Option);
+            var query = (T) Activator.CreateInstance (typeof (T), this.dbProvider);
             query.selectSql = this.selectSql;
             query.whereSql = this.whereSql;
             query.groupSql = this.groupSql;

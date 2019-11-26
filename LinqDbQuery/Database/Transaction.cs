@@ -20,6 +20,7 @@ namespace LinqDbQuery.Database
         public Transaction (DbOption dbOption)
         {
             this.dbOption = dbOption;
+            dbTransaction = BegiTransaction ();
         }
 
         public bool IsComplete { get; set; }

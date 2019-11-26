@@ -16,9 +16,9 @@ namespace LinqDbQuery
         private readonly TypeMap _typeMap;
         protected readonly IDbProvider dbProvider;
 
-        protected DbSql (IDbProvider dbProvider)
+        protected DbSql (IDbProvider dbProvider, DbOption dbOption)
         {
-            this.Option = dbProvider.CreateOption ();
+            this.Option = dbOption;
             _typeMap = dbProvider.GetTypeMap ();
             this.dbProvider = dbProvider;
         }

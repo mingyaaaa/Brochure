@@ -6,6 +6,6 @@ namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbData : DbData
     {
-        public MySqlDbData (IDbProvider dbProvider, DbOption dbOption) : base (dbOption, new MySqlDbSql (dbProvider)) { }
+        public MySqlDbData (DbSql dbSql, DbOption dbOption, TransactionManager transactionManager) : base (dbOption, dbSql, transactionManager) { }
     }
 }

@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using LinqDbQuery.Atrributes;
+
 namespace LinqDbQuery.Database
 {
     public abstract class DbIndex
@@ -12,11 +14,13 @@ namespace LinqDbQuery.Database
             this._dbSql = dbSql;
         }
 
+        [Transaction]
         public Task<long> CreateIndexAsync (string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
             return Task.Run (() => CreateIndex (tableName, columnNames, indexName, sqlIndex));
         }
 
+        [Transaction]
         public virtual long CreateIndex (string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
             var connection = Option.GetDbConnection ();
@@ -25,11 +29,13 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public Task<long> DeleteIndexAsync (string tableName, string indexName)
         {
             return Task.Run (() => DeleteIndex (tableName, indexName));
         }
 
+        [Transaction]
         public virtual long DeleteIndex (string tableName, string indexName)
         {
             var connection = Option.GetDbConnection ();

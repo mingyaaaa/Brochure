@@ -36,6 +36,7 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public virtual int InsertMany<T> (IEnumerable<T> objs)
         {
             var list = objs.ToList ();
@@ -71,6 +72,7 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public virtual int Update<T> (object obj, Expression<Func<T, bool>> whereFunc)
         {
             var sqlTuple = _dbSql.GetUpdateSql<T> (obj, whereFunc);
@@ -81,6 +83,7 @@ namespace LinqDbQuery.Database
             return command.ExecuteNonQuery ();
         }
 
+        [Transaction]
         public virtual int Delete<T> (Expression<Func<T, bool>> whereFunc)
         {
             var tuple = _dbSql.GetDeleteSql<T> (whereFunc);

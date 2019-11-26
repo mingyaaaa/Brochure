@@ -5,8 +5,11 @@ using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.LinqDbQuery.MySql;
 using LinqDbQuery;
+using LinqDbQuery.Database;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+
 namespace LinqDbQueryTest.Querys
 {
     [TestClass]
@@ -16,18 +19,19 @@ namespace LinqDbQueryTest.Querys
         private readonly DbOption option;
 
         private readonly DbSql dbSql;
+        private Mock<TransactionManager> transactionManager;
         public DbTest ()
         {
+            transactionManager = new Mock<TransactionManager> ();
             provider = new MySqlDbProvider () { IsUseParamers = false };
-            option = provider.CreateOption ();
+            option = new MySqlOption (provider, transactionManager.Object);
             ObjectConverCollection.RegistObjectConver<Record> ();
-            dbSql = new MySqlDbSql (provider);
+            dbSql = new MySqlDbSql (provider, option);
         }
 
         [TestMethod]
         public void TestDbData ()
         {
-            var dbData = new MySqlDbData (provider, option);
             var obj = new Students ()
             {
                 ClassCount = 1,
