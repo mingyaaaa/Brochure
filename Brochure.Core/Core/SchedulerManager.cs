@@ -273,7 +273,7 @@ namespace CenterService.Core
                 {
                     JobName = jobKey,
                     SchedulerTime = schedulerTime,
-                    JobTypeFullName = type.FullName,
+                    JobTypeFullName = type.AssemblyQualifiedName,
                     JobType = (int)jobType,
                     Params = parms
                 });
@@ -356,7 +356,10 @@ namespace CenterService.Core
                 throw new ArgumentNullException(nameof(jobInfo));
             var type = Type.GetType(jobInfo.JobTypeFullName);
             var param = jobInfo.Params.As<Document>();
-            await AddSchedulerJob(type, jobInfo.JobName, jobInfo.SchedulerTime, param);
+            if (jobInfo.JobType == (int)JobType.Interval)
+                await AddSchedulerJob(type, jobInfo.JobName, jobInfo.SchedulerTime.As<int>(), param);
+            else if (jobInfo.JobType == (int)JobType.DateTime)
+                await AddSchedulerJob(type, jobInfo.JobName, jobInfo.SchedulerTime, param);
         }
 
         /// <summary>

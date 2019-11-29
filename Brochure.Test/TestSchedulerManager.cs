@@ -1,6 +1,7 @@
 using CenterService.Core;
 using CenterService.Core.SchedulerRule;
 using CenterService.Core.SchedulerRule.SehedulerPart;
+using CenterService.Utils;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -8,6 +9,7 @@ using Quartz;
 using Quartz.Impl;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,6 +35,28 @@ namespace CenterServiceTest
             return Task.CompletedTask;
         }
     }
+
+    public class TestJob2 : IJob
+    {
+        public static int i = 0;
+        public Task Execute(IJobExecutionContext context)
+        {
+            i++;
+            Trace.TraceInformation(DateTime.Now.ToString());
+            return Task.CompletedTask;
+        }
+    }
+    public class TestJob3 : IJob
+    {
+        public static int i = 0;
+        public Task Execute(IJobExecutionContext context)
+        {
+            i++;
+            Trace.TraceInformation(DateTime.Now.ToString());
+            return Task.CompletedTask;
+        }
+    }
+
     [TestClass]
     public class TestSchedulerManager
     {
@@ -180,6 +204,29 @@ namespace CenterServiceTest
             //≤‚ ‘∂® ±÷¥––
             await Task.Delay(2000);
             Assert.AreEqual(1, TestJob.i);
+        }
+
+        [TestMethod]
+        public async Task SaveSchedulerFile()
+        {
+            var SCHEDULERSFILE = "LocalData\\schedulers.json";
+            await manager.AddSchedulerJob(typeof(TestJob2), "test3", 2);
+            var path = Path.Combine(CommonUtils.GetDataConfigPath(), SCHEDULERSFILE);
+            Assert.IsTrue(File.Exists(path));
+        }
+
+        [TestMethod]
+        public async Task LoadSchedulerFile()
+        {
+            var SCHEDULERSFILE = "LocalData\\schedulers.json";
+            var path = Path.Combine(CommonUtils.GetDataConfigPath(), SCHEDULERSFILE);
+            var str = @"[{'JobName':'test4','JobTypeFullName':'CenterServiceTest.TestJob2, CenterServiceTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null','SchedulerTime':'2','JobType':1,'Params':null}]";
+            File.WriteAllText(path, str);
+            await manager.LoadJobRecord();
+            await Task.Delay(3000);
+            Assert.AreEqual(2, TestJob2.i);
+            await Task.Delay(2000);
+            Assert.AreEqual(3, TestJob2.i);
         }
     }
 }
