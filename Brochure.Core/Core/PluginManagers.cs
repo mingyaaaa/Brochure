@@ -41,7 +41,7 @@ namespace Brochure.Core
             return pluginDic.Values.ToList ();
         }
 
-        public static List<IPlugins> ResolvePlugins (string pluginBathPath, IServiceCollection serviceDescriptors)
+        public List<IPlugins> ResolvePlugins (string pluginBathPath, IServiceCollection serviceDescriptors)
         {
             var allPluginPath = Directory.GetFiles (pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList ();
             var configBuilder = new ConfigurationBuilder ();
@@ -65,7 +65,7 @@ namespace Brochure.Core
             return plugins;
         }
 
-        private static void SetPluginValues (PluginConfig config, Assembly assembly, ref Plugins plugin)
+        private void SetPluginValues (PluginConfig config, Assembly assembly, ref Plugins plugin)
         {
             if (config == null)
                 throw new ArgumentException (nameof (PluginConfig));
@@ -77,5 +77,6 @@ namespace Brochure.Core
             plugin.Name = config.Name;
             plugin.Version = config.Version;
         }
+
     }
 }
