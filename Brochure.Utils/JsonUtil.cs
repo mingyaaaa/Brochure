@@ -4,14 +4,14 @@ using System.Text.Json;
 using Brochure.Abstract;
 namespace Brochure.Utils
 {
-    public static class JsonUtil
+    public class JsonUtil : IJsonUtil
     {
         /// <summary>
         /// 读取Json文本 文件不存在返回null
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static IRecord ReadJsonFile (string filePath)
+        public IRecord ReadJsonFile (string filePath)
         {
             if (!File.Exists (filePath))
                 return null;
@@ -20,16 +20,7 @@ namespace Brochure.Utils
             return record;
         }
 
-        public static List<IRecord> ReadArrayJsonFile (string filePath)
-        {
-            if (!File.Exists (filePath))
-                return null;
-            var jsonStr = File.ReadAllText (filePath);
-            var record = JsonSerializer.Deserialize<List<IRecord>> (jsonStr);
-            return record;
-        }
-
-        public static bool ArrayJsonValid (string str)
+        public bool ArrayJsonValid (string str)
         {
             try
             {
@@ -42,7 +33,7 @@ namespace Brochure.Utils
             }
         }
 
-        public static bool ObjectJsonValid (string str)
+        public bool ObjectJsonValid (string str)
         {
             try
             {
@@ -55,14 +46,32 @@ namespace Brochure.Utils
             }
         }
 
-        public static T ConverToJson<T> (string str)
+        public T ConverToJson<T> (string str)
         {
             return JsonSerializer.Deserialize<T> (str);
         }
 
-        public static string ConverToJsonString (object o)
+        public string ConverToJsonString (object o)
         {
             return JsonSerializer.Serialize (o);
+        }
+
+        public T ReadJsonFile<T> (string filePath)
+        {
+            if (!File.Exists (filePath))
+                return (T) (object) null;
+            var jsonStr = File.ReadAllText (filePath);
+            return JsonSerializer.Deserialize<T> (jsonStr);
+        }
+
+        public T ConverToObject<T> (string str)
+        {
+            return JsonSerializer.Deserialize<T> (str);
+        }
+
+        public string ConverToString (object obj)
+        {
+            return JsonSerializer.Serialize (obj);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Brochure.Core
 {
     public static class IServiceCollectionExtensions
     {
-        public static IEnumerable<ServiceDescriptor> AddPluginsServiceDescriptor (this IServiceCollection service)
+        public static IEnumerable<ServiceDescriptor> AddPluginsServiceDescriptor (this IServiceCollection service, IPluginUtil pluginUtil)
         {
             //处理插件
             service.AddTransient<IPluginManagers, PluginManagers> ();
-            var pluginBathPath = PluginUtils.GetBasePluginsPath ();
+            var pluginBathPath = pluginUtil.GetBasePluginsPath ();
             var allPluginPath = Directory.GetFiles (pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList ();
             var configBuilder = new ConfigurationBuilder ();
             var plugins = new List<ServiceDescriptor> ();

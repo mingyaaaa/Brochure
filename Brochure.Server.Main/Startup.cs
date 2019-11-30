@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Brochure.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,10 +27,9 @@ namespace Brochure.Server.Main
         public void ConfigureServices (IServiceCollection services)
         {
             var mvcBuilder = services.AddControllers ();
-            var provider = services.BuildServiceProvider ();
-            var loggerFactory = provider.GetService<ILoggerFactory> ();
-            services.AddPlugins (mvcBuilder, loggerFactory);
-
+            var loggerFactory = LoggerFactory.Create (_ => { });
+            var pluginUtil = new PluginUtil ();
+            services.AddPlugins (mvcBuilder, loggerFactory, pluginUtil);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

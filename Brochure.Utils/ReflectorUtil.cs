@@ -23,7 +23,6 @@ namespace Brochure.Utils
                 if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
                     listobject.Add (assembly.CreateInstance (item.FullName));
             }
-
             return listobject;
         }
 
@@ -43,7 +42,6 @@ namespace Brochure.Utils
                 if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
                     list.Add (item);
             }
-
             return list;
         }
 

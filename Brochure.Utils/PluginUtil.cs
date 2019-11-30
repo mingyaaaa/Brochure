@@ -6,9 +6,9 @@ using Brochure.Abstract;
 
 namespace Brochure.Utils
 {
-    public static class PluginUtils
+    public class PluginUtil : IPluginUtil
     {
-        public static string GetBasePluginsPath ()
+        public string GetBasePluginsPath ()
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             var pluginPath = Path.Combine (basePath, "Plugins");

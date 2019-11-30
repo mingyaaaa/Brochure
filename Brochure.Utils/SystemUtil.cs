@@ -4,9 +4,9 @@ using System.Net.NetworkInformation;
 
 namespace Brochure.Utils
 {
-    public static class SystemUtil
+    public class SystemUtil : ISystemUtil
     {
-        public static int GetUsefullPort ()
+        public int GetUsefullPort ()
         {
             Random random = new Random ();
             var port = random.Next (3000, 10000);
@@ -15,7 +15,7 @@ namespace Brochure.Utils
             return port;
         }
 
-        public static bool IsUsePort (int port)
+        public bool IsUsePort (int port)
         {
             bool inUse = false;
             IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties ();
