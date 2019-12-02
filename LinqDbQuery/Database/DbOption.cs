@@ -15,16 +15,16 @@ namespace LinqDbQuery
 
         public string DatabaseName { get; set; }
 
-        protected DbOption (IDbProvider dbProvider, TransactionManager transactionManager)
+        public DbOption (IDbProvider dbProvider, ITransactionManager transactionManager)
         {
             this.dbProvider = dbProvider;
             this.transactionManager = transactionManager;
         }
 
         private readonly IDbProvider dbProvider;
-        private readonly TransactionManager transactionManager;
+        private readonly ITransactionManager transactionManager;
 
-        public IDbConnection GetDbConnection ()
+        public virtual IDbConnection GetDbConnection ()
         {
             if (dbConnection != null)
                 return dbConnection;

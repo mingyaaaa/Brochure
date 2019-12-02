@@ -21,13 +21,10 @@ namespace LinqDbQuery.Atrributes
             }
             else
             {
-                var transactionManager = context.ServiceProvider.GetService<TransactionManager> ();
-                var dbOption = context.ServiceProvider.GetService<DbOption> ();
-                ITransaction transaction;
-                if (transactionManager.IsEmpty)
-                    transaction = new Transaction (dbOption);
-                else
-                    transaction = new InnerTransaction (dbOption);
+                var transactionManager = context.ServiceProvider.GetService<ITransactionManager> ();
+                var factory = context.ServiceProvider.GetService<ITransactionFactory> ();
+                //此处如果transactionManager.IsEmpty为空则 返回Transaction 否则返回InnerTransaction
+                ITransaction transaction = factory.GetTransaction ();
                 transactionManager.AddTransaction (transaction);
                 next (context);
                 transaction.Commit ();

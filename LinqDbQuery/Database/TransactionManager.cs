@@ -6,7 +6,17 @@ using System.Linq;
 using System.Xml.Linq;
 namespace LinqDbQuery.Database
 {
-    public abstract class TransactionManager
+    public interface ITransactionManager
+    {
+        bool IsEmpty { get; }
+        void AddTransaction (ITransaction transaction);
+
+        void RemoveTransaction (ITransaction transaction);
+
+        IDbTransaction GetDbTransaction ();
+    }
+
+    public class TransactionManager : ITransactionManager
     {
         private readonly List<ITransaction> transactions;
         private readonly object lockObj = new object ();
@@ -14,12 +24,12 @@ namespace LinqDbQuery.Database
         /// <summary>
         /// 事物管理类
         /// </summary>
-        protected TransactionManager ()
+        public TransactionManager ()
         {
             transactions = new List<ITransaction> ();
         }
 
-        public virtual void AddTransaction (ITransaction transaction)
+        public void AddTransaction (ITransaction transaction)
         {
             lock (lockObj)
             {
@@ -29,7 +39,7 @@ namespace LinqDbQuery.Database
 
         public bool IsEmpty { get { return transactions.Count == 0; } }
 
-        public virtual void RemoveTransaction (ITransaction transaction)
+        public void RemoveTransaction (ITransaction transaction)
         {
             lock (lockObj)
             {
@@ -37,12 +47,12 @@ namespace LinqDbQuery.Database
             }
         }
 
-        public virtual IDbTransaction GetDbTransaction ()
+        public IDbTransaction GetDbTransaction ()
         {
             IDbTransaction dbTransaction = null;
             foreach (var item in transactions)
             {
-                dbTransaction = item.BegiTransaction ();
+                dbTransaction = item.GetDbTransaction ();
                 if (dbTransaction != null)
                     break;
             }

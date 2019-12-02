@@ -5,22 +5,19 @@ namespace LinqDbQuery.Database
     {
         IsolationLevel IsolationLevel { get; }
         bool IsComplete { get; }
-
-        IDbTransaction BegiTransaction ();
-
         void Commit ();
         void Rollback ();
+
+        IDbTransaction GetDbTransaction ();
     }
 
     public class Transaction : ITransaction
     {
         private readonly IDbTransaction dbTransaction;
-        private readonly DbOption dbOption;
 
-        public Transaction (DbOption dbOption)
+        public Transaction (IDbTransaction dbTransaction)
         {
-            this.dbOption = dbOption;
-            dbTransaction = BegiTransaction ();
+            this.dbTransaction = dbTransaction;
         }
 
         public bool IsComplete { get; set; }
@@ -33,22 +30,15 @@ namespace LinqDbQuery.Database
             IsComplete = true;
         }
 
+        public IDbTransaction GetDbTransaction ()
+        {
+            return dbTransaction;
+        }
+
         public void Rollback ()
         {
             dbTransaction.Rollback ();
             IsComplete = true;
-        }
-        public void Open (IDbConnection dbConnection)
-        {
-            if (dbConnection.State == ConnectionState.Closed)
-                dbConnection.Open ();
-        }
-
-        public IDbTransaction BegiTransaction ()
-        {
-            var connect = this.dbOption.GetDbConnection ();
-            Open (connect);
-            return connect.BeginTransaction (dbOption.TransactionLevel);
         }
     }
 
@@ -64,14 +54,14 @@ namespace LinqDbQuery.Database
 
         public bool IsComplete { get; set; }
 
-        public IDbTransaction BegiTransaction ()
-        {
-            return null;
-        }
-
         public void Commit ()
         {
             IsComplete = true;
+        }
+
+        public IDbTransaction GetDbTransaction ()
+        {
+            return null;
         }
 
         public void Rollback ()
@@ -79,4 +69,5 @@ namespace LinqDbQuery.Database
             IsComplete = true;
         }
     }
+
 }
