@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
     <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
     <ProjectReference Include="..\Brochure.LinqDbQuery.MySql\Brochure.LinqDbQuery.MySql.csproj" />
+    <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
   </ItemGroup>
 
 <ItemGroup>

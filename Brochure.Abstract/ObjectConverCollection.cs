@@ -5,25 +5,27 @@ using Brochure.Abstract;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// 用于处理 Object类型像其他类型转换的处理
+    /// </summary>
     public static class ObjectConverCollection
     {
-        private static readonly ConcurrentDictionary<Type, IObjectConver> concurrentDictionary = new ConcurrentDictionary<Type, IObjectConver> ();
+        private static readonly ConcurrentDictionary<Type, Func<object, object>> concurrentDictionary = new ConcurrentDictionary<Type, Func<object, object>> ();
 
-        public static T ConvertFromObject<T> (object obj)
+        public static bool TryGetConverFunc (Type type, out Func<object, object> func)
         {
-            var type = typeof (T);
-            var first = concurrentDictionary.FirstOrDefault (t => type.IsAssignableFrom (t.Key) || type.IsSubclassOf (t.Key) || t.Key.Equals (type)).Value;
-            if (first != null)
-            {
-                return (T) first.ConvertFromObject (obj);
-            }
-            return (T) (object) null;
+            return concurrentDictionary.TryGetValue (type, out func);
         }
 
-        public static void RegistObjectConver<T> () where T : IObjectConver
+        public static bool TryGetConverFunc<T1> (out Func<object, object> func)
         {
-            var type = typeof (T);
-            concurrentDictionary.TryAdd (type, Activator.CreateInstance<T> ());
+            var type = typeof (T1);
+            return concurrentDictionary.TryGetValue (type, out func);
+        }
+        public static void RegistObjectConver<T1> (Func<object, T1> func)
+        {
+            var type = typeof (T1);
+            concurrentDictionary.TryAdd (type, t => func (t));
         }
 
         public static void Remove<T> ()

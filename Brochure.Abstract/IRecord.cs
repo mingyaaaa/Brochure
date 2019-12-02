@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Brochure.Abstract
 {
-    public interface IRecord : IEnumerator, IObjectConver
+    public interface IRecord : IEnumerator
     {
         void Add (string key, object obj);
 

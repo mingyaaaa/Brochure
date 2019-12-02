@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Loader;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.Extensions;
 using Brochure.LinqDbQuery.MySql;
 using LinqDbQuery;
 using LinqDbQuery.Database;
@@ -25,7 +26,7 @@ namespace LinqDbQueryTest.Querys
             transactionManager = new Mock<TransactionManager> ();
             provider = new MySqlDbProvider () { IsUseParamers = false };
             option = new MySqlOption (provider, transactionManager.Object);
-            ObjectConverCollection.RegistObjectConver<Record> ();
+            ObjectConverCollection.RegistObjectConver<IRecord> (t => new Record (t.AsDictionary ()));
             dbSql = new MySqlDbSql (provider, option);
         }
 

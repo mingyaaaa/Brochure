@@ -32,10 +32,9 @@ namespace Brochure.Extensions
                         return ibConver.Conver ();
                 }
                 //处理IObjectConver
-                var iObjectConver = type.GetInterface ($"IObjectConver");
-                if (iObjectConver != null)
+                if (ObjectConverCollection.TryGetConverFunc (type, out var fun))
                 {
-                    return Abstract.ObjectConverCollection.ConvertFromObject<T> (obj);
+                    return (T) fun (obj);
                 }
                 return (T) As (obj, type);
             }

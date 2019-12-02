@@ -97,7 +97,7 @@ namespace Brochure.Core
         /// 添加值
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="obj"></param>
+        /// <param name="obj"></param> 
         public void Add (string key, object obj)
         {
             _dic.Add (key, obj);
@@ -157,9 +157,8 @@ namespace Brochure.Core
             return JsonSerializer.Serialize (_dic);
         }
 
-        public object ConvertFromObject (object obj)
+        public IRecord ConvertFromObject (object obj)
         {
-
             return new Record (obj.AsDictionary ());
         }
     }
