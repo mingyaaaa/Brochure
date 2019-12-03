@@ -50,28 +50,9 @@ namespace LinqDbQueryTest
     [TestClass]
     public class TestTransaction
     {
-        private DbContext dbContext;
-
-        private Mock<DbData> dbDataMock;
-
-        private Mock<DbTable> dbTableMock;
-
-        private Mock<DbColumns> dbColumnMock;
-
-        private Mock<DbIndex> dbIndexMock;
-
-        private Mock<DbDatabase> dbDatabaseMock;
-
-        private Mock<IDbProvider> dbProviderMock;
-
-        private ServiceContainer container;
-        private IServiceProvider serviceProvider;
 
         public TestTransaction ()
-        {
-            container = TestBootstrap.InitContrainer ();
-            serviceProvider = container.Build ();
-        }
+        { }
 
         [TestMethod]
         public void TestTransactionDisableTrue ()

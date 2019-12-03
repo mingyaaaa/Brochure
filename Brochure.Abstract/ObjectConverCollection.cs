@@ -22,6 +22,7 @@ namespace Brochure.Abstract
             var type = typeof (T1);
             return concurrentDictionary.TryGetValue (type, out func);
         }
+
         public static void RegistObjectConver<T1> (Func<object, T1> func)
         {
             var type = typeof (T1);

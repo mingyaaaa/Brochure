@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace Brochure.Utils
 {
-    public static class ReflectorUtil
+    public class ReflectorUtil : IReflectorUtil
     {
         /// <summary>
         /// 根据接口获取指定的类型
         /// </summary>
         /// <returns></returns>
-        public static List<object> GetObjectByInterface (Assembly assembly, Type type)
+        public List<object> GetObjectByInterface (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
             var listobject = new List<object> ();
@@ -30,7 +30,7 @@ namespace Brochure.Utils
         /// 根据接口获取指定的类型
         /// </summary>
         /// <returns></returns>
-        public static List<Type> GetTypeByInterface (Assembly assembly, Type type)
+        public List<Type> GetTypeByInterface (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
             var list = new List<Type> ();
@@ -45,7 +45,7 @@ namespace Brochure.Utils
             return list;
         }
 
-        public static List<object> GetObjectByClass (Assembly assembly, Type type)
+        public List<object> GetObjectByClass (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
             var listobject = new List<object> ();
@@ -61,7 +61,7 @@ namespace Brochure.Utils
             return listobject;
         }
 
-        public static List<Type> GetTypeByClass (Assembly assembly, Type type)
+        public List<Type> GetTypeByClass (Assembly assembly, Type type)
         {
             var types = assembly.GetTypes ();
             var list = new List<Type> ();
@@ -77,7 +77,7 @@ namespace Brochure.Utils
             return list;
         }
 
-        public static T CreateInstance<T> (params object[] parms) where T : class
+        public T CreateInstance<T> (params object[] parms) where T : class
         {
             var type = typeof (T);
             var typeinfo = type.GetTypeInfo ();
@@ -90,7 +90,7 @@ namespace Brochure.Utils
             return (T) constructor?.Invoke (parms);
         }
 
-        private static bool HasTargetType (Type type, string targetTypeFullName)
+        private bool HasTargetType (Type type, string targetTypeFullName)
         {
             if (type.BaseType?.FullName == targetTypeFullName)
                 return true;

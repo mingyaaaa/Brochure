@@ -5,7 +5,9 @@ namespace Brochure.Abstract
     {
         T Create<T> () where T : new ();
 
-        T Creater<T> (params object[] objs);
+        T Create<T> (params object[] objs);
+
+        object Create (Type type, params object[] objs);
     }
 
     public class ObjectFactory : IObjectFactory
@@ -15,9 +17,14 @@ namespace Brochure.Abstract
             return new T ();
         }
 
-        public T Creater<T> (params object[] objs)
+        public T Create<T> (params object[] objs)
         {
-            return (T) Activator.CreateInstance (typeof (T), objs);
+            return (T) Create (typeof (T), objs);
+        }
+
+        public object Create (Type type, params object[] objs)
+        {
+            return Activator.CreateInstance (type, objs);
         }
     }
 }

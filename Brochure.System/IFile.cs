@@ -2,5 +2,6 @@
 
 namespace Brochure.System
 {
-    public interface IFile { }
+    public interface IFile
+    { }
 }
