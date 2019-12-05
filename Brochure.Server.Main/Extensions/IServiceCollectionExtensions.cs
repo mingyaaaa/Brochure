@@ -28,11 +28,15 @@ namespace Brochure.Server.Main
         internal static IServiceCollection AddPlugins (this IServiceCollection service,
             IMvcBuilder mvcBuilder,
             ILoggerFactory loggerFactory,
-            IPluginUtil pluginUtil)
+            IJsonUtil jsonUtil,
+            IReflectorUtil reflectorUtil,
+            IPluginUtil pluginUtil,
+            IObjectFactory objectFactory,
+            ISysDirectory sysDirectory)
         {
             var logger = loggerFactory.CreateLogger ("AddPlugins");
             //处理插件           
-            var manager = new PluginManagers (new SysDirectory (), new ConfigurationBuilder (), new Abstract.ObjectFactory (), new ReflectorUtil ());
+            var manager = new PluginManagers (sysDirectory, jsonUtil, objectFactory, reflectorUtil);
             var pluginBathPath = pluginUtil.GetBasePluginsPath ();
             var allPlugin = manager.ResolvePlugins (pluginBathPath, service);
             foreach (var item in allPlugin)
