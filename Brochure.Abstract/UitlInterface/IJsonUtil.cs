@@ -41,5 +41,7 @@ namespace Brochure.Utils
         /// <param name="obj"></param>
         /// <returns></returns>
         string ConverToString (object obj);
+
+        T Get<T> (string path);
     }
 }

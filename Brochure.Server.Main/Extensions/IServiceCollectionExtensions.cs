@@ -8,6 +8,7 @@ using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
 using Brochure.Core.Models;
+using Brochure.System;
 using Brochure.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ namespace Brochure.Server.Main
         {
             var logger = loggerFactory.CreateLogger ("AddPlugins");
             //处理插件           
-            var manager = new PluginManagers ();
+            var manager = new PluginManagers (new SysDirectory (), new ConfigurationBuilder (), new Abstract.ObjectFactory (), new ReflectorUtil ());
             var pluginBathPath = pluginUtil.GetBasePluginsPath ();
             var allPlugin = manager.ResolvePlugins (pluginBathPath, service);
             foreach (var item in allPlugin)

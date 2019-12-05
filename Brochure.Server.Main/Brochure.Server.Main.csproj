@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
     <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+    <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
   </ItemGroup>
 
 </Project>

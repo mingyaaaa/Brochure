@@ -17,19 +17,19 @@ namespace Brochure.Core
     {
         private readonly ConcurrentDictionary<Guid, IPlugins> pluginDic;
         private readonly ISysDirectory directory;
-        private readonly IConfigurationBuilder configurationBuilder;
+        private readonly IJsonUtil jsonUtil;
         private readonly IObjectFactory objectFactory;
         private readonly IReflectorUtil reflectorUtil;
 
         public PluginManagers (
             ISysDirectory directory,
-            IConfigurationBuilder configurationBuilder,
+            IJsonUtil jsonUtil,
             IObjectFactory objectFactory,
             IReflectorUtil reflectorUtil)
         {
             pluginDic = new ConcurrentDictionary<Guid, IPlugins> ();
             this.directory = directory;
-            this.configurationBuilder = configurationBuilder;
+            this.jsonUtil = jsonUtil;
             this.objectFactory = objectFactory;
             this.reflectorUtil = reflectorUtil;
         }
@@ -60,17 +60,17 @@ namespace Brochure.Core
             var plugins = new List<IPlugins> ();
             foreach (var pluginPath in allPluginPath)
             {
-                var pluginConfig = configurationBuilder.AddJsonFile (pluginPath).Build ().Get<PluginConfig> ();
-                var locadContext = objectFactory.Create<PluginsLoadContext> ();
+                var pluginConfig = jsonUtil.Get<PluginConfig> (pluginPath);
+                var locadContext = objectFactory.Create<PluginsLoadContext> (serviceDescriptors);
                 //此处需要保证插件的文件夹的名称与 程序集的名称保持一致
-                var assemably = locadContext.LoadFromAssemblyPath (Path.Combine (pluginBathPath, Path.GetFileNameWithoutExtension (pluginConfig.AssemblyName), pluginConfig.AssemblyName));
+                var assemably = locadContext.LoadAssembly (Path.Combine (pluginBathPath, Path.GetFileNameWithoutExtension (pluginConfig.AssemblyName), pluginConfig.AssemblyName));
                 var allPluginTypes = reflectorUtil.GetTypeByClass (assemably, typeof (Plugins));
                 if (allPluginTypes.Count == 0)
                     throw new Exception ("请实现基于Plugins的插件类");
                 if (allPluginTypes.Count == 2)
                     throw new Exception ("存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
-                var plugin = (Plugins) objectFactory.Create (pluginType, locadContext, serviceDescriptors);
+                var plugin = (Plugins) objectFactory.Create (pluginType, locadContext);
                 SetPluginValues (pluginConfig, assemably, ref plugin);
                 plugins.Add (plugin);
             }

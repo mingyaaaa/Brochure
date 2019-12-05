@@ -15,10 +15,9 @@ namespace Brochure.Core
         private readonly AssemblyLoadContext assemblyContext;
         protected IServiceCollection serviceDescriptors;
 
-        public Plugins (AssemblyLoadContext assemblyContext, IServiceCollection serviceDescriptors)
+        public Plugins (AssemblyLoadContext assemblyContext)
         {
             this.assemblyContext = assemblyContext;
-            this.serviceDescriptors = serviceDescriptors;
         }
 
         public IServiceProvider ServiceProvider { get; private set; }

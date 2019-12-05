@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text.Json;
 using Brochure.Abstract;
+using Microsoft.Extensions.Configuration;
+
 namespace Brochure.Utils
 {
     public class JsonUtil : IJsonUtil
@@ -72,6 +74,11 @@ namespace Brochure.Utils
         public string ConverToString (object obj)
         {
             return JsonSerializer.Serialize (obj);
+        }
+
+        public T Get<T> (string path)
+        {
+            return new ConfigurationBuilder ().AddJsonFile (path).Build ().Get<T> ();
         }
     }
 }
