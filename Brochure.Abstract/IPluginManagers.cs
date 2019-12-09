@@ -12,5 +12,6 @@ namespace Brochure.Abstract
         IPlugins GetPlugin (Guid key);
 
         List<IPlugins> GetPlugins ();
+
     }
 }

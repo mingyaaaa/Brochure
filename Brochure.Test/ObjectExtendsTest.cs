@@ -184,54 +184,6 @@ namespace Brochure.Core.Test
         }
 
         [TestMethod]
-        public void JsonTo ()
-        {
-            string json = "{\"aa\":1}";
-            var obj = json.AsObject<IRecord> ();
-            Assert.IsTrue (obj.ContainsKey ("aa"));
-            Assert.AreEqual (1, obj["aa"].As<int> ());
-            obj = json.As<IRecord> ();
-            Assert.IsTrue (obj.ContainsKey ("aa"));
-            Assert.AreEqual (1, obj["aa"].As<int> ());
-
-            var jsonArray = new string[]
-            {
-                "a",
-                "b",
-                "c"
-            };
-            json = JsonConvert.SerializeObject (jsonArray);
-            var array = json.AsEnumerable<string> ().ToArray ();
-            Assert.AreEqual (3, array.Length);
-
-            var recordArray = new List<IRecord>
-            {
-                new Record ()
-                {
-                ["a"] = 1,
-                },
-                new Record ()
-                {
-                ["b"] = 2,
-                },
-                new Record ()
-                {
-                ["c"] = 3,
-                },
-            };
-
-            json = JsonConvert.SerializeObject (recordArray);
-            var records = json.AsEnumerable<IRecord> ().ToArray ();
-            Assert.AreEqual (3, records.Length);
-            Assert.IsTrue (records[0].ContainsKey ("a"));
-            Assert.AreEqual (1, records[0]["a"].As<int> ());
-            records = json.AsEnumerable<IRecord> ().ToArray ();
-            Assert.AreEqual (3, records.Length);
-            Assert.IsTrue (records[0].ContainsKey ("a"));
-            Assert.AreEqual (1, records[0]["a"].As<int> ());
-        }
-
-        [TestMethod]
         public void IBConverTo ()
         {
             var c = new C ();

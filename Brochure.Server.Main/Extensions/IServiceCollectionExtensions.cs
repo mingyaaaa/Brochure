@@ -28,18 +28,13 @@ namespace Brochure.Server.Main
         internal static IServiceCollection AddPlugins (this IServiceCollection service,
             IMvcBuilder mvcBuilder,
             ILoggerFactory loggerFactory,
-            IJsonUtil jsonUtil,
-            IReflectorUtil reflectorUtil,
-            IPluginUtil pluginUtil,
-            IObjectFactory objectFactory,
-            ISysDirectory sysDirectory)
+            IPluginManagers manager,
+            IEnumerable<IPlugins> plugins
+        )
         {
             var logger = loggerFactory.CreateLogger ("AddPlugins");
             //处理插件           
-            var manager = new PluginManagers (sysDirectory, jsonUtil, objectFactory, reflectorUtil);
-            var pluginBathPath = pluginUtil.GetBasePluginsPath ();
-            var allPlugin = manager.ResolvePlugins (pluginBathPath, service);
-            foreach (var item in allPlugin)
+            foreach (var item in plugins)
             {
                 var task = Task.Run (async () =>
                 {
@@ -60,9 +55,10 @@ namespace Brochure.Server.Main
                             logger.LogError ($"{item.Name}插件加载失败");
                         }
                     }
-                    catch (System.Exception e)
+                    catch (Exception e)
                     {
                         logger.LogError (e, $"{item.Name}插件加载失败");
+                        await item.ExitAsync ();
                     }
                     return Task.CompletedTask;
                 });

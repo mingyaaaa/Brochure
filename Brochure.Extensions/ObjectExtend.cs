@@ -21,43 +21,13 @@ namespace Brochure.Extensions
             {
                 if (obj is T t)
                     return t;
-                if (obj is IRecord)
-                    return JsonSerializer.Deserialize<T> (obj.ToString ());
                 var type = typeof (T);
-                //实现接口IBConverable的类使用 接口转换器
-                var interfaceType = obj.GetType ().GetInterface ($"IBConverables`1");
-                if (interfaceType != null)
-                {
-                    if (obj is IBConverables<T> ibConver)
-                        return ibConver.Conver ();
-                }
-                //处理IObjectConver
-                if (ObjectConverCollection.TryGetConverFunc (type, out var fun))
-                {
-                    return (T) fun (obj);
-                }
                 return (T) As (obj, type);
             }
             catch (System.Exception) when (!isException)
             {
                 return (T) (object) default (T);
             }
-        }
-
-        public static IEnumerable<T> AsEnumerable<T> (this object obj, bool isException = true)
-        {
-            if (obj == null)
-                return new List<T> ();
-            if (obj is IEnumerable<T> enumerables)
-                return enumerables;
-            var type = obj.GetType ();
-            if (type.Name == nameof (TypeCode.String))
-            {
-                return obj.ToString ().AsEnumerable<T> ();
-            }
-            if (isException)
-                throw new Exception ($"{type.FullName}不是集合类型");
-            return new List<T> ();
         }
 
         public static IDictionary<string, object> AsDictionary (this object obj)
@@ -88,28 +58,18 @@ namespace Brochure.Extensions
             return result;
         }
 
-        internal static object As (object obj, Type type)
+        /// <summary>
+        /// 可以通过 ObjectConverCollection 注册需要转换的类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object As (object obj, Type type)
         {
-            if (obj == null)
-                return (object) null;
-            if (obj is Enum)
-                obj = (int) obj;
-            if (type == typeof (Guid))
-                return Guid.Parse (obj.ToString ());
-            //如果是基本类型 使用基本类型转换
+            //处理IObjectConver
+            if (ObjectConverCollection.TryGetConverFunc (type, out var fun))
             {
-                if (type.Name == nameof (TypeCode.String))
-                    return obj.ToString ();
-                else if (type.Name == nameof (TypeCode.Int32))
-                    return int.Parse (obj.ToString ());
-                else if (type.Name == nameof (TypeCode.Double))
-                    return double.Parse (obj.ToString ());
-                else if (type.Name == nameof (TypeCode.Single))
-                    return float.Parse (obj.ToString ());
-                else if (type.Name == nameof (TypeCode.DateTime))
-                    return DateTime.Parse (obj.ToString ());
-                else if (type.BaseType == typeof (Enum))
-                    return Enum.Parse (type, obj.ToString ());
+                return fun (obj);
             }
             //如果是系统其他类型  则使用系统的转换器
             return (object) Convert.ChangeType (obj, type);
