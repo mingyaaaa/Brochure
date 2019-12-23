@@ -11,6 +11,7 @@ namespace Brochure.Core
         {
             this.ServiceContrainer = services;
         }
+
         public virtual Assembly LoadAssembly (string path)
         {
             return LoadFromAssemblyPath (path);

@@ -1,11 +1,13 @@
-﻿namespace Brochure.Abstract
+﻿using System.Threading.Tasks;
+
+namespace Brochure.Abstract
 {
     public interface IBootstrap
     {
         //加载插件
-        void Start ();
+        Task Start ();
 
         //退出程序
-        void Exit (IPlugins[] plugins);
+        Task Exit (IPlugins[] plugins);
     }
 }

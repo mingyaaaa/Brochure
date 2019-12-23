@@ -29,6 +29,17 @@ namespace Brochure.Abstract
             concurrentDictionary.TryAdd (type, t => func (t));
         }
 
+        public static void RegistObjectConver<T1, T2> (Func<T1, T2> func)
+        {
+            var type = typeof (T2);
+            concurrentDictionary.TryAdd (type, t =>
+            {
+                if (!(t is T1))
+                    throw new Exception ($"{t}的类型不正确 无法转化为");
+                return func ((T1) t);
+            });
+        }
+
         public static void Remove<T> ()
         {
             var type = typeof (T);

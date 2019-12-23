@@ -25,12 +25,6 @@ namespace Brochure.Core.Test
             Assert.AreEqual (obj.ProString, doc[nameof (obj.ProString)]);
             Assert.AreEqual (3, doc.Values.Count ());
             Assert.AreEqual (3, doc.Keys.Count ());
-            Assert.IsNotNull (doc.As<string> ());
-            Assert.AreEqual (JsonConvert.SerializeObject (obj.AsDictionary ()), doc.As<string> ());
-            foreach (var item in doc)
-            {
-
-            }
         }
         #endregion
     }

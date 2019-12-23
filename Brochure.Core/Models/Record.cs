@@ -42,15 +42,6 @@ namespace Brochure.Core
             _dic = new Dictionary<string, object> ();
         }
 
-        public Record (SerializationInfo info, StreamingContext context)
-        {
-            _dic = new Dictionary<string, object> ();
-            foreach (var item in info)
-            {
-                _dic[item.Name] = item.Value;
-            }
-        }
-
         /// <summary>
         /// 获取Key的集合
         /// </summary>

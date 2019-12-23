@@ -30,6 +30,18 @@ namespace Brochure.Extensions
             }
         }
 
+        public static T As<T> (this object obj, T defaultValue)
+        {
+            try
+            {
+                return As<T> (obj, false);
+            }
+            catch (System.Exception)
+            {
+                return defaultValue;
+            }
+        }
+
         public static IDictionary<string, object> AsDictionary (this object obj)
         {
             if (obj == null)
@@ -66,6 +78,10 @@ namespace Brochure.Extensions
         /// <returns></returns>
         public static object As (object obj, Type type)
         {
+            if (type.IsEnum)
+            {
+                return Enum.Parse (type, obj.ToString ());
+            }
             //处理IObjectConver
             if (ObjectConverCollection.TryGetConverFunc (type, out var fun))
             {

@@ -28,20 +28,21 @@ namespace Brochure.Core.Test
         public DateTime DateTime { get; set; }
     }
 
-    public class C : IBConverables<B>
-    {
-        public B Conver ()
-        {
-            return new B ()
-            {
-                BStr = "C"
-            };
-        }
-    }
+    public class C { }
 
     [TestClass]
     public class AsTest
     {
+        public AsTest ()
+        {
+            var bb = new BaseBootstrap ();
+            bb.Start ();
+            ObjectConverCollection.RegistObjectConver<C, B> (t => new B ()
+            {
+                BStr = "C"
+            });
+        }
+
         [TestMethod]
         public void StringTo ()
         {
@@ -59,7 +60,6 @@ namespace Brochure.Core.Test
                 Assert.IsTrue (true);
             }
             str = "1.34";
-            Assert.AreEqual (0, str.As<int> ());
             Assert.AreEqual (1.34, str.As<double> ());
             var date = "1992.3.6 13:6:7";
             date = "1992.3.6";
@@ -146,17 +146,6 @@ namespace Brochure.Core.Test
         }
 
         [TestMethod]
-        public void NUllTo ()
-        {
-            object obj = null;
-            Assert.AreEqual (0, obj.As<int> ());
-            Assert.AreEqual (0, obj.As<double> ());
-            Assert.IsNull (obj.As<string> ());
-            Assert.AreEqual (default (DateTime), obj.As<DateTime> ());
-
-        }
-
-        [TestMethod]
         public void RecordTo ()
         {
             var a = new A ();
@@ -186,6 +175,7 @@ namespace Brochure.Core.Test
         [TestMethod]
         public void IBConverTo ()
         {
+
             var c = new C ();
             var b = c.As<B> ();
             Assert.AreEqual ("C", b.BStr);
