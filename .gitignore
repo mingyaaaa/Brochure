@@ -43,3 +43,4 @@ Brochure.Server.Main/bin/
 Brochure.Server.Main/obj/
 **/bin/
 **/obj/
+.DS_Store
