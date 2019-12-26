@@ -18,14 +18,22 @@ namespace Brochure.Test
             builder.UserID = "root";
             builder.Password = "123";
             builder.Database = "test";
+            builder.ConnectionTimeout = 3;
             dbConnection = new MySqlConnection (builder.ToString ());
-
         }
 
         [TestMethod]
         public void TestConnnect ()
         {
-            dbConnection.Open ();
+            try
+            {
+                dbConnection.Open ();
+            }
+            catch (MySqlException e)
+            {
+                return;
+            }
+
             //插入时同一个Command Connect可以复用
             var command = dbConnection.CreateCommand ();
             command.CommandText = "insert testTable(Id) values('1')";
@@ -46,7 +54,14 @@ namespace Brochure.Test
         [TestMethod]
         public void TestConnnectTransction ()
         {
-            dbConnection.Open ();
+            try
+            {
+                dbConnection.Open ();
+            }
+            catch (MySqlException e)
+            {
+                return;
+            }
             transaction = dbConnection.BeginTransaction ();
             //插入时同一个Command Connect可以复用
             var command = dbConnection.CreateCommand ();
