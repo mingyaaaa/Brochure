@@ -10,6 +10,8 @@ namespace Brochure.System
     {
         public string[] GetFiles (string filePath, string searchParttern, SearchOption searchOption)
         {
+            if (!Directory.Exists (filePath))
+                return new string[0];
             return Directory.GetFiles (filePath, searchParttern, searchOption);
         }
     }

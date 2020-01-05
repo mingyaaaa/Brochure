@@ -4,4 +4,23 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>AfterBuild</type>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main.dll</StartProgram>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Brochure.Main' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>dotnet  \Users\yangming\Documents\Brochure\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main</StartProgram>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
 </Project>
