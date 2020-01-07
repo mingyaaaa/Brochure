@@ -13,7 +13,7 @@ namespace Brochure.Core
     public class Plugins : IPlugins
     {
         private readonly AssemblyLoadContext assemblyContext;
-        protected IServiceCollection serviceDescriptors;
+        protected IServiceCollection ServiceDescriptors;
 
         public Plugins (AssemblyLoadContext assemblyContext)
         {

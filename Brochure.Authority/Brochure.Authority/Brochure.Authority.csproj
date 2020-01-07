@@ -1,7 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-  </PropertyGroup>
-
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <OutputType>Library</OutputType>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Controllers\" />
+        <Folder Include="Controllers\V1\" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Class1.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Brochure.Core">
+            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Brochure.Extensions">
+            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Extensions.dll</HintPath>
+        </Reference>
+        <Reference Include="Brochure.Utils">
+            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Utils.dll</HintPath>
+        </Reference>
+        <Reference Include="Brochure.Abstract">
+            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Abstract.dll</HintPath>
+        </Reference>
+        <Reference Include="Brochure.System">
+            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.System.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="IdentityServer4" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    </ItemGroup>
 </Project>
