@@ -7,19 +7,20 @@ namespace Brochure.Abstract
 {
     public interface IPlugins
     {
-        Task StartAsync ();
+        Task StartAsync();
 
-        Task ExitAsync ();
+        Task ExitAsync();
         Guid Key { get; }
         string Name { get; }
-        long Version { get; }
+        string Version { get; }
         string Author { get; }
         string AssemblyName { get; }
         Assembly Assembly { get; }
+        int Order { get; }
         List<Guid> DependencesKey { get; }
 
-        Task<bool> StartingAsync ();
-        Task<bool> ExitingAsync ();
+        Task<bool> StartingAsync();
+        Task<bool> ExitingAsync();
     }
 
 }

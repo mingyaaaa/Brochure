@@ -11,99 +11,117 @@ namespace Brochure.Utils
         /// 根据接口获取指定的类型
         /// </summary>
         /// <returns></returns>
-        public List<object> GetObjectByInterface (Assembly assembly, Type type)
+        public IEnumerable<object> GetObjectByInterface(Assembly assembly, Type type)
         {
-            var types = assembly.GetTypes ();
-            var listobject = new List<object> ();
+            var types = assembly.GetTypes();
+            var listobject = new List<object>();
             foreach (var item in types)
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                var tinterfaces = item.GetInterfaces ();
-                if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
-                    listobject.Add (assembly.CreateInstance (item.FullName));
+                var tinterfaces = item.GetInterfaces();
+                if (!string.IsNullOrWhiteSpace(item.FullName) && tinterfaces.Any(t => t.FullName == type.FullName))
+                    listobject.Add(assembly.CreateInstance(item.FullName));
             }
             return listobject;
         }
+
+        public IEnumerable<T> GetObjectByInterface<T>(Assembly assembly)
+        {
+            var type = typeof(T);
+            var objs = GetObjectByInterface(assembly, type);
+            return objs.OfType<T>();
+        }
+
 
         /// <summary>
         /// 根据接口获取指定的类型
         /// </summary>
         /// <returns></returns>
-        public List<Type> GetTypeByInterface (Assembly assembly, Type type)
+        public IEnumerable<Type> GetTypeByInterface(Assembly assembly, Type type)
         {
-            var types = assembly.GetTypes ();
-            var list = new List<Type> ();
+            var types = assembly.GetTypes();
+            var list = new List<Type>();
             foreach (var item in types)
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                var tinterfaces = item.GetInterfaces ();
-                if (!string.IsNullOrWhiteSpace (item.FullName) && tinterfaces.Any (t => t.FullName == type.FullName))
-                    list.Add (item);
+                var tinterfaces = item.GetInterfaces();
+                if (!string.IsNullOrWhiteSpace(item.FullName) && tinterfaces.Any(t => t.FullName == type.FullName))
+                    list.Add(item);
             }
             return list;
         }
 
-        public List<object> GetObjectByClass (Assembly assembly, Type type)
+        public IEnumerable<object> GetObjectByClass(Assembly assembly, Type type)
         {
-            var types = assembly.GetTypes ();
-            var listobject = new List<object> ();
+            var types = assembly.GetTypes();
+            var listobject = new List<object>();
             foreach (var item in types)
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                if (HasTargetType (item, type.FullName))
+                if (HasTargetType(item, type.FullName))
                 {
-                    listobject.Add (assembly.CreateInstance (item.FullName));
+                    listobject.Add(assembly.CreateInstance(item.FullName));
                 }
             }
             return listobject;
         }
 
-        public List<Type> GetTypeByClass (Assembly assembly, Type type)
+        public IEnumerable<Type> GetTypeByClass(Assembly assembly, Type type)
         {
-            var types = assembly.GetTypes ();
-            var list = new List<Type> ();
+            var types = assembly.GetTypes();
+            var list = new List<Type>();
             foreach (var item in types)
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                if (HasTargetType (item, type.FullName))
+                if (HasTargetType(item, type.FullName))
                 {
-                    list.Add (item);
+                    list.Add(item);
                 }
             }
             return list;
         }
 
-        public T CreateInstance<T> (params object[] parms) where T : class
+        public IEnumerable<T> GetObjectByClass<T>(Assembly assembly)
         {
-            var type = typeof (T);
-            var typeinfo = type.GetTypeInfo ();
-            var paramsTypes = new List<Type> ();
-            foreach (var o in parms)
-            {
-                paramsTypes.Add (o.GetType ());
-            }
-            var constructor = typeinfo.GetConstructor (paramsTypes.ToArray ());
-            return (T) constructor?.Invoke (parms);
+            var type = typeof(T);
+            var objs = GetObjectByClass(assembly, type);
+            return objs.OfType<T>();
         }
 
-        private bool HasTargetType (Type type, string targetTypeFullName)
+        public T CreateInstance<T>(params object[] parms) where T : class
+        {
+            var type = typeof(T);
+            var typeinfo = type.GetTypeInfo();
+            var paramsTypes = new List<Type>();
+            foreach (var o in parms)
+            {
+                paramsTypes.Add(o.GetType());
+            }
+            var constructor = typeinfo.GetConstructor(paramsTypes.ToArray());
+            return (T)constructor?.Invoke(parms);
+        }
+
+        private bool HasTargetType(Type type, string targetTypeFullName)
         {
             if (type.BaseType?.FullName == targetTypeFullName)
                 return true;
-            var interfaces = type.GetInterfaces ();
+            var interfaces = type.GetInterfaces();
             foreach (var item in interfaces)
             {
                 if (item.FullName == targetTypeFullName)
                     return true;
-                if (HasTargetType (item, targetTypeFullName))
+                if (HasTargetType(item, targetTypeFullName))
                     return true;
             }
             return false;
         }
+
+
+
 
     }
 }

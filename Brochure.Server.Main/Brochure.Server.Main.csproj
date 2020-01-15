@@ -10,6 +10,9 @@
     <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
     <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
+    <ProjectReference Include="..\Brochure.Server.Main.Abstract\Brochure.Server.Main.Abstract.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

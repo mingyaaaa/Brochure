@@ -10,6 +10,7 @@ using Brochure.System;
 using Brochure.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
@@ -18,7 +19,7 @@ namespace Brochure.Test
 {
     public class TestPlugins : Plugins
     {
-        public TestPlugins (AssemblyLoadContext assemblyContext) : base (assemblyContext) { }
+        public TestPlugins (AssemblyLoadContext assemblyContext) : base (assemblyContext, new ServiceCollection ()) { }
     }
 
     [TestClass]
@@ -40,6 +41,7 @@ namespace Brochure.Test
             var reflectorUtilMock = new Mock<IReflectorUtil> ();
             var configurationRootMock = new Mock<IConfigurationRoot> ();
             var pluginUtilMock = new Mock<IPluginUtil> ();
+            var logFactory = new Mock<ILoggerFactory> ();
             var path = "aaa";
             pluginUtilMock.Setup (t => t.GetBasePluginsPath ()).Returns (path);
             dirMock.Setup (t => t.GetFiles (path, It.IsAny<string> (), SearchOption.AllDirectories))
@@ -51,7 +53,7 @@ namespace Brochure.Test
                 .Returns (new TestPlugins (loadContextMock.Object));
             loadContextMock.Protected ().Setup<Assembly> ("Load", typeof (TestPlugins).Assembly.GetName ()).Returns (typeof (TestPlugins).Assembly);
             reflectorUtilMock.Setup (t => t.GetTypeByClass (It.IsAny<Assembly> (), It.IsAny<Type> ())).Returns (new List<Type> { typeof (TestPlugins) });
-            var pp = service.ResolvePlugins (pluginUtilMock.Object, dirMock.Object, jsonUtilMock.Object, objectFactoryMock.Object, reflectorUtilMock.Object);
+            var pp = service.ResolvePlugins (pluginUtilMock.Object, dirMock.Object, jsonUtilMock.Object, objectFactoryMock.Object, reflectorUtilMock.Object, logFactory.Object);
             Assert.AreEqual (2, pp.Count);
         }
     }

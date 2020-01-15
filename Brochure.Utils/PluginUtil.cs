@@ -14,5 +14,11 @@ namespace Brochure.Utils
             var pluginPath = Path.Combine (basePath, "Plugins");
             return pluginPath;
         }
+
+        public long GetPluginVersion (string version)
+        {
+            //todo 实现版本转换
+            return 0;
+        }
     }
 }

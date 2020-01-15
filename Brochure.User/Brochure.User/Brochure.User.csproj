@@ -9,6 +9,7 @@
       <CustomCommands>
         <Command>
           <type>AfterBuild</type>
+          <command>cp -rf ${TargetDir}   ${SolutionDir}/../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/Brochure.User</command>
         </Command>
       </CustomCommands>
     </CustomCommands>

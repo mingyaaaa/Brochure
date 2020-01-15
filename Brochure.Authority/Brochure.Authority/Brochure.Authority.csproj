@@ -1,8 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <OutputType>Library</OutputType>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <CustomCommands>
+          <CustomCommands>
+            <Command>
+              <type>AfterBuild</type>
+              <command>cp -rf ${TargetDir}/   ${SolutionDir}/../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/${ProjectName}</command>
+            </Command>
+          </CustomCommands>
+        </CustomCommands>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom' ">
+      <StartAction>Program</StartAction>
+      <StartProgram>..\..\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main.dll</StartProgram>
+      <StartArguments>run</StartArguments>
+      <ApplicationURL>https://localhost:5003;http://localhost:5002</ApplicationURL>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="Controllers\" />
@@ -12,9 +28,6 @@
         <Compile Remove="Class1.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="Brochure.Core">
-            <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Core.dll</HintPath>
-        </Reference>
         <Reference Include="Brochure.Extensions">
             <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.Extensions.dll</HintPath>
         </Reference>
@@ -27,9 +40,15 @@
         <Reference Include="Brochure.System">
             <HintPath>..\..\Brochure.Core\bin\Debug\netcoreapp3.1\Brochure.System.dll</HintPath>
         </Reference>
+                <Reference Include="Brochure.Core">
+            <HintPath>../../Brochure.Core/bin/Debug/netcoreapp3.1/Brochure.Core.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="IdentityServer4" Version="3.1.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+        <PackageReference Include="IdentityServer4" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Brochure.Authority.Abstract\Brochure.Authority.Abstract.csproj" />
     </ItemGroup>
 </Project>
