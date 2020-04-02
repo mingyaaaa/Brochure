@@ -24,30 +24,14 @@ namespace Brochure.Server.Main
         public void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddControllers();
-            var loggerFactory = LoggerFactory.Create(p => p.AddConsole());
-            var pluginUtil = new PluginUtil();
-            var jsonUtil = new JsonUtil();
-            var reflectorUtil = new ReflectorUtil();
-            var objectFactory = new Brochure.Abstract.ObjectFactory();
-            var sysDirectory = new SysDirectory();
-            var pluginManager = new PluginManagers();
-            var plugins = services.LoadPlugins(pluginUtil, sysDirectory, jsonUtil, objectFactory, reflectorUtil, loggerFactory, pluginManager);
-            services.ResolverPlugins(pluginManager, t =>
+            services.AddBrochureService(t =>
             {
-                t.AddController(mvcBuilder);
-                t.AddStarupConfigureServices(services, reflectorUtil);
+                return t.AddPlugin(services, mvcBuilder);
             });
-            services.AddSingleton<IPluginUtil>(pluginUtil);
-            services.AddSingleton<IJsonUtil>(jsonUtil);
-            services.AddSingleton<IReflectorUtil>(reflectorUtil);
-            services.AddSingleton<IObjectFactory>(objectFactory);
-            services.AddSingleton<ISysDirectory>(sysDirectory);
-            services.AddSingleton<IPluginManagers>(pluginManager);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -55,8 +39,6 @@ namespace Brochure.Server.Main
             }
 
             app.UseHttpsRedirection();
-
-            await app.AddPlugins();
 
             app.UseRouting();
 

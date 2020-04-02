@@ -21,4 +21,7 @@
     <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApplicationInit\" />
+  </ItemGroup>
 </Project>

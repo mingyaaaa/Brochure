@@ -4,12 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Brochure.Abstract;
-using Brochure.Core;
-using Brochure.Core.Extenstions;
+using Brochure.Core.Core;
 using Brochure.Core.Models;
 using Brochure.System;
 using Brochure.Utils;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -18,67 +16,41 @@ namespace Brochure.Core
     public static class IServiceCollectionExtensions
     {
 
-        public static IServiceCollection LoadPlugins(this IServiceCollection serviceDescriptors,
-            IPluginUtil pluginUtil,
-            ISysDirectory directory,
-            IJsonUtil jsonUtil,
-            IObjectFactory objectFactory,
-            IReflectorUtil reflectorUtil,
-            ILoggerFactory loggerFactory,
-            IPluginManagers pluginManagers)
+        /// <summary>
+        /// 初始化程序
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddBrochureService(this IServiceCollection service, Func<IPluginOption, bool> pluginAction)
         {
-            var log = loggerFactory.CreateLogger("ResolvePlugins");
-            var pluginBathPath = pluginUtil.GetBasePluginsPath();
-            var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
-            foreach (var pluginConfigPath in allPluginPath)
-            {
-                try
-                {
-                    var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
-                    var pluginPath = Path.Combine(pluginBathPath, Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName), pluginConfig.AssemblyName);
-                    var locadContext = objectFactory.Create<PluginsLoadContext>(serviceDescriptors, pluginPath);
-                    //此处需要保证插件的文件夹的名称与 程序集的名称保持一致
-                    var assemably = locadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
-                    var allPluginTypes = reflectorUtil.GetTypeByClass(assemably, typeof(Plugins)).ToList();
-                    if (allPluginTypes.Count == 0)
-                        throw new Exception("请实现基于Plugins的插件类");
-                    if (allPluginTypes.Count == 2)
-                        throw new Exception("存在多个Plugins实现类");
-                    var pluginType = allPluginTypes[0];
-                    var plugin = (Plugins)objectFactory.Create(pluginType, locadContext, serviceDescriptors);
-                    SetPluginValues(pluginConfig, assemably, ref plugin);
-                    pluginManagers.Regist(plugin);
-                }
-                catch (Exception e)
-                {
-                    log.LogError(e, e.Message);
-                }
-
-            }
-            return serviceDescriptors;
+            //初始化程序
+            service.InitApplication();
+            //加载插件
+            var pluginManager = service.GetServiceInstance<IPluginManagers>();
+            pluginManager.ResolverPlugins(service, pluginAction);
+            return service;
         }
 
-        private static void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
+        internal static IServiceCollection InitApplication(this IServiceCollection service)
         {
-            if (config == null)
-                throw new ArgumentException(nameof(PluginConfig));
-            plugin.Assembly = assembly;
-            plugin.AssemblyName = config.AssemblyName;
-            plugin.Author = config.Author;
-            plugin.DependencesKey = config.DependencesKey;
-            plugin.Key = config.Key;
-            plugin.Name = config.Name;
-            plugin.Version = config.Version;
-            plugin.Order = config.Order;
+
+            //工具类初始化
+            var utilInit = new UtilApplicationInit(service, null);
+            utilInit.Init();
+            return service;
+
         }
 
-        public static void ResolverPlugins(this IServiceCollection serviceDescriptors, IPluginManagers pluginManagers, Action<PluginOption> action)
+        public static IEnumerable<T> GetServiceInstances<T>(this IServiceCollection services)
         {
-            var allPlugin = pluginManagers.GetPlugins();
-            foreach (var item in allPlugin)
-            {
-                action?.Invoke(new PluginOption(item));
-            }
+            var type = typeof(T);
+            return services.Where(t => t.ServiceType == type).Select(t => (T)t.ImplementationInstance);
+        }
+
+        public static T GetServiceInstance<T>(this IServiceCollection services)
+        {
+            var type = typeof(T);
+            return (T)services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
         }
     }
 }

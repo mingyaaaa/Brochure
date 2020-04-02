@@ -51,8 +51,7 @@ namespace LinqDbQueryTest
     public class TestTransaction
     {
 
-        public TestTransaction ()
-        { }
+        public TestTransaction () { }
 
         [TestMethod]
         public void TestTransactionDisableTrue ()

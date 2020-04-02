@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Abstract
 {
     public interface IPluginManagers
     {
-        void Regist (IPlugins plugin);
+        void ResolverPlugins(IServiceCollection serviceDescriptors, Func<IPluginOption, bool> func);
 
-        void Remove (IPlugins plugin);
+        void Regist(IPlugins plugin);
 
-        IPlugins GetPlugin (Guid key);
+        void UnLoad(IPlugins plugin);
 
-        List<IPlugins> GetPlugins ();
+        void Remove(IPlugins plugin);
+
+        IPlugins GetPlugin(Guid key);
+
+        List<IPlugins> GetPlugins();
+
+        string GetBasePluginsPath();
+
+        long GetPluginVersion(string version);
 
     }
 }
