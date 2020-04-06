@@ -25,9 +25,9 @@
     <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspectCore.Abstractions" Version="2.0.0" />
-    <PackageReference Include="AspectCore.Core" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="AspectCore.Abstractions" Version="2.1.0" />
+    <PackageReference Include="AspectCore.Core" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
   </ItemGroup>
 </Project>

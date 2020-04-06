@@ -7,17 +7,70 @@ namespace Brochure.Abstract
 {
     public interface IPlugins
     {
+        /// <summary>
+        /// 插件唯一健
+        /// </summary>
         Guid Key { get; }
+
+        /// <summary>
+        /// 插件名称
+        /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// 插件版本
+        /// </summary>
         string Version { get; }
+
+        /// <summary>
+        /// 插件作者
+        /// </summary>
         string Author { get; }
+
+        /// <summary>
+        /// 插件程序集名称
+        /// </summary>
         string AssemblyName { get; }
+
+        /// <summary>
+        /// 插件程序集
+        /// </summary>
         Assembly Assembly { get; }
+
+        /// <summary>
+        /// 插件加载顺序
+        /// </summary>
         int Order { get; }
+
+        /// <summary>
+        /// 依赖的插件
+        /// </summary>
         List<Guid> DependencesKey { get; }
+
+        /// <summary>
+        /// 启动插件
+        /// </summary>
+        /// <returns></returns>
         Task StartAsync();
+
+        /// <summary>
+        /// 退出卸载插件
+        /// </summary>
+        /// <returns></returns>
         Task ExitAsync();
+
+        /// <summary>
+        /// 插件加载前执行
+        /// </summary>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
         Task<bool> StartingAsync(out string errorMsg);
+
+        /// <summary>
+        /// 退出插件前执行
+        /// </summary>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
         Task<bool> ExitingAsync(out string errorMsg);
     }
 

@@ -9,7 +9,6 @@ using Brochure.Abstract;
 using Brochure.Core.Models;
 using Brochure.System;
 using Brochure.Utils;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -51,9 +50,9 @@ namespace Brochure.Core
             return pluginPath;
         }
 
-        public long GetPluginVersion(string version)
+        public long GetPluginVersion(Guid key)
         {
-            //todo 实现版本转换
+            //获取版本信息
             return 0;
         }
 
@@ -140,7 +139,7 @@ namespace Brochure.Core
             {
                 var r = await pluginOption.Plugin.StartingAsync(out string errorMsg);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 result = false;
             }

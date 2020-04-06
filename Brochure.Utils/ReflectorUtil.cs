@@ -95,6 +95,11 @@ namespace Brochure.Utils
         public T CreateInstance<T>(params object[] parms) where T : class
         {
             var type = typeof(T);
+            return (T)CreateInstance(type, parms);
+        }
+
+        public object CreateInstance(Type type, params object[] parms)
+        {
             var typeinfo = type.GetTypeInfo();
             var paramsTypes = new List<Type>();
             foreach (var o in parms)
@@ -102,7 +107,7 @@ namespace Brochure.Utils
                 paramsTypes.Add(o.GetType());
             }
             var constructor = typeinfo.GetConstructor(paramsTypes.ToArray());
-            return (T)constructor?.Invoke(parms);
+            return constructor?.Invoke(parms);
         }
 
         private bool HasTargetType(Type type, string targetTypeFullName)
@@ -119,8 +124,6 @@ namespace Brochure.Utils
             }
             return false;
         }
-
-
 
 
     }

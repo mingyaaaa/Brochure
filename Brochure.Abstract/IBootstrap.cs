@@ -2,12 +2,22 @@
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// 程序启动退出接口
+    /// </summary>
     public interface IBootstrap
     {
-        //加载插件
-        Task Start ();
+        /// <summary>
+        /// 启动程序
+        /// </summary>
+        /// <returns></returns>
+        Task Start();
 
-        //退出程序
-        Task Exit (IPlugins[] plugins);
+        /// <summary>
+        /// 退出程序
+        /// </summary>
+        /// <param name="plugins"></param>
+        /// <returns></returns>
+        Task Exit(IPlugins[] plugins);
     }
 }
