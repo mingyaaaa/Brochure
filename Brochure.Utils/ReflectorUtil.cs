@@ -7,6 +7,7 @@ namespace Brochure.Utils
 {
     public class ReflectorUtil : IReflectorUtil
     {
+        public static IReflectorUtil Instance => new ReflectorUtil();
         /// <summary>
         /// 根据接口获取指定的类型
         /// </summary>

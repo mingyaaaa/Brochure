@@ -6,4 +6,9 @@ namespace Brochure.Abstract
     public interface ISingleton
     {
     }
+
+    public interface IMutiSingleton
+    {
+
+    }
 }

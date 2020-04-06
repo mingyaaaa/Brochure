@@ -7,4 +7,7 @@ namespace Brochure.Abstract
     {
 
     }
+    public interface IMutiTransient
+    {
+    }
 }
