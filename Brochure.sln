@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqDbQuery", "LinqDbQuery\LinqDbQuery.csproj", "{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.ORM", "LinqDbQuery\Brochure.ORM.csproj", "{4CD1CC9E-8435-4D5F-92D3-1D8C46FC7D1B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Utils", "Brochure.Utils\Brochure.Utils.csproj", "{E012E0F3-56A5-485C-81F0-F932799B0C8B}"
 EndProject
@@ -30,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.System", "Brochure.System\Brochure.System.csproj", "{36325BC2-0BFA-4029-A36E-5A536AEBCE71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.Server.Main.Abstract", "Brochure.Server.Main.Abstract\Brochure.Server.Main.Abstract.csproj", "{B4A78014-17F4-4080-BCFF-1B76CB6C8E27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.ORM.MySql", "Brochure.LinqDbQuery.MySql\Brochure.ORM.MySql.csproj", "{E8842713-9095-4A34-8CCB-CDDDB54C5F9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,10 @@ Global
 		{B4A78014-17F4-4080-BCFF-1B76CB6C8E27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4A78014-17F4-4080-BCFF-1B76CB6C8E27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4A78014-17F4-4080-BCFF-1B76CB6C8E27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8842713-9095-4A34-8CCB-CDDDB54C5F9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8842713-9095-4A34-8CCB-CDDDB54C5F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8842713-9095-4A34-8CCB-CDDDB54C5F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8842713-9095-4A34-8CCB-CDDDB54C5F9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,5 +137,6 @@ Global
 		{C3683B03-64F2-43B6-90F5-49501308EE16} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
 		{4CDDE020-A1C3-45FC-ACBF-F625ABA91301} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
 		{B4A78014-17F4-4080-BCFF-1B76CB6C8E27} = {C68B3550-FDE9-11E9-8553-8D2B27024F48}
+		{E8842713-9095-4A34-8CCB-CDDDB54C5F9A} = {640FDFC0-FDE9-11E9-8553-8D2B27024F48}
 	EndGlobalSection
 EndGlobal

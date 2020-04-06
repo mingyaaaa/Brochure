@@ -7,9 +7,6 @@ namespace Brochure.Abstract
 {
     public interface IPlugins
     {
-        Task StartAsync();
-
-        Task ExitAsync();
         Guid Key { get; }
         string Name { get; }
         string Version { get; }
@@ -18,9 +15,10 @@ namespace Brochure.Abstract
         Assembly Assembly { get; }
         int Order { get; }
         List<Guid> DependencesKey { get; }
-
-        Task<bool> StartingAsync();
-        Task<bool> ExitingAsync();
+        Task StartAsync();
+        Task ExitAsync();
+        Task<bool> StartingAsync(out string errorMsg);
+        Task<bool> ExitingAsync(out string errorMsg);
     }
 
 }

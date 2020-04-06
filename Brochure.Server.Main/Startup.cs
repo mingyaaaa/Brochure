@@ -24,6 +24,7 @@ namespace Brochure.Server.Main
         public void ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddControllers();
+            services.AddLogging();
             services.AddBrochureService(t =>
             {
                 return t.AddPlugin(services, mvcBuilder);

@@ -45,13 +45,15 @@ namespace Brochure.Core
             return Task.CompletedTask;
         }
 
-        public virtual Task<bool> StartingAsync()
+        public virtual Task<bool> StartingAsync(out string errorMsg)
         {
+            errorMsg = string.Empty;
             return Task.FromResult(true);
         }
 
-        public virtual Task<bool> ExitingAsync()
+        public virtual Task<bool> ExitingAsync(out string errorMsg)
         {
+            errorMsg = string.Empty;
             return Task.FromResult(true);
         }
 

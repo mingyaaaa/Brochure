@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core.Models;
 using Brochure.System;
@@ -60,7 +61,7 @@ namespace Brochure.Core
         /// 加载插件
         /// </summary>
         /// <param name="serviceDescriptors"></param>
-        public void ResolverPlugins(IServiceCollection serviceDescriptors, Func<IPluginOption, bool> func)
+        public async Task ResolverPlugins(IServiceCollection serviceDescriptors, Func<IPluginOption, Task<bool>> func)
         {
             var directory = serviceDescriptors.GetServiceInstance<ISysDirectory>();
             var jsonUtil = serviceDescriptors.GetServiceInstance<IJsonUtil>();
@@ -71,6 +72,10 @@ namespace Brochure.Core
             var log = loggerFactory.CreateLogger("ResolvePlugins");
             var pluginBathPath = pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
+            if (func == null)
+            {
+                func = DefaultInvokePlugin;
+            }
             foreach (var pluginConfigPath in allPluginPath)
             {
                 try
@@ -93,11 +98,13 @@ namespace Brochure.Core
                         throw new Exception("Plugins必须包含AssemblyLoadContext，IServiceCollection两个参数的构造函数");
                     }
                     SetPluginValues(pluginConfig, assemably, ref plugin);
-                    var result = func?.Invoke(new PluginOption(plugin)) ?? true;
+                    var result = await func.Invoke(new PluginOption(plugin));
                     if (!result)
                     {
+
                         UnLoad(plugin);
                         locadContext.Unload();
+                        throw new Exception($"{plugin.Name}插件加载失败");
                     }
                     else
                     {
@@ -110,6 +117,7 @@ namespace Brochure.Core
                 }
             }
         }
+
 
         private static void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
         {
@@ -124,6 +132,21 @@ namespace Brochure.Core
             plugin.Version = config.Version;
             plugin.Order = config.Order;
         }
+
+        private async Task<bool> DefaultInvokePlugin(IPluginOption pluginOption)
+        {
+            var result = true;
+            try
+            {
+                var r = await pluginOption.Plugin.StartingAsync(out string errorMsg);
+            }
+            catch (Exception e)
+            {
+                result = false;
+            }
+            return result;
+        }
+
 
         public void UnLoad(IPlugins plugin)
         {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Abstract
 {
     public interface IPluginManagers
     {
-        void ResolverPlugins(IServiceCollection serviceDescriptors, Func<IPluginOption, bool> func);
+        Task ResolverPlugins(IServiceCollection serviceDescriptors, Func<IPluginOption, Task<bool>> func);
 
         void Regist(IPlugins plugin);
 

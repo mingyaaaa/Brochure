@@ -3,6 +3,7 @@ using Brochure.Abstract;
 using Brochure.System;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core.Core
 {

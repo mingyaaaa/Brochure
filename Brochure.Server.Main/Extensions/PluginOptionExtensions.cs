@@ -25,19 +25,10 @@ namespace Brochure.Server.Main.Extensions
                 var result = true;
                 try
                 {
-                    var r = await item.StartingAsync();
+                    var r = await item.StartingAsync(out string errorMsg);
                     if (r)
                     {
-                        await item.StartAsync();
                         mvcBuilder.AddApplicationPart(item.Assembly);
-                    }
-                    else
-                    {
-                        r = await item.ExitingAsync();
-                        if (r)
-                            await item.ExitAsync();
-                        logger.LogError($"{item.Name}插件加载失败");
-                        result = false;
                     }
                 }
                 catch (Exception e)
