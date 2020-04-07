@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace Brochure.User.Controllers
 {
-    public class UserController
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UserController : ControllerBase
     {
-        
+
     }
 }

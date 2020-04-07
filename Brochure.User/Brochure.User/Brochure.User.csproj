@@ -9,7 +9,7 @@
       <CustomCommands>
         <Command>
           <type>AfterBuild</type>
-          <command>cp -rf ${TargetDir}   ${SolutionDir}/../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/Brochure.User</command>
+          <command>cp -rf ${TargetDir}   ${ProjectDir}/../../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/Brochure.User</command>
         </Command>
       </CustomCommands>
     </CustomCommands>
@@ -24,4 +24,7 @@
     <StartProgram>dotnet  \Users\yangming\Documents\Brochure\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main</StartProgram>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
 </Project>
