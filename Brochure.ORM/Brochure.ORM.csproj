@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackOnBuild>true</PackOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.assets.cache" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.cache" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.dgspec.json" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.g.props" />
+    <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.g.targets" />
+    <None Remove="LinqDbQueryTest\obj\project.assets.json" />
+    <None Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.csprojAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="LinqDbQueryTest\UnitTest1.cs" />
+    <Compile Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+    <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AspectCore.Abstractions" Version="2.1.0" />
+    <PackageReference Include="AspectCore.Core" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.3" />
+  </ItemGroup>
+</Project>

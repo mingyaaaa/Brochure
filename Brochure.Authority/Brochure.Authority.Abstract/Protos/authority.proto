@@ -1,0 +1,10 @@
+syntax = "proto3";
+package Brochure.AuthorityService;
+message Authority {
+    string id=1;
+    string name=2;
+    int32 auth_status=3; 
+}
+service AuthorityService {
+
+}

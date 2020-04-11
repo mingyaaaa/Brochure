@@ -6,13 +6,12 @@ namespace Brochure.Authority
 {
     public class StartFilter : IStartupFilter
     {
-        public Action<IApplicationBuilder> Configure (Action<IApplicationBuilder> next)
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
             return app =>
             {
-                app.UseAuthentication ();
-                app.UseAuthorization ();
-                next (app);
+
+                next(app);
             };
         }
     }

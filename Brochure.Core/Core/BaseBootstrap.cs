@@ -6,18 +6,15 @@ namespace Brochure.Core
 {
     public class BaseBootstrap : IBootstrap
     {
-        public async Task Exit (IPlugins[] plugins)
+        public Task Exit(IPlugins[] plugins)
         {
-            foreach (var item in plugins)
-            {
-                await item.ExitAsync ();
-            }
+            return Task.CompletedTask;
         }
 
-        public Task Start ()
+        public Task Start()
         {
             //注入转换器
-            ObjectConverCollection.RegistObjectConver<IRecord> (t => new Record (t.AsDictionary ()));
+            ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
             return Task.CompletedTask;
         }
     }

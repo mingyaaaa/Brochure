@@ -23,11 +23,12 @@ namespace Brochure.Server.Main
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mvcBuilder = services.AddControllers();
+
             services.AddLogging();
             services.AddBrochureService(t =>
             {
-                return t.AddPlugin(services, mvcBuilder);
+                var mvcBuilder = services.AddControllers();
+                t.OnPluginLoad += plugionOPtion => plugionOPtion.AddPlugin(services, mvcBuilder);
             });
         }
 

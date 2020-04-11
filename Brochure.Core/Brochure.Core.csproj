@@ -23,5 +23,15 @@
 
   <ItemGroup>
     <Folder Include="ApplicationInit\" />
+    <Folder Include="Logs\" />
+    <Folder Include="Application\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="RPC\" />
+    <Folder Include="Interceptor\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Core\Log.cs" />
+    <Compile Remove="Core\ApplicatonOption.cs" />
+    <Compile Remove="Core\IApplication.cs" />
   </ItemGroup>
 </Project>

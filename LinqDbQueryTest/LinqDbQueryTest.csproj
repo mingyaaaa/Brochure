@@ -21,8 +21,8 @@
 </ItemGroup>
 <ItemGroup>
   <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
-  <ProjectReference Include="..\LinqDbQuery\Brochure.ORM.csproj" />
-  <ProjectReference Include="..\Brochure.LinqDbQuery.MySql\Brochure.ORM.MySql.csproj" />
   <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+  <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" />
+  <ProjectReference Include="..\Brochure.ORM.MySql\Brochure.ORM.MySql.csproj" />
 </ItemGroup>
 </Project>

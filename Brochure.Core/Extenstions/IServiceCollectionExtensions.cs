@@ -19,29 +19,31 @@ namespace Brochure.Core
     {
 
         /// <summary>
-        /// 初始化程序
+        /// 添加服务
         /// </summary>
         /// <param name="service"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBrochureService(this IServiceCollection service, Func<IPluginOption, bool> pluginAction)
+        public static IServiceCollection AddBrochureService(this IServiceCollection service, Action<ApplicationOption> appAction)
         {
+            var option = new ApplicationOption();
+            appAction(option);
             //初始化程序
-            service.InitApplication();
+            service.InitApplicationCore();
             //加载插件
             var pluginManager = service.GetServiceInstance<IPluginManagers>();
+
             pluginManager.ResolverPlugins(service, t =>
             {
-                var r = pluginAction(t);
+                var r = option.OnPluginLoad?.Invoke(t) ?? true;
                 return Task.FromResult(r);
             });
             return service;
         }
 
-        internal static IServiceCollection InitApplication(this IServiceCollection service)
+        internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
         {
-
             //工具类初始化
-            var utilInit = new UtilApplicationInit(service, null);
+            var utilInit = new UtilApplicationInit(service);
             utilInit.Init();
             return service;
 
