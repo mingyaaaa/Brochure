@@ -3,6 +3,7 @@ using Brochure.Abstract;
 using Brochure.System;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core.Core
@@ -12,23 +13,23 @@ namespace Brochure.Core.Core
         private readonly IServiceCollection services;
         private IApplicationFunInit nextApplicationFunInit;
 
-        public UtilApplicationInit(IServiceCollection services)
+        public UtilApplicationInit (IServiceCollection services)
         {
             this.services = services;
 
         }
 
-        public void Init()
+        public void Init ()
         {
-            services.AddSingleton<IJsonUtil>(new JsonUtil());
-            services.AddSingleton<IReflectorUtil>(new ReflectorUtil());
-            services.AddSingleton<IObjectFactory>(new Brochure.Abstract.ObjectFactory());
-            services.AddSingleton<ISysDirectory>(new SysDirectory());
-            services.AddSingleton<IPluginManagers>(new PluginManagers());
-            nextApplicationFunInit?.Init();
+            services.TryAddSingleton<IJsonUtil> (new JsonUtil ());
+            services.TryAddSingleton<IReflectorUtil> (new ReflectorUtil ());
+            services.TryAddSingleton<IObjectFactory> (new Brochure.Abstract.ObjectFactory ());
+            services.TryAddSingleton<ISysDirectory> (new SysDirectory ());
+            services.TryAddSingleton<IPluginManagers> (new PluginManagers ());
+            nextApplicationFunInit?.Init ();
         }
 
-        public void SetNext(IApplicationFunInit nextApplicationFunInit)
+        public void SetNext (IApplicationFunInit nextApplicationFunInit)
         {
             this.nextApplicationFunInit = nextApplicationFunInit;
         }
