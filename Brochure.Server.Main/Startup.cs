@@ -24,10 +24,7 @@ namespace Brochure.Server.Main
         public void ConfigureServices (IServiceCollection services)
         {
             services.AddLogging ();
-            services.AddBrochureService (async option =>
-            {
-                await option.AddPluginController ();
-            });
+            services.AddBrochureService (async option => await option.AddPluginController ());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

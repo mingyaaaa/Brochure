@@ -25,6 +25,36 @@ namespace Brochure.AuthorityService {
     {
     }
 
+    /// <summary>Client for AuthorityService</summary>
+    public partial class AuthorityServiceClient : grpc::ClientBase<AuthorityServiceClient>
+    {
+      /// <summary>Creates a new client for AuthorityService</summary>
+      /// <param name="channel">The channel to use to make remote calls.</param>
+      public AuthorityServiceClient(grpc::ChannelBase channel) : base(channel)
+      {
+      }
+      /// <summary>Creates a new client for AuthorityService that uses a custom <c>CallInvoker</c>.</summary>
+      /// <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+      public AuthorityServiceClient(grpc::CallInvoker callInvoker) : base(callInvoker)
+      {
+      }
+      /// <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+      protected AuthorityServiceClient() : base()
+      {
+      }
+      /// <summary>Protected constructor to allow creation of configured clients.</summary>
+      /// <param name="configuration">The client configuration.</param>
+      protected AuthorityServiceClient(ClientBaseConfiguration configuration) : base(configuration)
+      {
+      }
+
+      /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+      protected override AuthorityServiceClient NewInstance(ClientBaseConfiguration configuration)
+      {
+        return new AuthorityServiceClient(configuration);
+      }
+    }
+
     /// <summary>Creates service definition that can be registered with a server</summary>
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static grpc::ServerServiceDefinition BindService(AuthorityServiceBase serviceImpl)

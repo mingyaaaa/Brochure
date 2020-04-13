@@ -21,7 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Protos\authority.proto" CompileOutputs="false">
-      <GrpcServices>Server</GrpcServices>
       <OutputDir>
       </OutputDir>
     </Protobuf>

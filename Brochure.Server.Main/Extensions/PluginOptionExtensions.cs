@@ -15,7 +15,7 @@ namespace Brochure.Server.Main.Extensions
         {
             var assembly = pluginOption.Plugin.Assembly;
             var reflectorUtil = applicationBuilder.ApplicationServices.GetService<IReflectorUtil> ();
-            var configures = reflectorUtil.GetObjectByInterface<IStarupConfigure> (assembly);
+            var configures = reflectorUtil.GetObjectOfAbsoluteBase<IStarupConfigure> (assembly);
             foreach (var item in configures)
             {
                 item.Configure (applicationBuilder);

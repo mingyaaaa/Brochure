@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspectCore.Configuration;
+using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core.Core;
+using Brochure.Core.Module;
+using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,19 +24,35 @@ namespace Brochure.Core
         /// <returns></returns>
         public static IServiceCollection AddBrochureService (this IServiceCollection service, Action<ApplicationOption> appAction)
         {
-
             //加载一些基本的工具类
             //工具类初始化
             var utilInit = new UtilApplicationInit (service);
             utilInit.Init ();
-
+            service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             var option = new ApplicationOption (service);
+            service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
             option.AddLog ();
             appAction (option);
             //加载一些核心的程序
             service.InitApplicationCore ();
-
             return service;
+        }
+
+        /// <summary>
+        /// 添加拦截器
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configure"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddInterceptor (this IServiceCollection services, Action<IAspectConfiguration> configure = null)
+        {
+            services.ConfigureDynamicProxy (configure);
+            return services;
+        }
+        public static IServiceCollection AddGrpcService (this IServiceCollection services, Action<GrpcServiceOptions> configureOptions = null)
+        {
+            services.AddGrpc (configureOptions);
+            return services;
         }
 
         internal static IServiceCollection InitApplicationCore (this IServiceCollection service)
