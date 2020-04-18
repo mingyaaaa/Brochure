@@ -12,6 +12,15 @@ namespace Brochure.AuthorityService {
   {
     static readonly string __ServiceName = "Brochure.AuthorityService.AuthorityService";
 
+    static readonly grpc::Marshaller<global::Brochure.AuthorityService.Params> __Marshaller_Brochure_AuthorityService_Params = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Brochure.AuthorityService.Params.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Brochure.AuthorityService.Authority> __Marshaller_Brochure_AuthorityService_Authority = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Brochure.AuthorityService.Authority.Parser.ParseFrom);
+
+    static readonly grpc::Method<global::Brochure.AuthorityService.Params, global::Brochure.AuthorityService.Authority> __Method_GetAuthorityList = new grpc::Method<global::Brochure.AuthorityService.Params, global::Brochure.AuthorityService.Authority>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetAuthorityList",
+        __Marshaller_Brochure_AuthorityService_Params,
+        __Marshaller_Brochure_AuthorityService_Authority);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -23,6 +32,11 @@ namespace Brochure.AuthorityService {
     [grpc::BindServiceMethod(typeof(AuthorityService), "BindService")]
     public abstract partial class AuthorityServiceBase
     {
+      public virtual global::System.Threading.Tasks.Task<global::Brochure.AuthorityService.Authority> GetAuthorityList(global::Brochure.AuthorityService.Params request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
     }
 
     /// <summary>Client for AuthorityService</summary>
@@ -48,6 +62,22 @@ namespace Brochure.AuthorityService {
       {
       }
 
+      public virtual global::Brochure.AuthorityService.Authority GetAuthorityList(global::Brochure.AuthorityService.Params request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetAuthorityList(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Brochure.AuthorityService.Authority GetAuthorityList(global::Brochure.AuthorityService.Params request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetAuthorityList, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Brochure.AuthorityService.Authority> GetAuthorityListAsync(global::Brochure.AuthorityService.Params request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetAuthorityListAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Brochure.AuthorityService.Authority> GetAuthorityListAsync(global::Brochure.AuthorityService.Params request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetAuthorityList, null, options, request);
+      }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override AuthorityServiceClient NewInstance(ClientBaseConfiguration configuration)
       {
@@ -59,7 +89,8 @@ namespace Brochure.AuthorityService {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static grpc::ServerServiceDefinition BindService(AuthorityServiceBase serviceImpl)
     {
-      return grpc::ServerServiceDefinition.CreateBuilder().Build();
+      return grpc::ServerServiceDefinition.CreateBuilder()
+          .AddMethod(__Method_GetAuthorityList, serviceImpl.GetAuthorityList).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -68,6 +99,7 @@ namespace Brochure.AuthorityService {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, AuthorityServiceBase serviceImpl)
     {
+      serviceBinder.AddMethod(__Method_GetAuthorityList, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Brochure.AuthorityService.Params, global::Brochure.AuthorityService.Authority>(serviceImpl.GetAuthorityList));
     }
 
   }

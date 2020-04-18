@@ -1,7 +1,6 @@
 ﻿using System;
 
-namespace Brochure.System
+namespace Brochure.SysInterface
 {
-    public interface IFile
-    { }
+    public interface IFile { }
 }

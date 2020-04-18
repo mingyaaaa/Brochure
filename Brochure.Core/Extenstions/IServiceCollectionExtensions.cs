@@ -7,6 +7,7 @@ using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core.Core;
+using Brochure.Core.Interceptor;
 using Brochure.Core.Module;
 using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.DependencyInjection;

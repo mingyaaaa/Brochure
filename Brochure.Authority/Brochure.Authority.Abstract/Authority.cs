@@ -26,12 +26,15 @@ namespace Brochure.AuthorityService {
           string.Concat(
             "ChZQcm90b3MvYXV0aG9yaXR5LnByb3RvEhlCcm9jaHVyZS5BdXRob3JpdHlT",
             "ZXJ2aWNlIjoKCUF1dGhvcml0eRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJ",
-            "EhMKC2F1dGhfc3RhdHVzGAMgASgFMhIKEEF1dGhvcml0eVNlcnZpY2ViBnBy",
-            "b3RvMw=="));
+            "EhMKC2F1dGhfc3RhdHVzGAMgASgFIggKBlBhcmFtczJvChBBdXRob3JpdHlT",
+            "ZXJ2aWNlElsKEEdldEF1dGhvcml0eUxpc3QSIS5Ccm9jaHVyZS5BdXRob3Jp",
+            "dHlTZXJ2aWNlLlBhcmFtcxokLkJyb2NodXJlLkF1dGhvcml0eVNlcnZpY2Uu",
+            "QXV0aG9yaXR5YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Brochure.AuthorityService.Authority), global::Brochure.AuthorityService.Authority.Parser, new[]{ "Id", "Name", "AuthStatus" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Brochure.AuthorityService.Authority), global::Brochure.AuthorityService.Authority.Parser, new[]{ "Id", "Name", "AuthStatus" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Brochure.AuthorityService.Params), global::Brochure.AuthorityService.Params.Parser, null, null, null, null, null)
           }));
     }
     #endregion
@@ -217,6 +220,107 @@ namespace Brochure.AuthorityService {
             AuthStatus = input.ReadInt32();
             break;
           }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Params : pb::IMessage<Params> {
+    private static readonly pb::MessageParser<Params> _parser = new pb::MessageParser<Params>(() => new Params());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Params> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Brochure.AuthorityService.AuthorityReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Params() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Params(Params other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Params Clone() {
+      return new Params(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Params);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Params other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Params other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
         }
       }
     }

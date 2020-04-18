@@ -1,5 +1,5 @@
 using System.IO;
-namespace Brochure.System
+namespace Brochure.SysInterface
 {
     public interface ISysDirectory
     {

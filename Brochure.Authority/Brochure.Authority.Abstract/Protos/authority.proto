@@ -5,6 +5,8 @@ message Authority {
     string name=2;
     int32 auth_status=3; 
 }
+message Params {
+}
 service AuthorityService {
-
+    rpc GetAuthorityList (Params) returns (Authority);
 }
