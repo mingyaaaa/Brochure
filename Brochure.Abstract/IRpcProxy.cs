@@ -3,6 +3,6 @@ namespace Brochure.Abstract
 {
     public interface IRpcProxy<T>
     {
-        T RpcServiceIns { get; }
+        T Ins { get; }
     }
 }
