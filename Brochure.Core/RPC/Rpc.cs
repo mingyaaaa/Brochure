@@ -7,22 +7,22 @@ using AspectCore.Configuration;
 using AspectCore.DynamicProxy;
 using Brochure.Abstract;
 using Brochure.Core.Interceptor;
-using Polly;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 
 namespace Brochure.Core.RPC
 {
     public class Rpc<T> : IRpcProxy<T> where T : class
     {
-        public Rpc(IRpcProxyFactory factory, params object[] args)
+        public Rpc (IRpcProxyFactory factory, params object[] args)
         {
-            Ins = factory.CreateRpcProxy<T>(args);
+            Ins = factory.CreateRpcProxy<T> (args);
         }
         public T Ins { get; }
     }
     public interface IRpcProxyFactory
     {
-        T CreateRpcProxy<T>(params object[] args) where T : class;
+        T CreateRpcProxy<T> (params object[] args) where T : class;
     }
 
     /// <summary>
@@ -32,35 +32,43 @@ namespace Brochure.Core.RPC
     {
         private readonly PollyOption option;
 
-        public RpcPollyProxyFactory(PollyOption option)
+        public RpcPollyProxyFactory (PollyOption option)
         {
             this.option = option;
         }
-        public T CreateRpcProxy<T>(params object[] args) where T : class
+        public T CreateRpcProxy<T> (params object[] args) where T : class
         {
             //创建代理类                                                                                                             
-            var builder = new ProxyGeneratorBuilder();
-            builder.Configure(t => t.Interceptors.AddTyped<PollyInterceptor>(new object[] { option }));
-            var type = typeof(T);
-            var proxyCreate = builder.Build();
-            return proxyCreate.CreateClassProxy<T>(args);
+            var builder = new ProxyGeneratorBuilder ();
+            builder.Configure (t => t.Interceptors.AddTyped<PollyInterceptor> (new object[] { option }));
+            var type = typeof (T);
+            var proxyCreate = builder.Build ();
+            return proxyCreate.CreateClassProxy<T> (args);
         }
     }
 
     public class RpcMemoryProxyFactory : IRpcProxyFactory
     {
-        private readonly Type targetType;
+        private readonly object targetObj;
 
-        public RpcMemoryProxyFactory(Type targetType)
+        public RpcMemoryProxyFactory (object targetObj)
         {
-            this.targetType = targetType;
+            this.targetObj = targetObj;
         }
-        public T CreateRpcProxy<T>(params object[] args) where T : class
+        public RpcMemoryProxyFactory (Type type)
         {
-            var builder = new ProxyGeneratorBuilder();
-            builder.Configure(t => t.Interceptors.AddTyped<InnerAssemblyInterceptor>(new object[] { targetType }));
-            var proxyCreate = builder.Build();
-            return proxyCreate.CreateClassProxy<T>(args);
+            this.targetObj = Activator.CreateInstance (type);
+        }
+        public RpcMemoryProxyFactory (Func<object> func)
+        {
+            targetObj = func.Invoke ();
+        }
+        public T CreateRpcProxy<T> (params object[] args) where T : class
+        {
+            var builder = new ProxyGeneratorBuilder ();
+            builder.Configure (t => t.Interceptors.AddTyped<InnerAssemblyInterceptor> (new object[] { targetObj }));
+            var proxyCreate = builder.Build ();
+            return proxyCreate.CreateClassProxy<T> (args);
         }
     }
 }
