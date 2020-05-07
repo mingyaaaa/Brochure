@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <MySourceFiles Include="$(TargetDir)/**/*.dll"/>
+    </ItemGroup>
+ <Target Name="AfterBuildCopy" AfterTargets="Build">
+    <MakeDir Directories="$(ProjectDir)/../../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/$(ProjectName)"></MakeDir>
+    <Exec Command="cp -rf $(TargetDir)/   $(ProjectDir)/../../Brochure.Server.Main/bin/Debug/netcoreapp3.1/Plugins/$(ProjectName)"></Exec>
+ </Target>
+</Project>

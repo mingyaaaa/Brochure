@@ -74,8 +74,7 @@ namespace Brochure.Utils
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                var ii = item.GetInterfaces ();
-                if (ii.Any (t => t.FullName == type.FullName))
+                if (item.BaseType == type)
                     listobject.Add (assembly.CreateInstance (item.FullName));
             }
             return listobject;
@@ -96,8 +95,7 @@ namespace Brochure.Utils
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                var ii = item.GetInterfaces ();
-                if (ii.Any (t => t.FullName == type.FullName))
+                if (item.BaseType == type)
                     listobject.Add (item);
             }
             return listobject;

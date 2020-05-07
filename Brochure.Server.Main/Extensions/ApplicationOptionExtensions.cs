@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Server.Main.Extensions
@@ -10,7 +11,7 @@ namespace Brochure.Server.Main.Extensions
     {
         public static async Task AddPluginController (this ApplicationOption applicationOption)
         {
-            var mvcBuilder = applicationOption.Services.AddControllers ();
+            var mvcBuilder = applicationOption.Services.AddMvcCore ();
             var manager = applicationOption.Services.GetServiceInstance<IPluginManagers> ();
             var pluginList = manager.GetPlugins ();
             foreach (var item in pluginList)
@@ -25,6 +26,7 @@ namespace Brochure.Server.Main.Extensions
                     Log.Error ($"{item.Name}加载失败", e);
                 }
             }
+            mvcBuilder.AddControllersAsServices ().SetCompatibilityVersion (CompatibilityVersion.Version_3_0);
         }
     }
 }
