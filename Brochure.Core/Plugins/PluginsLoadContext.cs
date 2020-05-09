@@ -9,13 +9,13 @@ namespace Brochure.Core
 {
     public class PluginsLoadContext : AssemblyLoadContext
     {
-        public IServiceCollection ServiceContrainer;
+        public IServiceProvider Service { get; }
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private readonly HashSet<string> _sysAssemblyNameList;
 
-        public PluginsLoadContext (IServiceCollection services, IAssemblyDependencyResolverProxy resolverProxy)
+        public PluginsLoadContext (IServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy)
         {
-            this.ServiceContrainer = services;
+            this.Service = services;
             _resolver = resolverProxy;
             _sysAssemblyNameList = new HashSet<string> (Default.Assemblies.Select (t => t.GetName ().Name));
         }

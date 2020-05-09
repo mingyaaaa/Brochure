@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Brochure.Abstract;
+using Brochure.Core;
 using Brochure.SysInterface;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,7 @@ namespace Brochure.Test
             SetMockService (new Mock<IObjectFactory> ());
             SetMockService (new Mock<IPluginManagers> ());
             SetMockService (new Mock<ILoggerFactory> ());
+            SetMockService (new Mock<IBApplication> ());
             Log.Setup (t => t.Log (It.IsAny<LogLevel> (), It.IsAny<EventId> (),
                 this, It.IsAny<Exception> (), It.IsAny<Func<BaseTest, Exception, string>> ()
             ));

@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Brochure.Core.Core
+namespace Brochure.Core
 {
-    public interface IApplication
+    public interface IBApplication
     {
         IServiceCollection Services { get; }
+
+        IServiceProvider ServiceProvider { get; }
     }
 }

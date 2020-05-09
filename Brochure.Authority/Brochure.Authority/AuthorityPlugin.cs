@@ -9,54 +9,55 @@ namespace Brochure.Authority
 {
     public class AuthorityPlugin : Plugins
     {
-        public AuthorityPlugin(AssemblyLoadContext assemblyContext, IServiceCollection serviceDescriptor) : base(assemblyContext, serviceDescriptor) { }
+        public AuthorityPlugin (IServiceCollection serviceDescriptor) : base (serviceDescriptor) { }
 
-        public override Task<bool> StartingAsync(out string errorMsg)
+        public override Task<bool> StartingAsync (out string errorMsg)
         {
             errorMsg = string.Empty;
-            ServiceDescriptor.AddIdentityServer().AddDeveloperSigningCredential()
-            .AddInMemoryClients(InitMemoryData.GetClients())
-            .AddInMemoryApiResources(InitMemoryData.GetApiResources());
-            ServiceDescriptor.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
-            return Task.FromResult(true);
+            ServiceDescriptor.AddIdentityServer ().AddDeveloperSigningCredential ()
+                .AddInMemoryClients (InitMemoryData.GetClients ())
+                .AddInMemoryApiResources (InitMemoryData.GetApiResources ());
+            ServiceDescriptor.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
+            return Task.FromResult (true);
         }
     }
     public static class InitMemoryData
     {
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients ()
         {
             var result = new List<Client>
             {
-                new Client()
+                new Client ()
                 {
-                    ClientId = "client1",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("123456".Sha256()) },
-                    AllowedScopes = { "api1" },
+                ClientId = "client1",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret ("123456".Sha256 ()) },
+                AllowedScopes = { "api1" },
                 },
-                new Client()
+                new Client ()
                 {
-                    ClientId = "2",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("123456".Sha256()) },
-                    AllowedScopes = { "2" },
+                ClientId = "2",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret ("123456".Sha256 ()) },
+                AllowedScopes = { "2" },
                 },
-                new Client()
+                new Client ()
                 {
-                    ClientId = "3",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("123456".Sha256()) },
-                    AllowedScopes = { "api3" },
+                ClientId = "3",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret ("123456".Sha256 ()) },
+                AllowedScopes = { "api3" },
                 }
             };
             return result;
         }
-        public static IEnumerable<ApiResource> GetApiResources()
+        public static IEnumerable<ApiResource> GetApiResources ()
         {
-            var result = new List<ApiResource>(){
-                new ApiResource("api1"),
-                new ApiResource("api2"),
-                new ApiResource("api3")
+            var result = new List<ApiResource> ()
+            {
+                new ApiResource ("api1"),
+                new ApiResource ("api2"),
+                new ApiResource ("api3")
             };
             return result;
         }

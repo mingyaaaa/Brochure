@@ -10,12 +10,10 @@ namespace Brochure.Core
 {
     public abstract class Plugins : IPlugins
     {
-        private readonly AssemblyLoadContext assemblyContext;
         protected IServiceCollection ServiceDescriptor;
 
-        public Plugins(AssemblyLoadContext assemblyContext, IServiceCollection serviceDescriptor)
+        public Plugins (IServiceCollection serviceDescriptor)
         {
-            this.assemblyContext = assemblyContext;
             this.ServiceDescriptor = serviceDescriptor;
             Order = int.MaxValue;
         }
@@ -34,32 +32,26 @@ namespace Brochure.Core
         /// 配置服务
         /// </summary>
 
-        public virtual Task StartAsync()
+        public virtual Task StartAsync ()
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task ExitAsync()
+        public virtual Task ExitAsync ()
         {
-            this.assemblyContext.Unload();
             return Task.CompletedTask;
         }
 
-        public virtual Task<bool> StartingAsync(out string errorMsg)
+        public virtual Task<bool> StartingAsync (out string errorMsg)
         {
             errorMsg = string.Empty;
-            return Task.FromResult(true);
+            return Task.FromResult (true);
         }
 
-        public virtual Task<bool> ExitingAsync(out string errorMsg)
+        public virtual Task<bool> ExitingAsync (out string errorMsg)
         {
             errorMsg = string.Empty;
-            return Task.FromResult(true);
-        }
-
-        public AssemblyLoadContext GetAssemblyLoadContext()
-        {
-            return assemblyContext;
+            return Task.FromResult (true);
         }
     }
 }
