@@ -59,7 +59,7 @@ namespace Brochure.Test
             loadContextMock.Protected ().Setup<Assembly> ("Load", typeof (TestPlugins).Assembly.GetName ()).Returns (typeof (TestPlugins).Assembly);
             reflectorUtilMock.Setup (t => t.GetTypeOfAbsoluteBase (It.IsAny<Assembly> (), It.IsAny<Type> ())).Returns (new List<Type> { typeof (TestPlugins) });
 
-            pluginManagerMock.Object.ResolverPlugins (Service, null);
+            pluginManagerMock.Object.ResolverPlugins (Service);
             pluginManagerMock.Verify (t => t.Regist (It.IsAny<Plugins> ()), Times.AtMost (2));
         }
     }

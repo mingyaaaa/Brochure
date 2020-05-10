@@ -12,7 +12,7 @@ namespace Brochure.Server.Main
     {
         public static async Task AddPluginController (this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvcCore ();
+            var mvcBuilder = services.AddMvc ();
             var manager = services.GetServiceInstance<IPluginManagers> ();
             var application = services.GetServiceInstance<IBApplication> () as BApplication;
             application.ApplicationPartManager = mvcBuilder.PartManager;
@@ -29,7 +29,7 @@ namespace Brochure.Server.Main
                     Log.Error ($"{item.Name}加载失败", e);
                 }
             }
-            mvcBuilder.AddControllersAsServices ().SetCompatibilityVersion (CompatibilityVersion.Version_3_0);
+            mvcBuilder.SetCompatibilityVersion (CompatibilityVersion.Version_3_0);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Brochure.Abstract
         /// <param name="serviceDescriptors"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        Task ResolverPlugins (IServiceCollection serviceDescriptors, Func<IPluginOption, Task<bool>> func);
+        Task ResolverPlugins (IServiceCollection services);
 
         /// <summary>
         /// 加载插件
@@ -21,14 +21,14 @@ namespace Brochure.Abstract
         /// <param name="service"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        Task<IPlugins> LoadPlugins (IServiceProvider service, string path);
+        Task<IPlugins> LoadPlugin (IServiceProvider service, string path);
         /// <summary>
         /// 加载插件
         /// </summary>
         /// <param name="service"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        Task<IPlugins> LoadPlugins (IServiceCollection service, string path);
+        Task<IPlugins> LoadPlugin (IServiceCollection service, string path);
         /// <summary>
         /// 注册插件
         /// </summary>
@@ -39,7 +39,7 @@ namespace Brochure.Abstract
         /// 卸载插件程序集
         /// </summary>
         /// <param name="plugin"></param>
-        Task UnLoad (IPlugins plugin);
+        Task UnLoadPlugin (IPlugins plugin);
 
         /// <summary>
         /// 移除插件

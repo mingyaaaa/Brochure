@@ -11,6 +11,9 @@ namespace Brochure.Core.Models
         public string Author { get; set; }
         public string AssemblyName { get; set; }
         public int Order { get; set; }
+
+        public string PluginPath { get; set; }
+
         public List<Guid> DependencesKey { get; set; }
     }
 }

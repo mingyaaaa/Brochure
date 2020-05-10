@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -31,14 +32,36 @@ namespace Brochure.Server.Main.Controllers
         }
 
         [HttpGet ("loadPlugin")]
-        public async Task<IActionResult> TestLoadPlugin (string id)
+        public async Task<IActionResult> TestLoadPlugin ()
         {
+            var path = Path.Combine (pluginManager.GetBasePluginsPath (), "Brochure.Authority", "plugin.config");
+            var p = await pluginManager.LoadPlugin (application.ServiceProvider, path);
+            if (!(p is Plugins plugin))
+                return new ContentResult () { Content = "bbb" };
+            if (application is BApplication app)
+            {
+                app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
+            }
+            PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
+            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();
             return new ContentResult () { Content = "aaa" };
         }
 
         [HttpGet ("unLoadPlugin")]
         public async Task<IActionResult> TestUnLoadPlugin ()
         {
+            var plugins = pluginManager.GetPlugins ();
+            if (application is BApplication app)
+            {
+                foreach (var item in plugins)
+                {
+                    await pluginManager.UnLoadPlugin (item);
+                    var part = app.ApplicationPartManager.ApplicationParts.FirstOrDefault (t => t.Name == item.Assembly.GetName ().Name);
+                    app.ApplicationPartManager.ApplicationParts.Remove (part);
+                }
+            }
+            PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
+            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();
             return new ContentResult () { Content = "aaa" };
         }
     }

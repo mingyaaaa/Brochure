@@ -79,7 +79,7 @@ namespace Brochure.Core
         internal static IServiceCollection InitApplicationCore (this IServiceCollection service)
         {
             //注入插件模块
-            service.AddSingleton<IModule> (new PluginModule ());
+            // service.AddSingleton<IModule> (new PluginModule ());
             //加载模块
             var models = service.GetServiceInstances<IModule> ().ToArray ();
             foreach (var item in models)

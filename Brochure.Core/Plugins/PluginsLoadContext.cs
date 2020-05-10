@@ -13,7 +13,7 @@ namespace Brochure.Core
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private readonly HashSet<string> _sysAssemblyNameList;
 
-        public PluginsLoadContext (IServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy)
+        public PluginsLoadContext (IServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy) : base (isCollectible: true)
         {
             this.Service = services;
             _resolver = resolverProxy;
