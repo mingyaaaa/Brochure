@@ -19,7 +19,7 @@ namespace Brochure.Test
 {
     public class TestPlugins : Plugins
     {
-        public TestPlugins (IServiceCollection services) : base (services) { }
+        public TestPlugins (IServiceProvider services) : base (services) { }
     }
 
     [TestClass]
@@ -52,8 +52,8 @@ namespace Brochure.Test
             jsonUtilMock.Setup (t => t.Get<PluginConfig> (It.IsAny<string> ())).Returns (new PluginConfig () { AssemblyName = typeof (TestPlugins).Assembly.FullName });
             objectFactoryMock.Setup (t => t.Create<PluginsLoadContext> (serviceProvider, resolver.Object))
                 .Returns (loadContextMock.Object);
-            objectFactoryMock.Setup (t => t.Create (typeof (TestPlugins), Service))
-                .Returns (new TestPlugins (Service));
+            objectFactoryMock.Setup (t => t.Create (typeof (TestPlugins), serviceProvider))
+                .Returns (new TestPlugins (serviceProvider));
             objectFactoryMock.Setup (t => t.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy> (It.IsAny<string> ()))
                 .Returns (resolver.Object);
             loadContextMock.Protected ().Setup<Assembly> ("Load", typeof (TestPlugins).Assembly.GetName ()).Returns (typeof (TestPlugins).Assembly);

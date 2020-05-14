@@ -61,6 +61,12 @@ namespace Brochure.Abstract
         List<IPlugins> GetPlugins ();
 
         /// <summary>
+        /// 判断插件是否存在
+        /// </summary>
+        /// <returns></returns>
+        bool IsExistPlugins (Guid id);
+
+        /// <summary>
         /// 获取插件路径
         /// </summary>
         /// <returns></returns>

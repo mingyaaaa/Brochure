@@ -10,12 +10,12 @@ namespace Brochure.Core
 {
     public abstract class Plugins : IPlugins
     {
-        protected IServiceCollection ServiceDescriptor;
+        public PluginContext Context;
 
-        public Plugins (IServiceCollection serviceDescriptor)
+        public Plugins (IServiceProvider service)
         {
-            this.ServiceDescriptor = serviceDescriptor;
             Order = int.MaxValue;
+            Context = new PluginContext (service);
         }
 
         public Guid Key { get; set; }

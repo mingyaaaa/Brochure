@@ -7,9 +7,11 @@ namespace Brochure.Authority.Controllers.V1
     [Route ("api/v1/[controller]")]
     public class AuthorityController : ControllerBase
     {
-        public AuthorityController ()
-        {
+        private readonly AuthorityService.AuthorityService.AuthorityServiceBase serviceBase;
 
+        public AuthorityController (AuthorityService.AuthorityService.AuthorityServiceBase serviceBase)
+        {
+            this.serviceBase = serviceBase;
         }
 
         [HttpGet]

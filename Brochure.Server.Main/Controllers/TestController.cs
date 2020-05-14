@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.Core.Core;
 using Brochure.Server.Main.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,16 @@ namespace Brochure.Server.Main.Controllers
     {
         private readonly IPluginManagers pluginManager;
         private readonly IBApplication application;
+        private readonly IServiceScopeFactory serviceScopeFactory;
 
-        public TestController (IPluginManagers pluginManager, IBApplication application)
+        public TestController (
+            IPluginManagers pluginManager,
+            IBApplication application,
+            IServiceScopeFactory serviceScopeFactory)
         {
             this.pluginManager = pluginManager;
             this.application = application;
+            this.serviceScopeFactory = serviceScopeFactory;
         }
 
         [HttpGet]
@@ -41,6 +47,10 @@ namespace Brochure.Server.Main.Controllers
             if (application is BApplication app)
             {
                 app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
+                if (serviceScopeFactory is ServiceScopeFactory factory)
+                {
+                    factory.SetService (app.Services);
+                }
             }
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
             PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();

@@ -33,10 +33,11 @@ namespace Brochure.Core
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             var option = new ApplicationOption (service);
             appAction (option);
+            option.AddLog ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
             //加载一些核心的程序
             service.InitApplicationCore ();
-            option.AddLog ();
+
             return service;
         }
 

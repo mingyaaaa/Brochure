@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Core;
@@ -9,15 +10,15 @@ namespace Brochure.Authority
 {
     public class AuthorityPlugin : Plugins
     {
-        public AuthorityPlugin (IServiceCollection serviceDescriptor) : base (serviceDescriptor) { }
+        public AuthorityPlugin (IServiceProvider service) : base (service) { }
 
         public override Task<bool> StartingAsync (out string errorMsg)
         {
             errorMsg = string.Empty;
-            ServiceDescriptor.AddIdentityServer ().AddDeveloperSigningCredential ()
+            Context.AddIdentityServer ().AddDeveloperSigningCredential ()
                 .AddInMemoryClients (InitMemoryData.GetClients ())
                 .AddInMemoryApiResources (InitMemoryData.GetApiResources ());
-            ServiceDescriptor.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
+            Context.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
             return Task.FromResult (true);
         }
     }

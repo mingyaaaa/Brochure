@@ -135,7 +135,7 @@ namespace Brochure.Core
             if (allPluginTypes.Count == 2)
                 throw new Exception ("存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
-            var plugin = (Plugins) objectFactory.Create (pluginType, application.Services);
+            var plugin = (Plugins) objectFactory.Create (pluginType, application.Services.BuildServiceProvider ());
             SetPluginValues (pluginConfig, assemably, ref plugin);
             if (await StartPlugin (plugin))
             {
@@ -199,6 +199,11 @@ namespace Brochure.Core
         {
             var serviceProvider = service.BuildServiceProvider ();
             return LoadPlugin (serviceProvider, path);
+        }
+
+        public bool IsExistPlugins (Guid id)
+        {
+            return pluginDic.ContainsKey (id);
         }
     }
 }
