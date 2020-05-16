@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Brochure.Core.PluginsDI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ namespace Brochure.Server.Main
         }
 
         public static IHostBuilder CreateHostBuilder (string[] args) =>
-            Host.CreateDefaultBuilder (args)
+            Host.CreateDefaultBuilder (args).UseServiceProviderFactory (new PluginServiceProviderFactory ())
             .ConfigureWebHostDefaults (webBuilder => webBuilder.UseStartup<Startup> ());
     }
 }

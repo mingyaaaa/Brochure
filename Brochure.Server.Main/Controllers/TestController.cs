@@ -19,16 +19,13 @@ namespace Brochure.Server.Main.Controllers
     {
         private readonly IPluginManagers pluginManager;
         private readonly IBApplication application;
-        private readonly IServiceScopeFactory serviceScopeFactory;
 
         public TestController (
             IPluginManagers pluginManager,
-            IBApplication application,
-            IServiceScopeFactory serviceScopeFactory)
+            IBApplication application)
         {
             this.pluginManager = pluginManager;
             this.application = application;
-            this.serviceScopeFactory = serviceScopeFactory;
         }
 
         [HttpGet]
@@ -47,10 +44,6 @@ namespace Brochure.Server.Main.Controllers
             if (application is BApplication app)
             {
                 app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
-                if (serviceScopeFactory is ServiceScopeFactory factory)
-                {
-                    factory.SetService (app.Services);
-                }
             }
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
             PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();

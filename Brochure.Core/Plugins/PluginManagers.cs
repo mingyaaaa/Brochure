@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Core.Extenstions;
 using Brochure.Core.Models;
 using Brochure.SysInterface;
 using Brochure.Utils;
@@ -118,7 +119,6 @@ namespace Brochure.Core
         {
             var objectFactory = service.GetService<IObjectFactory> ();
             var reflectorUtil = service.GetService<IReflectorUtil> ();
-            var application = service.GetService<IBApplication> ();
             if (pluginDic.ContainsKey (pluginConfig.Key))
             {
                 throw new Exception ($"当前插件{pluginConfig.Key}已存在");
@@ -135,7 +135,7 @@ namespace Brochure.Core
             if (allPluginTypes.Count == 2)
                 throw new Exception ("存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
-            var plugin = (Plugins) objectFactory.Create (pluginType, application.Services.BuildServiceProvider ());
+            var plugin = (Plugins) objectFactory.Create (pluginType, service);
             SetPluginValues (pluginConfig, assemably, ref plugin);
             if (await StartPlugin (plugin))
             {
@@ -145,7 +145,7 @@ namespace Brochure.Core
         }
         private Task<IPlugins> LoadPlugin (IServiceCollection service, PluginConfig pluginConfig)
         {
-            var serviceProvider = service.BuildServiceProvider ();
+            var serviceProvider = service.BuildPluginServiceProvider ();
             return LoadPlugin (serviceProvider, pluginConfig);
         }
         private async Task<bool> StartPlugin (Plugins plugin)
@@ -197,7 +197,7 @@ namespace Brochure.Core
 
         public Task<IPlugins> LoadPlugin (IServiceCollection service, string path)
         {
-            var serviceProvider = service.BuildServiceProvider ();
+            var serviceProvider = service.BuildPluginServiceProvider ();
             return LoadPlugin (serviceProvider, path);
         }
 

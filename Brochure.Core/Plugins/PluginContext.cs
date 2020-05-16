@@ -8,9 +8,9 @@ namespace Brochure.Core
     /// </summary>
     public class PluginContext : ServiceCollection
     {
-        public PluginContext (IServiceProvider mainServiceProvider)
+        public PluginContext (IServiceProvider services)
         {
-            MainService = mainServiceProvider;
+            MainService = services;
         }
         public IServiceProvider MainService { get; }
     }
