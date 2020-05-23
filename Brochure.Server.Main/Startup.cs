@@ -1,15 +1,19 @@
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.Server.Main.Abstract.Interfaces;
 using Brochure.Server.Main.Core;
 using Brochure.Server.Main.Extensions;
 using Brochure.SysInterface;
 using Brochure.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 namespace Brochure.Server.Main
@@ -28,7 +32,12 @@ namespace Brochure.Server.Main
         {
             services.AddLogging ();
             services.AddSingleton<IActionDescriptorChangeProvider> (PluginActionDescriptorChangeProvider.Instance);
-            services.AddBrochureService (option => option.Services.AddSingleton<IBApplication> (new BApplication () { Services = services }));
+            services.AddBrochureService (option =>
+            {
+                option.Services.AddSingleton<IBApplication> (new BApplication ());
+                option.Services.AddSingleton<IMiddleManager, MiddleManager> ();
+                option.Services.Replace (ServiceDescriptor.Transient (typeof (IApplicationBuilderFactory), typeof (PluginApplicationBuilderFactory)));
+            });
             await services.AddPluginController ();
         }
 
@@ -39,14 +48,42 @@ namespace Brochure.Server.Main
             {
                 app.UseDeveloperExceptionPage ();
             }
-            //   app.UseHttpsRedirection ();
-            (application as BApplication).ServiceProvider = app.ApplicationServices;
-            app.UseRouting ();
 
-            app.UseEndpoints (endpoints =>
+            var log = app.ApplicationServices.GetService<ILogger<Startup>> ();
+            var middleManager = app.ApplicationServices.GetService<IMiddleManager> ();
+            if (application is BApplication t)
             {
-                endpoints.MapControllers ();
+                t.ServiceProvider = app.ApplicationServices;
+                t.Builder = app;
+            }
+            middleManager.IntertMiddle (middleManager.GetMiddleCount () + 1, () => app.UseRouting ());
+
+            middleManager.AddMiddle (() =>
+            {
+                app.Use (t =>
+                {
+                    return h =>
+                    {
+                        log.LogInformation ("1");
+                        t (h);
+                        return Task.CompletedTask;
+                    };;
+                });
             });
+            middleManager.AddMiddle (() =>
+            {
+                app.Use (t =>
+                {
+                    return h =>
+                    {
+                        log.LogInformation ("2");
+                        t (h);
+                        return Task.CompletedTask;
+                    };
+                });
+            });
+            app.ConfigPlugin ();
+            middleManager.IntertMiddle (1000, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
         }
     }
 }

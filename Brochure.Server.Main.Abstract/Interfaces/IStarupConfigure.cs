@@ -5,6 +5,6 @@ namespace Brochure.Server.Main.Abstract.Interfaces
 {
     public interface IStarupConfigure
     {
-        void Configure(IApplicationBuilder applicationBuilder);
+        void Configure (IApplicationBuilder builder);
     }
 }

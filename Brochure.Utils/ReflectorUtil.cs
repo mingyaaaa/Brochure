@@ -15,7 +15,7 @@ namespace Brochure.Utils
             var listobject = new List<object> ();
             foreach (var item in types)
             {
-                if (item.IsAssignableFrom (type))
+                if (type.IsAssignableFrom (item))
                     listobject.Add (assembly.CreateInstance (item.FullName));
             }
             return listobject;
@@ -36,7 +36,7 @@ namespace Brochure.Utils
             {
                 if (item.IsAbstract || item.IsInterface)
                     continue;
-                if (item.IsAssignableFrom (type))
+                if (type.IsAssignableFrom (item))
                     list.Add (item);
             }
             return list;

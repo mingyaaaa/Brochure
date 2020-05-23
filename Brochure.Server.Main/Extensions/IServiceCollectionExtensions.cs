@@ -31,5 +31,6 @@ namespace Brochure.Server.Main
             }
             mvcBuilder.SetCompatibilityVersion (CompatibilityVersion.Version_3_0);
         }
+
     }
 }

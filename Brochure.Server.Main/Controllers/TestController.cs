@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Core;
+using Brochure.Server.Main.Abstract.Interfaces;
 using Brochure.Server.Main.Core;
+using Brochure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -19,13 +22,19 @@ namespace Brochure.Server.Main.Controllers
     {
         private readonly IPluginManagers pluginManager;
         private readonly IBApplication application;
+        private readonly IReflectorUtil reflectorUtil;
+        private readonly IMiddleManager manager;
 
         public TestController (
             IPluginManagers pluginManager,
-            IBApplication application)
+            IBApplication application,
+            IReflectorUtil reflectorUtil,
+            IMiddleManager manager)
         {
             this.pluginManager = pluginManager;
             this.application = application;
+            this.reflectorUtil = reflectorUtil;
+            this.manager = manager;
         }
 
         [HttpGet]
@@ -43,6 +52,11 @@ namespace Brochure.Server.Main.Controllers
                 return new ContentResult () { Content = "bbb" };
             if (application is BApplication app)
             {
+                var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure> (plugin.Assembly);
+                foreach (var item in startConfigs)
+                {
+                    item.Configure (app.Builder);
+                }
                 app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
             }
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
@@ -51,7 +65,7 @@ namespace Brochure.Server.Main.Controllers
         }
 
         [HttpGet ("unLoadPlugin")]
-        public async Task<IActionResult> TestUnLoadPlugin ()
+        public async Task<IActionResult> UnLoadPlugin ()
         {
             var plugins = pluginManager.GetPlugins ();
             if (application is BApplication app)
@@ -66,6 +80,12 @@ namespace Brochure.Server.Main.Controllers
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
             PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();
             return new ContentResult () { Content = "aaa" };
+        }
+
+        [Authorize]
+        public async Task<IActionResult> TestAuth ()
+        {
+            return Ok ();
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
 {
     public interface IBApplication
     {
-        IServiceCollection Services { get; }
 
         IServiceProvider ServiceProvider { get; }
+
+        IApplicationBuilder Builder { get; }
     }
 }
