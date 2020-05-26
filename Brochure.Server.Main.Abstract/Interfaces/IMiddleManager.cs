@@ -1,18 +1,22 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
 namespace Brochure.Server.Main.Abstract.Interfaces
 {
     public interface IMiddleManager
     {
-        void AddMiddle (Func<RequestDelegate, RequestDelegate> middle);
-        void IntertMiddle (int index, Func<RequestDelegate, RequestDelegate> middle);
 
-        void AddMiddle (Action action);
-        void IntertMiddle (int index, Action action);
+        void AddMiddle (Guid pluginId, Func<RequestDelegate, RequestDelegate> middle);
+        void IntertMiddle (Guid pluginId, int index, Func<RequestDelegate, RequestDelegate> middle);
 
-        int GetMiddleCount ();
+        void AddMiddle (Guid pluginId, Action action);
+        void IntertMiddle (Guid pluginId, int index, Action action);
 
-        RequestDelegate UseMiddle ();
+        void RemovePluginMiddle (Guid guid);
+        IReadOnlyList<RequestDelegateProxy> GetMiddlesList ();
+
+        void AddRange (IEnumerable<RequestDelegateProxy> proxy);
+        void Reset ();
     }
 }

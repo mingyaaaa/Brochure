@@ -1,5 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Brochure.Abstract;
+using Brochure.Core;
+using Brochure.Server.Main.Abstract.Extensions;
 using Brochure.Server.Main.Abstract.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,33 +13,32 @@ namespace Brochure.Authority
 {
     public class StartConfig : IStarupConfigure
     {
-        public void Configure (IApplicationBuilder app)
+        public void Configure (Guid guid, IApplicationBuilder app)
         {
             // app.UseIdentityServer ();
-            var middleManager = app.ApplicationServices.GetService<IMiddleManager> ();
             var log = app.ApplicationServices.GetService<ILogger<AuthorityPlugin>> ();
-            middleManager.IntertMiddle (100, () => app.UseAuthentication ());
-            middleManager.IntertMiddle (101, () =>
+
+            //   app.IntertMiddle (guid, 100, () => app.UseAuthentication ());
+            app.IntertMiddle (guid, 101, () =>
             {
                 app.Use (t =>
                 {
-                    return h =>
+                    return async h =>
                     {
                         log.LogInformation ("3");
-                        t (h);
-                        return Task.CompletedTask;
+                        await t (h);
+                        return;
                     };
                 });
             });
-            middleManager.AddMiddle (() =>
+            app.AddMiddle (guid, () =>
             {
                 app.Use (t =>
                 {
-                    return h =>
+                    return async h =>
                     {
                         log.LogInformation ("4");
-                        t (h);
-                        return Task.CompletedTask;
+                        await t (h);
                     };
                 });
             });

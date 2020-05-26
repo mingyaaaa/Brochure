@@ -20,7 +20,8 @@ namespace Brochure.Authority
         public override Task<bool> StartingAsync (out string errorMsg)
         {
             errorMsg = string.Empty;
-            Context.AddAuthentication (t =>
+            var pluginServiceCollection = this.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            pluginServiceCollection.AddAuthentication (t =>
                 t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme).AddJwtBearer (t =>
             {
                 t.RequireHttpsMetadata = true;
@@ -36,7 +37,7 @@ namespace Brochure.Authority
             // Context.AddIdentityServer ().AddDeveloperSigningCredential ()
             //     .AddInMemoryClients (InitMemoryData.GetClients ())
             //     .AddInMemoryApiResources (InitMemoryData.GetApiResources ());
-            // Context.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
+            pluginServiceCollection.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
             return Task.FromResult (true);
         }
     }

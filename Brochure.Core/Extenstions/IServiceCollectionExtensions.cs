@@ -31,6 +31,7 @@ namespace Brochure.Core
             var utilInit = new UtilApplicationInit (service);
             utilInit.Init ();
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
+            service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
             var option = new ApplicationOption (service);
             appAction (option);
             option.AddLog ();
@@ -80,7 +81,7 @@ namespace Brochure.Core
         internal static IServiceCollection InitApplicationCore (this IServiceCollection service)
         {
             //注入插件模块
-            // service.AddSingleton<IModule> (new PluginModule ());
+            service.AddSingleton<IModule> (new PluginModule ());
             //加载模块
             var models = service.GetServiceInstances<IModule> ().ToArray ();
             foreach (var item in models)

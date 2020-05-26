@@ -23,23 +23,21 @@ namespace Brochure.Server.Main.Controllers
         private readonly IPluginManagers pluginManager;
         private readonly IBApplication application;
         private readonly IReflectorUtil reflectorUtil;
-        private readonly IMiddleManager manager;
 
         public TestController (
             IPluginManagers pluginManager,
             IBApplication application,
-            IReflectorUtil reflectorUtil,
-            IMiddleManager manager)
+            IReflectorUtil reflectorUtil)
         {
             this.pluginManager = pluginManager;
             this.application = application;
             this.reflectorUtil = reflectorUtil;
-            this.manager = manager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAction1 ()
+        public IActionResult GetAction1 ()
         {
+            throw new Exception ("aaaa");
             return new ContentResult () { Content = "aaa" };
         }
 
@@ -53,9 +51,11 @@ namespace Brochure.Server.Main.Controllers
             if (application is BApplication app)
             {
                 var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure> (plugin.Assembly);
+                var context = new PluginMiddleContext (app.ServiceProvider, plugin.Key);
+                plugin.Context.Add (context);
                 foreach (var item in startConfigs)
                 {
-                    item.Configure (app.Builder);
+                    item.Configure (plugin.Key, context);
                 }
                 app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
             }
@@ -83,7 +83,7 @@ namespace Brochure.Server.Main.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> TestAuth ()
+        public IActionResult TestAuth ()
         {
             return Ok ();
         }

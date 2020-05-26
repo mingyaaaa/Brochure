@@ -10,12 +10,12 @@ namespace Brochure.Core
 {
     public abstract class Plugins : IPlugins
     {
-        public PluginContext Context;
+        public IPluginContext Context;
 
         public Plugins (IServiceProvider service)
         {
             Order = int.MaxValue;
-            Context = new PluginContext (service);
+            Context = new PluginContext (service.GetServices<IPluginContextDescript> ());
         }
 
         public Guid Key { get; set; }

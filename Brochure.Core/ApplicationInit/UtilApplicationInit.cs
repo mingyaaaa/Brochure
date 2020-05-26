@@ -25,7 +25,6 @@ namespace Brochure.Core.Core
             services.TryAddSingleton<IReflectorUtil> (new ReflectorUtil ());
             services.TryAddSingleton<IObjectFactory> (new Brochure.Abstract.ObjectFactory ());
             services.TryAddSingleton<ISysDirectory> (new SysDirectory ());
-            services.TryAddSingleton<IPluginManagers> (new PluginManagers ());
             nextApplicationFunInit?.Init ();
         }
 

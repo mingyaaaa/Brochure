@@ -10,14 +10,12 @@ namespace Brochure.Core
 {
     public class PluginModule : IModule
     {
-        public Task Initialization (IServiceCollection services)
+        public async Task Initialization (IServiceCollection services)
         {
-            services.TryAddSingleton<IPluginManagers, PluginManagers> ();
+            var pluginManagers = new PluginManagers ();
+            services.TryAddSingleton<IPluginManagers> (pluginManagers);
             //加载插件
-            var pluginManager = services.GetServiceInstance<IPluginManagers> ();
-            pluginManager.ResolverPlugins (services);
-            return Task.CompletedTask;
+            //  await pluginManagers.ResolverPlugins (services);
         }
-
     }
 }

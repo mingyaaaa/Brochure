@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core.Extenstions;
 using Brochure.Core.Models;
+using Brochure.Extensions;
 using Brochure.SysInterface;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
 namespace Brochure.Core
 {
     public class PluginManagers : IPluginManagers
     {
         private readonly ConcurrentDictionary<Guid, IPlugins> pluginDic;
         private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
+        private readonly IServiceProvider serviceProvider;
+
         public PluginManagers ()
         {
             pluginDic = new ConcurrentDictionary<Guid, IPlugins> ();
@@ -69,6 +71,7 @@ namespace Brochure.Core
             var loggerFactory = service.GetServiceInstance<ILoggerFactory> ();
             var moduleLoader = service.GetServiceInstance<IModuleLoader> ();
             var jsonUtil = service.GetServiceInstance<IJsonUtil> ();
+            var loadActions = service.GetServiceInstances<IPluginLoadAction> ();
             var log = loggerFactory.CreateLogger ("ResolvePlugins");
             var pluginBathPath = GetBasePluginsPath ();
             var allPluginPath = directory.GetFiles (pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList ();
@@ -81,6 +84,8 @@ namespace Brochure.Core
                     if (p != null && p is Plugins plugin)
                     {
                         moduleLoader.LoadModule (service, plugin.Assembly);
+                        foreach (var item in loadActions)
+                            item.Invoke (plugin);
                     }
                     else
                     {
@@ -174,10 +179,12 @@ namespace Brochure.Core
                 await pp.ExitAsync ();
                 if (pluginContextDic.TryGetValue (plugin.Key, out var loadContext))
                 {
+                    var pluginUnLoadActions = pp.Context.GetPluginContext<PluginServiceCollectionContext> ()?.MainService.GetServices<IPluginUnLoadAction> () ?? new List<IPluginUnLoadAction> ();
                     loadContext.Unload ();
                     pluginContextDic.TryRemove (plugin.Key, out var _);
+                    foreach (var item in pluginUnLoadActions)
+                        item.Invoke (plugin);
                 }
-
             }
             await Remove (plugin);
         }
@@ -205,5 +212,6 @@ namespace Brochure.Core
         {
             return pluginDic.ContainsKey (id);
         }
+
     }
 }

@@ -21,5 +21,16 @@ namespace Brochure.Extensions
             }
             return list;
         }
+        public static void AddValue<T1, T2> (this IDictionary<T1, List<T2>> dic, T1 key, T2 value)
+        {
+            if (dic.ContainsKey (key))
+            {
+                dic[key].Add (value);
+            }
+            else
+            {
+                dic.Add (key, new List<T2> () { value });
+            }
+        }
     }
 }

@@ -12,107 +12,72 @@ namespace Brochure.Server.Main.Core
 {
     public class MiddleManager : IMiddleManager
     {
-        private int pluginCount = -1;
-        public MiddleManager (IPluginManagers pluginManagers)
+        public MiddleManager ()
         {
-            middleCollection = new List<Tuple<int, Func<object>>> ();
-            this.pluginManagers = pluginManagers;
+            middleCollection = new List<RequestDelegateProxy> ();
         }
-        private readonly List<Tuple<int, Func<object>>> middleCollection;
-        private readonly IPluginManagers pluginManagers;
+        private readonly List<RequestDelegateProxy> middleCollection;
 
-        public void AddMiddle (Func<RequestDelegate, RequestDelegate> middle)
+        public void AddMiddle (Guid id, Func<RequestDelegate, RequestDelegate> middle)
         {
             var count = middleCollection.Count;
-            middleCollection.Add (Tuple.Create<int, Func<object>> (count + 1, () => middle)); //顺序从1开始
+            middleCollection.Add (new RequestDelegateProxy (id, count, () => middle)); //顺序从1开始
         }
 
-        public void IntertMiddle (int index, Func<RequestDelegate, RequestDelegate> middle)
+        public void IntertMiddle (Guid id, int index, Func<RequestDelegate, RequestDelegate> middle)
         {
-            middleCollection.Add (Tuple.Create<int, Func<object>> (index, () => middle));
+            middleCollection.Add (new RequestDelegateProxy (id, index, () => middle));
         }
-        public void AddMiddle (Action action)
+
+        public void AddMiddle (Guid guid, Action action)
         {
             var count = middleCollection.Count;
-            middleCollection.Add (Tuple.Create<int, Func<object>> (count + 1, () =>
+            middleCollection.Add (new RequestDelegateProxy (guid, count, () =>
             {
                 action.Invoke ();
                 return null;
             })); //顺序从1开始
         }
 
-        public void IntertMiddle (int index, Action action)
+        public void IntertMiddle (Guid guid, int index, Action action)
         {
-            middleCollection.Add (Tuple.Create<int, Func<object>> (index, () =>
+            middleCollection.Add (new RequestDelegateProxy (guid, index, () =>
             {
                 action.Invoke ();
                 return null;
             })); //顺序从1开始
         }
 
-        public int GetMiddleCount ()
+        public IReadOnlyList<RequestDelegateProxy> GetMiddlesList ()
         {
-            return middleCollection.Count;
-        }
-        public RequestDelegate UseMiddle ()
-        {
-
-            return StartPipe ();
-        }
-        private RequestDelegate Default404EndPipe ()
-        {
-            return context =>
-            {
-                // If we reach the end of the pipeline, but we have an endpoint, then something unexpected has happened.
-                // This could happen if user code sets an endpoint, but they forgot to add the UseEndpoint middleware.
-                var endpoint = context.GetEndpoint ();
-                var endpointRequestDelegate = endpoint?.RequestDelegate;
-                if (endpointRequestDelegate != null)
-                {
-                    var message =
-                        $"The request reached the end of the pipeline without executing the endpoint: '{endpoint.DisplayName}'. " +
-                        $"Please register the EndpointMiddleware using '{nameof(IApplicationBuilder)}.UseEndpoints(...)' if using " +
-                        $"routing.";
-                    throw new InvalidOperationException (message);
-                }
-                context.Response.StatusCode = 404;
-                return Task.CompletedTask;
-            };
+            return middleCollection;
         }
 
-        private RequestDelegate StartPipe ()
+        public void RemovePluginMiddle (Guid guid)
         {
-            RequestDelegate app = null;
-            return t =>
-            {
-                var count = pluginManagers.GetPlugins ().Count;
-                if (pluginCount != count)
-                {
-                    app = Default404EndPipe ();
-                    var list = middleCollection.OrderBy (t => t.Item1).ToList ();
-                    middleCollection.Clear ();
-                    //注入所有的Fun<RequestDelegate,RequestDelegate>
-                    foreach (var tuple in list)
-                    {
-                        var r = tuple.Item2.Invoke ();
-                        if (r != null && r is Func<RequestDelegate, RequestDelegate>)
-                            AddMiddle (r as Func<RequestDelegate, RequestDelegate>);
-                    }
-                    var reqList = middleCollection.OrderByDescending (t => t.Item1).Select (t => t.Item2).ToList ();
-                    foreach (var item in reqList)
-                    {
-                        var r = item ();
-                        var type = typeof (Func<,>);
-                        if (r is Func<RequestDelegate, RequestDelegate> f)
-                            app = f (app);
-                    }
-                    pluginCount = count;
-                    middleCollection.Clear ();
-                    middleCollection.AddRange (list);
-                }
-                app.Invoke (t);
-                return Task.CompletedTask;
-            };
+            middleCollection.RemoveAll (t => t.PluginId == guid);
+        }
+        public void Reset ()
+        {
+            middleCollection.Clear ();
+        }
+        public void AddRange (IEnumerable<RequestDelegateProxy> proxy)
+        {
+            middleCollection.AddRange (proxy);
+        }
+    }
+
+    public class PluginMiddleUnLoadAction : IPluginUnLoadAction
+    {
+        private readonly IMiddleManager middleManager;
+
+        public PluginMiddleUnLoadAction (IMiddleManager middleManager)
+        {
+            this.middleManager = middleManager;
+        }
+        public void Invoke (IPlugins plugins)
+        {
+            middleManager.RemovePluginMiddle (plugins.Key);
         }
     }
 }

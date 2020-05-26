@@ -1,3 +1,4 @@
+using System;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using Brochure.Abstract;
@@ -35,7 +36,8 @@ namespace Brochure.Server.Main
             services.AddBrochureService (option =>
             {
                 option.Services.AddSingleton<IBApplication> (new BApplication ());
-                option.Services.AddSingleton<IMiddleManager, MiddleManager> ();
+                option.Services.TryAddSingleton<IMiddleManager, MiddleManager> ();
+                option.Services.AddTransient<IPluginUnLoadAction, PluginMiddleUnLoadAction> ();
                 option.Services.Replace (ServiceDescriptor.Transient (typeof (IApplicationBuilderFactory), typeof (PluginApplicationBuilderFactory)));
             });
             await services.AddPluginController ();
@@ -50,40 +52,26 @@ namespace Brochure.Server.Main
             }
 
             var log = app.ApplicationServices.GetService<ILogger<Startup>> ();
-            var middleManager = app.ApplicationServices.GetService<IMiddleManager> ();
             if (application is BApplication t)
             {
                 t.ServiceProvider = app.ApplicationServices;
                 t.Builder = app;
             }
-            middleManager.IntertMiddle (middleManager.GetMiddleCount () + 1, () => app.UseRouting ());
 
-            middleManager.AddMiddle (() =>
+            app.AddMiddle (Guid.Empty, () => app.UseRouting ());
+            app.IntertMiddle (Guid.Empty, 10, () =>
             {
                 app.Use (t =>
                 {
-                    return h =>
-                    {
-                        log.LogInformation ("1");
-                        t (h);
-                        return Task.CompletedTask;
-                    };;
-                });
-            });
-            middleManager.AddMiddle (() =>
-            {
-                app.Use (t =>
-                {
-                    return h =>
+                    return async h =>
                     {
                         log.LogInformation ("2");
-                        t (h);
-                        return Task.CompletedTask;
+                        await t (h);
                     };
                 });
             });
             app.ConfigPlugin ();
-            middleManager.IntertMiddle (1000, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
+            app.IntertMiddle (Guid.Empty, 1000, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
         }
     }
 }

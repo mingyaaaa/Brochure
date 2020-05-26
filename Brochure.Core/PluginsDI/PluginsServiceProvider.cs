@@ -55,7 +55,8 @@ namespace Brochure.Core.PluginsDI
             var plugins = this.managers.GetPlugins ().OfType<Plugins> ().ToList ();
             foreach (var item in plugins)
             {
-                pluginServiceDic.TryAdd (item.Key.ToString (), item.Context.BuildPlugnScopeProvider ());
+                var pluginsServiceCollection = item.Context.GetPluginContext<PluginServiceCollectionContext> ();
+                pluginServiceDic.TryAdd (item.Key.ToString (), pluginsServiceCollection.BuildPlugnScopeProvider ());
             }
         }
     }
