@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Server.Main.Controllers
 {
+    [Authorize]
     [Route ("api/v1/[controller]")]
     public class TestController : ControllerBase
     {
@@ -37,7 +38,6 @@ namespace Brochure.Server.Main.Controllers
         [HttpGet]
         public IActionResult GetAction1 ()
         {
-            throw new Exception ("aaaa");
             return new ContentResult () { Content = "aaa" };
         }
 

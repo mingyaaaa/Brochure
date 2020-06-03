@@ -13,19 +13,18 @@ namespace Brochure.Core.Extenstions
     {
         public static IServiceProvider BuildPluginServiceProvider (this IServiceCollection services)
         {
-            var provider = services.BuildPlugnScopeProvider ();
-            var managers = provider.GetService<IPluginManagers> ();
-            return new PluginsServiceProvider (managers, provider);
+            var managers = services.GetServiceInstance<IPluginManagers> ();
+            return new PluginsServiceProvider (managers, services);
         }
 
-        public static IServiceResolver BuildPlugnScopeProvider (this IServiceCollection services)
+        public static IServiceResolver BuildPlugnScopeProvider (this IServiceCollection services, PluginsServiceProvider serviceProvider)
         {
             var provider = services.BuildServiceContextProvider (t =>
             {
                 var serviceDefinition = t.FirstOrDefault (t => t.ServiceType == typeof (IServiceScopeFactory));
                 t.Remove (serviceDefinition);
-                t.AddType<IServiceScopeFactory, PluginServiceScopeFactory> (Lifetime.Scoped);
-                t.AddType<IPluginServiceProvider, PluginsServiceProvider> (Lifetime.Scoped);
+                t.AddInstance<IServiceScopeFactory> (serviceProvider);
+                t.AddInstance<IPluginServiceProvider> (serviceProvider);
             });
             return provider as IServiceResolver;
         }

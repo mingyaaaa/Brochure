@@ -5,19 +5,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.PluginsDI
 {
-    public class PluginServiceScope : IServiceScope
+    public class PluginServiceScope : IServiceScope, IServiceProvider
     {
         private readonly IServiceResolver serviceProvider;
 
         public PluginServiceScope (IServiceResolver serviceProvider)
         {
-            this.serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider.CreateScope ();
         }
-        public IServiceProvider ServiceProvider => serviceProvider.GetService<IPluginServiceProvider> () as PluginsServiceProvider;
+        public IServiceProvider ServiceProvider => this;
 
         public void Dispose ()
         {
             serviceProvider.Dispose ();
+        }
+
+        public object GetService (Type serviceType)
+        {
+            return this.serviceProvider.GetService (serviceType);
         }
     }
 

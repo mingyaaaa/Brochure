@@ -22,18 +22,24 @@ namespace Brochure.Authority
             errorMsg = string.Empty;
             var pluginServiceCollection = this.Context.GetPluginContext<PluginServiceCollectionContext> ();
             pluginServiceCollection.AddAuthentication (t =>
-                t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme).AddJwtBearer (t =>
             {
-                t.RequireHttpsMetadata = true;
-                t.SaveToken = true;
-                t.TokenValidationParameters = new TokenValidationParameters ()
+                t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer (t =>
+
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes ("123")),
-                    ValidIssuer = "server1",
-                    ValidAudience = "client1"
-                };
-            });
+                    t.RequireHttpsMetadata = true;
+                    t.SaveToken = true;
+                    t.TokenValidationParameters = new TokenValidationParameters ()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes ("123")),
+                        ValidIssuer = "http://localhost:5000",
+                        ValidAudience = "api"
+                    };
+                });
+            // pluginServiceCollection.AddAuthorization ();
+
             // Context.AddIdentityServer ().AddDeveloperSigningCredential ()
             //     .AddInMemoryClients (InitMemoryData.GetClients ())
             //     .AddInMemoryApiResources (InitMemoryData.GetApiResources ());

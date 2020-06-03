@@ -14,22 +14,43 @@ namespace Brochure.Core
             factory = Services.GetServiceInstance<ILoggerFactory> ();
         }
 
-        public static void Info () { }
-        public static void Error (string msg, Exception e = null) { }
-        public static void Warning () { }
+        public static void Info (string msg)
+        {
+            EnsureLogger ();
+            Logger.LogInformation (msg);
+        }
+        public static void Error (string msg, Exception e = null)
+        {
+            EnsureLogger ();
+            Logger.LogError (msg, e);
+        }
+        public static void Warning (string msg)
+        {
+            EnsureLogger ();
+            Logger.LogWarning (msg);
+        }
 
-        public static void Info<T> ()
+        public static void Info<T> (string msg)
         {
             var logger = factory.CreateLogger<T> ();
-            logger.LogInformation ("");
+            logger.LogInformation (msg);
         }
-        public static void Error<T> () { }
-        public static void Warning<T> () { }
+        public static void Error<T> (string msg, Exception e = null)
+        {
+            var logger = factory.CreateLogger<T> ();
+            logger.LogError (msg, e);
+        }
+        public static void Warning<T> (string msg)
+        {
+            var logger = factory.CreateLogger<T> ();
+            logger.LogWarning (msg);
+        }
 
         private static void EnsureLogger ()
         {
             if (Logger == null)
             {
+                EnsureLoggerFactorty ();
                 Logger = Services.GetServiceInstance<ILoggerFactory> ()?.CreateLogger ("Brochure");
             }
         }

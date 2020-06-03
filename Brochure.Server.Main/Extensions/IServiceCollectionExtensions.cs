@@ -23,10 +23,12 @@ namespace Brochure.Server.Main
                 {
                     await item.StartAsync ();
                     mvcBuilder.AddApplicationPart (item.Assembly);
+                    Log.Info ($"{item.Name}加载成功");
                 }
                 catch (Exception e)
                 {
                     Log.Error ($"{item.Name}加载失败", e);
+                    await item.ExitAsync ();
                 }
             }
             mvcBuilder.SetCompatibilityVersion (CompatibilityVersion.Version_3_0);

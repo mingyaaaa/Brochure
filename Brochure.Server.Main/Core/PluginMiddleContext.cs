@@ -16,7 +16,6 @@ namespace Brochure.Server.Main.Core
             this.guid = guid;
             this.provider = provider;
         }
-        private readonly IApplicationBuilder builder;
         private readonly Guid guid;
         private readonly IMiddleManager middle;
         private readonly IServiceProvider provider;

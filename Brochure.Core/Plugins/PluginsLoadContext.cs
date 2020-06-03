@@ -4,16 +4,17 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Brochure.Abstract;
+using Brochure.Abstract.PluginDI;
 using Microsoft.Extensions.DependencyInjection;
 namespace Brochure.Core
 {
     public class PluginsLoadContext : AssemblyLoadContext
     {
-        public IServiceProvider Service { get; }
+        public IPluginServiceProvider Service { get; }
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private readonly HashSet<string> _sysAssemblyNameList;
 
-        public PluginsLoadContext (IServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy) : base (isCollectible: true)
+        public PluginsLoadContext (IPluginServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy) : base (isCollectible: true)
         {
             this.Service = services;
             _resolver = resolverProxy;

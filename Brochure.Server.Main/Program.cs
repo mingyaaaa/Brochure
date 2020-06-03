@@ -18,7 +18,8 @@ namespace Brochure.Server.Main
         }
 
         public static IHostBuilder CreateHostBuilder (string[] args) =>
-            Host.CreateDefaultBuilder (args).UseServiceProviderFactory (new PluginServiceProviderFactory ())
+            Host.CreateDefaultBuilder (args)
+            .UseServiceProviderFactory (new PluginServiceProviderFactory ())
             .ConfigureWebHostDefaults (webBuilder => webBuilder.UseStartup<Startup> ());
     }
 }

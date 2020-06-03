@@ -15,7 +15,7 @@ namespace Brochure.Core
             var pluginManagers = new PluginManagers ();
             services.TryAddSingleton<IPluginManagers> (pluginManagers);
             //加载插件
-            //  await pluginManagers.ResolverPlugins (services);
+            await pluginManagers.ResolverPlugins (services);
         }
     }
 }

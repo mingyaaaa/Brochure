@@ -13,6 +13,7 @@ using Brochure.Core.RPC;
 using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {
@@ -34,6 +35,7 @@ namespace Brochure.Core
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
             var option = new ApplicationOption (service);
             appAction (option);
+            /// 静态日志类
             option.AddLog ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
             //加载一些核心的程序
@@ -113,6 +115,10 @@ namespace Brochure.Core
         {
             var type = typeof (T);
             var instance = (T) services.FirstOrDefault (t => t.ServiceType == type)?.ImplementationInstance;
+            if (instance != null)
+                return instance;
+            var provider = services.BuildServiceProvider ();
+            instance = provider.GetService<T> ();
             if (instance != null)
                 return instance;
             var instanceType = services.FirstOrDefault (t => t.ServiceType == type)?.ImplementationType;

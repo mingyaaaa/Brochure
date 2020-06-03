@@ -7,134 +7,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.Core.Extenstions;
+using Brochure.Core.PluginsDI;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
-    public interface IPluginServiceProvider : IServiceProvider, IDisposable { }
-    public class PluginsServiceProvider : IPluginServiceProvider
-    {
-        private readonly IPluginManagers managers;
-        private readonly ConcurrentDictionary<string, IServiceResolver> pluginServiceDic;
-        private IServiceResolver originalProvider;
-
-        public PluginsServiceProvider (IPluginManagers managers, IServiceResolver serviceProvider)
-        {
-            this.managers = managers;
-            pluginServiceDic = new ConcurrentDictionary<string, IServiceResolver> ();
-            originalProvider = serviceProvider;
-            PopuPlugin ();
-        }
-        public void Dispose ()
-        {
-            originalProvider.Dispose ();
-            foreach (var item in pluginServiceDic.Values.ToList ())
-            {
-                item.Dispose ();
-            }
-        }
-
-        public object GetService (Type serviceType)
-        {
-            var plugins = this.managers.GetPlugins ();
-            if (plugins.Count != pluginServiceDic.Count)
-            {
-                PopuPlugin ();
-            }
-            var obj = originalProvider.GetService (serviceType);
-            if (obj == null)
-            {
-                foreach (var item in pluginServiceDic.Values.ToArray ())
-                {
-                    obj = item.GetService (serviceType);
-                    if (obj != null)
-                        return obj;
-                }
-            }
-            return obj;
-        }
-
-        public void PopuPlugin ()
-        {
-            var plugins = this.managers.GetPlugins ().OfType<P> ().ToList ();
-            foreach (var item in plugins)
-            {
-                pluginServiceDic.TryAdd (item.Key.ToString (), item.Context.BuildPlugnScopeProvider ());
-            }
-        }
-    }
-
-    public static class Extend
-    {
-        public static IServiceProvider BuildCostumeServiceCollection (this IServiceCollection services)
-        {
-            var provider = services.BuildPlugnScopeProvider ();
-            var managers = provider.GetService<IPluginManagers> ();
-            return new PluginsServiceProvider (managers, provider);
-        }
-
-        public static IServiceResolver BuildPlugnScopeProvider (this IServiceCollection services)
-        {
-            var provider = services.BuildServiceContextProvider (t =>
-            {
-                var serviceDefinition = t.FirstOrDefault (t => t.ServiceType == typeof (IServiceScopeFactory));
-                t.Remove (serviceDefinition);
-                t.AddType<IServiceScopeFactory, PluginServiceScopeFactory> (Lifetime.Scoped);
-                t.AddType<IPluginServiceProvider, PluginsServiceProvider> (Lifetime.Scoped);
-            });
-            return provider as IServiceResolver;
-        }
-
-    }
-
-    public class ServiceProviderFactory : IServiceProviderFactory<IServiceCollection>
-    {
-        public IServiceCollection CreateBuilder (IServiceCollection services)
-        {
-            return services;
-        }
-
-        public IServiceProvider CreateServiceProvider (IServiceCollection containerBuilder)
-        {
-            return containerBuilder.BuildCostumeServiceCollection ();
-        }
-    }
-
-    public class PluginServiceScopeFactory : IServiceScopeFactory
-    {
-        private readonly IServiceResolver serviceProvider;
-
-        public PluginServiceScopeFactory (IServiceResolver serviceProvider)
-        {
-            this.serviceProvider = serviceProvider;
-        }
-        public IServiceScope CreateScope ()
-        {
-            return new PluginServiceScope (serviceProvider.CreateScope ());
-        }
-    }
-
-    public class PluginServiceScope : IServiceScope
-    {
-        private readonly IServiceResolver serviceProvider;
-
-        public PluginServiceScope (IServiceResolver serviceProvider)
-        {
-            this.serviceProvider = serviceProvider;
-        }
-        public IServiceProvider ServiceProvider => serviceProvider.GetService<IPluginServiceProvider> () as PluginsServiceProvider;
-
-        public void Dispose ()
-        {
-            serviceProvider.Dispose ();
-        }
-    }
 
     [TestClass]
     public class Test
@@ -143,12 +32,14 @@ namespace Brochure.Test
         public void TestBuildService ()
         {
             var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
             var managers = new PluginManagers ();
             service.AddSingleton<IPluginManagers> (managers);
-            var mProvider = service.BuildCostumeServiceCollection ();
+            var mProvider = service.BuildPluginServiceProvider ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
-            p1.Context.AddSingleton<ITest, ImpTest> ();
+            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            p1Context.AddSingleton<ITest, ImpTest> ();
             var a = mProvider.GetService<ITest> ();
             Assert.IsNotNull (a);
         }
@@ -157,14 +48,17 @@ namespace Brochure.Test
         public void TestServiceScope ()
         {
             var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+
             var managers = new PluginManagers ();
             service.AddSingleton<IPluginManagers> (managers);
             service.AddScoped<ITest1, ImpTest1> ();
             service.AddSingleton<ITest2, ImpTest2> ();
-            var mProvider = service.BuildCostumeServiceCollection ();
+            var mProvider = service.BuildPluginServiceProvider ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
-            p1.Context.AddScoped<ITest, ImpTest> ();
+            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            p1Context.AddScoped<ITest, ImpTest> ();
             var test2 = mProvider.GetService<ITest2> ();
             using (var scope = mProvider.CreateScope ())
             {
@@ -182,18 +76,59 @@ namespace Brochure.Test
         public void TestServiceTransient ()
         {
             var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
             var managers = new PluginManagers ();
             service.AddSingleton<IPluginManagers> (managers);
             service.AddTransient<ITest1, ImpTest1> ();
-            var mProvider = service.BuildCostumeServiceCollection ();
+            var mProvider = service.BuildPluginServiceProvider ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
-            p1.Context.AddScoped<ITest, ImpTest> ();
-
+            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            p1Context.AddScoped<ITest, ImpTest> ();
             var a1 = mProvider.GetService<ITest1> ();
             var a2 = mProvider.GetService<ITest1> ();
             Assert.AreNotSame (a1, a2);
 
+        }
+
+        [TestMethod]
+        public void TestSingletonSame ()
+        {
+            var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            var managers = new PluginManagers ();
+            service.AddSingleton<IPluginManagers> (managers);
+            service.AddSingleton<ITest1, ImpTest1> ();
+            var provider = service.BuildPluginServiceProvider ();
+            var test1 = provider.GetService<ITest1> ();
+            var p1 = new P1 (provider);
+            managers.Regist (p1);
+            var context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            context.AddSingleton<ITest2, ImpTest2> ();
+            var test2 = provider.GetService<ITest1> ();
+            Assert.AreSame (test1, test2);
+        }
+
+        [TestMethod]
+        public void TestGerniSame ()
+        {
+            var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            var managers = new PluginManagers ();
+            service.AddSingleton<IPluginManagers> (managers);
+            service.AddOptions ();
+            service.TryAddEnumerable (ServiceDescriptor.Transient<IConfigureOptions<RouteOptions>, ConfigureRouteOptions> (
+                _ => new ConfigureRouteOptions ()));
+            var oprovider = service.BuildServiceContextProvider ();
+            var options = oprovider.GetService<IOptions<RouteOptions>> ();
+            Assert.IsNotNull (options.Value);
+            var provider = service.BuildPluginServiceProvider ();
+            var test1 = provider.GetService<IOptions<RouteOptions>> ();
+            Assert.IsNotNull (test1.Value);
+            var p1 = new P1 (provider);
+            managers.Regist (p1);
+            var test2 = provider.GetService<IOptions<RouteOptions>> ();
+            // Assert.AreSame (test1, test2);
         }
     }
 
@@ -233,76 +168,35 @@ namespace Brochure.Test
             Trace.TraceInformation ("ImpTest2");
         }
     }
-    public class P : IPlugins
+
+    public class Option<T>
     {
-        public PContext Context { get; }
 
-        public Guid Key => Guid.NewGuid ();
-
-        public string Name =>
-            throw new NotImplementedException ();
-
-        public string Version =>
-            throw new NotImplementedException ();
-
-        public string Author =>
-            throw new NotImplementedException ();
-
-        public string AssemblyName =>
-            throw new NotImplementedException ();
-
-        public Assembly Assembly =>
-            throw new NotImplementedException ();
-
-        public int Order =>
-            throw new NotImplementedException ();
-
-        public List<Guid> DependencesKey =>
-            throw new NotImplementedException ();
-
-        public P (IServiceProvider service)
-        {
-            Context = new PContext (service);
-        }
-
-        public Task StartAsync ()
-        {
-            throw new NotImplementedException ();
-        }
-
-        public Task ExitAsync ()
-        {
-            throw new NotImplementedException ();
-        }
-
-        public Task<bool> StartingAsync (out string errorMsg)
-        {
-            throw new NotImplementedException ();
-        }
-
-        public Task<bool> ExitingAsync (out string errorMsg)
-        {
-            throw new NotImplementedException ();
-        }
     }
-    public class PContext : ServiceCollection
-    {
-        public PContext (IServiceProvider services)
-        {
-            // foreach (var item in services)
-            // {
-            //     this.Append (item);
-            // }
-            // MainService = services;
-        }
-    }
-    public class P1 : P
+
+    public class P1 : Plugins
     {
         public P1 (IServiceProvider service) : base (service) { }
     }
 
-    public class P2 : P
+    public class P2 : Plugins
     {
         public P2 (IServiceProvider service) : base (service) { }
+    }
+    public class ConfigureRouteOptions : IConfigureOptions<RouteOptions>
+    {
+
+        public ConfigureRouteOptions ()
+        {
+
+        }
+
+        public void Configure (RouteOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException (nameof (options));
+            }
+        }
     }
 }
