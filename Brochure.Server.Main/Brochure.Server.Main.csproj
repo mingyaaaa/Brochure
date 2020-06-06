@@ -14,12 +14,10 @@
     <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\Brochure.Server.Main.Abstract\Brochure.Server.Main.Abstract.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\Brochure.Core.Server\Brochure.Core.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>

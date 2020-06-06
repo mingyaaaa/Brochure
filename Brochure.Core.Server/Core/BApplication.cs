@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Brochure.Server.Main.Core
+namespace Brochure.Core.Server
 {
     public class BApplication : IBApplication
     {

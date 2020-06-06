@@ -1,19 +1,13 @@
-using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
-using Brochure.Core.Core;
-using Brochure.Server.Main.Abstract.Interfaces;
-using Brochure.Server.Main.Core;
+using Brochure.Core.Server;
 using Brochure.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Server.Main.Controllers
 {

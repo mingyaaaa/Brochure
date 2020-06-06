@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Brochure.Core.Test
 {

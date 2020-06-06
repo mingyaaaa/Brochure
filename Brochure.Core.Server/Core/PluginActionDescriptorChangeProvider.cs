@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
 
-namespace Brochure.Server.Main.Core
+namespace Brochure.Core.Server
 {
     public class PluginActionDescriptorChangeProvider : IActionDescriptorChangeProvider
     {

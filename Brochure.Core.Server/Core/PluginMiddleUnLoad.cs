@@ -1,8 +1,7 @@
 using System;
 
-namespace Brochure.Server.Main.Core
+namespace Brochure.Core.Server
 {
     public class PluginMiddleUnLoad
-    {
-    }
+    { }
 }

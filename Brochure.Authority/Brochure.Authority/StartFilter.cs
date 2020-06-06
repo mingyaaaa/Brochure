@@ -1,13 +1,6 @@
 using System;
-using System.Threading.Tasks;
-using Brochure.Abstract;
-using Brochure.Core;
-using Brochure.Server.Main.Abstract.Extensions;
-using Brochure.Server.Main.Abstract.Interfaces;
+using Brochure.Core.Server;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Brochure.Authority
 {

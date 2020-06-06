@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace Brochure.Server.Main.Abstract.Interfaces
+namespace Brochure.Core.Server
 {
     public interface IStarupConfigure
     {

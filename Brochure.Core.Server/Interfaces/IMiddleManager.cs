@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace Brochure.Server.Main.Abstract.Interfaces
+namespace Brochure.Core.Server
 {
     public interface IMiddleManager
     {

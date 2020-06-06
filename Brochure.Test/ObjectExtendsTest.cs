@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Brochure.Abstract;
 using Brochure.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -35,8 +36,8 @@ namespace Brochure.Core.Test
     {
         public AsTest ()
         {
-            var bb = new BaseBootstrap ();
-            bb.Start ();
+            var service = new ServiceCollection ();
+            service.AddBrochureCore ();
             ObjectConverCollection.RegistObjectConver<C, B> (t => new B ()
             {
                 BStr = "C"

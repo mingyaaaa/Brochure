@@ -1,13 +1,11 @@
 using System;
 using System.Diagnostics;
-using System.Runtime.Loader;
 using Brochure.Abstract;
-using Brochure.Core;
+using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.LinqDbQuery.MySql;
 using LinqDbQuery;
 using LinqDbQuery.Database;
-using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

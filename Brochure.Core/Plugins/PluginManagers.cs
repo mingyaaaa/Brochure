@@ -19,7 +19,6 @@ namespace Brochure.Core
     {
         private readonly ConcurrentDictionary<Guid, IPlugins> pluginDic;
         private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
-        private readonly IServiceProvider serviceProvider;
 
         public PluginManagers ()
         {

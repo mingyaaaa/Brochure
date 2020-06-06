@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Brochure.Core\Brochure.Core.csproj" />
     <ProjectReference Include="..\Brochure.Authority.Abstract\Brochure.Authority.Abstract.csproj" />
-    <ProjectReference Include="..\..\Brochure.Server.Main.Abstract\Brochure.Server.Main.Abstract.csproj" />
+    <ProjectReference Include="..\..\Brochure.Core.Server\Brochure.Core.Server.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="3.1.3" />

@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using Brochure.Abstract;
-using Brochure.Extensions;
-namespace Brochure.Core
+
+namespace Brochure.Abstract.Models
 {
     /// <summary>
     /// 文档类型
@@ -148,10 +147,6 @@ namespace Brochure.Core
             return JsonSerializer.Serialize (_dic);
         }
 
-        public IRecord ConvertFromObject (object obj)
-        {
-            return new Record (obj.AsDictionary ());
-        }
     }
 
 }

@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
-using Brochure.Core.Core;
-using Brochure.Core.Interceptor;
+using Brochure.Abstract.Models;
 using Brochure.Core.Module;
 using Brochure.Core.RPC;
+using Brochure.Extensions;
+using Brochure.SysInterface;
+using Brochure.Utils;
 using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {
@@ -25,19 +25,21 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="service"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBrochureService (this IServiceCollection service, Action<ApplicationOption> appAction)
+        public static IServiceCollection AddBrochureCore (this IServiceCollection service, Action<ApplicationOption> appAction = null)
         {
+
+            ObjectConverCollection.RegistObjectConver<IRecord> (t => new Record (t.AsDictionary ()));
             //加载一些基本的工具类
             //工具类初始化
-            var utilInit = new UtilApplicationInit (service);
-            utilInit.Init ();
+            service.TryAddSingleton<IJsonUtil> (new JsonUtil ());
+            service.TryAddSingleton<IReflectorUtil> (new ReflectorUtil ());
+            service.TryAddSingleton<IObjectFactory> (new Brochure.Abstract.ObjectFactory ());
+            service.TryAddSingleton<ISysDirectory> (new SysDirectory ());
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var option = new ApplicationOption (service);
-            appAction (option);
-            /// 静态日志类
-            option.AddLog ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
+            var option = new ApplicationOption (service);
+            appAction?.Invoke (option);
             //加载一些核心的程序
             service.InitApplicationCore ();
 
@@ -50,7 +52,7 @@ namespace Brochure.Core
         /// <param name="services"></param>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public static IServiceCollection AddInterceptor (this IServiceCollection services, Action<IAspectConfiguration> configure = null)
+        public static IServiceCollection AddBrochureInterceptor (this IServiceCollection services, Action<IAspectConfiguration> configure = null)
         {
             services.ConfigureDynamicProxy (configure);
             return services;

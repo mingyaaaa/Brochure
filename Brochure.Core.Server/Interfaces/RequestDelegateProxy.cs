@@ -1,6 +1,6 @@
 using System;
 
-namespace Brochure.Server.Main.Abstract.Interfaces
+namespace Brochure.Core.Server
 {
     public class RequestDelegateProxy
     {

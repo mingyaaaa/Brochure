@@ -1,14 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.Core;
-using Brochure.Server.Main.Abstract.Interfaces;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-namespace Brochure.Server.Main.Core
+namespace Brochure.Core.Server
 {
     public class MiddleManager : IMiddleManager
     {

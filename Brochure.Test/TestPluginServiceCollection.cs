@@ -1,22 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
-using Brochure.Core.PluginsDI;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -39,8 +30,8 @@ namespace Brochure.Test
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
-            p1Context.AddSingleton<ITest, ImpTest> ();
-            var a = mProvider.GetService<ITest> ();
+            p1Context.AddSingleton<ITestInterceptor, ImpTestInterceptor> ();
+            var a = mProvider.GetService<ITestInterceptor> ();
             Assert.IsNotNull (a);
         }
 
@@ -58,13 +49,13 @@ namespace Brochure.Test
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
-            p1Context.AddScoped<ITest, ImpTest> ();
+            p1Context.AddScoped<ITestInterceptor, ImpTestInterceptor> ();
             var test2 = mProvider.GetService<ITest2> ();
             using (var scope = mProvider.CreateScope ())
             {
                 var a1 = scope.ServiceProvider.GetService<ITest1> ();
                 Assert.IsNotNull (a1);
-                var a = scope.ServiceProvider.GetService<ITest> ();
+                var a = scope.ServiceProvider.GetService<ITestInterceptor> ();
                 Assert.IsNotNull (a);
                 var a2 = scope.ServiceProvider.GetService<ITest2> ();
                 Assert.IsNotNull (a2);
@@ -84,7 +75,7 @@ namespace Brochure.Test
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
-            p1Context.AddScoped<ITest, ImpTest> ();
+            p1Context.AddScoped<ITestInterceptor, ImpTestInterceptor> ();
             var a1 = mProvider.GetService<ITest1> ();
             var a2 = mProvider.GetService<ITest1> ();
             Assert.AreNotSame (a1, a2);
@@ -128,16 +119,36 @@ namespace Brochure.Test
             var p1 = new P1 (provider);
             managers.Regist (p1);
             var test2 = provider.GetService<IOptions<RouteOptions>> ();
-            // Assert.AreSame (test1, test2);
         }
+
+        [TestMethod]
+        public void TestCollection ()
+        {
+            var service = new ServiceCollection ();
+            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            var managers = new PluginManagers ();
+            service.AddSingleton<IPluginManagers> (managers);
+            service.AddSingleton<ITest1, ImpTest1> ();
+            var provider = service.BuildPluginServiceProvider ();
+            var collection = provider.GetService<IEnumerable<ITest1>> ();
+            Assert.IsNotNull (collection);
+            Assert.AreEqual (1, collection.Count ());
+            var p1 = new P1 (provider);
+            managers.Regist (p1);
+            var context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
+            context.AddSingleton<ITest1, ImpTest11> ();
+            collection = provider.GetService<IEnumerable<ITest1>> ();
+            Assert.AreEqual (2, collection.Count ());
+        }
+
     }
 
-    public interface ITest : IDisposable
+    public interface ITestInterceptor : IDisposable
     {
 
     }
 
-    public class ImpTest : ITest
+    public class ImpTestInterceptor : ITestInterceptor
     {
         public void Dispose ()
         {
@@ -156,6 +167,16 @@ namespace Brochure.Test
             Trace.TraceInformation ("ImpTest1");
         }
     }
+
+    public class ImpTest11 : ITest1
+    {
+        public void Dispose ()
+        {
+
+            Trace.TraceInformation ("ImpTest11");
+        }
+    }
+
     public interface ITest2 : IDisposable
     {
 
