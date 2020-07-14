@@ -1,6 +1,6 @@
-using LinqDbQuery.Database;
+using Brochure.ORM.Database;
 
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     public abstract class DbContext
     {

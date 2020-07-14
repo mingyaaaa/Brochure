@@ -1,4 +1,4 @@
-namespace LinqDbQueryTest.Datas
+namespace Brochure.ORMTest.Datas
 {
     public class Classes
     {

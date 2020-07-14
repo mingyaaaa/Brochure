@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
-namespace LinqDbQueryTest.Querys
+namespace Brochure.ORMTest.Querys
 {
     [TestClass]
     public class MysqlDbTest

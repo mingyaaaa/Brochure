@@ -1,8 +1,8 @@
 using System;
 using System.Data;
-using LinqDbQuery.Database;
+using Brochure.ORM.Database;
 
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     public abstract class DbOption
     {
@@ -13,7 +13,7 @@ namespace LinqDbQuery
 
         public string DatabaseName { get; set; }
 
-        public DbOption(IDbProvider dbProvider, ITransactionManager transactionManager)
+        public DbOption (IDbProvider dbProvider, ITransactionManager transactionManager)
         {
             this.dbProvider = dbProvider;
             this.transactionManager = transactionManager;
@@ -22,13 +22,13 @@ namespace LinqDbQuery
         private readonly IDbProvider dbProvider;
         private readonly ITransactionManager transactionManager;
 
-        public virtual IDbConnection GetDbConnection()
+        public virtual IDbConnection GetDbConnection ()
         {
             if (dbConnection != null)
                 return dbConnection;
-            dbConnection = dbProvider.GetDbConnection();
-            if (string.IsNullOrWhiteSpace(ConnectionString))
-                throw new Exception("请设置数据库连接字符串");
+            dbConnection = dbProvider.GetDbConnection ();
+            if (string.IsNullOrWhiteSpace (ConnectionString))
+                throw new Exception ("请设置数据库连接字符串");
             dbConnection.ConnectionString = ConnectionString;
             DatabaseName = dbConnection.Database;
             return dbConnection;

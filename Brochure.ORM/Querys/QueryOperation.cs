@@ -1,4 +1,4 @@
-﻿namespace LinqDbQuery
+﻿namespace Brochure.ORM
 {
     public static class QueryOperationType
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using LinqDbQuery.Atrributes;
+using Brochure.ORM.Atrributes;
 
-namespace LinqDbQuery.Database
+namespace Brochure.ORM.Database
 {
     public abstract class DbColumns
     {

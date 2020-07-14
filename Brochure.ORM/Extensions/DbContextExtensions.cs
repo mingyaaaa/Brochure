@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-namespace LinqDbQuery.Extensions
+namespace Brochure.ORM.Extensions
 {
     public static class DbContextExtensions
     {
@@ -51,10 +51,28 @@ namespace LinqDbQuery.Extensions
             return dbData.Update (obj, where);
         }
 
+        public static int Update<T> (this DbContext dbContext, object obj, IQuery query)
+        {
+            var dbData = dbContext.GetDbData ();
+            return dbData.Update<T> (obj, query);
+        }
+
         public static int Delete<T> (this DbContext dbContext, Expression<Func<T, bool>> where)
         {
             var dbData = dbContext.GetDbData ();
             return dbData.Delete (where);
+        }
+
+        public static int Delete<T> (this DbContext dbContext, IQuery query)
+        {
+            var dbData = dbContext.GetDbData ();
+            return dbData.Delete<T> (query);
+        }
+
+        public static IEnumerable<T> Query<T> (this DbContext dbContext, IQuery query)
+        {
+            var dbData = dbContext.GetDbData ();
+            return dbData.Query<T> (query);
         }
         #endregion
     }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace LinqDbQuery.Visitors
+namespace Brochure.ORM.Visitors
 {
     public class OrderVisitor : ORMVisitor
     {

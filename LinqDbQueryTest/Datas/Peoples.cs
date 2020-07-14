@@ -1,5 +1,5 @@
 using System;
-namespace LinqDbQueryTest
+namespace Brochure.ORMTest
 {
     public class Peoples
     {

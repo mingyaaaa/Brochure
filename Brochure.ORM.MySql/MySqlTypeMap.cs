@@ -1,5 +1,5 @@
 using System;
-using LinqDbQuery;
+using Brochure.ORM;
 
 namespace Brochure.LinqDbQuery.MySql
 {

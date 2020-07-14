@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using Brochure.LinqDbQuery.MySql;
-using LinqDbQuery;
-using LinqDbQuery.Visitors;
+using Brochure.ORM;
+using Brochure.ORM.Visitors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LinqDbQueryTest
+namespace Brochure.ORMTest
 {
     [TestClass]
     public class TestVisitor

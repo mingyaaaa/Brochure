@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using System.Linq;
 using Brochure.LinqDbQuery.MySql;
-using LinqDbQuery.Database;
-using LinqDbQuery.Querys;
-using LinqDbQueryTest.Datas;
+using Brochure.ORM.Database;
+using Brochure.ORM.Querys;
+using Brochure.ORMTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace LinqDbQueryTest.Querys
+namespace Brochure.ORMTest.Querys
 {
     [TestClass]
     public class QueryTest

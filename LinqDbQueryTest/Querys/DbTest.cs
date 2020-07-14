@@ -4,12 +4,12 @@ using Brochure.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.LinqDbQuery.MySql;
-using LinqDbQuery;
-using LinqDbQuery.Database;
+using Brochure.ORM;
+using Brochure.ORM.Database;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace LinqDbQueryTest.Querys
+namespace Brochure.ORMTest.Querys
 {
     [TestClass]
     public class DbTest

@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 using System.Linq.Expressions;
-using LinqDbQuery;
+using Brochure.ORM;
 using MySql.Data.MySqlClient;
 
 namespace Brochure.LinqDbQuery.MySql

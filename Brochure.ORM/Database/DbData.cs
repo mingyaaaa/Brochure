@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Brochure.Extensions;
-using LinqDbQuery.Atrributes;
-using LinqDbQuery.Extensions;
-namespace LinqDbQuery.Database
+using Brochure.ORM.Atrributes;
+using Brochure.ORM.Extensions;
+namespace Brochure.ORM.Database
 {
     public abstract class DbData : IDisposable
     {
-        private IDbConnection dbConnection;
+        private readonly IDbConnection dbConnection;
 
         protected DbData (DbOption dbOption, DbSql dbSql, TransactionManager transactionManager)
         {
@@ -84,6 +85,17 @@ namespace LinqDbQuery.Database
         }
 
         [Transaction]
+        public virtual int Update<T> (object obj, IQuery query)
+        {
+            var sqlTuple = _dbSql.GetUpdateSql<T> (obj, query);
+            var sql = sqlTuple.Item1;
+            var command = CreateDbCommand ();
+            command.CommandText = sql;
+            command.Parameters.AddRange (sqlTuple.Item2);
+            return command.ExecuteNonQuery ();
+        }
+
+        [Transaction]
         public virtual int Delete<T> (Expression<Func<T, bool>> whereFunc)
         {
             var tuple = _dbSql.GetDeleteSql<T> (whereFunc);
@@ -92,6 +104,51 @@ namespace LinqDbQuery.Database
             command.CommandText = sql;
             command.Parameters.AddRange (tuple.Item2);
             return command.ExecuteNonQuery ();
+        }
+
+        [Transaction]
+        public virtual int Delete<T> (IQuery query)
+        {
+            var tuple = _dbSql.GetDeleteSql<T> (query);
+            var command = CreateDbCommand ();
+            command.CommandText = tuple.Item1;
+            command.Parameters.AddRange (tuple.Item2);
+            return command.ExecuteNonQuery ();
+        }
+
+        public virtual IEnumerable<T> Query<T> (IQuery<T> query)
+        {
+            var sql = query.GetSql ();
+            var parms = query.GetDbDataParameters ();
+            var connect = Option.GetDbConnection ();
+            var command = connect.CreateCommand ();
+            command.CommandText = sql;
+            command.Parameters.AddRange (parms);
+            var reader = command.ExecuteReader ();
+            var list = new List<T> ();
+            while (reader.Read ())
+            {
+                var t = DbUtlis.ConverFromIDataReader<T> (reader);
+                list.Add (t);
+            }
+            return list;
+        }
+        public virtual IEnumerable<T> Query<T> (IQuery query)
+        {
+            var sql = query.GetSql ();
+            var parms = query.GetDbDataParameters ();
+            var connect = Option.GetDbConnection ();
+            var command = connect.CreateCommand ();
+            command.CommandText = sql;
+            command.Parameters.AddRange (parms);
+            var reader = command.ExecuteReader ();
+            var list = new List<T> ();
+            while (reader.Read ())
+            {
+                var t = DbUtlis.ConverFromIDataReader<T> (reader);
+                list.Add (t);
+            }
+            return list;
         }
 
         public void Dispose () { }
@@ -103,5 +160,6 @@ namespace LinqDbQuery.Database
             command.Transaction = transactionManager.GetDbTransaction ();
             return command;
         }
+
     }
 }

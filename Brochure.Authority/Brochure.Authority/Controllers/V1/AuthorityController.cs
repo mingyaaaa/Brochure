@@ -23,7 +23,6 @@ namespace Brochure.Authority.Controllers.V1
         [AllowAnonymous]
         public IActionResult Login (LoginModel model)
         {
-
             return Ok ();
         }
 

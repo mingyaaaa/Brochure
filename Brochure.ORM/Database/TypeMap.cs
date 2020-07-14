@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     public abstract class TypeMap
     {

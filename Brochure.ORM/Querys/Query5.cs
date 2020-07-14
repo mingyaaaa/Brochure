@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace LinqDbQuery.Querys
+namespace Brochure.ORM.Querys
 {
     public class Query<T1, T2, T3, T4, T5> : Query, IQuery<T1, T2, T3, T4, T5>
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     /// <summary>
     /// 转化时 需要忽略的属性

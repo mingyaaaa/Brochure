@@ -1,4 +1,4 @@
-namespace LinqDbQuery.Database
+namespace Brochure.ORM.Database
 {
     public interface ITransactionFactory
     {

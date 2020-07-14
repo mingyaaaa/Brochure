@@ -1,9 +1,10 @@
-using LinqDbQuery.Database;
+using Brochure.ORM;
+using Brochure.ORM.Database;
 
 namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbTable : DbTable
     {
-        public MySqlDbTable (global::LinqDbQuery.DbOption option, global::LinqDbQuery.DbSql dbSql) : base (option, dbSql) { }
+        public MySqlDbTable (DbOption option, DbSql dbSql) : base (option, dbSql) { }
     }
 }

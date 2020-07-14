@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-namespace LinqDbQuery.Extensions
+namespace Brochure.ORM.Extensions
 {
     public static class IDataParameterCollectionExtenstions
     {

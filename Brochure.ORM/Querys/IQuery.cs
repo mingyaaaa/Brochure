@@ -4,11 +4,14 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     public interface IQuery
     {
         string GetSql ();
+
+        string GetWhereSql ();
+
         List<IDbDataParameter> GetDbDataParameters ();
     }
 

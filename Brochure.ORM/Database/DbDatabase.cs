@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-namespace LinqDbQuery.Database
+namespace Brochure.ORM.Database
 {
     public abstract class DbDatabase
     {

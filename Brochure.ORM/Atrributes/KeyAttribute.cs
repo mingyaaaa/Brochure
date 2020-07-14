@@ -1,6 +1,6 @@
 using System;
 
-namespace LinqDbQuery.Atrributes
+namespace Brochure.ORM.Atrributes
 {
     [AttributeUsage (AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public class KeyAttribute : Attribute

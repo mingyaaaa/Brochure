@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Brochure.Abstract;
 using Brochure.Extensions;
-using LinqDbQuery.Atrributes;
-using LinqDbQuery.Visitors;
-namespace LinqDbQuery
+using Brochure.ORM.Atrributes;
+using Brochure.ORM.Visitors;
+namespace Brochure.ORM
 {
     public abstract class DbSql
     {
@@ -39,6 +39,19 @@ namespace LinqDbQuery
             return Tuple.Create (sql, parms);
         }
 
+        public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (IQuery query)
+        {
+            var whereSql = string.Empty;
+            var parms = new List<IDbDataParameter> ();
+            if (query != null)
+            {
+                whereSql = query.GetWhereSql ();
+                parms.AddRange (query.GetDbDataParameters ());
+            }
+            var tableName = TableUtlis.GetTableName<T> ();
+            var sql = $"delete from [{tableName}] {whereSql}";
+            return Tuple.Create (sql, parms);
+        }
         public virtual Tuple<string, List<IDbDataParameter>> GetInsertSql<T> (T obj)
         {
             var doc = obj.As<IRecord> ();
@@ -88,6 +101,39 @@ namespace LinqDbQuery
                 whereVisitor.Visit (whereFunc);
                 whereSql = whereVisitor.GetSql ().ToString ();
                 parms.AddRange (whereVisitor.GetParameters ());
+            }
+            var tableName = TableUtlis.GetTableName<T> ();
+            var doc = obj.As<IRecord> ();
+            var sql = $"update [{tableName}] set ";
+            var fieldList = new List<string> ();
+            foreach (var item in doc.Keys.ToList ())
+            {
+                var fieldStr = string.Empty;
+                if (dbProvider.IsUseParamers)
+                {
+                    var param = dbProvider.GetDbDataParameter ();
+                    param.ParameterName = $"{dbProvider.GetParamsSymbol()}{item}";
+                    param.Value = doc[item];
+                    fieldStr = $"[{item}]={param.ParameterName}";
+                    parms.Add (param);
+                }
+                else
+                {
+                    fieldStr = $"[{item}]={dbProvider.GetObjectType(doc[item])}";
+                }
+                fieldList.Add (fieldStr);
+            }
+            sql = $"{sql}{fieldList.Join(",")} {whereSql}";
+            return Tuple.Create (sql, parms);
+        }
+        public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T> (object obj, IQuery query)
+        {
+            var whereSql = string.Empty;
+            var parms = new List<IDbDataParameter> ();
+            if (query != null)
+            {
+                whereSql = query.GetWhereSql ();
+                parms.AddRange (query.GetDbDataParameters ());
             }
             var tableName = TableUtlis.GetTableName<T> ();
             var doc = obj.As<IRecord> ();

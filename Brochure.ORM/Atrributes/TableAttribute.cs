@@ -1,5 +1,5 @@
 using System;
-namespace LinqDbQuery
+namespace Brochure.ORM
 {
     [AttributeUsage (AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public class TableAttribute : Attribute

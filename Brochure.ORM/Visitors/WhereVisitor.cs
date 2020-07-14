@@ -2,7 +2,7 @@
 using System.Data;
 using System.Linq.Expressions;
 
-namespace LinqDbQuery.Visitors
+namespace Brochure.ORM.Visitors
 {
     public class WhereVisitor : ORMVisitor
     {

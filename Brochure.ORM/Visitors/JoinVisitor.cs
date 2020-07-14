@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace LinqDbQuery.Visitors
+namespace Brochure.ORM.Visitors
 {
     public class JoinVisitor : ORMVisitor
     {

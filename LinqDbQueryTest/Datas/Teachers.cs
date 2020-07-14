@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-namespace LinqDbQueryTest
+namespace Brochure.ORMTest
 {
     [Table ("aaa")]
     public class Teachers

@@ -5,8 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Brochure.ORM;
 
-namespace LinqDbQuery.Visitors
+namespace Brochure.ORM.Visitors
 {
     public abstract class NoSqlVisitor : ExpressionVisitor { }
 

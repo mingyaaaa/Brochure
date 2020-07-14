@@ -1,12 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LinqDbQueryTest
+namespace Brochure.ORMTest
 {
     [TestClass]
     public class TestExpress
     {
-        public TestExpress ()
-        { }
+        public TestExpress () { }
 
         [TestMethod]
         public void WhereExpress () { }

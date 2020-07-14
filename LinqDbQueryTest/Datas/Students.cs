@@ -1,4 +1,4 @@
-namespace LinqDbQueryTest
+namespace Brochure.ORMTest
 {
     public class Students
     {

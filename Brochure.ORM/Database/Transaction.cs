@@ -1,5 +1,5 @@
 using System.Data;
-namespace LinqDbQuery.Database
+namespace Brochure.ORM.Database
 {
     public interface ITransaction
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using LinqDbQuery.Visitors;
+using Brochure.ORM.Visitors;
 
-namespace LinqDbQuery.Querys
+namespace Brochure.ORM.Querys
 {
     public class Query<T1, T2> : Query, IQuery<T1, T2>
     {

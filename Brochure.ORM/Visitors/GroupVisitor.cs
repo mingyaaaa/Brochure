@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace LinqDbQuery.Visitors
+namespace Brochure.ORM.Visitors
 {
     public class GroupVisitor : ORMVisitor
     {

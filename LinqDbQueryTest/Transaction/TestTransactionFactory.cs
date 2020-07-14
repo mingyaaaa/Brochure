@@ -1,11 +1,11 @@
 using System.Data;
 using System.Data.Common;
-using LinqDbQuery;
-using LinqDbQuery.Database;
+using Brochure.ORM;
+using Brochure.ORM.Database;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace LinqDbQueryTest.Transaction
+namespace Brochure.ORMTest.Transaction
 {
     [TestClass]
     public class TestTransactionFactory
@@ -28,7 +28,7 @@ namespace LinqDbQueryTest.Transaction
             managerMock.Setup (t => t.IsEmpty).Returns (true);
             var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object);
             var r = factory.GetTransaction ();
-            Assert.IsInstanceOfType (r, typeof (LinqDbQuery.Database.Transaction));
+            Assert.IsInstanceOfType (r, typeof (ORM.Database.Transaction));
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace LinqDbQueryTest.Transaction
             managerMock.Setup (t => t.IsEmpty).Returns (false);
             var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object);
             var r = factory.GetTransaction ();
-            Assert.IsInstanceOfType (r, typeof (LinqDbQuery.Database.InnerTransaction));
+            Assert.IsInstanceOfType (r, typeof (InnerTransaction));
 
         }
     }

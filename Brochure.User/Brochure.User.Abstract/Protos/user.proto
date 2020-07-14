@@ -1,0 +1,28 @@
+syntax = "proto3";
+package User.Rpc;
+message User {
+    string id=1;
+    string name=2;
+    int32 age=3;
+    string id_card=4;
+    string pwd=5;
+}
+message UserRequest {
+    repeated string Ids=1;
+}
+message MutiUserRequest{
+    repeated User Users=1;
+}
+message FailIdsResponse {
+    repeated string Ids=1;
+}
+message UserResponse{
+    repeated User Users=1;
+}
+service UserService {
+    rpc GetUser (UserRequest) returns (UserResponse);
+    rpc DeleteUser (UserRequest) returns (FailIdsResponse);
+    rpc UpdateUser (UserRequest) returns(FailIdsResponse);
+    rpc Insert (UserRequest) returns (UserResponse);
+    rpc InsertMuti (MutiUserRequest) returns (UserResponse);
+}
