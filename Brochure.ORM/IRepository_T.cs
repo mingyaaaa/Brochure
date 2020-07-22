@@ -8,18 +8,26 @@ namespace Brochure.ORM
     {
         Task<T> Get (IQuery query);
 
-        Task<T> Get (Guid id);
+        Task<T> Get (string id);
 
-        Task<T> Update (IQuery query, T entity);
+        Task<int> Update (IQuery query, T entity);
 
-        Task<T> Update (Guid id, T entity);
+        Task<int> Update (string id, T entity);
 
         Task<bool> Delete (IQuery query);
 
-        Task<bool> Delete (Guid id);
+        Task<bool> Delete (string id);
+
+        Task<bool> DeleteMany (IEnumerable<string> ids);
 
         Task<IEnumerable<T>> List (IQuery query);
 
-        Task<IEnumerable<T>> List (IEnumerable<Guid> ids);
+        Task<IEnumerable<T>> List (IEnumerable<string> ids);
+
+        Task<int> Insert (T entity);
+
+        Task<T> InsetAndGet (T entity);
+
+        Task<int> Insert (IEnumerable<T> entity);
     }
 }

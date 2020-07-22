@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Brochure.Extensions;
 using Brochure.User.Entrities;
-
 namespace Brochure.User.Models
 {
     public class UserModel
@@ -49,7 +49,7 @@ namespace Brochure.User.Models
                 IdCard = this.IdCard,
                 Password = this.Password,
                 UserId = this.UserId,
-                CreateTime = DateTime.Now
+                CreateTime = DateTime.Now.ToUnixTimestampByMilliseconds ()
             };
             return entity;
         }

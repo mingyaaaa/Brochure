@@ -15,31 +15,31 @@ namespace Brochure.User.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository repository;
-        private readonly DbContext dbContext;
 
-        public UserController (IUserRepository repository, DbContext dbContext)
+        public UserController (IUserRepository repository)
         {
             this.repository = repository;
-            this.dbContext = dbContext;
         }
 
         public async Task<IActionResult> AddUser ([FromQuery] UserModel user)
         {
             var entity = user.GetEntrity ();
-            var model = await repository.AddAsync (entity);
-            return new JsonResult (model);
+            var r = await repository.InsetAndGet (entity);
+            if (r == null)
+                return Problem ("添加错误");
+            return new JsonResult (r);
         }
 
         public async Task<IActionResult> DeleteUser ([FromQuery] string[] userIds)
         {
-            var r = await repository.DeleteUserByUserIdAsync (userIds);
+            var r = await repository.DeleteMany (userIds);
             return new JsonResult (r);
         }
 
         public async Task<IActionResult> UpdateUser ([FromQuery] string userId, [FromBody] UserModel model)
         {
-            var query = new Query<UserEntrity> (this.dbContext.GetDbProvider ()).WhereAnd (t => t.Id == userId);
-            var r = await repository.UpdateUserAsync (model, query);
+            var entity = model.GetEntrity ();
+            var r = await repository.Update (userId, entity);
             return new JsonResult (r);
         }
     }

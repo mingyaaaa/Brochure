@@ -22,19 +22,19 @@ namespace Brochure.User.Services
             this.repository = repository;
             this.dbProvider = dbProvider;
         }
-        public override Task<UserResponse> GetUser (UserRequest request, ServerCallContext context)
+        public override async Task<UserResponse> GetUser (UserRequest request, ServerCallContext context)
         {
             var query = new Query<UserEntrity> (dbProvider);
-            var entrity = repository.GetUser (query);
+            var entrity = await repository.Get (query);
             var userResponse = new UserResponse ();
             userResponse.Users.Add (new UseModel.User ()
             {
-                Id = entrity.Id.ToString (),
+                Id = entrity.Id,
                     Name = entrity.Name,
                     IdCard = entrity.IdCard,
                     Age = entrity.Age,
             });
-            return Task.FromResult (userResponse);
+            return userResponse;
         }
 
         public override Task<FailIdsResponse> UpdateUser (UserRequest request, ServerCallContext context)
