@@ -16,7 +16,7 @@ namespace Brochure.ORM
             this.context = context;
             dbData = context.GetDbData ();
         }
-        public Task<bool> Delete (IQuery query)
+        public Task<bool> Delete (IWhereQuery query)
         {
             var r = dbData.Delete<T> (query);
             return Task.FromResult (r > 0);
@@ -25,14 +25,14 @@ namespace Brochure.ORM
         public async Task<bool> Delete (string id)
         {
             var query = new Query<T> (context.GetDbProvider ());
-            var q = query.WhereAnd (t => t.Id == id);
+            var q = query.WhereAnd (t => t.Id == id) as IWhereQuery;
             return await Delete (q);
         }
 
         public async Task<bool> DeleteMany (IEnumerable<string> ids)
         {
             var query = new Query<T> (context.GetDbProvider ());
-            var q = query.WhereAnd (t => ids.Contains (t.Id));
+            var q = query.WhereAnd (t => ids.Contains (t.Id)) as IWhereQuery;
             return await Delete (q);
         }
 
@@ -83,7 +83,7 @@ namespace Brochure.ORM
             return await List (q);
         }
 
-        public Task<int> Update (IQuery query, T entity)
+        public Task<int> Update (IWhereQuery query, T entity)
         {
             if (query == null)
                 throw new Exception ("query不能为null");
@@ -94,7 +94,7 @@ namespace Brochure.ORM
         public async Task<int> Update (string id, T entity)
         {
             var query = new Query<T> (context.GetDbProvider ());
-            var q = query.WhereAnd (t => t.Id == id);
+            var q = query.WhereAnd (t => t.Id == id) as IWhereQuery;
             return await Update (q, entity);
         }
     }

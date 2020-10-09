@@ -39,7 +39,7 @@ namespace Brochure.ORM
             return Tuple.Create (sql, parms);
         }
 
-        public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (IQuery query)
+        public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (IWhereQuery query)
         {
             var whereSql = string.Empty;
             var parms = new List<IDbDataParameter> ();
@@ -126,7 +126,7 @@ namespace Brochure.ORM
             sql = $"{sql}{fieldList.Join(",")} {whereSql}";
             return Tuple.Create (sql, parms);
         }
-        public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T> (object obj, IQuery query)
+        public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T> (object obj, IWhereQuery query)
         {
             var whereSql = string.Empty;
             var parms = new List<IDbDataParameter> ();

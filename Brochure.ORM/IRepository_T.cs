@@ -10,11 +10,11 @@ namespace Brochure.ORM
 
         Task<T> Get (string id);
 
-        Task<int> Update (IQuery query, T entity);
+        Task<int> Update (IWhereQuery query, T entity);
 
         Task<int> Update (string id, T entity);
 
-        Task<bool> Delete (IQuery query);
+        Task<bool> Delete (IWhereQuery query);
 
         Task<bool> Delete (string id);
 

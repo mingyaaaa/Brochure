@@ -85,7 +85,7 @@ namespace Brochure.ORM.Database
         }
 
         [Transaction]
-        public virtual int Update<T> (object obj, IQuery query)
+        public virtual int Update<T> (object obj, IWhereQuery query)
         {
             var sqlTuple = _dbSql.GetUpdateSql<T> (obj, query);
             var sql = sqlTuple.Item1;
@@ -107,7 +107,7 @@ namespace Brochure.ORM.Database
         }
 
         [Transaction]
-        public virtual int Delete<T> (IQuery query)
+        public virtual int Delete<T> (IWhereQuery query)
         {
             var tuple = _dbSql.GetDeleteSql<T> (query);
             var command = CreateDbCommand ();

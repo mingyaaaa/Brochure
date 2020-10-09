@@ -84,9 +84,5 @@ namespace Brochure.LinqDbQuery.MySql
             return new MySqlTypeMap ();
         }
 
-        public ExpressionVisitor GetVisitor ()
-        {
-            throw new NotImplementedException ();
-        }
     }
 }

@@ -14,7 +14,6 @@ namespace Brochure.ORM
         string GetOperateSymbol (object left, ExpressionType expressionType, object right);
         string GetObjectType (object type);
         IDbConnection GetDbConnection ();
-        ExpressionVisitor GetVisitor ();
         TypeMap GetTypeMap ();
     }
 }

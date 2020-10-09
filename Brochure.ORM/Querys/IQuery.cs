@@ -10,9 +10,12 @@ namespace Brochure.ORM
     {
         string GetSql ();
 
-        string GetWhereSql ();
-
         List<IDbDataParameter> GetDbDataParameters ();
+    }
+
+    public interface IWhereQuery : IQuery
+    {
+        string GetWhereSql ();
     }
 
     public interface IQuery<T1> : IQuery

@@ -7,7 +7,7 @@ using Brochure.Extensions;
 using Brochure.ORM.Visitors;
 namespace Brochure.ORM
 {
-    public abstract class Query : IQuery
+    public abstract class Query : IQuery, IWhereQuery
     {
         protected DbOption Option { get; private set; }
 
