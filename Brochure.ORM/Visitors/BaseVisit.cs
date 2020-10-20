@@ -13,15 +13,20 @@ namespace Brochure.ORM.Visitors
 
     public abstract class ORMVisitor : ExpressionVisitor
     {
-        protected ORMVisitor (IDbProvider dbProvider)
+        protected ORMVisitor (IDbProvider dbProvider, DbOption dbOption, IServiceProvider serviceProvider = null)
         {
             _dbPrivoder = dbProvider;
             this.Parameters = new List<IDbDataParameter> ();
+            this.serviceProvider = serviceProvider;
+            this.dbOption = dbOption;
         }
 
         protected IDbProvider _dbPrivoder;
         protected object sql;
         protected List<IDbDataParameter> Parameters;
+        private readonly IEnumerable<IFuncVisit> funlist;
+        private readonly IServiceProvider serviceProvider;
+        protected readonly DbOption dbOption;
 
         public virtual object GetSql (Expression expression = null)
         {
@@ -98,6 +103,11 @@ namespace Brochure.ORM.Visitors
                     sql = $"max({member})";
                     break;
                 default:
+                    var fun = funlist?.FirstOrDefault (t => t.FuncName == node.Method.Name);
+                    if (fun != null)
+                    {
+                        sql = fun.GetExcuteSql (call, member);
+                    }
                     break;
             }
             return node;
@@ -111,7 +121,7 @@ namespace Brochure.ORM.Visitors
 
         private object AddParamers (object obj)
         {
-            if (!_dbPrivoder.IsUseParamers)
+            if (!dbOption.IsUseParamers)
             {
                 return obj;
             }

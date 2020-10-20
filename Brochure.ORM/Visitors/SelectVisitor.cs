@@ -6,7 +6,7 @@ namespace Brochure.ORM.Visitors
 {
     public class SelectVisitor : ORMVisitor
     {
-        public SelectVisitor (IDbProvider dbPrivoder) : base (dbPrivoder) { }
+        public SelectVisitor (IDbProvider dbPrivoder, DbOption dbOption) : base (dbPrivoder, dbOption) { }
 
         protected override Expression VisitNew (NewExpression node)
         {

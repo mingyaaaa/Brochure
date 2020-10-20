@@ -8,7 +8,7 @@ namespace Brochure.ORM.Querys
     public class Query<T1, T2> : Query, IQuery<T1, T2>
     {
 
-        public Query (IDbProvider dbProvider) : base (dbProvider) { }
+        public Query (IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider) : base (dbProvider, option, visitProvider) { }
 
         public IQuery<T1, T2, T3> Join<T3> (Expression<Func<T1, T2, T3, bool>> fun)
         {

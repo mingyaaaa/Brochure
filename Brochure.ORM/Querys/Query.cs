@@ -9,15 +9,16 @@ namespace Brochure.ORM
 {
     public abstract class Query : IQuery, IWhereQuery
     {
-        protected DbOption Option { get; private set; }
+        private readonly DbOption option;
 
         protected List<IDbDataParameter> DbParameters;
 
-        protected Query (IDbProvider dbProvider)
+        protected Query (IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider)
         {
-            // this.Option = option;
+            this.option = option;
             InitData ();
             this.dbProvider = dbProvider;
+            this.visitProvider = visitProvider;
         }
 
         private void InitData ()
@@ -36,6 +37,7 @@ namespace Brochure.ORM
         protected string orderSql;
         protected List<IDbDataParameter> parameters;
         private readonly IDbProvider dbProvider;
+        private readonly IVisitProvider visitProvider;
 
         private string AddWhiteSpace (string str)
         {
@@ -44,29 +46,30 @@ namespace Brochure.ORM
             return string.Empty;
         }
 
-        public int Count ()
-        {
-            selectSql = $"select count(1) from {JoinTableNames()}";
-            var sql = GetSql ();
-            var result = -1;
-            using (var conn = this.Option.GetDbConnection ())
-            {
-                var command = conn.CreateCommand ();
-                command.CommandText = sql;
-                command.CommandTimeout = this.Option.Timeout;
-                if (dbProvider.IsUseParamers)
-                {
-                    foreach (var item in parameters)
-                        command.Parameters.Add (item);
-                }
-                result = command.ExecuteNonQuery ();
-            }
-            return result;
-        }
+        // public int Count ()
+        // {
+        //     selectSql = $"select count(1) from {JoinTableNames()}";
+        //     var sql = GetSql ();
+        //     var result = -1;
+        //     using (var conn = this.option.GetDbConnection ())
+        //     {
+        //         var command = conn.CreateCommand ();
+        //         command.CommandText = sql;
+        //         command.CommandTimeout = this.option.Timeout;
+        //         if (option.IsUseParamers)
+        //         {
+        //             foreach (var item in parameters)
+        //                 command.Parameters.Add (item);
+        //         }
+        //         result = command.ExecuteNonQuery ();
+        //     }
+        //     return result;
+        // }
 
         protected T Join<T> (Type type, Expression expression) where T : Query
         {
-            var joinVisitor = new JoinVisitor (type, dbProvider);
+            var joinVisitor = visitProvider.Builder<JoinVisitor> ();
+            joinVisitor.SetTableName (type);
             joinVisitor.Visit (expression);
             string t_joinSql;
             if (string.IsNullOrWhiteSpace (joinSql))
@@ -80,7 +83,7 @@ namespace Brochure.ORM
 
         protected T OrderBy<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (dbProvider);
+            var orderVisitor = visitProvider.Builder<OrderVisitor> ();
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this.Copy<T> ();
@@ -90,7 +93,8 @@ namespace Brochure.ORM
 
         protected T OrderByDesc<T> (Expression fun) where T : Query
         {
-            var orderVisitor = new OrderVisitor (dbProvider, false);
+            var orderVisitor = visitProvider.Builder<OrderVisitor> ();
+            orderVisitor.IsAes = false;
             orderVisitor.Visit (fun);
             var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
             var tt = this.Copy<T> ();
@@ -100,7 +104,7 @@ namespace Brochure.ORM
 
         public T Select<T> (Expression fun) where T : Query
         {
-            var selectVisitor = new SelectVisitor (dbProvider);
+            var selectVisitor = visitProvider.Builder<SelectVisitor> ();
             selectVisitor.Visit (fun);
             var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
             //如果有group 则需要将Key替换成对应的分组属性
@@ -132,7 +136,8 @@ namespace Brochure.ORM
 
         public T WhereAnd<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (dbProvider, this.DbParameters);
+            var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
+            whereVisitor.AddParamters (this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;
@@ -156,7 +161,8 @@ namespace Brochure.ORM
 
         public T WhereOr<T> (Expression fun) where T : Query
         {
-            var whereVisitor = new WhereVisitor (dbProvider, this.DbParameters);
+            var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
+            whereVisitor.AddParamters (this.DbParameters);
             whereVisitor.Visit (fun);
             var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
             string t_whereSql = string.Empty;
@@ -178,7 +184,7 @@ namespace Brochure.ORM
 
         public T Groupby<T> (Expression fun) where T : Query
         {
-            var groupVisit = new GroupVisitor (dbProvider);
+            var groupVisit = visitProvider.Builder<GroupVisitor> ();
             groupVisit.Visit (fun);
             var t_groupSql = groupVisit.GetSql ().ToString ();
             var tt = this.Copy<T> ();
@@ -188,7 +194,7 @@ namespace Brochure.ORM
 
         protected T Copy<T> () where T : Query
         {
-            var query = (T) Activator.CreateInstance (typeof (T), this.dbProvider);
+            var query = (T) Activator.CreateInstance (typeof (T), this.dbProvider, this.option, this.visitProvider);
             query.selectSql = this.selectSql;
             query.whereSql = this.whereSql;
             query.groupSql = this.groupSql;
@@ -196,7 +202,6 @@ namespace Brochure.ORM
             query.orderSql = this.orderSql;
             query.parameters = this.parameters;
             query.mainTableNames = this.mainTableNames;
-            query.Option = this.Option;
             query.DbParameters = new List<IDbDataParameter> (this.DbParameters);
             return query;
         }

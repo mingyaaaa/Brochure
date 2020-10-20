@@ -7,11 +7,13 @@ namespace Brochure.ORM.Database
     {
         protected DbOption Option;
         private readonly DbSql _dbSql;
+        private readonly IConnectFactory connectFactory;
 
-        protected DbIndex (DbOption option, DbSql dbSql)
+        protected DbIndex (DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
             this._dbSql = dbSql;
+            this.connectFactory = connectFactory;
         }
 
         [Transaction]
@@ -23,7 +25,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long CreateIndex (string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetCreateIndexSql (tableName, columnNames, indexName, sqlIndex);
             return command.ExecuteNonQuery ();
@@ -38,7 +40,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long DeleteIndex (string tableName, string indexName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetDeleteIndexSql (tableName, indexName);
             return command.ExecuteNonQuery ();

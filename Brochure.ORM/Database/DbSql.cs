@@ -15,12 +15,14 @@ namespace Brochure.ORM
         protected DbOption Option;
         private readonly TypeMap _typeMap;
         protected readonly IDbProvider dbProvider;
+        private readonly IVisitProvider visitProvider;
 
-        protected DbSql (IDbProvider dbProvider, DbOption dbOption)
+        protected DbSql (IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
         {
             this.Option = dbOption;
             _typeMap = dbProvider.GetTypeMap ();
             this.dbProvider = dbProvider;
+            this.visitProvider = visitProvider;
         }
 
         public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T> (Expression<Func<T, bool>> whereFunc)
@@ -29,7 +31,7 @@ namespace Brochure.ORM
             var parms = new List<IDbDataParameter> ();
             if (whereFunc != null)
             {
-                var whereVisitor = new WhereVisitor (dbProvider);
+                var whereVisitor = visitProvider.Builder<WhereVisitor> ();
                 whereVisitor.Visit (whereFunc);
                 whereSql = whereVisitor.GetSql ().ToString ();
                 parms.AddRange (whereVisitor.GetParameters ());
@@ -62,7 +64,7 @@ namespace Brochure.ORM
             var valueList = new List<string> ();
             foreach (var item in doc.Keys.ToList ())
             {
-                if (dbProvider.IsUseParamers)
+                if (Option.IsUseParamers)
                 {
                     var paramsKey = $"{dbProvider.GetParamsSymbol()}{item}";
                     var param = dbProvider.GetDbDataParameter ();
@@ -84,7 +86,7 @@ namespace Brochure.ORM
                     }
                 }
             }
-            if (dbProvider.IsUseParamers)
+            if (Option.IsUseParamers)
                 sql = $"{sql}({fields.Join(",")}) values({pams.Join(",",t=>t.ParameterName)})";
             else
                 sql = $"{sql}({fields.Join(",")}) values({valueList.Join(",")})";
@@ -97,7 +99,7 @@ namespace Brochure.ORM
             var parms = new List<IDbDataParameter> ();
             if (whereFunc != null)
             {
-                var whereVisitor = new WhereVisitor (dbProvider);
+                var whereVisitor = visitProvider.Builder<WhereVisitor> ();
                 whereVisitor.Visit (whereFunc);
                 whereSql = whereVisitor.GetSql ().ToString ();
                 parms.AddRange (whereVisitor.GetParameters ());
@@ -109,7 +111,7 @@ namespace Brochure.ORM
             foreach (var item in doc.Keys.ToList ())
             {
                 var fieldStr = string.Empty;
-                if (dbProvider.IsUseParamers)
+                if (Option.IsUseParamers)
                 {
                     var param = dbProvider.GetDbDataParameter ();
                     param.ParameterName = $"{dbProvider.GetParamsSymbol()}{item}";
@@ -142,7 +144,7 @@ namespace Brochure.ORM
             foreach (var item in doc.Keys.ToList ())
             {
                 var fieldStr = string.Empty;
-                if (dbProvider.IsUseParamers)
+                if (Option.IsUseParamers)
                 {
                     var param = dbProvider.GetDbDataParameter ();
                     param.ParameterName = $"{dbProvider.GetParamsSymbol()}{item}";

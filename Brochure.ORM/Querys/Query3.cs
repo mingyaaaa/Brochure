@@ -1,12 +1,13 @@
 using System;
 using System.Linq.Expressions;
+using Brochure.ORM.Visitors;
 
 namespace Brochure.ORM.Querys
 {
     public class Query<T1, T2, T3> : Query, IQuery<T1, T2, T3>
     {
 
-        public Query (IDbProvider dbProvider) : base (dbProvider) { }
+        public Query (IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider) : base (dbProvider, option, visitProvider) { }
 
         public IQuery<T1, T2, T3, T4> Join<T4> (Expression<Func<T1, T2, T3, T4, bool>> fun)
         {

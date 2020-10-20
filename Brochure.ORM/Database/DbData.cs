@@ -13,17 +13,20 @@ namespace Brochure.ORM.Database
     {
         private readonly IDbConnection dbConnection;
 
-        protected DbData (DbOption dbOption, DbSql dbSql, TransactionManager transactionManager)
+        protected DbData (DbOption dbOption, DbSql dbSql, TransactionManager transactionManager, IConnectFactory connectFactory)
         {
             Option = dbOption;
             this._dbSql = dbSql;
-            dbConnection = Option.GetDbConnection ();
+
             this.transactionManager = transactionManager;
+            this.connectFactory = connectFactory;
+            dbConnection = connectFactory.CreaConnection ();
         }
 
         protected DbOption Option;
         private readonly DbSql _dbSql;
         private readonly TransactionManager transactionManager;
+        private readonly IConnectFactory connectFactory;
 
         [Transaction]
         public virtual int Insert<T> (T obj)
@@ -120,7 +123,7 @@ namespace Brochure.ORM.Database
         {
             var sql = query.GetSql ();
             var parms = query.GetDbDataParameters ();
-            var connect = Option.GetDbConnection ();
+            var connect = connectFactory.CreaConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (parms);
@@ -137,7 +140,7 @@ namespace Brochure.ORM.Database
         {
             var sql = query.GetSql ();
             var parms = query.GetDbDataParameters ();
-            var connect = Option.GetDbConnection ();
+            var connect = connectFactory.CreaConnection ();
             var command = connect.CreateCommand ();
             command.CommandText = sql;
             command.Parameters.AddRange (parms);
@@ -155,7 +158,7 @@ namespace Brochure.ORM.Database
 
         private IDbCommand CreateDbCommand ()
         {
-            var connect = Option.GetDbConnection ();
+            var connect = connectFactory.CreaConnection ();
             var command = connect.CreateCommand ();
             command.Transaction = transactionManager.GetDbTransaction ();
             return command;

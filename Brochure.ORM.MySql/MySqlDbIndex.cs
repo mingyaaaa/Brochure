@@ -5,6 +5,6 @@ namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbIndex : DbIndex
     {
-        public MySqlDbIndex (DbOption option, DbSql dbSql) : base (option, dbSql) { }
+        public MySqlDbIndex (DbOption option, DbSql dbSql, IConnectFactory connectFactory) : base (option, dbSql, connectFactory) { }
     }
 }

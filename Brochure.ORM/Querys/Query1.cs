@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Brochure.ORM.Visitors;
 using Microsoft.Extensions.Logging;
 
 namespace Brochure.ORM.Querys
@@ -8,8 +9,7 @@ namespace Brochure.ORM.Querys
     public class Query<T1> : Query, IQuery<T1>
     {
 
-        public Query (IDbProvider dbProvider) : base (dbProvider)
-        { }
+        public Query (IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider) : base (dbProvider, option, visitProvider) { }
 
         public string Sql { get; protected set; }
 

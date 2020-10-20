@@ -5,13 +5,9 @@ namespace Brochure.ORM.Visitors
 {
     public class OrderVisitor : ORMVisitor
     {
-        private readonly bool isAes;
+        public bool IsAes { get; set; } = true;
 
-        public OrderVisitor (IDbProvider dbProvider, bool isAes = true) : base (dbProvider)
-        {
-            this.isAes = isAes;
-        }
-
+        public OrderVisitor (IDbProvider dbProvider, DbOption dbOption) : base (dbProvider, dbOption) { }
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {
             var list = new List<string> ();
@@ -23,7 +19,7 @@ namespace Brochure.ORM.Visitors
                 list.Add ($"{field}");
             }
             sql = $"order by {string.Join(",", list)}";
-            if (!isAes)
+            if (!IsAes)
                 sql = $"{sql} desc";
             return node;
         }
@@ -37,7 +33,7 @@ namespace Brochure.ORM.Visitors
                 list.Add ($"{GetSql(parms[i])}");
             }
             sql = $"order by {string.Join(",", list)} ";
-            if (!isAes)
+            if (!IsAes)
                 sql = $"{sql} desc";
             return node;
         }
@@ -54,7 +50,7 @@ namespace Brochure.ORM.Visitors
                 if (!string.IsNullOrWhiteSpace (str) && !str.Contains ("order by"))
                 {
                     sql = $"order by {str}";
-                    if (!isAes)
+                    if (!IsAes)
                         sql = $"{sql} desc";
                 }
             }

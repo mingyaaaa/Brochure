@@ -6,13 +6,14 @@ using Brochure.Extensions;
 using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Database;
+using LinqDbQueryTest.Datas;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-
 namespace Brochure.ORMTest.Querys
 {
     [TestClass]
-    public class DbTest
+    public class DbTest : BaseTest
     {
         public IDbProvider provider { get; }
         private readonly DbOption option;
@@ -22,10 +23,11 @@ namespace Brochure.ORMTest.Querys
         public DbTest ()
         {
             transactionManager = new Mock<TransactionManager> ();
-            provider = new MySqlDbProvider () { IsUseParamers = false };
-            option = new MySqlOption (provider, transactionManager.Object);
+            provider = base.Provider.GetService<IDbProvider> ();
+            option = base.Provider.GetService<DbOption> ();
+            option.IsUseParamers = false;
             ObjectConverCollection.RegistObjectConver<IRecord> (t => new Record (t.AsDictionary ()));
-            dbSql = new MySqlDbSql (provider, option);
+            dbSql = base.Provider.GetService<DbSql> ();
         }
 
         [TestMethod]
@@ -39,7 +41,6 @@ namespace Brochure.ORMTest.Querys
             };
             var sql = dbSql.GetInsertSql (obj);
             Assert.AreEqual ("insert into [Students]([School],[ClassId],[ClassCount]) values('dd','11',1)", sql.Item1);
-
             sql = dbSql.GetDeleteSql<Students> (t => t.ClassId == "1" && t.ClassCount == 2);
             Assert.AreEqual ("delete from [Students] where [Students].[ClassId] = '1' and [Students].[ClassCount] = 2", sql.Item1);
             sql = dbSql.GetUpdateSql<Students> (new

@@ -16,15 +16,17 @@ namespace Brochure.User.Services
     {
         private readonly IUserRepository repository;
         private readonly IDbProvider dbProvider;
+        private readonly IQueryBuilder builder;
 
-        public UserService (IUserRepository repository, IDbProvider dbProvider)
+        public UserService (IUserRepository repository, IDbProvider dbProvider, IQueryBuilder builder)
         {
             this.repository = repository;
             this.dbProvider = dbProvider;
+            this.builder = builder;
         }
         public override async Task<UserResponse> GetUser (UserRequest request, ServerCallContext context)
         {
-            var query = new Query<UserEntrity> (dbProvider);
+            var query = builder.From<UserEntrity> ();
             var entrity = await repository.Get (query);
             var userResponse = new UserResponse ();
             userResponse.Users.Add (new UseModel.User ()

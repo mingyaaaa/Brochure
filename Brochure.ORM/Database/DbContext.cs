@@ -1,4 +1,5 @@
 using Brochure.ORM.Database;
+using Brochure.ORM.Visitors;
 
 namespace Brochure.ORM
 {
@@ -11,12 +12,13 @@ namespace Brochure.ORM
         private readonly IDbProvider dbProvider;
         private readonly DbOption dbOption;
         private readonly DbData dbData;
+        private readonly IVisitProvider visitProvider;
 
         public DbContext (DbDatabase dbDatabase,
             DbTable dbTable, DbColumns dbColumns,
             DbIndex dbIndex, DbData dbData,
             DbOption dbOption,
-            IDbProvider dbProvider)
+            IDbProvider dbProvider, IVisitProvider visitProvider)
         {
             this.dbData = dbData;
             this.dbIndex = dbIndex;
@@ -25,6 +27,7 @@ namespace Brochure.ORM
             this.dbDatabase = dbDatabase;
             this.dbProvider = dbProvider;
             this.dbOption = dbOption;
+            this.visitProvider = visitProvider;
         }
 
         public DbOption GetDbOption ()
@@ -59,6 +62,11 @@ namespace Brochure.ORM
         public IDbProvider GetDbProvider ()
         {
             return this.dbProvider;
+        }
+
+        public IVisitProvider GetVisitProvider ()
+        {
+            return visitProvider;
         }
     }
 }

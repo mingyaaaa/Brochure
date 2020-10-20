@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Brochure.ORM.Database;
+using Brochure.ORM.Extensions;
 using Brochure.ORM.Querys;
 
 namespace Brochure.ORM
@@ -24,14 +25,14 @@ namespace Brochure.ORM
 
         public async Task<bool> Delete (string id)
         {
-            var query = new Query<T> (context.GetDbProvider ());
+            var query = context.From<T> ();
             var q = query.WhereAnd (t => t.Id == id) as IWhereQuery;
             return await Delete (q);
         }
 
         public async Task<bool> DeleteMany (IEnumerable<string> ids)
         {
-            var query = new Query<T> (context.GetDbProvider ());
+            var query = context.From<T> ();
             var q = query.WhereAnd (t => ids.Contains (t.Id)) as IWhereQuery;
             return await Delete (q);
         }
@@ -44,7 +45,7 @@ namespace Brochure.ORM
 
         public async Task<T> Get (string id)
         {
-            var query = new Query<T> (context.GetDbProvider ());
+            var query = context.From<T> ();
             var q = query.WhereAnd (t => t.Id == id);
             return await Get (q);
         }
@@ -78,7 +79,7 @@ namespace Brochure.ORM
 
         public async Task<IEnumerable<T>> List (IEnumerable<string> ids)
         {
-            var query = new Query<T> (context.GetDbProvider ());
+            var query = context.From<T> ();
             var q = query.WhereAnd (t => ids.Contains (t.Id));
             return await List (q);
         }
@@ -93,7 +94,7 @@ namespace Brochure.ORM
 
         public async Task<int> Update (string id, T entity)
         {
-            var query = new Query<T> (context.GetDbProvider ());
+            var query = context.From<T> ();
             var q = query.WhereAnd (t => t.Id == id) as IWhereQuery;
             return await Update (q, entity);
         }

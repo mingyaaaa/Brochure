@@ -8,11 +8,13 @@ namespace Brochure.ORM.Database
     {
         protected DbOption Option;
         private readonly DbSql _dbSql;
+        private readonly IConnectFactory connectFactory;
 
-        protected DbColumns (DbOption option, DbSql dbSql)
+        protected DbColumns (DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
             this._dbSql = dbSql;
+            this.connectFactory = connectFactory;
         }
 
         public Task<bool> IsExistColumnAsync (string tableName, string columnName)
@@ -23,7 +25,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual bool IsExistColumn (string tableName, string columnName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetColumsNameCountSql (Option.DatabaseName, tableName, columnName);
             var r = (int) command.ExecuteScalar ();
@@ -39,7 +41,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long RenameColumn (string tableName, string columnName, string newcolumnName, TypeCode typeCode)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetRenameColumnNameSql (tableName, columnName, newcolumnName, typeCode);
             return command.ExecuteNonQuery ();
@@ -54,7 +56,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long UpdateColumn (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetUpdateColumnSql (tableName, columnName, typeCode, isNotNull);
             return command.ExecuteNonQuery ();
@@ -67,7 +69,7 @@ namespace Brochure.ORM.Database
 
         public virtual long DeleteColumn (string tableName, string columnName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetDeleteColumnSql (tableName, columnName);
             return command.ExecuteNonQuery ();
@@ -80,7 +82,7 @@ namespace Brochure.ORM.Database
 
         public virtual long AddColumns (string tableName, string columnName, TypeCode typeCode, bool isNotNull)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetAddllColumnSql (tableName, columnName, typeCode, isNotNull);
             return command.ExecuteNonQuery ();

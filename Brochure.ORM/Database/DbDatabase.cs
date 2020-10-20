@@ -5,11 +5,13 @@ namespace Brochure.ORM.Database
     {
         protected DbOption Option;
         private readonly DbSql _dbSql;
+        private readonly IConnectFactory connectFactory;
 
-        protected DbDatabase (DbOption option, DbSql dbSql)
+        protected DbDatabase (DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
             this._dbSql = dbSql;
+            this.connectFactory = connectFactory;
         }
 
         public Task<long> CreateDatabaseAsync (string databaseName)
@@ -20,7 +22,7 @@ namespace Brochure.ORM.Database
         public virtual long CreateDatabase (string databaseName)
         {
             var sql = _dbSql.GetCreateDatabaseSql (databaseName);
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = sql;
             return command.ExecuteNonQuery ();
@@ -33,7 +35,7 @@ namespace Brochure.ORM.Database
 
         public virtual long DeleteDatabase (string databaseName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetDeleteDatabaseSql (databaseName);
             return command.ExecuteNonQuery ();
@@ -46,7 +48,7 @@ namespace Brochure.ORM.Database
 
         public virtual bool IsExistDataBase (string databaseName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = _dbSql.GetDataBaseNameCountSql (databaseName);
             var rr = (int) command.ExecuteScalar ();
@@ -55,7 +57,7 @@ namespace Brochure.ORM.Database
 
         public virtual void ChangeDatabase (string databaseName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             connection.ChangeDatabase (databaseName);
         }
     }

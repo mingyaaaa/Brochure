@@ -4,22 +4,34 @@ using System.Linq;
 using System.Linq.Expressions;
 using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
+using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
+using LinqDbQueryTest.Datas;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Brochure.ORMTest
 {
     [TestClass]
-    public class TestVisitor
+    public class TestVisitor : BaseTest
     {
         private ORMVisitor visitor;
-
-        public TestVisitor () { }
+        private DbOption option;
+        IDbProvider provider;
+        private Mock<TransactionManager> transactionManager;
+        public TestVisitor ()
+        {
+            provider = base.Provider.GetService<IDbProvider> ();
+            transactionManager = new Mock<TransactionManager> ();
+            option = base.Provider.GetService<DbOption> ();
+        }
 
         [TestMethod]
         public void TestWhereVisitor ()
         {
-            visitor = new WhereVisitor (new MySqlDbProvider () { IsUseParamers = false });
+            option.IsUseParamers = false;
+            visitor = new WhereVisitor (provider, option);
             Expression<Func<Peoples, bool>> ex = t => t.Id == "1";
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
@@ -77,7 +89,7 @@ namespace Brochure.ORMTest
         [TestMethod]
         public void TestSelectVisitor ()
         {
-            visitor = new SelectVisitor (new MySqlDbProvider ());
+            visitor = new SelectVisitor (provider, option);
             Expression<Func<Peoples, object>> ex = t => new { NewName = t.Name, NewAge = t.Age };
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
@@ -96,7 +108,8 @@ namespace Brochure.ORMTest
         [TestMethod]
         public void TestJoinVisitor ()
         {
-            visitor = new JoinVisitor (typeof (Students), new MySqlDbProvider ());
+            visitor = new JoinVisitor (provider, option);
+            ((JoinVisitor) visitor).SetTableName (typeof (Students));
             Expression<Func<Peoples, Students, bool>> ex = (p, s) => s.PeopleId == p.Id;
             visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
@@ -106,7 +119,7 @@ namespace Brochure.ORMTest
         [TestMethod]
         public void TestGroupVisitor ()
         {
-            visitor = new GroupVisitor (new MySqlDbProvider ());
+            visitor = new GroupVisitor (provider, option);
             Expression<Func<Peoples, object>> ex = t => new { t.Age, t.BirthDay };
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();
@@ -121,7 +134,7 @@ namespace Brochure.ORMTest
         [TestMethod]
         public void TestParamers ()
         {
-            visitor = new WhereVisitor (new MySqlDbProvider ());
+            visitor = new WhereVisitor (provider, option);
             Expression<Func<Peoples, bool>> ex = t => t.Id == "1";
             var a = visitor.Visit (ex);
             var sql = visitor.GetSql ().ToString ().Trim ();

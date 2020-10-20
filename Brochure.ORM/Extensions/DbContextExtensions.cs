@@ -5,30 +5,30 @@ namespace Brochure.ORM.Extensions
 {
     public static class DbContextExtensions
     {
-        #region Query
-        public static IQuery<T1> Query<T1> (this DbContext dbContext)
+        #region Query 
+        public static IQuery<T1> From<T1> (this DbContext dbContext)
         {
-            return new Querys.Query<T1> (dbContext.GetDbProvider ());
+            return new Querys.Query<T1> (dbContext.GetDbProvider (), dbContext.GetDbOption (), dbContext.GetVisitProvider ());
         }
 
-        public static IQuery<T1, T2> Query<T1, T2> (this DbContext dbContext)
+        public static IQuery<T1, T2> From<T1, T2> (this DbContext dbContext)
         {
-            return new Querys.Query<T1, T2> (dbContext.GetDbProvider ());
+            return new Querys.Query<T1, T2> (dbContext.GetDbProvider (), dbContext.GetDbOption (), dbContext.GetVisitProvider ());
         }
 
-        public static IQuery<T1, T2, T3> Query<T1, T2, T3> (this DbContext dbContext)
+        public static IQuery<T1, T2, T3> From<T1, T2, T3> (this DbContext dbContext)
         {
-            return new Querys.Query<T1, T2, T3> (dbContext.GetDbProvider ());
+            return new Querys.Query<T1, T2, T3> (dbContext.GetDbProvider (), dbContext.GetDbOption (), dbContext.GetVisitProvider ());
         }
 
-        public static IQuery<T1, T2, T3, T4> Query<T1, T2, T3, T4> (this DbContext dbContext)
+        public static IQuery<T1, T2, T3, T4> From<T1, T2, T3, T4> (this DbContext dbContext)
         {
-            return new Querys.Query<T1, T2, T3, T4> (dbContext.GetDbProvider ());
+            return new Querys.Query<T1, T2, T3, T4> (dbContext.GetDbProvider (), dbContext.GetDbOption (), dbContext.GetVisitProvider ());
         }
 
-        public static IQuery<T1, T2, T3, T4, T5> Query<T1, T2, T3, T4, T5> (this DbContext dbContext)
+        public static IQuery<T1, T2, T3, T4, T5> From<T1, T2, T3, T4, T5> (this DbContext dbContext)
         {
-            return new Querys.Query<T1, T2, T3, T4, T5> (dbContext.GetDbProvider ());
+            return new Querys.Query<T1, T2, T3, T4, T5> (dbContext.GetDbProvider (), dbContext.GetDbOption (), dbContext.GetVisitProvider ());
         }
         #endregion
 

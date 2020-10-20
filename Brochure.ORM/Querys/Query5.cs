@@ -1,11 +1,12 @@
 using System;
 using System.Linq.Expressions;
+using Brochure.ORM.Visitors;
 
 namespace Brochure.ORM.Querys
 {
     public class Query<T1, T2, T3, T4, T5> : Query, IQuery<T1, T2, T3, T4, T5>
     {
-        public Query (IDbProvider dbprovider) : base (dbprovider) { }
+        public Query (IDbProvider dbprovider, DbOption option, IVisitProvider visitProvider) : base (dbprovider, option, visitProvider) { }
 
         public IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {

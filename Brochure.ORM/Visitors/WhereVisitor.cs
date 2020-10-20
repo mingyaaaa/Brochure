@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
-    public class WhereVisitor : ORMVisitor
+    public class WhereVisitor : ORMVisitor, ICloneable
     {
-        public WhereVisitor (IDbProvider dbPrivoder, IEnumerable<IDbDataParameter> pams = null) : base (dbPrivoder)
+        public WhereVisitor (IDbProvider dbPrivoder, DbOption dbOption) : base (dbPrivoder, dbOption) { }
+
+        public void AddParamters (IEnumerable<IDbDataParameter> pams)
         {
             this.Parameters.AddRange (pams??new List<IDbDataParameter> ());
         }
@@ -48,6 +51,11 @@ namespace Brochure.ORM.Visitors
                 return str;
             }
             return obj;
+        }
+
+        public object Clone ()
+        {
+            return new WhereVisitor (_dbPrivoder, dbOption);
         }
     }
 }

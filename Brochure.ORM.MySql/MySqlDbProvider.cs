@@ -2,18 +2,19 @@ using System;
 using System.Data;
 using System.Linq.Expressions;
 using Brochure.ORM;
+using Brochure.ORM.Visitors;
 using MySql.Data.MySqlClient;
 
 namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbProvider : IDbProvider
     {
-        public MySqlDbProvider ()
-        {
-            IsUseParamers = true;
-        }
+        private readonly DbOption dbOption;
 
-        public bool IsUseParamers { get; set; }
+        public MySqlDbProvider (DbOption dbOption)
+        {
+            this.dbOption = dbOption;
+        }
 
         public IDbConnection GetDbConnection ()
         {
@@ -30,7 +31,7 @@ namespace Brochure.LinqDbQuery.MySql
             if (obj == null)
                 return null;
             string str = string.Empty;
-            if (IsUseParamers)
+            if (dbOption.IsUseParamers)
             {
                 str = obj.ToString ();
             }

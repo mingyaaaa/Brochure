@@ -9,17 +9,19 @@ namespace Brochure.ORM.Database
     {
         private readonly ITransactionManager transactionManager;
         private readonly DbOption dbOption;
+        private readonly IConnectFactory connectFactory;
 
-        public TransactionFactory (ITransactionManager transactionManager, DbOption dbOption)
+        public TransactionFactory (ITransactionManager transactionManager, DbOption dbOption, IConnectFactory connectFactory)
         {
             this.transactionManager = transactionManager;
             this.dbOption = dbOption;
+            this.connectFactory = connectFactory;
         }
         public ITransaction GetTransaction ()
         {
             if (transactionManager.IsEmpty)
             {
-                var connect = dbOption.GetDbConnection ();
+                var connect = connectFactory.CreaConnection ();
                 connect.Open ();
                 var transaction = connect.BeginTransaction ();
                 return new Transaction (transaction);

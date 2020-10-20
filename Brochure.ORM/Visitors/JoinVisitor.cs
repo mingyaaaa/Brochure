@@ -5,13 +5,14 @@ namespace Brochure.ORM.Visitors
 {
     public class JoinVisitor : ORMVisitor
     {
-        private readonly string tableName;
+        private string tableName;
 
-        public JoinVisitor (Type tableType, IDbProvider dbPrivoder) : base (dbPrivoder)
+        public JoinVisitor (IDbProvider dbPrivoder, DbOption dbOption) : base (dbPrivoder, dbOption) { }
+
+        public void SetTableName (Type tableType)
         {
             tableName = TableUtlis.GetTableName (tableType);
         }
-
         protected override Expression VisitBinary (BinaryExpression node)
         {
             var left = GetSql (node.Left);

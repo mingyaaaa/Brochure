@@ -13,20 +13,21 @@ namespace Brochure.ORMTest.Transaction
         private readonly Mock<ITransactionManager> managerMock;
         private readonly Mock<DbOption> dbOptionMock;
         private readonly Mock<IDbConnection> dbConnectionMock;
-
+        private readonly Mock<IConnectFactory> connectFactoryMock;
         public TestTransactionFactory ()
         {
             managerMock = new Mock<ITransactionManager> ();
-            dbOptionMock = new Mock<DbOption> (new Mock<IDbProvider> ().Object, managerMock.Object);
+            dbOptionMock = new Mock<DbOption> ();
             dbConnectionMock = new Mock<IDbConnection> ();
-            dbOptionMock.Setup (t => t.GetDbConnection ()).Returns (dbConnectionMock.Object);
+            connectFactoryMock = new Mock<IConnectFactory> ();
+            connectFactoryMock.Setup (t => t.CreaConnection ()).Returns (dbConnectionMock.Object);
         }
 
         [TestMethod]
         public void TestCreateTransaction ()
         {
             managerMock.Setup (t => t.IsEmpty).Returns (true);
-            var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object);
+            var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object, connectFactoryMock.Object);
             var r = factory.GetTransaction ();
             Assert.IsInstanceOfType (r, typeof (ORM.Database.Transaction));
         }
@@ -35,7 +36,7 @@ namespace Brochure.ORMTest.Transaction
         public void TestCreateInnerTransaction ()
         {
             managerMock.Setup (t => t.IsEmpty).Returns (false);
-            var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object);
+            var factory = new TransactionFactory (managerMock.Object, dbOptionMock.Object, connectFactoryMock.Object);
             var r = factory.GetTransaction ();
             Assert.IsInstanceOfType (r, typeof (InnerTransaction));
 

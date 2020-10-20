@@ -7,11 +7,13 @@ namespace Brochure.ORM.Database
     {
         protected DbOption Option;
         private readonly DbSql dbSql;
+        private readonly IConnectFactory connectFactory;
 
-        protected DbTable (DbOption option, DbSql dbSql)
+        protected DbTable (DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
             this.dbSql = dbSql;
+            this.connectFactory = connectFactory;
         }
 
         [Transaction]
@@ -23,7 +25,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long CreateTable<T> ()
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = dbSql.GetCreateTableSql<T> ();
             return command.ExecuteNonQuery ();
@@ -36,7 +38,7 @@ namespace Brochure.ORM.Database
 
         public virtual bool IsExistTable (string tableName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = dbSql.GetTableNameCountSql (tableName);
             var r = (int) command.ExecuteScalar ();
@@ -52,7 +54,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long DeleteTable (string tableName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = dbSql.GetDeleteTableSql (tableName);
             return command.ExecuteNonQuery ();
@@ -67,7 +69,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long UpdateTableName (string tableName, string newTableName)
         {
-            var connection = Option.GetDbConnection ();
+            var connection = connectFactory.CreaConnection ();
             var command = connection.CreateCommand ();
             command.CommandText = dbSql.GetUpdateTableNameSql (tableName, newTableName);
             return command.ExecuteNonQuery ();

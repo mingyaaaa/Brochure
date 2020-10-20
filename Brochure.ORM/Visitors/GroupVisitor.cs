@@ -6,7 +6,7 @@ namespace Brochure.ORM.Visitors
 {
     public class GroupVisitor : ORMVisitor
     {
-        public GroupVisitor (IDbProvider provider) : base (provider) { }
+        public GroupVisitor (IDbProvider provider, DbOption dbOption) : base (provider, dbOption) { }
 
         protected override Expression VisitMemberInit (MemberInitExpression node)
         {

@@ -40,7 +40,7 @@ namespace Brochure.ORMTest.Transaction
             var mockDelegateMock = new Mock<AspectDelegate> ();
             var dbProviderMock = new Mock<IDbProvider> ();
             var factoryMock = new Mock<ITransactionFactory> ();
-            var dbOptionMock = new Mock<DbOption> (dbProviderMock.Object, transactionManagerMock.Object);
+            var dbOptionMock = new Mock<DbOption> ();
             var transactionMock = new Mock<ITransaction> ();
             var dbTransactionMock = new Mock<IDbTransaction> ();
             var services = Mock.Of<IServiceProvider> (sp =>
@@ -73,7 +73,7 @@ namespace Brochure.ORMTest.Transaction
             var mockDelegateMock = new Mock<AspectDelegate> ();
             var dbProviderMock = new Mock<IDbProvider> ();
             var factoryMock = new Mock<ITransactionFactory> ();
-            var dbOptionMock = new Mock<DbOption> (dbProviderMock.Object, transactionManagerMock.Object);
+            var dbOptionMock = new Mock<DbOption> ();
             var transactionMock = new Mock<ITransaction> ();
             var dbTransactionMock = new Mock<IDbTransaction> ();
             var manager = new TransactionManager ();
@@ -109,7 +109,7 @@ namespace Brochure.ORMTest.Transaction
             var mockDelegateMock = new Mock<AspectDelegate> ();
             var dbProviderMock = new Mock<IDbProvider> ();
             var factoryMock = new Mock<ITransactionFactory> ();
-            var dbOptionMock = new Mock<DbOption> (dbProviderMock.Object, transactionManagerMock.Object);
+            var dbOptionMock = new Mock<DbOption> ();
             var transactionMock = new Mock<ITransaction> ();
             var dbTransactionMock = new Mock<IDbTransaction> ();
             var manager = new TransactionManager ();

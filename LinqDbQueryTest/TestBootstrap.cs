@@ -5,6 +5,7 @@ using Brochure.ORM;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
+using Brochure.ORM.Visitors;
 
 namespace Brochure.ORMTest
 {
@@ -12,8 +13,9 @@ namespace Brochure.ORMTest
     {
         public class MySqlDbContext : DbContext
         {
-            public MySqlDbContext (DbDatabase dbDatabase, DbTable dbTable, DbColumns dbColumns, DbIndex dbIndex, DbData dbData, DbOption dbOption, IDbProvider dbProvider):
-                base (dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider) { }
+            public MySqlDbContext (DbDatabase dbDatabase, DbTable dbTable,
+                    DbColumns dbColumns, DbIndex dbIndex, DbData dbData, DbOption dbOption, IDbProvider dbProvider, IVisitProvider visitProvider):
+                base (dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider, visitProvider) { }
         }
 
         public class TestContext
@@ -26,9 +28,9 @@ namespace Brochure.ORMTest
                 DbIndex dbIndex,
                 DbData dbData,
                 DbOption dbOption,
-                IDbProvider dbProvider)
+                IDbProvider dbProvider, IVisitProvider visitProvider)
             {
-                dbContext = new MySqlDbContext (dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider);
+                dbContext = new MySqlDbContext (dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider, visitProvider);
             }
 
             [Transaction]
