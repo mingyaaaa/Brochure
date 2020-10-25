@@ -1,10 +1,11 @@
 ﻿using System;
+using static Brochure.AuthorityService.AuthorityService;
+
 namespace Brochure.Authority.Services
 {
-    public class AuthorityService : Brochure.AuthorityService.AuthorityService.AuthorityServiceBase
+    public class AuthorityService : AuthorityServiceBase
     {
-        public AuthorityService()
-        {
-        }
+        public AuthorityService ()
+        { }
     }
 }

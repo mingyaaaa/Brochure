@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Brochure.Authority.Models;
+using Brochure.Authority.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +13,18 @@ namespace Brochure.Authority.Controllers.V1
     [ApiController]
     public class AuthorityController : ControllerBase
     {
-        private readonly AuthorityService.AuthorityService.AuthorityServiceBase serviceBase;
+        private readonly ILoginService loginService;
 
-        public AuthorityController (AuthorityService.AuthorityService.AuthorityServiceBase serviceBase)
+        public AuthorityController (ILoginService loginService)
         {
-            this.serviceBase = serviceBase;
+            this.loginService = loginService;
         }
 
         [HttpPost ("login")]
         [AllowAnonymous]
-        public IActionResult Login (LoginModel model)
+        public async Task<IActionResult> Login (LoginModel model)
         {
+            var loginResult = await loginService.Login (model);
             return Ok ();
         }
 
