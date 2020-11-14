@@ -7,11 +7,11 @@ namespace Brochure.Core.Server
     public interface IMiddleManager
     {
 
-        void AddMiddle (Guid pluginId, Func<RequestDelegate, RequestDelegate> middle);
-        void IntertMiddle (Guid pluginId, int index, Func<RequestDelegate, RequestDelegate> middle);
+        void AddMiddle (string middleName, Guid pluginId, Func<RequestDelegate, RequestDelegate> middle);
+        void IntertMiddle (string middleName, Guid pluginId, int index, Func<RequestDelegate, RequestDelegate> middle);
 
-        void AddMiddle (Guid pluginId, Action action);
-        void IntertMiddle (Guid pluginId, int index, Action action);
+        void AddMiddle (string middleName, Guid pluginId, Action action);
+        void IntertMiddle (string middleName, Guid pluginId, int index, Action action);
 
         void RemovePluginMiddle (Guid guid);
         IReadOnlyList<RequestDelegateProxy> GetMiddlesList ();

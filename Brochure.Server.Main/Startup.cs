@@ -43,9 +43,9 @@ namespace Brochure.Server.Main
                 t.ServiceProvider = app.ApplicationServices;
                 t.Builder = app;
             }
-            app.IntertMiddle (Guid.Empty, 10, () => app.UseRouting ());
+            app.IntertMiddle ("main-routing", Guid.Empty, 10, () => app.UseRouting ());
             app.ConfigPlugin ();
-            app.IntertMiddle (Guid.Empty, 1000, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
+            app.IntertMiddle ("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
         }
     }
 }

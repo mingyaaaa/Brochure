@@ -4,17 +4,33 @@ namespace Brochure.Core.Server
 {
     public class RequestDelegateProxy
     {
-        public RequestDelegateProxy (Guid id, int order, Func<object> factory)
+        public RequestDelegateProxy (string middleName, Guid id, int order, Func<object> factory)
         {
+            this.MiddleName = middleName;
             this.PluginId = id;
             this.Order = order;
             this.MiddleFactory = factory;
         }
-
-        public Guid PluginId { get; set; }
-
+        /// <summary>
+        /// 中间件名称
+        /// </summary>
+        /// <value></value>
+        public string MiddleName { get; }
+        /// <summary>
+        /// 插件名称
+        /// </summary>
+        /// <value></value>
+        public Guid PluginId { get; }
+        /// <summary>
+        /// 中间件执行顺序
+        /// </summary>
+        /// <value></value>
         public int Order { get; set; }
 
-        public Func<object> MiddleFactory;
+        /// <summary>
+        /// 中间件方法
+        /// </summary>
+        /// <value></value>
+        public Func<object> MiddleFactory { get; }
     }
 }

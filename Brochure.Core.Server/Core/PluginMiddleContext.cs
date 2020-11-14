@@ -48,8 +48,7 @@ namespace Brochure.Core.Server
 
         public IApplicationBuilder Use (Func<RequestDelegate, RequestDelegate> middleware)
         {
-            middle.AddMiddle (guid, middleware);
-            return this;
+            throw new NotSupportedException ("当前类不支持");
         }
 
     }

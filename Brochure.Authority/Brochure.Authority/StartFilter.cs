@@ -9,8 +9,9 @@ namespace Brochure.Authority
         public void Configure (Guid guid, IApplicationBuilder app)
         {
             // app.UseIdentityServer ();
-            app.IntertMiddle (guid, 100, () => app.UseAuthentication ());
-            app.IntertMiddle (guid, 101, () => app.UseAuthorization ());
+            app.IntertMiddle ("author-authentication", guid, 100, () => app.UseAuthentication ());
+
+            app.IntertMiddle ("author-authorization", guid, 101, () => app.UseAuthorization ());
 
         }
     }

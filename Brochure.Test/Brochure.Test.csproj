@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
     <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
+     <ProjectReference Include="..\Brochure.Core.Server\Brochure.Core.Server.csproj" />
   </ItemGroup>
 
 </Project>

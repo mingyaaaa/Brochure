@@ -42,8 +42,7 @@ namespace Brochure.Core.Server
 
         public IApplicationBuilder Use (Func<RequestDelegate, RequestDelegate> middleware)
         {
-            manager.AddMiddle (Guid.Empty, middleware);
-            return this;
+            throw new NotSupportedException ("请使用AddMiddle方法");
         }
         public RequestDelegate UseMiddle ()
         {
@@ -93,7 +92,7 @@ namespace Brochure.Core.Server
                         {
                             var r = item.MiddleFactory.Invoke ();
                             if (r != null && r is Func<RequestDelegate, RequestDelegate>)
-                                middleManager.AddMiddle (item.PluginId, r as Func<RequestDelegate, RequestDelegate>);
+                                middleManager.AddMiddle (item.MiddleName, item.PluginId, r as Func<RequestDelegate, RequestDelegate>);
                         }
                         middleCollection = middleManager.GetMiddlesList ();
                         var reqList = middleCollection.OrderByDescending (t => t.Order).Select (t => t.MiddleFactory).ToList ();
