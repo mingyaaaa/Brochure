@@ -82,5 +82,40 @@ namespace Brochure.Utils
         /// <param name="parms"></param>
         /// <returns></returns>
         object CreateInstance (Type type, params object[] parms);
+
+        /// <summary>
+        /// 获取属性设置方法
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <returns></returns>
+        Action<T1, T2> GetSetPropertyValueFun<T1, T2> (string propertyName);
+
+        /// <summary>
+        /// 获取属性设置方法
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <returns></returns>
+        Action<T1, object> GetSetPropertyValueFun<T1> (Type valueClass, string propertyName);
+
+        /// <summary>
+        /// 获取属性值方法
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <returns></returns>
+        Func<T1, T2> GetPropertyValueFun<T1, T2> (string propertyName);
+
+        /// <summary>
+        /// 获取属性值方法
+        /// </summary>
+        /// <param name="classType"></param> 
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        Func<T1, object> GetPropertyValueFun<T1> (string propertyName);
     }
 }

@@ -26,7 +26,7 @@ namespace Brochure.User.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser ([FromQuery] UserModel user)
         {
-            var entity = user.GetEntrity ();
+            var entity = user.GetEntiry ();
             var r = await repository.InsetAndGet (entity);
             if (r == null)
                 return Problem ("添加错误");
@@ -45,7 +45,7 @@ namespace Brochure.User.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateUser ([FromQuery] string userId, [FromBody] UserModel model)
         {
-            var entity = model.GetEntrity ();
+            var entity = model.GetEntiry ();
             var r = await repository.Update (userId, entity);
             return new JsonResult (r);
         }

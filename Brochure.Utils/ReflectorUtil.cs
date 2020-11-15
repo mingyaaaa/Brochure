@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Brochure.Utils
@@ -105,6 +106,46 @@ namespace Brochure.Utils
         {
             var type = typeof (T);
             return GetTypeOfAbsoluteBase (assembly, type);
+        }
+
+        public Action<T1, T2> GetSetPropertyValueFun<T1, T2> (string propertyName)
+        {
+            return GetSetPropertyValueFun<T1> (typeof (T2), propertyName) as Action<T1, T2>;
+        }
+        public Func<T1, T2> GetPropertyValueFun<T1, T2> (string propertyName)
+        {
+            // return GetPropertyValueFun<T1> (propertyName) as Func<T1, T2>;
+            var classType = typeof (T1);
+            var propertyInfo = classType.GetProperty (propertyName);
+            var instance = Expression.Parameter (classType, "t");
+            var levelProperty = Expression.Property (instance, propertyInfo);
+            var lambdaExpression = Expression.Lambda<Func<T1, T2>> (levelProperty, instance);
+            return lambdaExpression.Compile ();
+        }
+
+        public Func<T1, object> GetPropertyValueFun<T1> (string propertyName)
+        {
+            // return GetPropertyValueFun (typeof (T1), propertyName) as Func<T1, object>;
+            var classType = typeof (T1);
+            var propertyInfo = classType.GetProperty (propertyName);
+            var instance = Expression.Parameter (classType, "t");
+            var valueProperty = Expression.Property (instance, propertyInfo);
+            var typeAsExpress = Expression.TypeAs (valueProperty, typeof (object));
+            var lambdaExpression = Expression.Lambda<Func<T1, object>> (typeAsExpress, instance);
+            return lambdaExpression.Compile ();
+        }
+
+        public Action<T1, object> GetSetPropertyValueFun<T1> (Type valueClass, string propertyName)
+        {
+            var classType = typeof (T1);
+            var propertyInfo = classType.GetProperty (propertyName);
+            var instance = Expression.Parameter (classType, "c");
+            var valueProperty = Expression.Property (instance, propertyInfo);
+            var valueExpress = Expression.Parameter (typeof (object), "v");
+            var typeAsExpress = Expression.Convert (valueExpress, valueClass);
+            var addAssignExpression = Expression.Assign (valueProperty, typeAsExpress);
+            var lambdaExpression = Expression.Lambda<Action<T1, object>> (addAssignExpression, instance, valueExpress);
+            return lambdaExpression.Compile ();
         }
     }
 }

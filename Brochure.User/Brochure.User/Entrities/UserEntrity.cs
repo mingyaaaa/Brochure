@@ -3,7 +3,7 @@ using Brochure.ORM;
 
 namespace Brochure.User.Entrities
 {
-    public class UserEntrity : EntityBase
+    public class UserEntrity : EntityBase<ModelBase>
     {
         /// <summary>
         /// 姓名

@@ -1,11 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Brochure.Abstract;
 using Brochure.Extensions;
+using Brochure.ORM;
 using Brochure.User.Entrities;
 namespace Brochure.User.Models
 {
-    public class UserModel
+    public class UserModel : ModelBase<UserEntrity>
     {
+        public UserModel () : base () { }
+
+        public UserModel (IConverPolicy policy) : base (policy) { }
+
         /// <summary>
         /// 姓名
         /// </summary>
@@ -39,19 +45,5 @@ namespace Brochure.User.Models
         /// </summary>
         /// <value></value>
         public string RePassword { get; set; }
-
-        public UserEntrity GetEntrity ()
-        {
-            var entity = new UserEntrity
-            {
-                Age = this.Age,
-                Name = this.Name,
-                IdCard = this.IdCard,
-                Password = this.Password,
-                UserId = this.UserId,
-                CreateTime = DateTime.Now.ToUnixTimestampByMilliseconds ()
-            };
-            return entity;
-        }
     }
 }

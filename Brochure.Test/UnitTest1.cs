@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Linq;
+using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +23,74 @@ namespace Brochure.Test
             a.h ();
         }
 
+        [TestMethod]
+        public void TestExpress ()
+        {
+            Stopwatch a = new Stopwatch ();
+            a.Start ();
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A ();
+                obj.Ap = "aa";
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+
+            a.Restart ();
+            var ap = typeof (A).GetProperty ("Ap");
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A ();
+                ap.SetValue (obj, "aa");
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+            a.Restart ();
+            var fun = ReflectorUtil.Instance.GetSetPropertyValueFun<A> (typeof (string), "Ap");
+
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A ();
+                fun.Invoke (obj, "aa");
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+        }
+
+        [TestMethod]
+        public void TestExpress2 ()
+        {
+            Stopwatch a = new Stopwatch ();
+            a.Start ();
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A ();
+                var apa = obj.Ap;
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+
+            a.Restart ();
+            var ap = typeof (A).GetProperty ("Ap");
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A ();
+                ap.GetValue (obj);
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+
+            a.Restart ();
+            var fun = ReflectorUtil.Instance.GetPropertyValueFun<A, string> ("Ap");
+
+            for (int i = 0; i < 100000; i++)
+            {
+                var obj = new A () { Ap = "aa" };
+                var aaa = fun.Invoke (obj);
+            }
+            Trace.TraceInformation (a.ElapsedMilliseconds.ToString ());
+            a.Stop ();
+        }
         public interface IA
         {
             void h ();
@@ -32,6 +101,7 @@ namespace Brochure.Test
         }
         public class A : IA
         {
+            public string Ap { get; set; }
             public void h ()
             {
                 Trace.TraceInformation ("A");
