@@ -6,11 +6,9 @@ using Brochure.ORM;
 using Brochure.User.Entrities;
 namespace Brochure.User.Models
 {
-    public class UserModel : ModelBase<UserEntrity>
+    public class UserModel
     {
         public UserModel () : base () { }
-
-        public UserModel (IConverPolicy policy) : base (policy) { }
 
         /// <summary>
         /// 姓名

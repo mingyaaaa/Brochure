@@ -10,13 +10,13 @@ namespace Brochure.Test
         [TestMethod]
         public void TestDefaultConverPolicy ()
         {
-            var policy = new DefaultConverPolicy<Pa, Pb> ();
+            var policy = new DefaultConverPolicy ();
             var a = new Pa ()
             {
                 A = "aa",
                 B = 1,
             };
-            var b = policy.ConverTo (a);
+            var b = policy.ConverTo<Pa, Pb> (a);
             Assert.AreEqual (b.A, "aa");
             Assert.AreEqual (b.B, 1);
         }

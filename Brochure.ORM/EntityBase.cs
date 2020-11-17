@@ -1,6 +1,8 @@
 using System;
 using Brochure.Abstract;
+using Brochure.Core;
 using Brochure.ORM;
+
 namespace Brochure.ORM
 {
     public abstract class EntityBase
@@ -17,36 +19,13 @@ namespace Brochure.ORM
         /// <returns></returns>
         public long CreateTime { get; set; }
 
-        [Ingore]
-        //序列号
+        /// <summary>
+        /// 序列号
+        /// </summary>
+        /// <value></value>
         public long SequenceId { get; set; }
 
     }
-
-    public abstract class EntityBase<T> : EntityBase where T : ModelBase
-    {
-        private readonly IConverPolicy _policy;
-
-        protected EntityBase ()
-        {
-            _policy = new DefaultConverPolicy ();
-        }
-
-        protected EntityBase (IConverPolicy policy)
-        {
-            this._policy = policy;
-        }
-        public T GetModel ()
-        {
-            return _policy.ConverTo<EntityBase, T> (this);
-        }
-
-        public T GetModel (IConverPolicy policy)
-        {
-            return policy.ConverTo<EntityBase, T> (this);
-        }
-    }
-
     public interface IEntiryCreator
     {
         Guid Creator { get; set; }

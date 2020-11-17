@@ -147,5 +147,21 @@ namespace Brochure.Utils
             var lambdaExpression = Expression.Lambda<Action<T1, object>> (addAssignExpression, instance, valueExpress);
             return lambdaExpression.Compile ();
         }
+
+        /// <summary>
+        /// 获取属性值方法
+        /// </summary>
+        /// <param name="classType"></param> 
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public Func<object, object> GetPropertyValueFun (Type classType, string propertyName)
+        {
+            var propertyInfo = classType.GetProperty (propertyName);
+            var instance = Expression.Parameter (classType, "t");
+            var valueProperty = Expression.Property (instance, propertyInfo);
+            var typeAsExpress = Expression.TypeAs (valueProperty, typeof (object));
+            var lambdaExpression = Expression.Lambda<Func<object, object>> (typeAsExpress, instance);
+            return lambdaExpression.Compile ();
+        }
     }
 }

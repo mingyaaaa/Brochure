@@ -33,7 +33,7 @@ namespace Brochure.Core
             //工具类初始化
             service.TryAddSingleton<IJsonUtil> (new JsonUtil ());
             service.TryAddSingleton<IReflectorUtil> (new ReflectorUtil ());
-            service.TryAddSingleton<IObjectFactory> (new Brochure.Abstract.ObjectFactory ());
+            service.TryAddSingleton<IObjectFactory> (new ObjectFactory ());
             service.TryAddSingleton<ISysDirectory> (new SysDirectory ());
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();

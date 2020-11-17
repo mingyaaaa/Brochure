@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
     <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
     <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
+    <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspectCore.Abstractions" Version="2.1.0" />

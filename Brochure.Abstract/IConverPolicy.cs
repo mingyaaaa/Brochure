@@ -2,13 +2,9 @@ using System;
 using System.Text.Json;
 namespace Brochure.Abstract
 {
-    /// <summary>
-    /// Model和Entiry之间转换策略接口
-    /// </summary>
-    public interface IConverPolicy<T1, T2> where T1 : class
-    where T2 : class
+    public interface IConverPolicy
     {
-        T2 ConverTo (T1 model);
-
+        T2 ConverTo<T1, T2> (T1 model) where T1 : class
+        where T2 : class;
     }
 }

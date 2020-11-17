@@ -117,5 +117,6 @@ namespace Brochure.Utils
         /// <param name="propertyName"></param>
         /// <returns></returns>
         Func<T1, object> GetPropertyValueFun<T1> (string propertyName);
+
     }
 }

@@ -1,11 +1,17 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using Brochure.ORM;
+
 namespace Brochure.ORMTest
 {
     [Table ("aaa")]
-    public class Teachers
+    public class Teachers : EntityBase
     {
-        public string Id { get; set; }
+        public string School { get; set; }
 
+        public string Job { get; set; }
+    }
+
+    public class TeachersModel
+    {
         public string School { get; set; }
 
         public string Job { get; set; }
