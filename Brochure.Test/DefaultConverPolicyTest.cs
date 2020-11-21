@@ -1,4 +1,6 @@
 using System;
+using Brochure.Abstract;
+using Brochure.Abstract.Models;
 using Brochure.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,6 +23,18 @@ namespace Brochure.Test
             Assert.AreEqual (b.B, 1);
         }
 
+        [TestMethod]
+        public void TestRecordConverPolicy ()
+        {
+            var policy = new RecordConverPolicy ();
+            var  record = new Record ()
+            {
+                [nameof (Pa.A)] = "aa", [nameof (Pa.B)] = 1,
+            };
+            var b = policy.ConverTo<IRecord, Pa> (record);
+            Assert.AreEqual (b.A, "aa");
+            Assert.AreEqual (b.B, 1);
+        }
     }
 
     public class Pa

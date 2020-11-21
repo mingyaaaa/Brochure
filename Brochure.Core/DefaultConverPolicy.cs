@@ -19,4 +19,17 @@ namespace Brochure.Core
             return policy.ConverTo (model);
         }
     }
+
+    public class RecordConverPolicy : IConverPolicy
+    {
+        public T2 ConverTo<T1, T2> (T1 model)
+        where T1 : class
+        where T2 : class
+        {
+            if (!(model is IRecord))
+                return null;
+            var policy = new RecordPropertyDelegate<T2> ();
+            return policy.ConverTo (model as IRecord);
+        }
+    }
 }

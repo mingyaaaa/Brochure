@@ -3,64 +3,78 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Brochure.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.ORM.Querys;
 using Brochure.User.Entrities;
+using Brochure.User.Models;
 using Brochure.User.Repository;
-using UserModel = User.Rpc;
 namespace Brochure.User.Services
 {
     public interface IUserDal
     {
-        ValueTask<IEnumerable<UserModel.User>> GetUsers (IEnumerable<string> ids);
+        ValueTask<IEnumerable<UserModel>> GetUsers (IEnumerable<string> ids);
 
-        ValueTask<IEnumerable<UserModel.User>> UpdateUser (string id, Record record);
+        ValueTask<int> UpdateUser (string id, Record record);
 
-        ValueTask<IEnumerable<UserModel.User>> DeleteUsers (IEnumerable<string> ids);
+        ValueTask<int> DeleteUsers (IEnumerable<string> ids);
 
-        ValueTask<IEnumerable<UserModel.User>> InsertUsers (IEnumerable<UserModel.User> users);
+        ValueTask<IEnumerable<UserModel>> InsertUsers (IEnumerable<UserModel> users);
     }
 
     public class UserDal : IUserDal
     {
         private readonly IUserRepository repository;
         private readonly IQueryBuilder builder;
+        private readonly IObjectFactory objectFactory;
 
-        public UserDal (IUserRepository repository, IQueryBuilder builder)
+        public UserDal (IUserRepository repository, IQueryBuilder builder, IObjectFactory objectFactory)
         {
             this.repository = repository;
             this.builder = builder;
+            this.objectFactory = objectFactory;
         }
 
-        public ValueTask<IEnumerable<UserModel.User>> DeleteUsers (IEnumerable<string> ids)
+        public async ValueTask<int> DeleteUsers (IEnumerable<string> ids)
         {
-            throw new System.NotImplementedException ();
+            var r = await repository.DeleteMany (ids);
+            return r?ids.Count (): -1;
         }
 
-        public async ValueTask<IEnumerable<UserModel.User>> GetUsers (IEnumerable<string> ids)
+        public async ValueTask<IEnumerable<UserModel>> GetUsers (IEnumerable<string> ids)
         {
+            var list = new List<UserModel> ();
             var idsList = ids.ToList ();
             var count = idsList.Count;
             if (count == 0)
-                return new List<UserModel.User> ();
+                return list;
             Expression<Func<UserEntrity, bool>> fun = null;
             if (count == 1)
                 fun = t => t.Id == idsList[0];
             else
                 fun = t => ids.Contains (t.Id);
             var query = builder.From<UserEntrity> ().WhereAnd (fun);
-            var entrity = await repository.Get (query);
-            return new List<UserModel.User> ();
+            var entrity = await repository.List (query);
+            foreach (var item in entrity)
+            {
+                var model = objectFactory.Create<UserEntrity, UserModel> (item);
+                list.Add (model);
+            }
+            return list;
         }
 
-        public ValueTask<IEnumerable<UserModel.User>> InsertUsers (IEnumerable<UserModel.User> users)
+        public async ValueTask<IEnumerable<UserModel>> InsertUsers (IEnumerable<UserModel> users)
         {
-            throw new System.NotImplementedException ();
+            var userEntirys = users.Select (t => objectFactory.Create<UserModel, UserEntrity> (t));
+            var list = await repository.Insert (userEntirys);
+            return users;
         }
 
-        public ValueTask<IEnumerable<UserModel.User>> UpdateUser (string id, Record record)
+        public async ValueTask<int> UpdateUser (string id, Record record)
         {
-            throw new System.NotImplementedException ();
+            var useEntiry = objectFactory.Create<UserEntrity> (record);
+            var r = await repository.Update (id, useEntiry);
+            return r;
         }
     }
 }

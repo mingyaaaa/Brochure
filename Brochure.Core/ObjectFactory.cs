@@ -55,5 +55,11 @@ namespace Brochure.Core
         {
             return converPolicy.ConverTo<T1, T2> (model);
         }
+
+        public T1 Create<T1> (IRecord record) where T1 : class
+        {
+            var policy = new RecordConverPolicy ();
+            return policy.ConverTo<IRecord, T1> (record);
+        }
     }
 }

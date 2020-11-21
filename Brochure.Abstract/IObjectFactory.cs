@@ -60,5 +60,11 @@ namespace Brochure.Abstract
         /// <typeparam name="T2"></typeparam>
         /// <returns></returns>
         T2 Create<T1, T2> (T1 model, IConverPolicy converPolicy) where T1 : class where T2 : class;
+
+        /// <summary>
+        /// 安装Key值对应转换
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        T1 Create<T1> (IRecord record) where T1 : class;
     }
 }
