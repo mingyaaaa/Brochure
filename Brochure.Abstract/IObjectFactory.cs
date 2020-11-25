@@ -66,5 +66,7 @@ namespace Brochure.Abstract
         /// </summary>
         /// <typeparam name="T1"></typeparam>
         T1 Create<T1> (IRecord record) where T1 : class;
+
+        IRecord Create<T1> (T1 obj) where T1 : class;
     }
 }

@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.ORM;
-using Brochure.ORM.Querys;
+using Brochure.Abstract.Models;
 using Brochure.User.Entrities;
 using Brochure.User.Models;
 using Brochure.User.Repository;
+using Brochure.User.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,21 +17,20 @@ namespace Brochure.User.Controllers
     [Route ("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository repository;
         private readonly IObjectFactory objectFactory;
+        private readonly IUserDal userDal;
 
-        public UserController (IUserRepository repository, IObjectFactory objectFactory)
+        public UserController (IUserDal userDal, IObjectFactory objectFactory)
         {
-            this.repository = repository;
             this.objectFactory = objectFactory;
+            this.userDal = userDal;
         }
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddUser ([FromQuery] UserModel user)
         {
-            var entity = objectFactory.Create<UserModel, UserEntrity> (user);
-            var r = await repository.InsetAndGet (entity);
+            var r = await userDal.InsertUsers (new List<UserModel> () { user });
             if (r == null)
                 return Problem ("添加错误");
             return new JsonResult (r);
@@ -40,7 +40,7 @@ namespace Brochure.User.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser ([FromQuery] string[] userIds)
         {
-            var r = await repository.DeleteMany (userIds);
+            var r = await userDal.DeleteUsers (userIds);
             return new JsonResult (r);
         }
 
@@ -48,8 +48,8 @@ namespace Brochure.User.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateUser ([FromQuery] string userId, [FromBody] UserModel model)
         {
-            var entity = objectFactory.Create<UserModel, UserEntrity> (model);
-            var r = await repository.Update (userId, entity);
+            var record = objectFactory.Create (model);
+            var r = await userDal.UpdateUser (userId, record);
             return new JsonResult (r);
         }
 

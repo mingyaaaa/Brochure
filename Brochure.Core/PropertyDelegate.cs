@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using Brochure.Abstract;
+using Brochure.Abstract.Models;
 using Brochure.Utils;
 
 namespace Brochure.Core
@@ -67,6 +68,7 @@ namespace Brochure.Core
             t1Type = typeof (T1);
         }
         private static readonly ConcurrentDictionary<string, Action<T1, object>> setPropertyFunCache = new ConcurrentDictionary<string, Action<T1, object>> ();
+
         public T1 ConverTo (IRecord record)
         {
             var properties = t1Type.GetProperties ();
@@ -97,6 +99,42 @@ namespace Brochure.Core
                 }
             }
             return t1;
+        }
+
+    }
+
+    public class ObjectToRecordDelegate<T1> where T1 : class
+    {
+        private readonly Type t1Type;
+
+        public ObjectToRecordDelegate ()
+        {
+            this.t1Type = typeof (T1);
+        }
+        private static readonly ConcurrentDictionary<string, Func<T1, object>> getPropertyFunCache = new ConcurrentDictionary<string, Func<T1, object>> ();
+
+        public IRecord ConverTo (T1 obj)
+        {
+            var properties = t1Type.GetProperties ();
+            var record = new Record ();
+            foreach (var item in properties)
+            {
+                var propertyType = item.PropertyType;
+                object value;
+                var key = propertyType.FullName + item.Name;
+                if (getPropertyFunCache.ContainsKey (key))
+                {
+                    value = getPropertyFunCache[key].Invoke (obj);
+                }
+                else
+                {
+                    var func = ReflectorUtil.Instance.GetPropertyValueFun<T1> (item.Name);
+                    value = func.Invoke (obj);
+                    getPropertyFunCache.TryAdd (key, func);
+                }
+                record[item.Name] = value;
+            }
+            return record;
         }
     }
 }

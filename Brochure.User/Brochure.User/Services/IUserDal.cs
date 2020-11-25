@@ -15,7 +15,7 @@ namespace Brochure.User.Services
     {
         ValueTask<IEnumerable<UserModel>> GetUsers (IEnumerable<string> ids);
 
-        ValueTask<int> UpdateUser (string id, Record record);
+        ValueTask<int> UpdateUser (string id, IRecord record);
 
         ValueTask<int> DeleteUsers (IEnumerable<string> ids);
 
@@ -70,7 +70,7 @@ namespace Brochure.User.Services
             return users;
         }
 
-        public async ValueTask<int> UpdateUser (string id, Record record)
+        public async ValueTask<int> UpdateUser (string id, IRecord record)
         {
             var useEntiry = objectFactory.Create<UserEntrity> (record);
             var r = await repository.Update (id, useEntiry);

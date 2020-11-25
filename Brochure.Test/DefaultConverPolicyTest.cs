@@ -35,6 +35,20 @@ namespace Brochure.Test
             Assert.AreEqual (b.A, "aa");
             Assert.AreEqual (b.B, 1);
         }
+
+        [TestMethod]
+        public void TestObjectToRecordConverPolicy ()
+        {
+            var policy = new ObjectToRecordConverPolicy ();
+            var a = new Pa ()
+            {
+                A = "aa",
+                B = 3
+            };
+            var b = policy.ConverTo<Pa, IRecord> (a);
+            Assert.AreEqual (b[nameof (Pa.A)], "aa");
+            Assert.AreEqual (b[nameof (Pa.B)], 3);
+        }
     }
 
     public class Pa
