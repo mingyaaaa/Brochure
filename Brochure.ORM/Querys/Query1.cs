@@ -41,9 +41,19 @@ namespace Brochure.ORM.Querys
             return base.OrderBy<Query<T1>> (fun);
         }
 
+        public IQuery<T1> OrderBy (string orderSql)
+        {
+            return base.OrderBy<Query<T1>> (orderSql);
+        }
+
         public IQuery<T1> OrderbyDesc (Expression<Func<T1, object>> fun)
         {
             return base.OrderByDesc<Query<T1>> (fun);
+        }
+
+        public IQuery<T1> OrderbyDesc (string orderSql)
+        {
+            return base.OrderByDesc<Query<T1>> (orderSql);
         }
 
         public IQuery<T> Select<T> (Expression<Func<T1, T>> fun)
@@ -56,9 +66,19 @@ namespace Brochure.ORM.Querys
             return base.WhereAnd<Query<T1>> (fun);
         }
 
+        public IQuery<T1> WhereAnd (string whereSql)
+        {
+            return base.WhereAnd<Query<T1>> (whereSql);
+        }
+
         public IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun)
         {
             return base.WhereOr<Query<T1>> (fun);
+        }
+
+        public IQuery<T1> WhereOr (string whereSql)
+        {
+            return base.WhereOr<Query<T1>> (whereSql);
         }
     }
 }

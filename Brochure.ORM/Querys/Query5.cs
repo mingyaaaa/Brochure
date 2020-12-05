@@ -13,9 +13,19 @@ namespace Brochure.ORM.Querys
             return base.OrderBy<Query<T1, T2, T3, T4, T5>> (fun);
         }
 
+        public IQuery<T1, T2, T3, T4, T5> OrderBy (string orderSql)
+        {
+            return base.OrderBy<Query<T1, T2, T3, T4, T5>> (orderSql);
+        }
+
         public IQuery<T1, T2, T3, T4, T5> OrderByDesc (Expression<Func<T1, T2, T3, T4, T5, object>> fun)
         {
             return base.OrderByDesc<Query<T1, T2, T3, T4, T5>> (fun);
+        }
+
+        public IQuery<T1, T2, T3, T4, T5> OrderByDesc (string orderSql)
+        {
+            return base.OrderByDesc<Query<T1, T2, T3, T4, T5>> (orderSql);
         }
 
         public IQuery<T> Select<T> (Expression<Func<T1, T2, T3, T4, T5, T>> fun)
@@ -28,9 +38,19 @@ namespace Brochure.ORM.Querys
             return base.WhereAnd<Query<T1, T2, T3, T4, T5>> (fun);
         }
 
+        public IQuery<T1, T2, T3, T4, T5> WhereAnd (string whereSql)
+        {
+            return base.WhereAnd<Query<T1, T2, T3, T4, T5>> (whereSql);
+        }
+
         public IQuery<T1, T2, T3, T4, T5> WhereOr (Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {
             return base.WhereOr<Query<T1, T2, T3, T4, T5>> (fun);
+        }
+
+        public IQuery<T1, T2, T3, T4, T5> WhereOr (string whereSql)
+        {
+            return base.WhereOr<Query<T1, T2, T3, T4, T5>> (whereSql);
         }
     }
 }

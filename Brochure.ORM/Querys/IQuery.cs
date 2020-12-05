@@ -27,6 +27,10 @@ namespace Brochure.ORM
         IQuery<T1> OrderbyDesc (Expression<Func<T1, object>> fun);
         IQuery<T1> WhereAnd (Expression<Func<T1, bool>> fun);
         IQuery<T1> WhereOr (Expression<Func<T1, bool>> fun);
+        IQuery<T1> WhereAnd (string whereSql);
+        IQuery<T1> WhereOr (string whereSql);
+        IQuery<T1> OrderBy (string whereSql);
+        IQuery<T1> OrderbyDesc (string whereSql);
         IQuery<T1> Distinct ();
     }
 
@@ -38,6 +42,10 @@ namespace Brochure.ORM
         IQuery<T1, T2> WhereOr (Expression<Func<T1, T2, bool>> fun);
         IQuery<T1, T2> OrderBy (Expression<Func<T1, T2, object>> fun);
         IQuery<T1, T2> OrderByDesc (Expression<Func<T1, T2, object>> fun);
+        IQuery<T1, T2> WhereAnd (string whereSql);
+        IQuery<T1, T2> WhereOr (string whereSql);
+        IQuery<T1, T2> OrderBy (string whereSql);
+        IQuery<T1, T2> OrderByDesc (string whereSql);
     }
 
     public interface IQuery<T1, T2, T3>
@@ -48,6 +56,10 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3> WhereOr (Expression<Func<T1, T2, T3, bool>> fun);
         IQuery<T1, T2, T3> OrderBy (Expression<Func<T1, T2, T3, object>> fun);
         IQuery<T1, T2, T3> OrderByDesc (Expression<Func<T1, T2, T3, object>> fun);
+        IQuery<T1, T2, T3> WhereAnd (string whereSql);
+        IQuery<T1, T2, T3> WhereOr (string whereSql);
+        IQuery<T1, T2, T3> OrderBy (string whereSql);
+        IQuery<T1, T2, T3> OrderByDesc (string whereSql);
     }
 
     public interface IQuery<T1, T2, T3, T4> : IQuery
@@ -58,6 +70,10 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3, T4> WhereOr (Expression<Func<T1, T2, T3, T4, bool>> fun);
         IQuery<T1, T2, T3, T4> OrderBy (Expression<Func<T1, T2, T3, T4, object>> fun);
         IQuery<T1, T2, T3, T4> OrderByDesc (Expression<Func<T1, T2, T3, T4, object>> fun);
+        IQuery<T1, T2, T3, T4> WhereAnd (string whereSql);
+        IQuery<T1, T2, T3, T4> WhereOr (string whereSql);
+        IQuery<T1, T2, T3, T4> OrderBy (string whereSql);
+        IQuery<T1, T2, T3, T4> OrderByDesc (string whereSql);
     }
 
     public interface IQuery<T1, T2, T3, T4, T5> : IQuery
@@ -67,5 +83,9 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3, T4, T5> WhereOr (Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
         IQuery<T1, T2, T3, T4, T5> OrderBy (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
         IQuery<T1, T2, T3, T4, T5> OrderByDesc (Expression<Func<T1, T2, T3, T4, T5, object>> fun);
+        IQuery<T1, T2, T3, T4, T5> WhereAnd (string whereSql);
+        IQuery<T1, T2, T3, T4, T5> WhereOr (string whereSql);
+        IQuery<T1, T2, T3, T4, T5> OrderBy (string whereSql);
+        IQuery<T1, T2, T3, T4, T5> OrderByDesc (string whereSql);
     }
 }

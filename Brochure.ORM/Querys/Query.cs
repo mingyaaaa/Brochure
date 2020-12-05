@@ -90,6 +90,11 @@ namespace Brochure.ORM
             tt.orderSql = t_orderSql;
             return tt;
         }
+        protected T OrderBy<T> (string str) where T : Query
+        {
+            this.orderSql = str;
+            return (T) this;
+        }
 
         protected T OrderByDesc<T> (Expression fun) where T : Query
         {
@@ -101,8 +106,12 @@ namespace Brochure.ORM
             tt.orderSql = t_orderSql;
             return tt;
         }
-
-        public T Select<T> (Expression fun) where T : Query
+        protected T OrderByDesc<T> (string str) where T : Query
+        {
+            this.orderSql = str;
+            return (T) this;
+        }
+        protected T Select<T> (Expression fun) where T : Query
         {
             var selectVisitor = visitProvider.Builder<SelectVisitor> ();
             selectVisitor.Visit (fun);
@@ -134,7 +143,7 @@ namespace Brochure.ORM
             return tt;
         }
 
-        public T WhereAnd<T> (Expression fun) where T : Query
+        protected T WhereAnd<T> (Expression fun) where T : Query
         {
             var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
             whereVisitor.AddParamters (this.DbParameters);
@@ -158,8 +167,44 @@ namespace Brochure.ORM
             tt.DbParameters = parameters.ToList ();
             return tt;
         }
+        public T WhereAnd<T> (string str) where T : Query
+        {
+            if (string.IsNullOrWhiteSpace (str))
+            {
+                return (T) this;
+            }
+            string t_whereSql;
+            if (string.IsNullOrWhiteSpace (whereSql))
+            {
+                t_whereSql = str;
+            }
+            else
+            {
+                t_whereSql = $"{whereSql} and ({str})";
+            }
+            this.whereSql = t_whereSql;
+            return (T) this;
+        }
 
-        public T WhereOr<T> (Expression fun) where T : Query
+        public T WhereOr<T> (string str) where T : Query
+        {
+            if (string.IsNullOrWhiteSpace (str))
+            {
+                return (T) this;
+            }
+            string t_whereSql;
+            if (string.IsNullOrWhiteSpace (whereSql))
+            {
+                t_whereSql = str;
+            }
+            else
+            {
+                t_whereSql = $"{whereSql} or ({str})";
+            }
+            this.whereSql = t_whereSql;
+            return (T) this;
+        }
+        protected T WhereOr<T> (Expression fun) where T : Query
         {
             var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
             whereVisitor.AddParamters (this.DbParameters);
@@ -182,7 +227,7 @@ namespace Brochure.ORM
             return tt;
         }
 
-        public T Groupby<T> (Expression fun) where T : Query
+        protected T Groupby<T> (Expression fun) where T : Query
         {
             var groupVisit = visitProvider.Builder<GroupVisitor> ();
             groupVisit.Visit (fun);

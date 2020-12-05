@@ -20,9 +20,19 @@ namespace Brochure.ORM.Querys
             return base.OrderBy<Query<T1, T2>> (fun);
         }
 
+        public IQuery<T1, T2> OrderBy (string orderSql)
+        {
+            return base.OrderBy<Query<T1, T2>> (orderSql);
+        }
+
         public IQuery<T1, T2> OrderByDesc (Expression<Func<T1, T2, object>> fun)
         {
             return base.OrderByDesc<Query<T1, T2>> (fun);
+        }
+
+        public IQuery<T1, T2> OrderByDesc (string orderSql)
+        {
+            return base.OrderByDesc<Query<T1, T2>> (orderSql);
         }
 
         public IQuery<T> Select<T> (Expression<Func<T1, T2, T>> fun)
@@ -35,9 +45,19 @@ namespace Brochure.ORM.Querys
             return base.WhereAnd<Query<T1, T2>> (fun);
         }
 
+        public IQuery<T1, T2> WhereAnd (string whereSql)
+        {
+            throw new NotImplementedException ();
+        }
+
         public IQuery<T1, T2> WhereOr (Expression<Func<T1, T2, bool>> fun)
         {
             return base.WhereOr<Query<T1, T2>> (fun);
+        }
+
+        public IQuery<T1, T2> WhereOr (string whereSql)
+        {
+            throw new NotImplementedException ();
         }
     }
 }
