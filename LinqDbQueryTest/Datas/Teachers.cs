@@ -2,7 +2,6 @@ using Brochure.ORM;
 
 namespace Brochure.ORMTest
 {
-    [Table ("aaa")]
     public class Teachers : EntityBase
     {
         public string School { get; set; }

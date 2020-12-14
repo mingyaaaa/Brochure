@@ -57,9 +57,8 @@ namespace Brochure.Core.PluginsDI
                 action (item, t_provider);
             foreach (var item in plugins)
             {
-
                 var pluginsServiceCollection = item.Context.GetPluginContext<PluginServiceCollectionContext> ();
-                t_provider = originalProvider?? pluginsServiceCollection.BuildPlugnScopeProvider (this);
+                t_provider = pluginsServiceCollection.BuildPlugnScopeProvider (this);
                 foreach (var serviceDescriptor in pluginsServiceCollection)
                 {
                     action (serviceDescriptor, t_provider);

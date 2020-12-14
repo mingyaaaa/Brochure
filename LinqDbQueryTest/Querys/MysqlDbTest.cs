@@ -25,6 +25,7 @@ namespace Brochure.ORMTest.Querys
         [TestMethod]
         public void TestConnnect ()
         {
+            return;
             try
             {
                 dbConnection.Open ();
@@ -54,6 +55,7 @@ namespace Brochure.ORMTest.Querys
         [TestMethod]
         public void TestConnnectTransction ()
         {
+            return;
             try
             {
                 dbConnection.Open ();

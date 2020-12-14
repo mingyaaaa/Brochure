@@ -4,12 +4,9 @@
     <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="4.7.1" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+<TargetFramework>net5.0</TargetFramework>
+
   </PropertyGroup>
 
 </Project>
