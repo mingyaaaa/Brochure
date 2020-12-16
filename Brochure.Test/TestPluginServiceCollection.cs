@@ -7,6 +7,7 @@ using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
+using Brochure.Core.Module;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,16 +18,24 @@ namespace Brochure.Test
 {
 
     [TestClass]
-    public class Test
+    public class TestPluginServiceCollection : BaseTest
     {
+
+        public TestPluginServiceCollection ()
+        {
+            base.InitBaseService ();
+            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            Service.AddSingleton<IPluginManagers, PluginManagers> ();
+            Service.AddSingleton<IModuleLoader, ModuleLoader> ();
+            Service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
+            Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
+        }
+
         [TestMethod]
         public void TestBuildService ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            var mProvider = service.BuildPluginServiceProvider ();
+            var mProvider = Service.BuildPluginServiceProvider ();
+            var managers = mProvider.GetService<IPluginManagers> ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
@@ -38,14 +47,10 @@ namespace Brochure.Test
         [TestMethod]
         public void TestServiceScope ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            service.AddScoped<ITest1, ImpTest1> ();
-            service.AddSingleton<ITest2, ImpTest2> ();
-            var mProvider = service.BuildPluginServiceProvider ();
+            Service.AddScoped<ITest1, ImpTest1> ();
+            Service.AddSingleton<ITest2, ImpTest2> ();
+            var mProvider = Service.BuildPluginServiceProvider ();
+            var managers = mProvider.GetService<IPluginManagers> ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
@@ -66,12 +71,9 @@ namespace Brochure.Test
         [TestMethod]
         public void TestServiceTransient ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            service.AddTransient<ITest1, ImpTest1> ();
-            var mProvider = service.BuildPluginServiceProvider ();
+            Service.AddTransient<ITest1, ImpTest1> ();
+            var mProvider = Service.BuildPluginServiceProvider ();
+            var managers = mProvider.GetService<IPluginManagers> ();
             var p1 = new P1 (mProvider);
             managers.Regist (p1);
             var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext> ();
@@ -85,12 +87,9 @@ namespace Brochure.Test
         [TestMethod]
         public void TestSingletonSame ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            service.AddSingleton<ITest1, ImpTest1> ();
-            var provider = service.BuildPluginServiceProvider ();
+            Service.AddSingleton<ITest1, ImpTest1> ();
+            var provider = Service.BuildPluginServiceProvider ();
+            var managers = provider.GetService<IPluginManagers> ();
             var test1 = provider.GetService<ITest1> ();
             var p1 = new P1 (provider);
             managers.Regist (p1);
@@ -103,17 +102,14 @@ namespace Brochure.Test
         [TestMethod]
         public void TestGerniSame ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            service.AddOptions ();
-            service.TryAddEnumerable (ServiceDescriptor.Transient<IConfigureOptions<RouteOptions>, ConfigureRouteOptions> (
+            Service.AddOptions ();
+            Service.TryAddEnumerable (ServiceDescriptor.Transient<IConfigureOptions<RouteOptions>, ConfigureRouteOptions> (
                 _ => new ConfigureRouteOptions ()));
-            var oprovider = service.BuildServiceContextProvider ();
+            var oprovider = Service.BuildServiceContextProvider ();
+            var managers = oprovider.GetService<IPluginManagers> ();
             var options = oprovider.GetService<IOptions<RouteOptions>> ();
             Assert.IsNotNull (options.Value);
-            var provider = service.BuildPluginServiceProvider ();
+            var provider = Service.BuildPluginServiceProvider ();
             var test1 = provider.GetService<IOptions<RouteOptions>> ();
             Assert.IsNotNull (test1.Value);
             var p1 = new P1 (provider);
@@ -124,12 +120,10 @@ namespace Brochure.Test
         [TestMethod]
         public void TestCollection ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            service.AddSingleton<ITest1, ImpTest1> ();
-            var provider = service.BuildPluginServiceProvider ();
+
+            Service.AddSingleton<ITest1, ImpTest1> ();
+            var provider = Service.BuildPluginServiceProvider ();
+            var managers = provider.GetService<IPluginManagers> ();
             var collection = provider.GetService<IEnumerable<ITest1>> ();
             Assert.IsNotNull (collection);
             Assert.AreEqual (1, collection.Count ());

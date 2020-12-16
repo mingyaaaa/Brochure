@@ -5,6 +5,7 @@ using AspectCore.DynamicProxy;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
+using Brochure.Core.Module;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -12,15 +13,16 @@ using Moq;
 namespace Brochure.Test
 {
     [TestClass]
-    public class InterceptorTest
+    public class InterceptorTest : BaseTest
     {
-        private IServiceCollection InitServiveCollection ()
+        public InterceptorTest ()
         {
-            var service = new ServiceCollection ();
-            service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            var managers = new PluginManagers ();
-            service.AddSingleton<IPluginManagers> (managers);
-            return service;
+            base.InitBaseService ();
+            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            Service.AddSingleton<IPluginManagers, PluginManagers> ();
+            Service.AddSingleton<IModuleLoader, ModuleLoader> ();
+            Service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
+            Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
         }
 
         [TestMethod]
@@ -28,15 +30,14 @@ namespace Brochure.Test
         {
             var count = new Mock<ICount> ();
             count.Setup (t => t.Count ());
-            var service = InitServiveCollection ();
-            service.AddSingleton<ITestA, ImpTestA> ();
-            service.AddSingleton<ICount> (count.Object);
-            service.AddSingleton<TestInterceptor> ();
-            service.AddBrochureInterceptor (t => t.Interceptors.AddServiced<TestInterceptor> ());
-            var provider = service.BuildPluginServiceProvider ();
+            Service.AddSingleton<ITestA, ImpTestA> ();
+            Service.AddSingleton<ICount> (count.Object);
+            Service.AddSingleton<TestInterceptor> ();
+            Service.AddBrochureInterceptor (t => t.Interceptors.AddServiced<TestInterceptor> ());
+            var provider = Service.BuildPluginServiceProvider ();
             var test = provider.GetService<ITestA> ();
             test.Test ();
-            count.Verify (t => t.Count (), Times.Once ());
+            count.Verify (t => t.Count (), Times.AtLeast (1));
         }
 
     }
@@ -61,6 +62,7 @@ namespace Brochure.Test
         public override Task Invoke (AspectContext context, AspectDelegate next)
         {
             count.Count ();
+            next (context);
             return Task.CompletedTask;
         }
     }

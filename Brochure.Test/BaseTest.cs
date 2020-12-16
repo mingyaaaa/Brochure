@@ -27,6 +27,8 @@ namespace Brochure.Test
         public void InitBaseService ()
         {
             var json = new Mock<IJsonUtil> ();
+            Service.AddLogging ();
+
             SetMockService (json);
             SetMockService (new Mock<ISystemUtil> ());
             SetMockService (new Mock<ISysDirectory> ());

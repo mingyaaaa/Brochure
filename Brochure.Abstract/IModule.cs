@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,7 @@ namespace Brochure.Abstract
     /// </summary>
     public interface IModule
     {
-        Task Initialization (IServiceCollection services);
+        Task ConfigModule (IServiceCollection services);
+        Task Initialization (IServiceProvider services);
     }
 }

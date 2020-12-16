@@ -37,6 +37,7 @@ namespace Brochure.Core.Test
         public AsTest ()
         {
             var service = new ServiceCollection ();
+            service.AddLogging ();
             service.AddBrochureCore ();
             ObjectConverCollection.RegistObjectConver<C, B> (t => new B ()
             {

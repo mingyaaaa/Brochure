@@ -1,20 +1,44 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using Brochure.Abstract;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core.Module
 {
     public class ModuleLoader : IModuleLoader
     {
-        public void LoadModule (IServiceCollection services, Assembly assembly)
+        private readonly ILogger<ModuleLoader> logger;
+
+        public ModuleLoader (ILogger<ModuleLoader> logger)
         {
-            var refUtils = services.GetServiceInstance<IReflectorUtil> ();
-            var modules = refUtils.GetObjectOfAbsoluteBase<IModule> (assembly);
-            foreach (var item in modules)
+            this.logger = logger;
+        }
+        public void LoadModule (IServiceProvider provider, IServiceCollection services, Assembly assembly)
+        {
+            try
             {
-                item.Initialization (services);
+                var refUtils = provider.GetService<IReflectorUtil> ();
+                var modules = refUtils.GetObjectOfAbsoluteBase<IModule> (assembly);
+                if (!modules.Any ())
+                    return;
+                foreach (var item in modules)
+                {
+                    item.ConfigModule (services);
+                }
+                foreach (var item in modules)
+                {
+                    item.Initialization (services.BuildServiceProvider ());
+                }
             }
+            catch (System.Exception e)
+            {
+                logger.LogError (e, e.Message);
+                throw;
+            }
+
         }
     }
 }

@@ -19,11 +19,21 @@ namespace Brochure.Core
     {
         private readonly ConcurrentDictionary<Guid, IPlugins> pluginDic;
         private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
+        private readonly ISysDirectory directory;
+        private readonly IModuleLoader moduleLoader;
+        private readonly IJsonUtil jsonUtil;
+        private readonly ILogger<PluginManagers> log;
+        private readonly IEnumerable<IPluginLoadAction> loadActions;
 
-        public PluginManagers ()
+        public PluginManagers (ISysDirectory directory, IModuleLoader moduleLoader, IJsonUtil jsonUtil, IEnumerable<IPluginLoadAction> loadActions, ILogger<PluginManagers> log)
         {
             pluginDic = new ConcurrentDictionary<Guid, IPlugins> ();
             pluginContextDic = new ConcurrentDictionary<Guid, PluginsLoadContext> ();
+            this.directory = directory;
+            this.moduleLoader = moduleLoader;
+            this.jsonUtil = jsonUtil;
+            this.log = log;
+            this.loadActions = loadActions;
         }
 
         public void Regist (IPlugins plugin)
@@ -64,14 +74,8 @@ namespace Brochure.Core
         /// 加载插件
         /// </summary>
         /// <param name="serviceDescriptors"></param>
-        public async Task ResolverPlugins (IServiceCollection service)
+        public async Task ResolverPlugins (IServiceProvider provider)
         {
-            var directory = service.GetServiceInstance<ISysDirectory> ();
-            var loggerFactory = service.GetServiceInstance<ILoggerFactory> ();
-            var moduleLoader = service.GetServiceInstance<IModuleLoader> ();
-            var jsonUtil = service.GetServiceInstance<IJsonUtil> ();
-            var loadActions = service.GetServiceInstances<IPluginLoadAction> ();
-            var log = loggerFactory.CreateLogger ("ResolvePlugins");
             var pluginBathPath = GetBasePluginsPath ();
             var allPluginPath = directory.GetFiles (pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList ();
             foreach (var pluginConfigPath in allPluginPath)
@@ -79,10 +83,11 @@ namespace Brochure.Core
                 var pluginConfig = jsonUtil.Get<PluginConfig> (pluginConfigPath);
                 try
                 {
-                    var p = await LoadPlugin (service, pluginConfig);
+                    var p = await LoadPlugin (provider, pluginConfig);
                     if (p != null && p is Plugins plugin)
                     {
-                        moduleLoader.LoadModule (service, plugin.Assembly);
+                        var pluginServiceCollectionContext = plugin.Context.GetPluginContext<PluginServiceCollectionContext> ();
+                        moduleLoader.LoadModule (provider, pluginServiceCollectionContext, plugin.Assembly);
                         foreach (var item in loadActions)
                             item.Invoke (plugin);
                     }
@@ -119,10 +124,10 @@ namespace Brochure.Core
             plugin.Order = config.Order;
         }
 
-        private async Task<IPlugins> LoadPlugin (IServiceProvider service, PluginConfig pluginConfig)
+        private async Task<IPlugins> LoadPlugin (IServiceProvider provider, PluginConfig pluginConfig)
         {
-            var objectFactory = service.GetService<IObjectFactory> ();
-            var reflectorUtil = service.GetService<IReflectorUtil> ();
+            var objectFactory = provider.GetService<IObjectFactory> ();
+            var reflectorUtil = provider.GetService<IReflectorUtil> ();
             if (pluginDic.ContainsKey (pluginConfig.Key))
             {
                 throw new Exception ($"当前插件{pluginConfig.Key}已存在");
@@ -130,7 +135,7 @@ namespace Brochure.Core
             var pluginBathPath = GetBasePluginsPath ();
             var pluginPath = Path.Combine (pluginBathPath, Path.GetFileNameWithoutExtension (pluginConfig.AssemblyName), pluginConfig.AssemblyName);
             var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy> (pluginPath);
-            var locadContext = objectFactory.Create<PluginsLoadContext> (service, assemblyDependencyResolverProxy);
+            var locadContext = objectFactory.Create<PluginsLoadContext> (provider, assemblyDependencyResolverProxy);
             var assemably = locadContext.LoadFromAssemblyName (new AssemblyName (Path.GetFileNameWithoutExtension (pluginPath)));
             pluginContextDic.TryAdd (pluginConfig.Key, locadContext);
             var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase (assemably, typeof (Plugins)).ToList ();
@@ -139,7 +144,7 @@ namespace Brochure.Core
             if (allPluginTypes.Count == 2)
                 throw new Exception ("存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
-            var plugin = (Plugins) objectFactory.Create (pluginType, service);
+            var plugin = (Plugins) objectFactory.Create (pluginType, provider);
             SetPluginValues (pluginConfig, assemably, ref plugin);
             if (await StartPlugin (plugin))
             {
@@ -147,6 +152,7 @@ namespace Brochure.Core
             }
             return (IPlugins) plugin;
         }
+
         private Task<IPlugins> LoadPlugin (IServiceCollection service, PluginConfig pluginConfig)
         {
             var serviceProvider = service.BuildPluginServiceProvider ();

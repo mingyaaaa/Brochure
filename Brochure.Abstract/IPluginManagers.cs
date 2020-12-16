@@ -13,7 +13,7 @@ namespace Brochure.Abstract
         /// <param name="serviceDescriptors"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        Task ResolverPlugins (IServiceCollection services);
+        Task ResolverPlugins (IServiceProvider services);
 
         /// <summary>
         /// 加载插件

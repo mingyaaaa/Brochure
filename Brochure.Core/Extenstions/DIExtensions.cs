@@ -13,8 +13,7 @@ namespace Brochure.Core.Extenstions
     {
         public static IServiceProvider BuildPluginServiceProvider (this IServiceCollection services)
         {
-            var managers = services.GetServiceInstance<IPluginManagers> ();
-            return new PluginsServiceProvider (managers, services);
+            return new PluginsServiceProvider (services);
         }
 
         public static IServiceResolver BuildPlugnScopeProvider (this IServiceCollection services, PluginsServiceProvider serviceProvider)

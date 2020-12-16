@@ -38,6 +38,8 @@ namespace Brochure.Core
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
+            service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
+            service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
             var option = new ApplicationOption (service);
             appAction?.Invoke (option);
             //加载一些核心的程序
@@ -85,12 +87,13 @@ namespace Brochure.Core
         internal static IServiceCollection InitApplicationCore (this IServiceCollection service)
         {
             //注入插件模块
-            service.AddSingleton<IModule> (new PluginModule ());
+            var provider = service.BuildServiceProvider ();
             //加载模块
-            var models = service.GetServiceInstances<IModule> ().ToArray ();
-            foreach (var item in models)
+            var modelLoader = provider.GetService<IModuleLoader> ();
+            var assemablys = AppDomain.CurrentDomain.GetAssemblies ();
+            foreach (var item in assemablys)
             {
-                item.Initialization (service);
+                modelLoader.LoadModule (provider, service, item);
             }
             return service;
         }

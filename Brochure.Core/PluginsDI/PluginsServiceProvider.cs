@@ -11,20 +11,24 @@ namespace Brochure.Core.PluginsDI
 {
     public class PluginsServiceProvider : IPluginServiceProvider, IServiceScopeFactory, IServiceResolver
     {
-        private readonly IPluginManagers managers;
+        private IPluginManagers managers;
         private IServiceResolver originalProvider;
         private int pluginCount = -1;
         private readonly IServiceCollection services;
 
-        public PluginsServiceProvider (IPluginManagers managers, IServiceCollection services)
+        public PluginsServiceProvider (IServiceCollection services)
         {
-            this.managers = managers;
             this.services = services;
         }
         public void Dispose () { }
 
         public object GetService (Type serviceType)
         {
+            if (managers == null)
+            {
+                originalProvider = services.BuildPlugnScopeProvider (this);
+                this.managers = originalProvider.GetService<IPluginManagers> ();
+            }
             var plugins = this.managers.GetPlugins ();
             if (plugins.Count != pluginCount)
             {
