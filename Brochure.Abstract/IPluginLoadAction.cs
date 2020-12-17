@@ -4,19 +4,19 @@ namespace Brochure.Abstract
 {
     public interface IPluginLoadAction
     {
-        void Invoke (IPlugins plugins);
+        void Invoke (Guid key);
     }
 
     public class DefaultLoadAction : IPluginLoadAction
     {
-        public void Invoke (IPlugins plugins) { }
+        public void Invoke (Guid key) { }
     }
     public interface IPluginUnLoadAction
     {
-        void Invoke (IPlugins plugins);
+        void Invoke (Guid key);
     }
     public class DefaultUnLoadAction : IPluginUnLoadAction
     {
-        public void Invoke (IPlugins plugins) { }
+        public void Invoke (Guid key) { }
     }
 }

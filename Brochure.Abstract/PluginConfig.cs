@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brochure.Core.Models
+namespace Brochure.Abstract
 {
     public class PluginConfig
     {

@@ -16,30 +16,10 @@ namespace Brochure.Abstract
         Task ResolverPlugins (IServiceProvider services);
 
         /// <summary>
-        /// 加载插件
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        Task<IPlugins> LoadPlugin (IServiceProvider service, string path);
-        /// <summary>
-        /// 加载插件
-        /// </summary>
-        /// <param name="service"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        Task<IPlugins> LoadPlugin (IServiceCollection service, string path);
-        /// <summary>
         /// 注册插件
         /// </summary>
         /// <param name="plugin"></param>
         void Regist (IPlugins plugin);
-
-        /// <summary>
-        /// 卸载插件程序集
-        /// </summary>
-        /// <param name="plugin"></param>
-        Task UnLoadPlugin (IPlugins plugin);
 
         /// <summary>
         /// 移除插件

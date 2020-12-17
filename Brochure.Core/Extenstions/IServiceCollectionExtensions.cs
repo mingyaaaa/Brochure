@@ -6,6 +6,7 @@ using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Models;
+using Brochure.Core;
 using Brochure.Core.Module;
 using Brochure.Core.RPC;
 using Brochure.Extensions;
@@ -39,6 +40,7 @@ namespace Brochure.Core
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
             service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
+            service.AddSingleton<IPluginLoader, PluginLoader> ();
             service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
             var option = new ApplicationOption (service);
             appAction?.Invoke (option);

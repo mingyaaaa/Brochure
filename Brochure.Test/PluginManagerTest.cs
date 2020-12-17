@@ -6,6 +6,7 @@ using System.Runtime.Loader;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Models;
+using Brochure.Core.Module;
 using Brochure.SysInterface;
 using Brochure.Utils;
 using Microsoft.Extensions.Configuration;
@@ -28,13 +29,27 @@ namespace Brochure.Test
         public PluginManagerTest ()
         {
             InitBaseService ();
+            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
+            Service.AddSingleton<IPluginManagers, PluginManagers> ();
+            Service.AddSingleton<IModuleLoader, ModuleLoader> ();
+            Service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
+            Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
         }
 
         [TestMethod]
         public void TestResolvePlugins ()
         {
             // var path = "aaa";
-            // var serviceProvider = Service.BuildServiceProvider ();
+            var serviceProvider = Service.BuildServiceProvider ();
+            var manager = serviceProvider.GetService<IPluginManagers> ();
+            var dirMock = GetMockService<ISysDirectory> ();
+            var jsonUtilMock = GetMockService<IJsonUtil> ();
+            var resolver = new Mock<IAssemblyDependencyResolverProxy> ();
+            var loadContextMock = new Mock<PluginsLoadContext> (serviceProvider, resolver.Object);
+            var reflectorUtilMock = GetMockService<IReflectorUtil> ();
+            var configurationRootMock = new Mock<IConfigurationRoot> ();
+
+            manager.ResolverPlugins (serviceProvider);
 
             // var dirMock = GetMockService<ISysDirectory> ();
             // var jsonUtilMock = GetMockService<IJsonUtil> ();
