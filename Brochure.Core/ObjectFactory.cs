@@ -15,7 +15,6 @@ namespace Brochure.Core
         {
             return (T) Create (typeof (T), objs);
         }
-
         public object Create (Type type, params object[] objs)
         {
             return Activator.CreateInstance (type, objs);
@@ -30,7 +29,6 @@ namespace Brochure.Core
         {
             return Create<T2> (objs);
         }
-
     }
 
     public partial class ObjectFactory

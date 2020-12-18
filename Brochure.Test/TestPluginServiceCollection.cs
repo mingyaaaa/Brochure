@@ -29,6 +29,7 @@ namespace Brochure.Test
             Service.AddSingleton<IModuleLoader, ModuleLoader> ();
             Service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
             Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
+            Service.AddSingleton<IPluginContext, PluginContext> ();
         }
 
         [TestMethod]

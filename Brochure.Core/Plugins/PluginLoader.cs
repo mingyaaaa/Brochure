@@ -16,7 +16,7 @@ namespace Brochure.Core
 {
     public class PluginLoader : IPluginLoader
     {
-        private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
+        private readonly ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
 
         private readonly ISysDirectory directory;
         private readonly IJsonUtil jsonUtil;
@@ -38,7 +38,7 @@ namespace Brochure.Core
             this.jsonUtil = jsonUtil;
             this.log = log;
             this.loadActions = loadActions;
-            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, PluginsLoadContext>> ();
+            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>> ();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
             this.unLoadActions = unLoadActions;
@@ -49,8 +49,8 @@ namespace Brochure.Core
             var pluginDir = Path.GetDirectoryName (pluginConfigPath);
             var pluginPath = Path.Combine (pluginDir, Path.GetFileNameWithoutExtension (pluginConfig.AssemblyName), pluginConfig.AssemblyName);
             var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy> (pluginPath);
-            var locadContext = objectFactory.Create<PluginsLoadContext> (provider, assemblyDependencyResolverProxy);
-            var assemably = locadContext.LoadFromAssemblyName (new AssemblyName (Path.GetFileNameWithoutExtension (pluginPath)));
+            var locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext> (provider, assemblyDependencyResolverProxy);
+            var assemably = locadContext.LoadAssembly (new AssemblyName (Path.GetFileNameWithoutExtension (pluginPath)));
             var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase (assemably, typeof (Plugins)).ToList ();
             if (allPluginTypes.Count == 0)
                 throw new Exception ("请实现基于Plugins的插件类");
@@ -77,7 +77,7 @@ namespace Brochure.Core
                 {
                     item?.Invoke (key);
                 };
-                context.Unload ();
+                context.UnLoad ();
             }
             return ValueTask.CompletedTask;
         }

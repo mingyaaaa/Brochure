@@ -38,6 +38,7 @@ namespace Brochure.Core
             service.TryAddSingleton<ISysDirectory> (new SysDirectory ());
             service.TryAddSingleton<IModuleLoader, ModuleLoader> ();
             service.AddTransient<IPluginContextDescript, PluginServiceCollectionContext> ();
+            service.AddTransient<IPluginContext, PluginContext> ();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration> ();
             service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
             service.AddSingleton<IPluginLoader, PluginLoader> ();

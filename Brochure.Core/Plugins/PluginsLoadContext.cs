@@ -8,7 +8,7 @@ using Brochure.Abstract.PluginDI;
 using Microsoft.Extensions.DependencyInjection;
 namespace Brochure.Core
 {
-    public class PluginsLoadContext : AssemblyLoadContext
+    public class PluginsLoadContext : AssemblyLoadContext, IPluginsLoadContext
     {
         public IPluginServiceProvider Service { get; }
         private readonly IAssemblyDependencyResolverProxy _resolver;
@@ -40,6 +40,16 @@ namespace Brochure.Core
             }
 
             return IntPtr.Zero;
+        }
+
+        public Assembly LoadAssembly (AssemblyName assemblyName)
+        {
+            return LoadFromAssemblyName (assemblyName);
+        }
+
+        public void UnLoad ()
+        {
+            Unload ();
         }
     }
 }

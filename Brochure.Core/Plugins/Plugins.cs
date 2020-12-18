@@ -15,7 +15,7 @@ namespace Brochure.Core
         public Plugins (IServiceProvider service)
         {
             Order = int.MaxValue;
-            Context = new PluginContext (service.GetServices<IPluginContextDescript> ());
+            Context = service.GetService<IPluginContext> ();
         }
 
         public Guid Key { get; set; }

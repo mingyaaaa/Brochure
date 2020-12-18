@@ -100,9 +100,9 @@ namespace Brochure.Core.Server
         {
             this.middleManager = middleManager;
         }
-        public void Invoke (IPlugins plugins)
+        public void Invoke (Guid key)
         {
-            middleManager.RemovePluginMiddle (plugins.Key);
+            middleManager.RemovePluginMiddle (key);
         }
     }
 }
