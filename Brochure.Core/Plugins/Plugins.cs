@@ -10,8 +10,7 @@ namespace Brochure.Core
 {
     public abstract class Plugins : IPlugins
     {
-        public IPluginContext Context;
-
+        public IPluginContext Context { get; }
         public Plugins (IServiceProvider service)
         {
             Order = int.MaxValue;

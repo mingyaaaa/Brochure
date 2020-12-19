@@ -7,6 +7,8 @@ namespace Brochure.Abstract
 {
     public interface IPlugins
     {
+        IPluginContext Context { get; }
+
         /// <summary>
         /// 插件唯一健
         /// </summary>
@@ -51,27 +53,27 @@ namespace Brochure.Abstract
         /// 启动插件
         /// </summary>
         /// <returns></returns>
-        Task StartAsync();
+        Task StartAsync ();
 
         /// <summary>
         /// 退出卸载插件
         /// </summary>
         /// <returns></returns>
-        Task ExitAsync();
+        Task ExitAsync ();
 
         /// <summary>
         /// 插件加载前执行
         /// </summary>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        Task<bool> StartingAsync(out string errorMsg);
+        Task<bool> StartingAsync (out string errorMsg);
 
         /// <summary>
         /// 退出插件前执行
         /// </summary>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        Task<bool> ExitingAsync(out string errorMsg);
+        Task<bool> ExitingAsync (out string errorMsg);
     }
 
 }

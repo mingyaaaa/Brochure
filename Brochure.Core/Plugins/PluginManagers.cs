@@ -24,13 +24,18 @@ namespace Brochure.Core
         private readonly IEnumerable<IPluginLoadAction> loadActions;
         private readonly IPluginLoader pluginLoader;
 
-        public PluginManagers (ISysDirectory directory,
-            IModuleLoader moduleLoader, IPluginLoader pluginLoader)
+        public PluginManagers (
+            ISysDirectory directory,
+            IModuleLoader moduleLoader,
+            IPluginLoader pluginLoader,
+            IObjectFactory objectFactory,
+            ILogger<PluginManagers> log)
         {
-            pluginDic = new ConcurrentDictionary<Guid, IPlugins> ();
+            pluginDic = objectFactory.Create<ConcurrentDictionary<Guid, IPlugins>> ();
             this.directory = directory;
             this.moduleLoader = moduleLoader;
             this.pluginLoader = pluginLoader;
+            this.log = log;
         }
 
         public void Regist (IPlugins plugin)
@@ -81,7 +86,7 @@ namespace Brochure.Core
                 try
                 {
                     var p = await pluginLoader.LoadPlugin (provider, pluginConfigPath);
-                    if (p != null && p is Plugins plugin)
+                    if (p != null && p is IPlugins plugin)
                     {
                         pluginKey = p.Key;
                         var pluginServiceCollectionContext = plugin.Context.GetPluginContext<PluginServiceCollectionContext> ();
@@ -106,7 +111,7 @@ namespace Brochure.Core
             }
         }
 
-        private async Task<bool> StartPlugin (Plugins plugin)
+        private async Task<bool> StartPlugin (IPlugins plugin)
         {
             //处理插件          
             var result = false;

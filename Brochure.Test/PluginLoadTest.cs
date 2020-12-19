@@ -16,9 +16,15 @@ namespace Brochure.Test
     [TestClass]
     public class PluginLoadTest : BaseTest
     {
+        private Mock<IObjectFactory> objFactoryMock;
+        private Mock<IPluginsLoadContext> loadContextMock;
+
         public PluginLoadTest ()
         {
             InitBaseService ();
+            objFactoryMock = new Mock<IObjectFactory> ();
+            loadContextMock = new Mock<IPluginsLoadContext> ();
+
         }
 
         [TestMethod]
@@ -32,7 +38,6 @@ namespace Brochure.Test
             var jsonUtilMock = new Mock<IJsonUtil> ();
             var pluginContextDescript = new Mock<IPluginContextDescript> ();
             jsonUtilMock.Setup (t => t.Get<PluginConfig> (pluginConfigPath)).Returns (new PluginConfig () { Key = guid, Name = name, AssemblyName = "test.dll" });
-            var objFactoryMock = new Mock<IObjectFactory> ();
             var loadContextMock = new Mock<IPluginsLoadContext> ();
             objFactoryMock.Setup (t => t.Create<IPluginsLoadContext, PluginsLoadContext> (provider.Object, It.IsAny<IAssemblyDependencyResolverProxy> ()))
                 .Returns (loadContextMock.Object);
@@ -62,10 +67,24 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestUnLoad ()
         {
-            var provider = Service.BuildServiceProvider ();
-            var load = provider.GetService<IPluginLoader> ();
+            var autoMock = new AutoMocker ();
             var key = Guid.NewGuid ();
+            autoMock.Use<IObjectFactory> (objFactoryMock.Object);
+            objFactoryMock.Setup (t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>> ())
+                .Returns (new ConcurrentDictionary<Guid, IPluginsLoadContext> ());
+            var load = autoMock.CreateInstance<PluginLoader> ();
             await load.UnLoad (key);
+            loadContextMock.Verify (t => t.UnLoad (), Times.Never);
+
+            objFactoryMock.Setup (t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>> ())
+                .Returns (new ConcurrentDictionary<Guid, IPluginsLoadContext> ()
+                {
+                    [key] = loadContextMock.Object
+                });
+            load = autoMock.CreateInstance<PluginLoader> ();
+            await load.UnLoad (key);
+            loadContextMock.Verify (t => t.UnLoad ());
+
         }
 
         protected class PA : Plugins

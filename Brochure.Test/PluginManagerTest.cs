@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Models;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Moq.AutoMock;
 using Moq.Protected;
 
 namespace Brochure.Test
@@ -29,28 +32,41 @@ namespace Brochure.Test
         public PluginManagerTest ()
         {
             InitBaseService ();
-            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext> ();
-            Service.AddSingleton<IPluginManagers, PluginManagers> ();
-            Service.AddSingleton<IModuleLoader, ModuleLoader> ();
-            Service.AddSingleton<IPluginLoadAction, DefaultLoadAction> ();
-            Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction> ();
         }
 
         [TestMethod]
-        public void TestResolvePlugins ()
+        public async Task TestResolvePlugins ()
         {
-            // var path = "aaa";
-            var serviceProvider = Service.BuildServiceProvider ();
-            var manager = serviceProvider.GetService<IPluginManagers> ();
-            var dirMock = GetMockService<ISysDirectory> ();
-            var jsonUtilMock = GetMockService<IJsonUtil> ();
-            var resolver = new Mock<IAssemblyDependencyResolverProxy> ();
-            var loadContextMock = new Mock<PluginsLoadContext> (serviceProvider, resolver.Object);
-            var reflectorUtilMock = GetMockService<IReflectorUtil> ();
-            var configurationRootMock = new Mock<IConfigurationRoot> ();
+            var autoMock = new AutoMocker ();
+            var serviceProviderMock = new Mock<IServiceProvider> ();
+            var dirMock = new Mock<ISysDirectory> ();
+            var pluginLoaderMock = new Mock<IPluginLoader> ();
+            var modulerMock = new Mock<IModuleLoader> ();
+            var objectFactory = new Mock<IObjectFactory> ();
+            var pluginContextMock = new Mock<IPluginContext> ();
+            var key = Guid.NewGuid ();
+            var pluginMock = new Mock<IPlugins> ();
+            pluginLoaderMock.Setup (t => t.LoadPlugin (It.IsAny<IServiceProvider> (), It.IsAny<string> ()))
+                .Returns (ValueTask.FromResult<IPlugins> (pluginMock.Object));
+            pluginMock.Setup (t => t.Context).Returns (pluginContextMock.Object);
 
-            manager.ResolverPlugins (serviceProvider);
+            objectFactory.Setup (t => t.Create<ConcurrentDictionary<Guid, IPlugins>> ()).
+            Returns (new ConcurrentDictionary<Guid, IPlugins> ());
 
+            autoMock.Use<ISysDirectory> (dirMock.Object);
+            autoMock.Use<IModuleLoader> (modulerMock);
+            autoMock.Use<ISysDirectory> (dirMock.Object);
+            autoMock.Use<IObjectFactory> (objectFactory.Object);
+            autoMock.Use<IPluginLoader> (pluginLoaderMock.Object);
+            dirMock.Setup (t => t.GetFiles (It.IsAny<string> (), It.IsAny<string> (), SearchOption.AllDirectories))
+                .Returns (new string[] { "PA" });
+            var msg = string.Empty;
+            pluginMock.Setup (t => t.StartingAsync (out msg)).Returns (Task.FromResult (true));
+
+            var manager = autoMock.CreateInstance<PluginManagers> ();
+            await manager.ResolverPlugins (serviceProviderMock.Object);
+            modulerMock.Verify (t => t.LoadModule (It.IsAny<IServiceProvider> (), It.IsAny<PluginServiceCollectionContext> (), It.IsAny<Assembly> ()));
+            pluginMock.Verify (t => t.StartingAsync (out msg));
             // var dirMock = GetMockService<ISysDirectory> ();
             // var jsonUtilMock = GetMockService<IJsonUtil> ();
             // var objectFactoryMock = GetMockService<IObjectFactory> ();
@@ -77,5 +93,10 @@ namespace Brochure.Test
             // pluginManagerMock.Object.ResolverPlugins (Service);
             // pluginManagerMock.Verify (t => t.Regist (It.IsAny<Plugins> ()), Times.AtMost (2));
         }
+    }
+
+    public class PA : Plugins
+    {
+        public PA (IServiceProvider service) : base (service) { }
     }
 }
