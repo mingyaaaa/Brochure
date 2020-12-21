@@ -30,7 +30,6 @@ namespace Brochure.Core
         /// <summary>
         /// 配置服务
         /// </summary>
-
         public virtual Task StartAsync ()
         {
             return Task.CompletedTask;

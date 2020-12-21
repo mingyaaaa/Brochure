@@ -4,10 +4,7 @@ import os
 import subprocess
 import re
 import io
-
-# 查找当前文件下面指定字符的路径
-
-
+#查找当前文件下面指定字符的路径
 def findFile(dirname, fileName):
     file_tupe = os.walk(dirname)
     for root, dirs, file_names in file_tupe:
@@ -16,7 +13,7 @@ def findFile(dirname, fileName):
                 return os.path.join(root, file_name)
     return None
 
-# 添加版本
+#添加版本
 
 
 def addVersion(version):
@@ -47,6 +44,7 @@ out = p.stdout.read()
 # 返回中文乱码 使用一下方法解决
 # print(out.decode("gbk"))
 old_version_re = re.search("(\d+.){3}\d+", str(out))
+print(old_version_re)
 if(old_version_re == None):
     pack_version = "0.0.0.1"
 elif(target_version!=None):

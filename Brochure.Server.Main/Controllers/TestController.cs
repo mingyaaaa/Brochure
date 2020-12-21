@@ -15,18 +15,21 @@ namespace Brochure.Server.Main.Controllers
     [Route ("api/v1/[controller]")]
     public class TestController : ControllerBase
     {
-        private readonly IPluginManagers pluginManager;
+        private readonly IPluginLoader pluginLoader;
         private readonly IBApplication application;
         private readonly IReflectorUtil reflectorUtil;
+        private readonly IPluginManagers pluginManagers;
 
         public TestController (
-            IPluginManagers pluginManager,
+            IPluginLoader pluginLoader,
             IBApplication application,
-            IReflectorUtil reflectorUtil)
+            IReflectorUtil reflectorUtil,
+            IPluginManagers pluginManagers)
         {
-            this.pluginManager = pluginManager;
+            this.pluginLoader = pluginLoader;
             this.application = application;
             this.reflectorUtil = reflectorUtil;
+            this.pluginManagers = pluginManagers;
         }
 
         [HttpGet]
@@ -38,8 +41,8 @@ namespace Brochure.Server.Main.Controllers
         [HttpGet ("loadPlugin")]
         public async Task<IActionResult> TestLoadPlugin ()
         {
-            var path = Path.Combine (pluginManager.GetBasePluginsPath (), "Brochure.Authority", "plugin.config");
-            var p = await pluginManager.LoadPlugin (application.ServiceProvider, path);
+            var path = Path.Combine (pluginManagers.GetBasePluginsPath (), "Brochure.Authority", "plugin.config");
+            var p = await pluginLoader.LoadPlugin (application.ServiceProvider, path);
             if (!(p is Plugins plugin))
                 return new ContentResult () { Content = "bbb" };
             if (application is BApplication app)
@@ -61,12 +64,12 @@ namespace Brochure.Server.Main.Controllers
         [HttpGet ("unLoadPlugin")]
         public async Task<IActionResult> UnLoadPlugin ()
         {
-            var plugins = pluginManager.GetPlugins ();
+            var plugins = pluginManagers.GetPlugins ();
             if (application is BApplication app)
             {
                 foreach (var item in plugins)
                 {
-                    await pluginManager.UnLoadPlugin (item);
+                    await pluginLoader.UnLoad (item.Key);
                     var part = app.ApplicationPartManager.ApplicationParts.FirstOrDefault (t => t.Name == item.Assembly.GetName ().Name);
                     app.ApplicationPartManager.ApplicationParts.Remove (part);
                 }
