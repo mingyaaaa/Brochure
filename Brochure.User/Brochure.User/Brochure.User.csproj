@@ -4,36 +4,21 @@
 <TargetFramework>net5.0</TargetFramework>
 
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CustomCommands>
-      <CustomCommands>
-        <Command>
-          <type>AfterBuild</type>
-          <command>cp -rf ${TargetDir}   ${ProjectDir}/../../Brochure.Server.Main/bin/Debug/netcoreapp3.1/plugins/Brochure.User</command>
-        </Command>
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Program</StartAction>
-    <StartProgram>..\..\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main.dll</StartProgram>
+    <StartProgram>..\..\Brochure.Server.Main\bin\Debug\net5.0\Brochure.Server.Main.dll</StartProgram>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Brochure.Main' ">
-    <StartAction>Program</StartAction>
-    <StartProgram>dotnet  \Users\yangming\Documents\Brochure\Brochure.Server.Main\bin\Debug\netcoreapp3.1\Brochure.Server.Main</StartProgram>
-    <ExternalConsole>true</ExternalConsole>
-  </PropertyGroup>
+  <Import Project="../../build/copy_plugin.targets" />
   <ItemGroup>
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.ORM" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Brochure.Core.Server\Brochure.Core.Server.csproj" />
-    <ProjectReference Include="..\..\Brochure.Core\Brochure.Core.csproj" />
     <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
-    <ProjectReference Include="..\..\Brochure.ORM.MySql\Brochure.ORM.MySql.csproj" />
-    <ProjectReference Include="..\..\Brochure.ORM\Brochure.ORM.csproj" />
   </ItemGroup>
 </Project>

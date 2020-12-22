@@ -14,7 +14,7 @@ namespace Brochure.Server.Main
 {
     public class Startup
     {
-        public Startup (IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -22,30 +22,30 @@ namespace Brochure.Server.Main
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public async void ConfigureServices (IServiceCollection services)
+        public async void ConfigureServices(IServiceCollection services)
         {
-            await services.AddBrochureServer ();
+            await services.AddBrochureServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env, IBApplication application)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBApplication application)
         {
-            if (env.IsDevelopment ())
+            if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage ();
+                app.UseDeveloperExceptionPage();
             }
 
-            var log = app.ApplicationServices.GetService<ILogger<Startup>> ();
-            var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>> ();
+            var log = app.ApplicationServices.GetService<ILogger<Startup>>();
+            var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>>();
             routeOption.Value.SuppressCheckForUnhandledSecurityMetadata = true;
             if (application is BApplication t)
             {
                 t.ServiceProvider = app.ApplicationServices;
                 t.Builder = app;
             }
-            app.IntertMiddle ("main-routing", Guid.Empty, 10, () => app.UseRouting ());
-            app.ConfigPlugin ();
-            app.IntertMiddle ("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints (endpoints => endpoints.MapControllers ()));
+            app.IntertMiddle("main-routing", Guid.Empty, 10, () => app.UseRouting());
+            app.ConfigPlugin();
+            app.IntertMiddle("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints(endpoints => endpoints.MapControllers()));
         }
     }
 }
