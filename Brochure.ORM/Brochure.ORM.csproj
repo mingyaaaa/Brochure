@@ -20,15 +20,13 @@
     <Compile Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
-    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
-    <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
-    <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AspectCore.Abstractions" Version="2.1.0" />
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Extensions" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Utils" Version="0.0.0.1" />
   </ItemGroup>
 </Project>

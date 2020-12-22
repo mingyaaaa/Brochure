@@ -11,10 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.1" />
   </ItemGroup>
 
 </Project>

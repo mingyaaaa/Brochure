@@ -2,11 +2,9 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="Brochure.ORM" Version="0.0.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" />
-  </ItemGroup>
   <PropertyGroup>
 <TargetFramework>net5.0</TargetFramework>
 

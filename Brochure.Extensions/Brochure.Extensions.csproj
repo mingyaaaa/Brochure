@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
 <TargetFramework>net5.0</TargetFramework>
 
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.1" />
+  </ItemGroup>
 </Project>
