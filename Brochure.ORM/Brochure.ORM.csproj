@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Brochure.Abstract" Version="0.0.0.1" />
-    <PackageReference Include="Brochure.Core" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.3" />
     <PackageReference Include="Brochure.Extensions" Version="0.0.0.1" />
     <PackageReference Include="Brochure.Utils" Version="0.0.0.1" />
   </ItemGroup>

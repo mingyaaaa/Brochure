@@ -50,7 +50,7 @@ if(old_version_re == None):
 elif(target_version!=None):
     pack_version = target_version
 else:
-    pack_version = old_version_re.group()
+    pack_version = addVersion(old_version_re.group()) 
 exeStr = "dotnet pack -c Release %s /p:Version=%s" % (
     project_path, pack_version)
 os.system(exeStr)
