@@ -12,30 +12,30 @@ namespace Brochure.Core.Module
     {
         private readonly ILogger<ModuleLoader> logger;
 
-        public ModuleLoader (ILogger<ModuleLoader> logger)
+        public ModuleLoader(ILogger<ModuleLoader> logger)
         {
             this.logger = logger;
         }
-        public void LoadModule (IServiceProvider provider, IServiceCollection services, Assembly assembly)
+        public void LoadModule(IServiceProvider provider, IServiceCollection services, Assembly assembly)
         {
             try
             {
-                var refUtils = provider.GetService<IReflectorUtil> ();
-                var modules = refUtils.GetObjectOfAbsoluteBase<IModule> (assembly);
-                if (!modules.Any ())
+                var refUtils = provider.GetService<IReflectorUtil>();
+                var modules = refUtils.GetObjectOfBase<IModule>(assembly);
+                if (!modules.Any())
                     return;
                 foreach (var item in modules)
                 {
-                    item.ConfigModule (services);
+                    item.ConfigModule(services);
                 }
                 foreach (var item in modules)
                 {
-                    item.Initialization (services.BuildServiceProvider ());
+                    item.Initialization(services.BuildServiceProvider());
                 }
             }
             catch (System.Exception e)
             {
-                logger.LogError (e, e.Message);
+                logger.LogError(e, e.Message);
                 throw;
             }
 

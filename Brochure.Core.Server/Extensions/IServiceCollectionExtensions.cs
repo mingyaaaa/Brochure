@@ -15,8 +15,9 @@ namespace Brochure.Core.Server
         internal static async Task AddPluginController(this IServiceCollection services)
         {
             var mvcBuilder = services.AddMvc();
-            var manager = services.GetServiceInstance<IPluginManagers>();
-            var application = services.GetServiceInstance<IBApplication>() as BApplication;
+            var provider = services.BuildServiceProvider();
+            var manager = provider.GetService<IPluginManagers>();
+            var application = provider.GetService<IBApplication>() as BApplication;
             application.ApplicationPartManager = mvcBuilder.PartManager;
             var pluginList = manager.GetPlugins();
             foreach (var item in pluginList)
@@ -33,7 +34,6 @@ namespace Brochure.Core.Server
                     await item.ExitAsync();
                 }
             }
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         public static async Task AddBrochureServer(this IServiceCollection services, Action<ApplicationOption> action = null)
