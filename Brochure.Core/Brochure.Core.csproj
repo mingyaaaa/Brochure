@@ -16,13 +16,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Polly" Version="7.2.1" />
     <PackageReference Include="Quartz" Version="3.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
-    <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
-    <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
-    <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
+    <PackageReference Include="Brochure.Extensions" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.System" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Utils" Version="0.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>

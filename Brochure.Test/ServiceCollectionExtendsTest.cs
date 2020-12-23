@@ -22,6 +22,7 @@ namespace Brochure.Test
         {
             services.AddBrochureCore();
         }
+
         [TestMethod]
         public async Task TestAddBrochureCoreServer()
         {
