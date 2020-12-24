@@ -13,12 +13,12 @@ namespace Brochure.Core.Server
     {
 
         private readonly IApplicationBuilder applicationBuilder;
-        private static readonly object lockObject = new object ();
+        private static readonly object lockObject = new object();
         private readonly IMiddleManager manager;
-        public PluginApplicationBuilder (IApplicationBuilder builder)
+        public PluginApplicationBuilder(IApplicationBuilder builder)
         {
             applicationBuilder = builder;
-            manager = builder.ApplicationServices.GetService<IMiddleManager> ();
+            manager = builder.ApplicationServices.GetService<IMiddleManager>();
         }
         public IServiceProvider ApplicationServices
         {
@@ -30,32 +30,33 @@ namespace Brochure.Core.Server
 
         public IFeatureCollection ServerFeatures => applicationBuilder.ServerFeatures;
 
-        public RequestDelegate Build ()
+        public RequestDelegate Build()
         {
-            return UseMiddle ();
+            return UseMiddle();
         }
 
-        public IApplicationBuilder New ()
+        public IApplicationBuilder New()
         {
-            return new PluginApplicationBuilder (applicationBuilder.New ());
+            return new PluginApplicationBuilder(applicationBuilder.New());
         }
 
-        public IApplicationBuilder Use (Func<RequestDelegate, RequestDelegate> middleware)
+        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
         {
-            throw new NotSupportedException ("请使用AddMiddle方法");
+            manager.MiddleAction?.Invoke(middleware);
+            return this;
         }
-        public RequestDelegate UseMiddle ()
+        public RequestDelegate UseMiddle()
         {
-            return StartPipe ();
+            return StartPipe();
         }
 
-        private RequestDelegate Default404EndPipe ()
+        private RequestDelegate Default404EndPipe()
         {
             return context =>
             {
                 // If we reach the end of the pipeline, but we have an endpoint, then something unexpected has happened.
                 // This could happen if user code sets an endpoint, but they forgot to add the UseEndpoint middleware.
-                var endpoint = context.GetEndpoint ();
+                var endpoint = context.GetEndpoint();
                 var endpointRequestDelegate = endpoint?.RequestDelegate;
                 if (endpointRequestDelegate != null)
                 {
@@ -63,51 +64,38 @@ namespace Brochure.Core.Server
                         $"The request reached the end of the pipeline without executing the endpoint: '{endpoint.DisplayName}'. " +
                         $"Please register the EndpointMiddleware using '{nameof(IApplicationBuilder)}.UseEndpoints(...)' if using " +
                         $"routing.";
-                    throw new InvalidOperationException (message);
+                    throw new InvalidOperationException(message);
                 }
                 context.Response.StatusCode = 404;
                 return Task.CompletedTask;
             };
         }
 
-        private RequestDelegate StartPipe ()
+        private RequestDelegate StartPipe()
         {
             RequestDelegate app = null;
             int pluginCount = -1;
             return t =>
             {
-                var pluginManagers = t.RequestServices.GetService<IPluginManagers> ();
-                var count = pluginManagers.GetPlugins ().Count;
+                var pluginManagers = t.RequestServices.GetService<IPluginManagers>();
+                var count = pluginManagers.GetPlugins().Count;
                 lock (lockObject)
                 {
                     if (pluginCount != count)
                     {
                         pluginCount = count;
-                        app = Default404EndPipe ();
-                        var middleManager = t.RequestServices.GetService<IMiddleManager> ();
-                        var middleCollection = middleManager.GetMiddlesList ();
-                        var list = middleCollection.OrderBy (t => t.Order).ToList ();
-                        middleManager.Reset ();
+                        app = Default404EndPipe();
+                        var middleManager = t.RequestServices.GetService<IMiddleManager>();
+                        var middleCollection = middleManager.GetMiddlesList();
+                        var list = middleCollection.OrderBy(t => t.Order).Select(t => t.MiddleFactory).ToList();
+                        list.Reverse();
                         foreach (var item in list)
                         {
-                            var r = item.MiddleFactory.Invoke ();
-                            if (r != null && r is Func<RequestDelegate, RequestDelegate>)
-                                middleManager.AddMiddle (item.MiddleName, item.PluginId, r as Func<RequestDelegate, RequestDelegate>);
+                            app = item(app);
                         }
-                        middleCollection = middleManager.GetMiddlesList ();
-                        var reqList = middleCollection.OrderByDescending (t => t.Order).Select (t => t.MiddleFactory).ToList ();
-                        foreach (var item in reqList)
-                        {
-                            var r = item ();
-                            var type = typeof (Func<,>);
-                            if (r is Func<RequestDelegate, RequestDelegate> f)
-                                app = f (app);
-                        }
-                        middleManager.Reset ();
-                        middleManager.AddRange (list);
                     }
                 }
-                app.Invoke (t);
+                app.Invoke(t);
                 return Task.CompletedTask;
             };
         }

@@ -9,6 +9,6 @@ namespace Brochure.Test
         public BrochureCoreTest()
         {
         }
-        // public void Test
+
     }
 }

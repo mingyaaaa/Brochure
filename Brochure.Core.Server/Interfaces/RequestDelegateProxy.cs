@@ -1,10 +1,11 @@
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Brochure.Core.Server
 {
     public class RequestDelegateProxy
     {
-        public RequestDelegateProxy (string middleName, Guid id, int order, Func<object> factory)
+        public RequestDelegateProxy(string middleName, Guid id, int order, Func<RequestDelegate, RequestDelegate> factory)
         {
             this.MiddleName = middleName;
             this.PluginId = id;
@@ -31,6 +32,6 @@ namespace Brochure.Core.Server
         /// 中间件方法
         /// </summary>
         /// <value></value>
-        public Func<object> MiddleFactory { get; }
+        public Func<RequestDelegate, RequestDelegate> MiddleFactory { get; }
     }
 }

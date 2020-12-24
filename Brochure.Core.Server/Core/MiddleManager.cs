@@ -7,88 +7,71 @@ namespace Brochure.Core.Server
 {
     public class MiddleManager : IMiddleManager
     {
-        public MiddleManager ()
+        public MiddleManager()
         {
-            middleCollection = new List<RequestDelegateProxy> ();
+            middleCollection = new List<RequestDelegateProxy>();
         }
         private readonly List<RequestDelegateProxy> middleCollection;
 
-        public void AddMiddle (string middleName, Guid id, Func<RequestDelegate, RequestDelegate> middle)
+        public Action<Func<RequestDelegate, RequestDelegate>> MiddleAction { get; set; }
+
+        public void AddMiddle(string middleName, Guid id, Func<RequestDelegate, RequestDelegate> middle)
         {
             var count = middleCollection.Count + 1; //顺序从1开始
-            AddAndRefreshOrder (middleName, id, count, () => middle);
+            AddAndRefreshOrder(middleName, id, count, middle);
         }
 
-        public void IntertMiddle (string middleName, Guid id, int index, Func<RequestDelegate, RequestDelegate> middle)
+        public void IntertMiddle(string middleName, Guid id, int index, Func<RequestDelegate, RequestDelegate> middle)
         {
-            AddAndRefreshOrder (middleName, id, index, () => middle);
+            AddAndRefreshOrder(middleName, id, index, middle);
         }
 
-        public void AddMiddle (string middleName, Guid guid, Action action)
-        {
-            var count = middleCollection.Count + 1; //顺序从1开始
-            AddAndRefreshOrder (middleName, guid, count, () =>
-            {
-                action.Invoke ();
-                return null;
-            });
-        }
-
-        public void IntertMiddle (string middleName, Guid guid, int index, Action action)
-        {
-            AddAndRefreshOrder (middleName, guid, index, () =>
-            {
-                action.Invoke ();
-                return null;
-            }); //顺序从1开始
-        }
-
-        public IReadOnlyList<RequestDelegateProxy> GetMiddlesList ()
+        public IReadOnlyList<RequestDelegateProxy> GetMiddlesList()
         {
             return middleCollection;
         }
 
-        public void RemovePluginMiddle (Guid guid)
+        public void RemovePluginMiddle(Guid guid)
         {
-            middleCollection.RemoveAll (t => t.PluginId == guid);
+            middleCollection.RemoveAll(t => t.PluginId == guid);
         }
 
-        public void Reset ()
+        public void Reset()
         {
-            middleCollection.Clear ();
+            middleCollection.Clear();
         }
-        public void AddRange (IEnumerable<RequestDelegateProxy> proxy)
+        public void AddRange(IEnumerable<RequestDelegateProxy> proxy)
         {
-            middleCollection.AddRange (proxy);
+            middleCollection.AddRange(proxy);
         }
 
-        private void AddAndRefreshOrder (string middleName, Guid id, int index, Func<object> middleFun)
+        private void AddAndRefreshOrder(string middleName, Guid id, int index, Func<RequestDelegate, RequestDelegate> middleFun)
         {
-            if (string.IsNullOrWhiteSpace (middleName))
-                throw new Exception ("中间件名称为null");
-            if (middleCollection.Any (t => t.MiddleName == middleName))
-                throw new Exception ($"{middleName}中间件已存在");
-            var orderMiddle = middleCollection.Find (t => t.Order == index);
+            if (string.IsNullOrWhiteSpace(middleName))
+                throw new Exception("中间件名称为null");
+            if (middleCollection.Any(t => t.MiddleName == middleName))
+                throw new Exception($"{middleName}中间件已存在");
+            var orderMiddle = middleCollection.Find(t => t.Order == index);
             if (orderMiddle != null)
             {
-                AddMiddleIndex (ref orderMiddle, int.MaxValue);
+                AddMiddleIndex(ref orderMiddle, int.MaxValue);
             }
-            middleCollection.Add (new RequestDelegateProxy (middleName, id, index, middleFun));
+            middleCollection.Add(new RequestDelegateProxy(middleName, id, index, middleFun));
         }
-        private void AddMiddleIndex (ref RequestDelegateProxy orderMiddle, int maxOrder)
+        private void AddMiddleIndex(ref RequestDelegateProxy orderMiddle, int maxOrder)
         {
             var order = orderMiddle.Order;
             if (orderMiddle.Order == maxOrder)
                 order--;
             else
                 order++;
-            var nextMiddle = middleCollection.Find (t => t.Order == order);
+            var nextMiddle = middleCollection.Find(t => t.Order == order);
             if (nextMiddle == null)
             {
                 orderMiddle.Order = order;
                 return;
             }
-            AddMiddleIndex (ref nextMiddle, order);
+            AddMiddleIndex(ref nextMiddle, order);
         }
     }
 
@@ -96,13 +79,13 @@ namespace Brochure.Core.Server
     {
         private readonly IMiddleManager middleManager;
 
-        public PluginMiddleUnLoadAction (IMiddleManager middleManager)
+        public PluginMiddleUnLoadAction(IMiddleManager middleManager)
         {
             this.middleManager = middleManager;
         }
-        public void Invoke (Guid key)
+        public void Invoke(Guid key)
         {
-            middleManager.RemovePluginMiddle (key);
+            middleManager.RemovePluginMiddle(key);
         }
     }
 }

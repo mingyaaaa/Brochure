@@ -14,7 +14,7 @@ namespace Brochure.Core.Server
     {
         internal static async Task AddPluginController(this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvcCore();
             var provider = services.BuildServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
             var application = provider.GetService<IBApplication>() as BApplication;
@@ -38,7 +38,6 @@ namespace Brochure.Core.Server
 
         public static async Task AddBrochureServer(this IServiceCollection services, Action<ApplicationOption> action = null)
         {
-            services.AddMvcCore();
             services.AddLogging(t => t.AddConsole());
             services.AddBrochureCore(option =>
            {

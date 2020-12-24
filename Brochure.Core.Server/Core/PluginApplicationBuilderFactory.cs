@@ -14,19 +14,19 @@ namespace Brochure.Core.Server
         private readonly IServiceProvider provider;
         private readonly IPluginManagers pluginManagers;
 
-        public PluginApplicationBuilderFactory (IPluginServiceProvider provider, IPluginManagers pluginManagers)
+        public PluginApplicationBuilderFactory(IServiceProvider provider, IPluginManagers pluginManagers)
         {
             this.provider = provider;
             this.pluginManagers = pluginManagers;
         }
-        public IApplicationBuilder CreateBuilder (IFeatureCollection serverFeatures)
+        public IApplicationBuilder CreateBuilder(IFeatureCollection serverFeatures)
         {
-            var plugins = pluginManagers.GetPlugins ().OfType<Plugins> ();
+            var plugins = pluginManagers.GetPlugins().OfType<Plugins>();
             foreach (var item in plugins)
             {
-                item.Context.Add (new PluginMiddleContext (provider, item.Key));
+                item.Context.Add(new PluginMiddleContext(provider, item.Key));
             }
-            var builder = new PluginApplicationBuilder (new ApplicationBuilder (provider, serverFeatures));
+            var builder = new PluginApplicationBuilder(new ApplicationBuilder(provider, serverFeatures));
             return builder;
         }
     }
