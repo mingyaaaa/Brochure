@@ -23,50 +23,58 @@ namespace Brochure.Core
         private readonly ILogger<PluginManagers> log;
         private readonly IEnumerable<IPluginLoadAction> loadActions;
         private readonly IPluginLoader pluginLoader;
+        private readonly IEnumerable<IPluginUnLoadAction> unLoadActions;
 
-        public PluginManagers (
+        public PluginManagers(
             ISysDirectory directory,
             IModuleLoader moduleLoader,
             IPluginLoader pluginLoader,
             IObjectFactory objectFactory,
-            ILogger<PluginManagers> log)
+            ILogger<PluginManagers> log,
+            IEnumerable<IPluginLoadAction> loadActions,
+            IEnumerable<IPluginUnLoadAction> unLoadActions)
         {
-            pluginDic = objectFactory.Create<ConcurrentDictionary<Guid, IPlugins>> ();
+            pluginDic = objectFactory.Create<ConcurrentDictionary<Guid, IPlugins>>();
             this.directory = directory;
             this.moduleLoader = moduleLoader;
             this.pluginLoader = pluginLoader;
             this.log = log;
+            this.loadActions = loadActions;
+            this.unLoadActions = unLoadActions;
         }
 
-        public void Regist (IPlugins plugin)
+        public void Regist(IPlugins plugin)
         {
-            pluginDic.TryAdd (plugin.Key, plugin);
+            pluginDic.TryAdd(plugin.Key, plugin);
         }
 
-        public Task Remove (IPlugins plugin)
+        public async Task Remove(IPlugins plugin)
         {
-            pluginDic.TryRemove (plugin.Key, out var _);
-            return Task.CompletedTask;
+            var r = await pluginLoader.UnLoad(plugin.Key);
+            if (!r)
+                return;
+            NotifyUnload(plugin.Key);
+            pluginDic.TryRemove(plugin.Key, out var _);
         }
 
-        public IPlugins GetPlugin (Guid key)
+        public IPlugins GetPlugin(Guid key)
         {
             return pluginDic[key];
         }
 
-        public List<IPlugins> GetPlugins ()
+        public List<IPlugins> GetPlugins()
         {
-            return pluginDic.Values.ToList ();
+            return pluginDic.Values.ToList();
         }
 
-        public string GetBasePluginsPath ()
+        public string GetBasePluginsPath()
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginPath = Path.Combine (basePath, "Plugins");
+            var pluginPath = Path.Combine(basePath, "Plugins");
             return pluginPath;
         }
 
-        public long GetPluginVersion (Guid key)
+        public long GetPluginVersion(Guid key)
         {
             //获取版本信息
             return 0;
@@ -76,61 +84,74 @@ namespace Brochure.Core
         /// 加载插件
         /// </summary>
         /// <param name="serviceDescriptors"></param>
-        public async Task ResolverPlugins (IServiceProvider provider)
+        public async Task ResolverPlugins(IServiceProvider provider)
         {
-            var pluginBathPath = GetBasePluginsPath ();
-            var allPluginPath = directory.GetFiles (pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList ();
+            var pluginBathPath = GetBasePluginsPath();
+            var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             foreach (var pluginConfigPath in allPluginPath)
             {
                 Guid pluginKey = Guid.Empty;
                 try
                 {
-                    var p = await pluginLoader.LoadPlugin (provider, pluginConfigPath);
+                    var p = await pluginLoader.LoadPlugin(provider, pluginConfigPath);
                     if (p != null && p is IPlugins plugin)
                     {
                         pluginKey = p.Key;
-                        var pluginServiceCollectionContext = plugin.Context.GetPluginContext<PluginServiceCollectionContext> ();
-                        moduleLoader.LoadModule (provider, pluginServiceCollectionContext, plugin.Assembly);
-                        if (await StartPlugin (plugin))
+                        var pluginServiceCollectionContext = plugin.Context.GetPluginContext<PluginServiceCollectionContext>();
+                        moduleLoader.LoadModule(provider, pluginServiceCollectionContext, plugin.Assembly);
+                        if (await StartPlugin(plugin))
                         {
-                            pluginDic.TryAdd (plugin.Key, plugin);
-                            foreach (var item in loadActions)
-                                item.Invoke (pluginKey);
+                            pluginDic.TryAdd(plugin.Key, plugin);
+                            NotifyLoad(plugin.Key);
                             continue;
                         }
                     }
-                    throw new Exception ($"{p.Name}插件加载失败");
+                    throw new Exception($"{p.Name}插件加载失败");
                 }
                 catch (Exception e)
                 {
-                    log.LogError (e, e.Message);
-                    pluginDic.TryRemove (pluginKey, out var _);
+                    log.LogError(e, e.Message);
+                    pluginDic.TryRemove(pluginKey, out var _);
                     if (pluginKey != Guid.Empty)
-                        await pluginLoader.UnLoad (pluginKey);
+                        await pluginLoader.UnLoad(pluginKey);
                 }
             }
         }
 
-        private async Task<bool> StartPlugin (IPlugins plugin)
+        private async Task<bool> StartPlugin(IPlugins plugin)
         {
             //处理插件          
             var result = false;
             try
             {
-                result = await plugin.StartingAsync (out string errorMsg);
+                result = await plugin.StartingAsync(out string errorMsg);
             }
             catch (Exception e)
             {
-                Log.Error ($"{plugin.Name}插件加载失败", e);
-                await plugin.ExitAsync ();
+                Log.Error($"{plugin.Name}插件加载失败", e);
+                await plugin.ExitAsync();
                 result = false;
             }
             return result;
         }
 
-        public bool IsExistPlugins (Guid id)
+        public bool IsExistPlugins(Guid id)
         {
-            return pluginDic.ContainsKey (id);
+            return pluginDic.ContainsKey(id);
+        }
+
+        private void NotifyUnload(Guid key)
+        {
+            foreach (var item in unLoadActions)
+            {
+                item?.Invoke(key);
+            };
+        }
+
+        private void NotifyLoad(Guid key)
+        {
+            foreach (var item in loadActions)
+                item.Invoke(key);
         }
     }
 }

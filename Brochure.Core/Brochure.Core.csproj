@@ -35,4 +35,7 @@
     <Compile Remove="Core\ApplicatonOption.cs" />
     <Compile Remove="Core\IApplication.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+  </ItemGroup>
 </Project>

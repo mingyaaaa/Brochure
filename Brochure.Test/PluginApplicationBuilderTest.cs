@@ -38,7 +38,7 @@ namespace Brochure.Test
             var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider, manager);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
             builder.IntertMiddle("main-routing", Guid.Empty, 10, () => builder.UseRouting());
-            var count = middleManager.GetMiddlesList();
+            var count = middleManager.GetMiddlesList().Count;
             Assert.AreEqual(1, count);
         }
     }

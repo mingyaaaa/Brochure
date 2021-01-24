@@ -21,15 +21,11 @@ namespace Brochure.Core
         private readonly ISysDirectory directory;
         private readonly IJsonUtil jsonUtil;
         private readonly ILogger<PluginManagers> log;
-        private readonly IEnumerable<IPluginLoadAction> loadActions;
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
-        private readonly IEnumerable<IPluginUnLoadAction> unLoadActions;
 
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
-            IEnumerable<IPluginLoadAction> loadActions,
-            IEnumerable<IPluginUnLoadAction> unLoadActions,
             ILogger<PluginManagers> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory)
@@ -37,11 +33,9 @@ namespace Brochure.Core
             this.directory = directory;
             this.jsonUtil = jsonUtil;
             this.log = log;
-            this.loadActions = loadActions;
             pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
-            this.unLoadActions = unLoadActions;
         }
         public ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
         {
@@ -69,17 +63,26 @@ namespace Brochure.Core
             return LoadPlugin(serviceProvider, pluginConfigPath);
         }
 
-        public ValueTask UnLoad(Guid key)
+        public ValueTask<bool> UnLoad(Guid key)
         {
             if (pluginContextDic.TryRemove(key, out var context))
             {
-                foreach (var item in unLoadActions)
+                try
                 {
-                    item?.Invoke(key);
-                };
-                context.UnLoad();
+                    context.UnLoad();
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, ex.Message);
+                    pluginContextDic.TryAdd(key, context);
+                    return new ValueTask<bool>(false);
+                }
             }
-            return ValueTask.CompletedTask;
+            else
+            {
+                return new ValueTask<bool>(false);
+            }
+            return new ValueTask<bool>(true);
         }
 
         private void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
