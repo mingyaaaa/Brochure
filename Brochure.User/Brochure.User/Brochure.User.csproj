@@ -11,14 +11,27 @@
   </PropertyGroup>
   <Import Project="../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Grpc.Core" Version="2.29.0" />
+    <PackageReference Include="Grpc.Core" Version="2.35.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Brochure.Core" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.4" />
     <PackageReference Include="Brochure.ORM" Version="0.0.0.1" />
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.5" />
     <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="plugin.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="plugin.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plugin.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ namespace Brochure.Core
         private readonly IObjectFactory objectFactory;
         private readonly IEnumerable<IPluginUnLoadAction> unLoadActions;
 
-        public PluginLoader (ISysDirectory directory,
+        public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
@@ -38,54 +38,54 @@ namespace Brochure.Core
             this.jsonUtil = jsonUtil;
             this.log = log;
             this.loadActions = loadActions;
-            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>> ();
+            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
             this.unLoadActions = unLoadActions;
         }
-        public ValueTask<IPlugins> LoadPlugin (IServiceProvider provider, string pluginConfigPath)
+        public ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
         {
-            var pluginConfig = jsonUtil.Get<PluginConfig> (pluginConfigPath);
-            var pluginDir = Path.GetDirectoryName (pluginConfigPath);
-            var pluginPath = Path.Combine (pluginDir, Path.GetFileNameWithoutExtension (pluginConfig.AssemblyName), pluginConfig.AssemblyName);
-            var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy> (pluginPath);
-            var locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext> (provider, assemblyDependencyResolverProxy);
-            var assemably = locadContext.LoadAssembly (new AssemblyName (Path.GetFileNameWithoutExtension (pluginPath)));
-            var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase (assemably, typeof (Plugins)).ToList ();
+            var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
+            var pluginDir = Path.GetDirectoryName(pluginConfigPath);
+            var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
+            var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>(pluginPath);
+            var locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext>(provider, assemblyDependencyResolverProxy);
+            var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
+            var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
             if (allPluginTypes.Count == 0)
-                throw new Exception ("请实现基于Plugins的插件类");
+                throw new Exception("请实现基于Plugins的插件类");
             if (allPluginTypes.Count == 2)
-                throw new Exception ("存在多个Plugins实现类");
+                throw new Exception("存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
-            var plugin = (Plugins) objectFactory.Create (pluginType, provider);
-            SetPluginValues (pluginConfig, assemably, ref plugin);
-            pluginContextDic.TryAdd (pluginConfig.Key, locadContext);
-            return ValueTask.FromResult ((IPlugins) plugin);
+            var plugin = (Plugins)objectFactory.Create(pluginType, provider);
+            SetPluginValues(pluginConfig, assemably, ref plugin);
+            pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
+            return ValueTask.FromResult((IPlugins)plugin);
         }
 
-        public ValueTask<IPlugins> LoadPlugin (IServiceCollection service, string pluginConfigPath)
+        public ValueTask<IPlugins> LoadPlugin(IServiceCollection service, string pluginConfigPath)
         {
-            var serviceProvider = service.BuildPluginServiceProvider ();
-            return LoadPlugin (serviceProvider, pluginConfigPath);
+            var serviceProvider = service.BuildPluginServiceProvider();
+            return LoadPlugin(serviceProvider, pluginConfigPath);
         }
 
-        public ValueTask UnLoad (Guid key)
+        public ValueTask UnLoad(Guid key)
         {
-            if (pluginContextDic.TryRemove (key, out var context))
+            if (pluginContextDic.TryRemove(key, out var context))
             {
                 foreach (var item in unLoadActions)
                 {
-                    item?.Invoke (key);
+                    item?.Invoke(key);
                 };
-                context.UnLoad ();
+                context.UnLoad();
             }
             return ValueTask.CompletedTask;
         }
 
-        private void SetPluginValues (PluginConfig config, Assembly assembly, ref Plugins plugin)
+        private void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
         {
             if (config == null)
-                throw new ArgumentException (nameof (PluginConfig));
+                throw new ArgumentException(nameof(PluginConfig));
             plugin.Assembly = assembly;
             plugin.AssemblyName = config.AssemblyName;
             plugin.Author = config.Author;
