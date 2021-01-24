@@ -10,16 +10,16 @@ namespace Brochure.Core
 {
     public class PluginModule : IModule
     {
-        public Task ConfigModule (IServiceCollection services)
+        public Task ConfigModule(IServiceCollection services)
         {
-            services.TryAddSingleton<IPluginManagers, PluginManagers> ();
+
             return Task.CompletedTask;
         }
 
-        public Task Initialization (IServiceProvider provider)
+        public Task Initialization(IServiceProvider provider)
         {
-            var pluginManager = provider.GetService<IPluginManagers> ();
-            return pluginManager.ResolverPlugins (provider);
+            var pluginManager = provider.GetService<IPluginManagers>();
+            return pluginManager.ResolverPlugins(provider);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Brochure.Abstract;
+using Brochure.Core.Extenstions;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,7 @@ namespace Brochure.Core.Module
                 }
                 foreach (var item in modules)
                 {
-                    item.Initialization(services.BuildServiceProvider());
+                    item.Initialization(services.BuildPluginServiceProvider());
                 }
             }
             catch (System.Exception e)

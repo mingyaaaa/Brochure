@@ -7,6 +7,7 @@ using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.Core;
+using Brochure.Core.Extenstions;
 using Brochure.Core.Module;
 using Brochure.Core.RPC;
 using Brochure.Extensions;
@@ -32,6 +33,7 @@ namespace Brochure.Core
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
             //加载一些基本的工具类
             //工具类初始化
+            service.TryAddSingleton<IPluginManagers, PluginManagers>();
             service.TryAddSingleton<IJsonUtil>(new JsonUtil());
             service.TryAddSingleton<IReflectorUtil>(new ReflectorUtil());
             service.TryAddSingleton<IObjectFactory>(new ObjectFactory());
@@ -90,7 +92,7 @@ namespace Brochure.Core
         internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
         {
             //注入插件模块
-            var provider = service.BuildServiceProvider();
+            var provider = service.BuildPluginServiceProvider();
             //加载模块
             var modelLoader = provider.GetService<IModuleLoader>();
             //处理当前程序集和入口程序集
