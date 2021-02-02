@@ -11,8 +11,12 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Brochure.Server.Main.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Authorize]
-    [Route ("api/v1/[controller]")]
+    [Route("api/v1/[controller]")]
+    [ApiController]
     public class TestController : ControllerBase
     {
         private readonly IPluginLoader pluginLoader;
@@ -20,7 +24,7 @@ namespace Brochure.Server.Main.Controllers
         private readonly IReflectorUtil reflectorUtil;
         private readonly IPluginManagers pluginManagers;
 
-        public TestController (
+        public TestController(
             IPluginLoader pluginLoader,
             IBApplication application,
             IReflectorUtil reflectorUtil,
@@ -32,57 +36,61 @@ namespace Brochure.Server.Main.Controllers
             this.pluginManagers = pluginManagers;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAction1 ()
+        public IActionResult GetAction1()
         {
-            return new ContentResult () { Content = "aaa" };
+            return new ContentResult() { Content = "aaa" };
         }
 
-        [HttpGet ("loadPlugin")]
-        public async Task<IActionResult> TestLoadPlugin ()
+        [HttpGet("loadPlugin")]
+        public async Task<IActionResult> TestLoadPlugin()
         {
-            var path = Path.Combine (pluginManagers.GetBasePluginsPath (), "Brochure.Authority", "plugin.config");
-            var p = await pluginLoader.LoadPlugin (application.ServiceProvider, path);
+            var path = Path.Combine(pluginManagers.GetBasePluginsPath(), "Brochure.Authority", "plugin.config");
+            var p = await pluginLoader.LoadPlugin(application.ServiceProvider, path);
             if (!(p is Plugins plugin))
-                return new ContentResult () { Content = "bbb" };
+                return new ContentResult() { Content = "bbb" };
             if (application is BApplication app)
             {
-                var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure> (plugin.Assembly);
-                var context = new PluginMiddleContext (app.ServiceProvider, plugin.Key);
-                plugin.Context.Add (context);
+                var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure>(plugin.Assembly);
+                var context = new PluginMiddleContext(app.ServiceProvider, plugin.Key);
+                plugin.Context.Add(context);
                 foreach (var item in startConfigs)
                 {
-                    item.Configure (plugin.Key, context);
+                    item.Configure(plugin.Key, context);
                 }
-                app.ApplicationPartManager.ApplicationParts.Add (new AssemblyPart (plugin.Assembly));
+                app.ApplicationPartManager.ApplicationParts.Add(new AssemblyPart(plugin.Assembly));
             }
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
-            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();
-            return new ContentResult () { Content = "aaa" };
+            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel();
+            return new ContentResult() { Content = "aaa" };
         }
 
-        [HttpGet ("unLoadPlugin")]
-        public async Task<IActionResult> UnLoadPlugin ()
+        [HttpGet("unLoadPlugin")]
+        public async Task<IActionResult> UnLoadPlugin()
         {
-            var plugins = pluginManagers.GetPlugins ();
+            var plugins = pluginManagers.GetPlugins();
             if (application is BApplication app)
             {
                 foreach (var item in plugins)
                 {
-                    await pluginLoader.UnLoad (item.Key);
-                    var part = app.ApplicationPartManager.ApplicationParts.FirstOrDefault (t => t.Name == item.Assembly.GetName ().Name);
-                    app.ApplicationPartManager.ApplicationParts.Remove (part);
+                    await pluginLoader.UnLoad(item.Key);
+                    var part = app.ApplicationPartManager.ApplicationParts.FirstOrDefault(t => t.Name == item.Assembly.GetName().Name);
+                    app.ApplicationPartManager.ApplicationParts.Remove(part);
                 }
             }
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;
-            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel ();
-            return new ContentResult () { Content = "aaa" };
+            PluginActionDescriptorChangeProvider.Instance.TokenSource.Cancel();
+            return new ContentResult() { Content = "aaa" };
         }
 
-        [Authorize]
-        public IActionResult TestAuth ()
-        {
-            return Ok ();
-        }
+        //[Authorize]
+        //public IActionResult TestAuth()
+        //{
+        //    return Ok();
+        //}
     }
 }

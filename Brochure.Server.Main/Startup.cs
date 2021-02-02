@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 namespace Brochure.Server.Main
 {
@@ -24,6 +25,11 @@ namespace Brochure.Server.Main
         // This method gets called by the runtime. Use this method to add services to the container.
         public async void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Main", Version = "v1" });
+            });
+            services.AddControllers();
             await services.AddBrochureServer();
         }
 
@@ -34,6 +40,12 @@ namespace Brochure.Server.Main
             {
                 app.UseDeveloperExceptionPage();
             }
+            // 添加Swagger有关中间件
+            app.IntertMiddle("swagger", Guid.Empty, 8, () => app.UseSwagger());
+            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Main v1");
+            }));
 
             var log = app.ApplicationServices.GetService<ILogger<Startup>>();
             var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>>();

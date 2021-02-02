@@ -24,12 +24,12 @@ def addVersion(version):
 
 source = "http://192.168.56.101:8999/api/odata"
 
-# 获取项目路径
+ 获取项目路径
 current_path=os.getcwd()
 project_path =os.path.join(current_path,sys.argv[1])
 target_version=None
 if(len(sys.argv)==3):
-    target_version=sys.argv[2]
+    target_version=sys.argv[2]#
 #project_path = 'G:\Brochure\Brochure.Core\Brochure.Core.csproj'
 project_spit = project_path.split('/')
 project_dir =os.path.dirname(project_path)
