@@ -2,8 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-<TargetFramework>net5.0</TargetFramework>
-
+       <TargetFramework>net5.0</TargetFramework>
+       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+       <PackageOutputPath>../LocalPackage/</PackageOutputPath>
     <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
   <ItemGroup>
@@ -24,9 +25,9 @@
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.2" />
-    <PackageReference Include="Brochure.Core" Version="0.0.0.7" />
-    <PackageReference Include="Brochure.Extensions" Version="0.0.0.1" />
-    <PackageReference Include="Brochure.Utils" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0" />
+    <PackageReference Include="Brochure.Core" Version="1.0.0" />
+    <PackageReference Include="Brochure.Extensions" Version="1.0.0" />
+    <PackageReference Include="Brochure.Utils" Version="1.0.0" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<TargetFramework>net5.0</TargetFramework>
-
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>../LocalPackage/</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.2" />
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0" />
   </ItemGroup>
 </Project>

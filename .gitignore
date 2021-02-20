@@ -10,3 +10,4 @@
 **/.vs/
 **/*.csproj.user
 **/.DS_Store
+/LocalPackage

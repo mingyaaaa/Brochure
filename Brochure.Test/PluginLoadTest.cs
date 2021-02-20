@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
@@ -30,7 +31,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestLoad()
         {
-            var pluginConfigPath = "/p1/plugin.config";
+            var pluginConfigPath = "p1/plugin.config";
             var autoMock = new AutoMocker();
             var guid = Guid.NewGuid();
             var name = "PA";
@@ -56,7 +57,7 @@ namespace Brochure.Test
             var plugin = await loader.LoadPlugin(provider.Object, pluginConfigPath);
             Assert.AreEqual(guid, plugin.Key);
             Assert.AreEqual(name, plugin.Name);
-            objFactoryMock.Verify(t => t.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>("/p1/test.dll"));
+            objFactoryMock.Verify(t => t.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>(Path.Combine("p1", "test.dll")));
             reflectorUtilMock.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new List<Type>() { typeof(PA), typeof(PB) });
             loader = autoMock.CreateInstance<PluginLoader>();
             await Assert.ThrowsExceptionAsync<Exception>(() => loader.LoadPlugin(provider.Object, pluginConfigPath).AsTask());
