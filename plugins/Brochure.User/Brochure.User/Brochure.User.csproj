@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+<TargetFramework>net5.0</TargetFramework>
+
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\Brochure.Server.Main\bin\Debug\net5.0\Brochure.Server.Main.dll</StartProgram>
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\net5.0\Brochure.User.xml</DocumentationFile>
+  </PropertyGroup>
+  <Import Project="../../build/copy_plugin.targets" />
+  <ItemGroup>
+    <PackageReference Include="Grpc.Core" Version="2.35.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.7" />
+    <PackageReference Include="Brochure.ORM" Version="0.0.0.1" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.6" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="plugin.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="plugin.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plugin.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

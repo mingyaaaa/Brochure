@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspectCore.Core" Version="2.1.0" />
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0" />
+    <PackageReference Include="Brochure.Core" Version="1.0.0" />
+    <PackageReference Include="Brochure.Core.Server" Version="1.0.0" />
+    <PackageReference Include="Brochure.Extensions" Version="1.0.0" />
+    <PackageReference Include="Brochure.ORM" Version="1.0.0" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="1.0.0" />
+    <PackageReference Include="Brochure.System" Version="1.0.0" />
+    <PackageReference Include="Brochure.Utils" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="Moq.AutoMock" Version="2.2.0.124" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+</Project>
