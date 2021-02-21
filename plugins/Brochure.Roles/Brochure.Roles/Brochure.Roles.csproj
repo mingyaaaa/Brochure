@@ -4,17 +4,21 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Brochure.Abstract\Brochure.Abstract.csproj" />
-    <ProjectReference Include="..\..\Brochure.Extensions\Brochure.Extensions.csproj" />
-    <ProjectReference Include="..\..\Brochure.Utils\Brochure.Utils.csproj" />
-    <ProjectReference Include="..\..\Brochure.Core\Brochure.Core.csproj" />
-    <ProjectReference Include="..\Brochure.Roles.Abstract\Brochure.Roles.Abstract.csproj" />
-    <ProjectReference Include="..\..\Brochure.ORM\Brochure.ORM.csproj" />
+    <None Remove="plugin.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="plugin.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.Roles.Abstract\Brochure.Roles.Abstract.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Brochure.ORM" Version="1.0.0" />
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
-  <Import Project="../../build/copy_plugin.targets" />
+  <Import Project="../../../build/copy_plugin.targets" />
  
 </Project>
