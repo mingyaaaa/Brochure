@@ -1,9 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup>
+    <ItemGroup Condition="'$(Configuration)' == 'Release' ">
         <MySourceFiles Include="$(TargetDir)/**/*.*" Exclude="$(TargetDir)/**/*.pdb">
 		   <DescDir>$(ProjectDir)/../../../../bin/Plugins/$(ProjectName)/</DescDir>
-		</MySourceFiles>	
-	
+		</MySourceFiles>		
+    </ItemGroup>
+	 <ItemGroup Condition="'$(Configuration)' == 'Debug' ">
+        <MySourceFiles Include="$(TargetDir)/**/*.*">
+		   <DescDir>$(ProjectDir)/../../../../bin/Plugins/$(ProjectName)/</DescDir>
+		</MySourceFiles>		
     </ItemGroup>
  <Target Name="AfterBuildCopy" AfterTargets="Build">
     <MakeDir Directories="%(MySourceFiles.DescDir)"></MakeDir>

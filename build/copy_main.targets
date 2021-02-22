@@ -1,6 +1,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup>
-        <MySourceFiles Include="$(TargetDir)/**/*.dll"/>
+    <ItemGroup Condition="'$(Configuration)' == 'Release' ">
+        <MySourceFiles Include="$(TargetDir)/**/*.*" Exclude="$(TargetDir)/**/*.pdb"/>
+    </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)' == 'Debug' ">
+        <MySourceFiles Include="$(TargetDir)/**/*.*"/>
     </ItemGroup>
  <Target Name="AfterBuildCopy" AfterTargets="Build">
      <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'$(ProjectDir)../../../bin/%(RecursiveDir)%(Filename)%(Extension)')" UseHardlinksIfPossible="True"></Copy>
