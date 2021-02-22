@@ -14,6 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {
+    /// <summary>
+    /// The plugin loader.
+    /// </summary>
     public class PluginLoader : IPluginLoader
     {
         private readonly ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
@@ -24,6 +27,14 @@ namespace Brochure.Core
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginLoader"/> class.
+        /// </summary>
+        /// <param name="directory">The directory.</param>
+        /// <param name="jsonUtil">The json util.</param>
+        /// <param name="log">The log.</param>
+        /// <param name="reflectorUtil">The reflector util.</param>
+        /// <param name="objectFactory">The object factory.</param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             ILogger<PluginManagers> log,
@@ -37,6 +48,12 @@ namespace Brochure.Core
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
         }
+        /// <summary>
+        /// Loads the plugin.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="pluginConfigPath">The plugin config path.</param>
+        /// <returns>A ValueTask.</returns>
         public ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
         {
             var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
@@ -47,9 +64,9 @@ namespace Brochure.Core
             var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
             var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
             if (allPluginTypes.Count == 0)
-                throw new Exception("请实现基于Plugins的插件类");
+                throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
             if (allPluginTypes.Count == 2)
-                throw new Exception("存在多个Plugins实现类");
+                throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
             var plugin = (Plugins)objectFactory.Create(pluginType, provider);
             SetPluginValues(pluginConfig, assemably, ref plugin);
@@ -57,12 +74,23 @@ namespace Brochure.Core
             return ValueTask.FromResult((IPlugins)plugin);
         }
 
+        /// <summary>
+        /// Loads the plugin.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="pluginConfigPath">The plugin config path.</param>
+        /// <returns>A ValueTask.</returns>
         public ValueTask<IPlugins> LoadPlugin(IServiceCollection service, string pluginConfigPath)
         {
             var serviceProvider = service.BuildPluginServiceProvider();
             return LoadPlugin(serviceProvider, pluginConfigPath);
         }
 
+        /// <summary>
+        /// Uns the load.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A ValueTask.</returns>
         public ValueTask<bool> UnLoad(Guid key)
         {
             if (pluginContextDic.TryRemove(key, out var context))
@@ -85,6 +113,12 @@ namespace Brochure.Core
             return new ValueTask<bool>(true);
         }
 
+        /// <summary>
+        /// Sets the plugin values.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="plugin">The plugin.</param>
         private void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
         {
             if (config == null)

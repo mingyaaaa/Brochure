@@ -5,7 +5,8 @@
   },
   "profiles": {
     "Custom": {
-      "commandName": "Project",
+      "commandName": "Executable",
+      "executablePath": "F:\\GitProgram\\bin\\Brochure.Server.Main.exe",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
