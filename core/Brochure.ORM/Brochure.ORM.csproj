@@ -6,7 +6,7 @@
        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
-  <Import Project="../../build/copy_nuget.targets"/>
+  <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
     <None Remove="LinqDbQueryTest\obj\Debug\netcoreapp2.2\LinqDbQueryTest.assets.cache" />
     <None Remove="LinqDbQueryTest\obj\LinqDbQueryTest.csproj.nuget.cache" />
@@ -25,9 +25,9 @@
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Brochure.Abstract" Version="1.0.0" />
-    <PackageReference Include="Brochure.Core" Version="1.0.0" />
-    <PackageReference Include="Brochure.Extensions" Version="1.0.0" />
-    <PackageReference Include="Brochure.Utils" Version="1.0.0" />
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0.3287" />
+    <PackageReference Include="Brochure.Core" Version="1.0.0.3077" />
+    <PackageReference Include="Brochure.Extensions" Version="1.0.0.3032" />
+    <PackageReference Include="Brochure.Utils" Version="1.0.0.3047" />
   </ItemGroup>
 </Project>

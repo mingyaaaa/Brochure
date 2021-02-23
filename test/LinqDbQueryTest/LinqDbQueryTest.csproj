@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
-    <PackageReference Include="Brochure.Abstract" Version="1.0.0" />
-    <PackageReference Include="Brochure.Core" Version="1.0.0" />
-    <PackageReference Include="Brochure.Core.Server" Version="1.0.0" />
-    <PackageReference Include="Brochure.Extensions" Version="1.0.0" />
-    <PackageReference Include="Brochure.ORM" Version="1.0.0" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="1.0.0" />
-    <PackageReference Include="Brochure.System" Version="1.0.0" />
-    <PackageReference Include="Brochure.Utils" Version="1.0.0" />
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0.3287" />
+    <PackageReference Include="Brochure.Core" Version="1.0.0.3077" />
+    <PackageReference Include="Brochure.Core.Server" Version="1.0.0.3046" />
+    <PackageReference Include="Brochure.Extensions" Version="1.0.0.3032" />
+    <PackageReference Include="Brochure.ORM" Version="1.0.0.3027" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="1.0.0.3022" />
+    <PackageReference Include="Brochure.System" Version="1.0.0.3007" />
+    <PackageReference Include="Brochure.Utils" Version="1.0.0.3047" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />
