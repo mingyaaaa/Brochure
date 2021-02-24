@@ -9,6 +9,10 @@
   <ItemGroup>
     <Compile Remove="Class1.cs" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="IUserService.cs~RF5ae25f6.TMP" />
+  </ItemGroup>
     <ItemGroup>
     <Folder Include="Protos\" />
   </ItemGroup>
@@ -19,6 +23,7 @@
      </Protobuf>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Brochure.Abstract" Version="1.0.0.3287" />
     <PackageReference Include="Google.Protobuf" Version="3.12.3" />
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
     <PackageReference Include="Grpc.Tools" Version="2.29.0">

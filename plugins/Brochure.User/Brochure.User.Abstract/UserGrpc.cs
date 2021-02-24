@@ -18,10 +18,10 @@ namespace User.Rpc {
     static readonly grpc::Marshaller<global::User.Rpc.UpdateUserRequest> __Marshaller_User_Rpc_UpdateUserRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::User.Rpc.UpdateUserRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::User.Rpc.MutiUserRequest> __Marshaller_User_Rpc_MutiUserRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::User.Rpc.MutiUserRequest.Parser.ParseFrom);
 
-    static readonly grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse> __Method_GetUser = new grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(
+    static readonly grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse> __Method_GetUsers = new grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "GetUser",
+        "GetUsers",
         __Marshaller_User_Rpc_UserRequest,
         __Marshaller_User_Rpc_UserResponse);
 
@@ -46,13 +46,6 @@ namespace User.Rpc {
         __Marshaller_User_Rpc_MutiUserRequest,
         __Marshaller_User_Rpc_UserResponse);
 
-    static readonly grpc::Method<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse> __Method_InsertMuti = new grpc::Method<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse>(
-        grpc::MethodType.Unary,
-        __ServiceName,
-        "InsertMuti",
-        __Marshaller_User_Rpc_MutiUserRequest,
-        __Marshaller_User_Rpc_UserResponse);
-
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -63,7 +56,7 @@ namespace User.Rpc {
     [grpc::BindServiceMethod(typeof(UserService), "BindService")]
     public abstract partial class UserServiceBase
     {
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> GetUser(global::User.Rpc.UserRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> GetUsers(global::User.Rpc.UserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -79,11 +72,6 @@ namespace User.Rpc {
       }
 
       public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> Insert(global::User.Rpc.MutiUserRequest request, grpc::ServerCallContext context)
-      {
-        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
-      }
-
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> InsertMuti(global::User.Rpc.MutiUserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -113,21 +101,21 @@ namespace User.Rpc {
       {
       }
 
-      public virtual global::User.Rpc.UserResponse GetUser(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::User.Rpc.UserResponse GetUsers(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return GetUser(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetUsers(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::User.Rpc.UserResponse GetUser(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual global::User.Rpc.UserResponse GetUsers(global::User.Rpc.UserRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_GetUser, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_GetUsers, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUserAsync(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUsersAsync(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return GetUserAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetUsersAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUserAsync(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUsersAsync(global::User.Rpc.UserRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_GetUser, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_GetUsers, null, options, request);
       }
       public virtual global::User.Rpc.FailIdsResponse DeleteUser(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
@@ -177,22 +165,6 @@ namespace User.Rpc {
       {
         return CallInvoker.AsyncUnaryCall(__Method_Insert, null, options, request);
       }
-      public virtual global::User.Rpc.UserResponse InsertMuti(global::User.Rpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return InsertMuti(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      public virtual global::User.Rpc.UserResponse InsertMuti(global::User.Rpc.MutiUserRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.BlockingUnaryCall(__Method_InsertMuti, null, options, request);
-      }
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> InsertMutiAsync(global::User.Rpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return InsertMutiAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> InsertMutiAsync(global::User.Rpc.MutiUserRequest request, grpc::CallOptions options)
-      {
-        return CallInvoker.AsyncUnaryCall(__Method_InsertMuti, null, options, request);
-      }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override UserServiceClient NewInstance(ClientBaseConfiguration configuration)
       {
@@ -205,11 +177,10 @@ namespace User.Rpc {
     public static grpc::ServerServiceDefinition BindService(UserServiceBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_GetUser, serviceImpl.GetUser)
+          .AddMethod(__Method_GetUsers, serviceImpl.GetUsers)
           .AddMethod(__Method_DeleteUser, serviceImpl.DeleteUser)
           .AddMethod(__Method_UpdateUser, serviceImpl.UpdateUser)
-          .AddMethod(__Method_Insert, serviceImpl.Insert)
-          .AddMethod(__Method_InsertMuti, serviceImpl.InsertMuti).Build();
+          .AddMethod(__Method_Insert, serviceImpl.Insert).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -218,11 +189,10 @@ namespace User.Rpc {
     /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
     public static void BindService(grpc::ServiceBinderBase serviceBinder, UserServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_GetUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(serviceImpl.GetUser));
+      serviceBinder.AddMethod(__Method_GetUsers, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(serviceImpl.GetUsers));
       serviceBinder.AddMethod(__Method_DeleteUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UserRequest, global::User.Rpc.FailIdsResponse>(serviceImpl.DeleteUser));
       serviceBinder.AddMethod(__Method_UpdateUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UpdateUserRequest, global::User.Rpc.FailIdsResponse>(serviceImpl.UpdateUser));
       serviceBinder.AddMethod(__Method_Insert, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse>(serviceImpl.Insert));
-      serviceBinder.AddMethod(__Method_InsertMuti, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse>(serviceImpl.InsertMuti));
     }
 
   }

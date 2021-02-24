@@ -1,21 +1,18 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using Brochure.Abstract;
-using Brochure.Extensions;
-using Brochure.ORM;
-using Brochure.User.Entrities;
-namespace Brochure.User.Models
-{
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// The user model.
-    /// </summary>
-    public class UserModel
+namespace Brochure.User.Abstract
+{
+    public class UserServiceModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserModel"/> class.
+        /// Initializes a new instance of the <see cref="UserServiceModel"/> class.
         /// </summary>
-        public UserModel () : base () { }
+        public UserServiceModel() { 
+        }
 
         /// <summary>
         /// 姓名
@@ -36,13 +33,11 @@ namespace Brochure.User.Models
         /// 登陆账号
         /// </summary>
         /// <value></value>
-        [Required]
         public string UserId { get; set; }
         /// <summary>
         /// 密码
         /// </summary>
         /// <value></value>
-        [Required]
         public string Password { get; set; }
 
         /// <summary>

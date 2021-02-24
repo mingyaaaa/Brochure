@@ -11,7 +11,6 @@ message UserRequest {
     repeated string Ids=1;
 }
 message UpdateUserRequest{
-    string id=1;
     User data=2;
 }
 message MutiUserRequest{
@@ -24,9 +23,8 @@ message UserResponse{
     repeated User Users=1;
 }
 service UserService {
-    rpc GetUser (UserRequest) returns (UserResponse);
+    rpc GetUsers (UserRequest) returns (UserResponse);
     rpc DeleteUser (UserRequest) returns (FailIdsResponse);
     rpc UpdateUser (UpdateUserRequest) returns(FailIdsResponse);
     rpc Insert (MutiUserRequest) returns (UserResponse);
-    rpc InsertMuti (MutiUserRequest) returns (UserResponse);
 }
