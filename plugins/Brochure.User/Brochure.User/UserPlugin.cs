@@ -5,19 +5,31 @@ using Brochure.User.Services;
 using Microsoft.Extensions.DependencyInjection;
 namespace Brochure.User
 {
+    /// <summary>
+    /// The user plugin.
+    /// </summary>
     public class UserPlugin : Plugins
     {
-        public UserPlugin (System.IServiceProvider service) : base (service)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserPlugin"/> class.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        public UserPlugin(System.IServiceProvider service) : base(service)
         {
 
         }
 
-        public override Task<bool> StartingAsync (out string errorMsg)
+        /// <summary>
+        /// Startings the async.
+        /// </summary>
+        /// <param name="errorMsg">The error msg.</param>
+        /// <returns>A Task.</returns>
+        public override Task<bool> StartingAsync(out string errorMsg)
         {
-            var pluginService = this.Context.GetPluginContext<PluginServiceCollectionContext> ();
-            pluginService.AddScoped<IUserDal, UserDal> ();
-            pluginService.AddScoped<IUserRepository, UserRepository> ();
-            return base.StartingAsync (out errorMsg);
+            var pluginService = this.Context.GetPluginContext<PluginServiceCollectionContext>();
+            pluginService.AddScoped<IUserDal, UserDal>();
+            pluginService.AddScoped<IUserRepository, UserRepository>();
+            return base.StartingAsync(out errorMsg);
         }
     }
 }

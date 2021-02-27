@@ -7,6 +7,9 @@ using Brochure.User.Entrities;
 
 namespace Brochure.User.Repository
 {
+    /// <summary>
+    /// The user repository.
+    /// </summary>
     public interface IUserRepository : IRepository<UserEntrity>
     { }
 }

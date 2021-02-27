@@ -31,6 +31,7 @@ namespace Brochure.User.Services
         /// Initializes a new instance of the <see cref="UserService"/> class.
         /// </summary>
         /// <param name="userDal">The user dal.</param>
+        /// <param name="objectFactory"></param>
         public GrpcUserService(IUserDal userDal, IObjectFactory objectFactory)
         {
             _userDal = userDal;

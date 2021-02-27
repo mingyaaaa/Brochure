@@ -3,6 +3,9 @@ using Brochure.ORM;
 
 namespace Brochure.User.Entrities
 {
+    /// <summary>
+    /// The user entrity.
+    /// </summary>
     public class UserEntrity : EntityBase
     {
         /// <summary>
