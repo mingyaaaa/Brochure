@@ -29,6 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Test", "..\test\Br
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqDbQueryTest", "..\test\LinqDbQueryTest\LinqDbQueryTest.csproj", "{15C783FA-A903-43C2-8DA3-B2F80EB4A5E2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6C89A63E-D421-440D-BB63-DFC13745CC86}"
+	ProjectSection(SolutionItems) = preProject
+		..\build\copy_nuget.targets = ..\build\copy_nuget.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,12 +1,12 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-   <PropertyGroup>
-     <PackageOutputPath>../../../lib/</PackageOutputPath>
-	 <VersionSuffix>1.0.0.$([System.DateTime]::UtcNow.ToString(mmff))</VersionSuffix>
-     <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">0.0.0.1</AssemblyVersion>
-     <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
-     <Version Condition=" '$(VersionSuffix)' == '' ">0.0.1.0</Version>
-     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
-     <Company>yangming</Company>
-     <Authors>yangming</Authors>
-   </PropertyGroup>
+  <PropertyGroup>
+    <PackageOutputPath>../../../lib/</PackageOutputPath>
+    <VersionSuffix>0.0.0.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2000-01-01"))).TotalDays)</VersionSuffix>
+    <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">0.0.0.1</AssemblyVersion>
+    <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
+    <Version Condition=" '$(VersionSuffix)' == '' ">0.0.1.0</Version>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
+    <Company>yangming</Company>
+    <Authors>yangming</Authors>
+  </PropertyGroup>
 </Project>
