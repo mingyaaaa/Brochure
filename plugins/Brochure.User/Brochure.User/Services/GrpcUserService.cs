@@ -81,9 +81,18 @@ namespace Brochure.User.Services
         /// <param name="request">The request.</param>
         /// <param name="context">The context.</param>
         /// <returns>A Task.</returns>
-        public override Task<UserResponse> Insert(MutiUserRequest request, ServerCallContext context)
+        public override async Task<UserResponse> Insert(MutiUserRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new UserResponse());
+            var users = request.Users.ToList();
+            var inserUsers = users.Select(t => _objectFactory.Create<UserModel>(t));
+            var r = await _userDal.InsertUsers(inserUsers);
+            var rsp = new UserResponse();
+            foreach (var item in r)
+            {
+                var obj = _objectFactory.Create<UseModel.User>(item);
+                rsp.Users.Add(obj);
+            }
+            return rsp;
         }
 
         /// <summary>
@@ -92,9 +101,17 @@ namespace Brochure.User.Services
         /// <param name="request">The request.</param>
         /// <param name="context">The context.</param>
         /// <returns>A Task.</returns>
-        public override Task<FailIdsResponse> DeleteUser(UserRequest request, ServerCallContext context)
+        public override async Task<FailIdsResponse> DeleteUser(UserRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new FailIdsResponse());
+            var deleteUserIds = request.Ids;
+            var r = await _userDal.DeleteUsers(deleteUserIds);
+            var rsp = new FailIdsResponse();
+
+            if (r > 0)
+            {
+                rsp.Ids.AddRange(deleteUserIds);
+            }
+            return rsp;
         }
     }
 }
