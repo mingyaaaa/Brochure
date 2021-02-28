@@ -106,7 +106,6 @@ namespace Brochure.User.Services
             var deleteUserIds = request.Ids;
             var r = await _userDal.DeleteUsers(deleteUserIds);
             var rsp = new FailIdsResponse();
-
             if (r > 0)
             {
                 rsp.Ids.AddRange(deleteUserIds);
