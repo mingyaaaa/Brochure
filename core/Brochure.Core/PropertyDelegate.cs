@@ -12,125 +12,145 @@ namespace Brochure.Core
     /// </summary>
     public class PropertyDelegate<T1, T2> where T1 : class where T2 : class
     {
-        private static readonly ConcurrentDictionary<string, Action<T2, object>> setPropertyFunCache = new ConcurrentDictionary<string, Action<T2, object>> ();
-        private static readonly ConcurrentDictionary<string, Func<T1, object>> getPropertyFunCache = new ConcurrentDictionary<string, Func<T1, object>> ();
+
         private readonly Type t1Type;
         private readonly Type t2Type;
-        public PropertyDelegate ()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyDelegate"/> class.
+        /// </summary>
+        public PropertyDelegate()
         {
-            t1Type = typeof (T1);
-            t2Type = typeof (T2);
+            t1Type = typeof(T1);
+            t2Type = typeof(T2);
         }
-        public T2 ConverTo (T1 model)
+        public T2 ConverTo(T1 model)
         {
-            var properties = t1Type.GetProperties ();
-            var t2Properties = t2Type.GetProperties ();
-            var t2 = ReflectorUtil.Instance.CreateInstance<T2> ();
+            var properties = t1Type.GetProperties();
+            var t2Properties = t2Type.GetProperties();
+            var t2 = ReflectorUtil.Instance.CreateInstance<T2>();
             foreach (var item in properties)
             {
                 var propertyType = item.PropertyType;
                 object value = null;
                 var key = propertyType.FullName + item.Name;
-                if (!t2Properties.Any (t => t.Name == item.Name))
+                if (!t2Properties.Any(t => t.Name == item.Name))
                 {
                     continue;
                 }
-                if (getPropertyFunCache.ContainsKey (key))
+                if (PropertyGetDelegateCache<T1>.TryGetGetAction(key, out var func))
                 {
-                    value = getPropertyFunCache[key].Invoke (model);
+                    value = func?.Invoke(model);
                 }
                 else
                 {
-                    var func = ReflectorUtil.Instance.GetPropertyValueFun<T1> (item.Name);
-                    value = func.Invoke (model);
-                    getPropertyFunCache.TryAdd (key, func);
+                    var t_func = ReflectorUtil.Instance.GetPropertyValueFun<T1>(item.Name);
+                    value = t_func.Invoke(model);
+                    PropertyGetDelegateCache<T1>.AddGetAction(key, t_func);
                 }
-                if (setPropertyFunCache.ContainsKey (key))
+                if (PropertySetDelegateCache<T2>.TryGetSetAction(key, out var action))
                 {
-                    setPropertyFunCache[key].Invoke (t2, value);
+                    action?.Invoke(t2, value);
                 }
                 else
                 {
-                    var action = ReflectorUtil.Instance.GetSetPropertyValueFun<T2> (propertyType, item.Name);
-                    action.Invoke (t2, value);
-                    setPropertyFunCache.TryAdd (key, action);
+                    var t_action = ReflectorUtil.Instance.GetSetPropertyValueFun<T2>(propertyType, item.Name);
+                    t_action.Invoke(t2, value);
+                    PropertySetDelegateCache<T2>.AddSetAction(key, t_action);
                 }
             }
             return t2;
         }
     }
 
-    public class RecordPropertyDelegate<T1> where T1 : class
+    /// <summary>
+    /// The record property delegate.
+    /// </summary>
+    public class GetValuePropertyDelegate<T1> where T1 : class
     {
         private readonly Type t1Type;
-        public RecordPropertyDelegate ()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordPropertyDelegate"/> class.
+        /// </summary>
+        public GetValuePropertyDelegate()
         {
-            t1Type = typeof (T1);
+            t1Type = typeof(T1);
         }
-        private static readonly ConcurrentDictionary<string, Action<T1, object>> setPropertyFunCache = new ConcurrentDictionary<string, Action<T1, object>> ();
 
-        public T1 ConverTo (IRecord record)
+        /// <summary>
+        /// Convers the to.
+        /// </summary>
+        /// <param name="record">The record.</param>
+        /// <returns>A T1.</returns>
+        public T1 ConverTo(IGetValue read)
         {
-            var properties = t1Type.GetProperties ();
-            var t1 = ReflectorUtil.Instance.CreateInstance<T1> ();
+            var properties = t1Type.GetProperties();
+            var t1 = ReflectorUtil.Instance.CreateInstance<T1>();
             foreach (var item in properties)
             {
                 var propertyType = item.PropertyType;
                 var key = propertyType.FullName + item.Name;
                 object value;
-                if (record.ContainsKey (item.Name))
-                {
-                    value = record[item.Name];
-                }
-                else
+                value = read.GetValue(item.Name);
+                if (value == null)
                 {
                     continue;
                 }
-
-                if (setPropertyFunCache.ContainsKey (key))
+                if (PropertySetDelegateCache<T1>.TryGetSetAction(key, out var action))
                 {
-                    setPropertyFunCache[key].Invoke (t1, value);
+                    action?.Invoke(t1, value);
                 }
                 else
                 {
-                    var action = ReflectorUtil.Instance.GetSetPropertyValueFun<T1> (propertyType, item.Name);
-                    action.Invoke (t1, value);
-                    setPropertyFunCache.TryAdd (key, action);
+                    var t_action = ReflectorUtil.Instance.GetSetPropertyValueFun<T1>(propertyType, item.Name);
+                    t_action.Invoke(t1, value);
+                    PropertySetDelegateCache<T1>.AddSetAction(key, t_action);
                 }
+
             }
             return t1;
         }
 
     }
-
+    /// <summary>
+    /// The object to record delegate.
+    /// </summary>
     public class ObjectToRecordDelegate<T1> where T1 : class
     {
         private readonly Type t1Type;
 
-        public ObjectToRecordDelegate ()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectToRecordDelegate"/> class.
+        /// </summary>
+        public ObjectToRecordDelegate()
         {
-            this.t1Type = typeof (T1);
+            this.t1Type = typeof(T1);
         }
-        private static readonly ConcurrentDictionary<string, Func<T1, object>> getPropertyFunCache = new ConcurrentDictionary<string, Func<T1, object>> ();
 
-        public IRecord ConverTo (T1 obj)
+        /// <summary>
+        /// Convers the to.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An IRecord.</returns>
+        public IRecord ConverTo(T1 obj)
         {
-            var properties = t1Type.GetProperties ();
-            var record = new Record ();
+            var properties = t1Type.GetProperties();
+            var record = new Record();
             foreach (var item in properties)
             {
                 var propertyType = item.PropertyType;
                 object value;
                 var key = propertyType.FullName + item.Name;
-                if (getPropertyFunCache.ContainsKey (key))
+
+
+                if (PropertyGetDelegateCache<T1>.TryGetGetAction(key, out var fun))
                 {
-                    value = getPropertyFunCache[key].Invoke (obj);
+                    value = fun?.Invoke(obj);
                 }
                 else
                 {
-                    var func = ReflectorUtil.Instance.GetPropertyValueFun<T1> (item.Name);
-                    value = func.Invoke (obj);
-                    getPropertyFunCache.TryAdd (key, func);
+                    var t_func = ReflectorUtil.Instance.GetPropertyValueFun<T1>(item.Name);
+                    value = t_func.Invoke(obj);
+                    PropertyGetDelegateCache<T1>.AddGetAction(key, t_func);
                 }
                 record[item.Name] = value;
             }

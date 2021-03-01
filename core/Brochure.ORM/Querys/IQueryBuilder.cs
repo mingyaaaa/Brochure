@@ -6,11 +6,12 @@ namespace Brochure.ORM.Querys
 {
     public interface IQueryBuilder
     {
-        Query<T1, T2> From<T1, T2> ();
-        Query<T1, T2, T3> From<T1, T2, T3> ();
-        Query<T1, T2, T3, T4> From<T1, T2, T3, T4> ();
-        Query<T1, T2, T3, T4, T5> From<T1, T2, T3, T4, T5> ();
-        Query<T> From<T> ();
+        Query<T1, T2> Build<T1, T2>();
+        Query<T1, T2, T3> Build<T1, T2, T3>();
+        Query<T1, T2, T3, T4> Build<T1, T2, T3, T4>();
+        Query<T1, T2, T3, T4, T5> Build<T1, T2, T3, T4, T5>();
+        Query<T> Build<T>();
+
     }
     public class QueryBuilder : IQueryBuilder
     {
@@ -18,36 +19,37 @@ namespace Brochure.ORM.Querys
         private readonly DbOption dbOption;
         private readonly IVisitProvider visitProvider;
 
-        public QueryBuilder (IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
+        public QueryBuilder(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
         {
             this.dbProvider = dbProvider;
             this.dbOption = dbOption;
             this.visitProvider = visitProvider;
         }
 
-        public Query<T1, T2> From<T1, T2> ()
+        public Query<T1, T2> Build<T1, T2>()
         {
-            return new Query<T1, T2> (dbProvider, dbOption, visitProvider);
+            return new Query<T1, T2>(dbProvider, dbOption, visitProvider);
         }
 
-        public Query<T1, T2, T3> From<T1, T2, T3> ()
+        public Query<T1, T2, T3> Build<T1, T2, T3>()
         {
-            return new Query<T1, T2, T3> (dbProvider, dbOption, visitProvider);
+            return new Query<T1, T2, T3>(dbProvider, dbOption, visitProvider);
         }
 
-        public Query<T1, T2, T3, T4> From<T1, T2, T3, T4> ()
+        public Query<T1, T2, T3, T4> Build<T1, T2, T3, T4>()
         {
-            return new Query<T1, T2, T3, T4> (dbProvider, dbOption, visitProvider);
+            return new Query<T1, T2, T3, T4>(dbProvider, dbOption, visitProvider);
         }
 
-        public Query<T1, T2, T3, T4, T5> From<T1, T2, T3, T4, T5> ()
+        public Query<T1, T2, T3, T4, T5> Build<T1, T2, T3, T4, T5>()
         {
-            return new Query<T1, T2, T3, T4, T5> (dbProvider, dbOption, visitProvider);
+            return new Query<T1, T2, T3, T4, T5>(dbProvider, dbOption, visitProvider);
         }
 
-        public Query<T> From<T> ()
+        public Query<T> Build<T>()
         {
-            return new Query<T> (dbProvider, dbOption, visitProvider);
+            return new Query<T>(dbProvider, dbOption, visitProvider);
         }
+
     }
 }

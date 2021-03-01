@@ -6,8 +6,8 @@
   <ItemGroup>
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.1.0" />
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7733" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7733" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.16.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
@@ -20,5 +20,9 @@
     <PackageReference Include="Quartz" Version="3.2.4" />
     <PackageReference Include="Moq.AutoMock" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
+    <ProjectReference Include="..\..\core\Brochure.ORM.MySql\Brochure.ORM.MySql.csproj" />
   </ItemGroup>
 </Project>

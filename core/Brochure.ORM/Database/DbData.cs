@@ -4,163 +4,225 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Brochure.Abstract;
 using Brochure.Extensions;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Extensions;
 namespace Brochure.ORM.Database
 {
+    /// <summary>
+    /// The db data.
+    /// </summary>
     public abstract class DbData : IDisposable
     {
-        private readonly IDbConnection dbConnection;
+        private readonly IDbConnection _dbConnection;
 
-        protected DbData (DbOption dbOption, DbSql dbSql, TransactionManager transactionManager, IConnectFactory connectFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbData"/> class.
+        /// </summary>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="dbSql">The db sql.</param>
+        /// <param name="transactionManager">The transaction manager.</param>
+        /// <param name="connectFactory">The connect factory.</param>
+        /// <param name="objectFactory">The object factory.</param>
+        protected DbData(DbOption dbOption, DbSql dbSql, TransactionManager transactionManager, IConnectFactory connectFactory, IObjectFactory objectFactory)
         {
             Option = dbOption;
             this._dbSql = dbSql;
-
-            this.transactionManager = transactionManager;
-            this.connectFactory = connectFactory;
-            dbConnection = connectFactory.CreaConnection ();
+            this._transactionManager = transactionManager;
+            this._connectFactory = connectFactory;
+            _objectFactory = objectFactory;
+            _dbConnection = connectFactory.CreaConnection();
         }
 
         protected DbOption Option;
         private readonly DbSql _dbSql;
-        private readonly TransactionManager transactionManager;
-        private readonly IConnectFactory connectFactory;
+        private readonly TransactionManager _transactionManager;
+        private readonly IConnectFactory _connectFactory;
+        private readonly IObjectFactory _objectFactory;
 
+        /// <summary>
+        /// Inserts the.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Insert<T> (T obj)
+        public virtual int Insert<T>(T obj)
         {
-            var sqlTuple = _dbSql.GetInsertSql (obj);
+            var sqlTuple = _dbSql.GetInsertSql(obj);
             var sql = sqlTuple.Item1;
             var parms = sqlTuple.Item2;
-            var command = CreateDbCommand ();
+            var command = CreateDbCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (parms);
-            return command.ExecuteNonQuery ();
+            command.Parameters.AddRange(parms);
+            return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Inserts the many.
+        /// </summary>
+        /// <param name="objs">The objs.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int InsertMany<T> (IEnumerable<T> objs)
+        public virtual int InsertMany<T>(IEnumerable<T> objs)
         {
-            var list = objs.ToList ();
-            var tableName = TableUtlis.GetTableName<T> ();
-            var sqlList = new List<string> ();
-            var parms = new List<IDbDataParameter> ();
+            var list = objs.ToList();
+            var tableName = TableUtlis.GetTableName<T>();
+            var sqlList = new List<string>();
+            var parms = new List<IDbDataParameter>();
             var i = 0;
             foreach (var item in list)
             {
-                var sqlTuple = _dbSql.GetInsertSql (item);
+                var sqlTuple = _dbSql.GetInsertSql(item);
                 var sql = sqlTuple.Item1;
                 if (i == 0)
                 {
-                    parms.AddRange (sqlTuple.Item2);
-                    sqlList.Add (sql);
+                    parms.AddRange(sqlTuple.Item2);
+                    sqlList.Add(sql);
                 }
                 else
                 {
                     foreach (var pp in sqlTuple.Item2)
                     {
                         var newParmsmName = pp.ParameterName + i;
-                        sql.Replace (pp.ParameterName, newParmsmName);
+                        sql.Replace(pp.ParameterName, newParmsmName);
                         pp.ParameterName = newParmsmName;
-                        parms.Add (pp);
+                        parms.Add(pp);
                     }
                 }
                 i++;
             }
 
-            var command = CreateDbCommand ();
-            command.CommandText = sqlList.Join (";", null);
-            command.Parameters.AddRange (parms);
-            return command.ExecuteNonQuery ();
+            var command = CreateDbCommand();
+            command.CommandText = sqlList.Join(";", null);
+            command.Parameters.AddRange(parms);
+            return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Updates the.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="whereFunc">The where func.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Update<T> (object obj, Expression<Func<T, bool>> whereFunc)
+        public virtual int Update<T>(object obj, Expression<Func<T, bool>> whereFunc)
         {
-            var sqlTuple = _dbSql.GetUpdateSql<T> (obj, whereFunc);
+            var sqlTuple = _dbSql.GetUpdateSql<T>(obj, whereFunc);
             var sql = sqlTuple.Item1;
-            var command = CreateDbCommand ();
+            var command = CreateDbCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (sqlTuple.Item2);
-            return command.ExecuteNonQuery ();
+            command.Parameters.AddRange(sqlTuple.Item2);
+            return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Updates the.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="query">The query.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Update<T> (object obj, IWhereQuery query)
+        public virtual int Update<T>(object obj, IWhereQuery query)
         {
-            var sqlTuple = _dbSql.GetUpdateSql<T> (obj, query);
+            var sqlTuple = _dbSql.GetUpdateSql<T>(obj, query);
             var sql = sqlTuple.Item1;
-            var command = CreateDbCommand ();
+            var command = CreateDbCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (sqlTuple.Item2);
-            return command.ExecuteNonQuery ();
+            command.Parameters.AddRange(sqlTuple.Item2);
+            return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Deletes the.
+        /// </summary>
+        /// <param name="whereFunc">The where func.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Delete<T> (Expression<Func<T, bool>> whereFunc)
+        public virtual int Delete<T>(Expression<Func<T, bool>> whereFunc)
         {
-            var tuple = _dbSql.GetDeleteSql<T> (whereFunc);
+            var tuple = _dbSql.GetDeleteSql<T>(whereFunc);
             var sql = tuple.Item1;
-            var command = CreateDbCommand ();
+            var command = CreateDbCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (tuple.Item2);
-            return command.ExecuteNonQuery ();
+            command.Parameters.AddRange(tuple.Item2);
+            return command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Deletes the.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Delete<T> (IWhereQuery query)
+        public virtual int Delete<T>(IWhereQuery query)
         {
-            var tuple = _dbSql.GetDeleteSql<T> (query);
-            var command = CreateDbCommand ();
+            var tuple = _dbSql.GetDeleteSql<T>(query);
+            var command = CreateDbCommand();
             command.CommandText = tuple.Item1;
-            command.Parameters.AddRange (tuple.Item2);
-            return command.ExecuteNonQuery ();
+            command.Parameters.AddRange(tuple.Item2);
+            return command.ExecuteNonQuery();
         }
 
-        public virtual IEnumerable<T> Query<T> (IQuery<T> query)
+        /// <summary>
+        /// Queries the.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of TS.</returns>
+        public virtual IEnumerable<T> Query<T>(IQuery<T> query)
         {
-            var sql = query.GetSql ();
-            var parms = query.GetDbDataParameters ();
-            var connect = connectFactory.CreaConnection ();
-            var command = connect.CreateCommand ();
+            var sql = query.GetSql();
+            var parms = query.GetDbDataParameters();
+            var connect = _connectFactory.CreaConnection();
+            var command = connect.CreateCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (parms);
-            var reader = command.ExecuteReader ();
-            var list = new List<T> ();
-            while (reader.Read ())
+            command.Parameters.AddRange(parms);
+            var reader = command.ExecuteReader();
+            var list = new List<T>();
+            while (reader.Read())
             {
-                var t = DbUtlis.ConverFromIDataReader<T> (reader);
-                list.Add (t);
+                var t = _objectFactory.Create<T>(new DataReaderGetValue(reader));
+                list.Add(t);
             }
             return list;
         }
-        public virtual IEnumerable<T> Query<T> (IQuery query)
+        /// <summary>
+        /// Queries the.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of TS.</returns>
+        public virtual IEnumerable<T> Query<T>(IQuery query)
         {
-            var sql = query.GetSql ();
-            var parms = query.GetDbDataParameters ();
-            var connect = connectFactory.CreaConnection ();
-            var command = connect.CreateCommand ();
+            var sql = query.GetSql();
+            var parms = query.GetDbDataParameters();
+            var connect = _connectFactory.CreaConnection();
+            var command = connect.CreateCommand();
             command.CommandText = sql;
-            command.Parameters.AddRange (parms);
-            var reader = command.ExecuteReader ();
-            var list = new List<T> ();
-            while (reader.Read ())
+            command.Parameters.AddRange(parms);
+            var reader = command.ExecuteReader();
+            var list = new List<T>();
+            while (reader.Read())
             {
-                var t = DbUtlis.ConverFromIDataReader<T> (reader);
-                list.Add (t);
+                var t = _objectFactory.Create<T>(new DataReaderGetValue(reader));
+                list.Add(t);
             }
             return list;
         }
 
-        public void Dispose () { }
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
+        public void Dispose() { }
 
-        private IDbCommand CreateDbCommand ()
+        /// <summary>
+        /// Creates the db command.
+        /// </summary>
+        /// <returns>An IDbCommand.</returns>
+        private IDbCommand CreateDbCommand()
         {
-            var connect = connectFactory.CreaConnection ();
-            var command = connect.CreateCommand ();
-            command.Transaction = transactionManager.GetDbTransaction ();
+            var connect = _connectFactory.CreaConnection();
+            var command = connect.CreateCommand();
+            command.Transaction = _transactionManager.GetDbTransaction();
             return command;
         }
 

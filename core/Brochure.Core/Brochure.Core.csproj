@@ -8,10 +8,9 @@
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.Extensions" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.System" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.Utils" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.Extensions" Version="0.0.0.7734" />
+    <PackageReference Include="Brochure.System" Version="0.0.0.7734" />
+    <PackageReference Include="Brochure.Utils" Version="0.0.0.7734" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
@@ -32,8 +31,9 @@
     <Folder Include="Interceptor\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Core\Log.cs" />
-    <Compile Remove="Core\ApplicatonOption.cs" />
-    <Compile Remove="Core\IApplication.cs" />
+    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+    <ProjectReference Include="..\Brochure.Extensions\Brochure.Extensions.csproj" />
+    <ProjectReference Include="..\Brochure.System\Brochure.System.csproj" />
+    <ProjectReference Include="..\Brochure.Utils\Brochure.Utils.csproj" />
   </ItemGroup>
 </Project>

@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7733" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7733" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />
@@ -20,5 +20,10 @@
 
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
+    <ProjectReference Include="..\..\core\Brochure.ORM.MySql\Brochure.ORM.MySql.csproj" />
   </ItemGroup>
 </Project>

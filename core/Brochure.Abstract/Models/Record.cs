@@ -9,7 +9,7 @@ namespace Brochure.Abstract.Models
     /// 文档类型
     /// </summary>
     /// <typeparam name="BDocument"></typeparam>
-    public class Record : IRecord
+    public class Record : IRecord, IGetValue
     {
         private readonly IDictionary<string, object> _dic;
 
@@ -31,14 +31,14 @@ namespace Brochure.Abstract.Models
         [IgnoreDataMember]
         public Action RemoveHander;
 
-        public Record (IDictionary<string, object> dictionary)
+        public Record(IDictionary<string, object> dictionary)
         {
             _dic = dictionary;
         }
 
-        public Record ()
+        public Record()
         {
-            _dic = new Dictionary<string, object> ();
+            _dic = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -62,24 +62,24 @@ namespace Brochure.Abstract.Models
         /// 获取或设置值
         /// </summary>
         /// <returns></returns>
-        public object this [string key]
+        public object this[string key]
         {
             get
             {
-                if (!_dic.ContainsKey (key))
+                if (!_dic.ContainsKey(key))
                     return null;
                 return _dic[key];
             }
             set
             {
                 var isAdd = false;
-                if (!_dic.ContainsKey (key))
+                if (!_dic.ContainsKey(key))
                     isAdd = true;
                 _dic[key] = value;
                 if (isAdd)
-                    AddHander?.Invoke ();
+                    AddHander?.Invoke();
                 else
-                    UpdateHander?.Invoke ();
+                    UpdateHander?.Invoke();
             }
         }
 
@@ -88,15 +88,15 @@ namespace Brochure.Abstract.Models
         /// </summary>
         /// <param name="key"></param>
         /// <param name="obj"></param> 
-        public void Add (string key, object obj)
+        public void Add(string key, object obj)
         {
-            _dic.Add (key, obj);
-            AddHander?.Invoke ();
+            _dic.Add(key, obj);
+            AddHander?.Invoke();
         }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator ()
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return _dic.GetEnumerator ();
+            return _dic.GetEnumerator();
         }
 
         /// <summary>
@@ -104,49 +104,68 @@ namespace Brochure.Abstract.Models
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public void Remove (string key)
+        public void Remove(string key)
         {
-            if (_dic.ContainsKey (key))
-                _dic.Remove (key);
-            RemoveHander?.Invoke ();
+            if (_dic.ContainsKey(key))
+                _dic.Remove(key);
+            RemoveHander?.Invoke();
         }
 
         /// <summary>
         /// 批量移除数据
         /// </summary>
         /// <param name="keys"></param>
-        public void RemoveMany (string[] keys)
+        public void RemoveMany(string[] keys)
         {
             foreach (var item in keys)
             {
-                if (_dic.ContainsKey (item))
-                    _dic.Remove (item);
+                if (_dic.ContainsKey(item))
+                    _dic.Remove(item);
             }
-            RemoveHander?.Invoke ();
+            RemoveHander?.Invoke();
         }
 
-        public bool MoveNext ()
+        public bool MoveNext()
         {
-            return _dic.GetEnumerator ().MoveNext ();
+            return _dic.GetEnumerator().MoveNext();
         }
 
-        public void Reset ()
+        public void Reset()
         {
-            _dic.GetEnumerator ().Reset ();
+            _dic.GetEnumerator().Reset();
         }
 
-        public bool ContainsKey (string key)
+        public bool ContainsKey(string key)
         {
-            return _dic.ContainsKey (key);
+            return _dic.ContainsKey(key);
         }
 
-        public override string ToString ()
+        public override string ToString()
         {
             if (_dic == null)
                 return string.Empty;
-            return JsonSerializer.Serialize (_dic);
+            return JsonSerializer.Serialize(_dic);
         }
 
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>A T.</returns>
+        public T GetValue<T>(string propertyName)
+        {
+            return (T)GetValue(propertyName);
+        }
+
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>An object.</returns>
+        public object GetValue(string propertyName)
+        {
+            return this[propertyName];
+        }
     }
 
 }

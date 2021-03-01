@@ -1,22 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The join visitor.
+    /// </summary>
     public class JoinVisitor : ORMVisitor
     {
         private string tableName;
 
-        public JoinVisitor (IDbProvider dbPrivoder, DbOption dbOption) : base (dbPrivoder, dbOption) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JoinVisitor"/> class.
+        /// </summary>
+        /// <param name="dbPrivoder">The db privoder.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="funcVisits">The func visits.</param>
+        public JoinVisitor(IDbProvider dbPrivoder, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbPrivoder, dbOption, funcVisits) { }
 
-        public void SetTableName (Type tableType)
+        /// <summary>
+        /// Sets the table name.
+        /// </summary>
+        /// <param name="tableType">The table type.</param>
+        public void SetTableName(Type tableType)
         {
-            tableName = TableUtlis.GetTableName (tableType);
+            tableName = TableUtlis.GetTableName(tableType);
         }
-        protected override Expression VisitBinary (BinaryExpression node)
+        /// <summary>
+        /// Visits the binary.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
+        protected override Expression VisitBinary(BinaryExpression node)
         {
-            var left = GetSql (node.Left);
-            var right = GetSql (node.Right);
+            var left = GetSql(node.Left);
+            var right = GetSql(node.Right);
             sql = $"join [{tableName}] on {left} = {right}";
             return node;
         }

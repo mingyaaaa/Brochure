@@ -1,8 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Brochure.ORM" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.ORM" Version="0.0.0.7733" />
     <PackageReference Include="MySql.Data" Version="8.0.23" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

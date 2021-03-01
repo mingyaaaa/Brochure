@@ -39,6 +39,13 @@ namespace Brochure.User.Services
         ValueTask<int> DeleteUsers(IEnumerable<string> ids);
 
         /// <summary>
+        /// Deletes the user return error ids.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns>A ValueTask.</returns>
+        ValueTask<IEnumerable<string>> DeleteUserReturnErrorIds(IEnumerable<string> ids);
+
+        /// <summary>
         /// Inserts the users.
         /// </summary>
         /// <param name="users">The users.</param>
@@ -69,6 +76,18 @@ namespace Brochure.User.Services
         }
 
         /// <summary>
+        /// Deletes the user return error ids.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns>A ValueTask.</returns>
+        public async ValueTask<IEnumerable<string>> DeleteUserReturnErrorIds(IEnumerable<string> ids)
+        {
+            var userIds = await repository.DeleteManyReturnError(ids);
+            return userIds;
+        }
+
+
+        /// <summary>
         /// Deletes the users.
         /// </summary>
         /// <param name="ids">The ids.</param>
@@ -76,7 +95,7 @@ namespace Brochure.User.Services
         public async ValueTask<int> DeleteUsers(IEnumerable<string> ids)
         {
             var r = await repository.DeleteMany(ids);
-            return r ? ids.Count() : -1;
+            return r;
         }
 
         /// <summary>
@@ -96,7 +115,7 @@ namespace Brochure.User.Services
                 fun = t => t.Id == idsList[0];
             else
                 fun = t => ids.Contains(t.Id);
-            var query = builder.From<UserEntrity>().WhereAnd(fun);
+            var query = builder.Build<UserEntrity>().WhereAnd(fun);
             var entrity = await repository.List(query);
             foreach (var item in entrity)
             {

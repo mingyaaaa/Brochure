@@ -5,29 +5,57 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The where visitor.
+    /// </summary>
     public class WhereVisitor : ORMVisitor, ICloneable
     {
-        public WhereVisitor (IDbProvider dbPrivoder, DbOption dbOption) : base (dbPrivoder, dbOption) { }
+        private readonly IEnumerable<IFuncVisit> _funcVisits;
 
-        public void AddParamters (IEnumerable<IDbDataParameter> pams)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WhereVisitor"/> class.
+        /// </summary>
+        /// <param name="dbPrivoder">The db privoder.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="funcVisits">The func visits.</param>
+        public WhereVisitor(IDbProvider dbPrivoder, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbPrivoder, dbOption, funcVisits)
         {
-            this.Parameters.AddRange (pams??new List<IDbDataParameter> ());
+            _funcVisits = funcVisits;
         }
 
-        protected override Expression VisitBinary (BinaryExpression node)
+        /// <summary>
+        /// Adds the paramters.
+        /// </summary>
+        /// <param name="pams">The pams.</param>
+        public void AddParamters(IEnumerable<IDbDataParameter> pams)
         {
-            var left = AddBrackets (GetSql (node.Left));
+            this.Parameters.AddRange(pams ?? new List<IDbDataParameter>());
+        }
+
+        /// <summary>
+        /// Visits the binary.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
+        protected override Expression VisitBinary(BinaryExpression node)
+        {
+            var left = AddBrackets(GetSql(node.Left));
             var exType = node.NodeType;
-            var right = AddBrackets (GetSql (node.Right));
-            sql = _dbPrivoder.GetOperateSymbol (left, exType, right);
+            var right = AddBrackets(GetSql(node.Right));
+            sql = _dbPrivoder.GetOperateSymbol(left, exType, right);
             return node;
         }
 
-        public override object GetSql (Expression expression = null)
+        /// <summary>
+        /// Gets the sql.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
+        public override object GetSql(Expression expression = null)
         {
             if (expression != null)
             {
-                return base.GetSql (expression);
+                return base.GetSql(expression);
             }
             else
             {
@@ -41,21 +69,25 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        private object AddBrackets (object obj)
+        private object AddBrackets(object obj)
         {
             if (obj is string)
             {
-                var str = obj.ToString ();
-                if (str.Contains ("and") || str.Contains ("or"))
+                var str = obj.ToString();
+                if (str.Contains("and") || str.Contains("or"))
                     return $"({str})";
                 return str;
             }
             return obj;
         }
 
-        public object Clone ()
+        /// <summary>
+        /// Clones the.
+        /// </summary>
+        /// <returns>An object.</returns>
+        public object Clone()
         {
-            return new WhereVisitor (_dbPrivoder, dbOption);
+            return new WhereVisitor(_dbPrivoder, dbOption, _funcVisits);
         }
     }
 }

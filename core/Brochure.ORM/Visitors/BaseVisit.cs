@@ -9,64 +9,98 @@ using Brochure.ORM;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The no sql visitor.
+    /// </summary>
     public abstract class NoSqlVisitor : ExpressionVisitor { }
 
+    /// <summary>
+    /// The o r m visitor.
+    /// </summary>
     public abstract class ORMVisitor : ExpressionVisitor
     {
-        protected ORMVisitor (IDbProvider dbProvider, DbOption dbOption, IServiceProvider serviceProvider = null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ORMVisitor"/> class.
+        /// </summary>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="">The .</param>
+        /// <param name="funList">The fun list.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider serviceProvider = null)
         {
             _dbPrivoder = dbProvider;
-            this.Parameters = new List<IDbDataParameter> ();
+            this.Parameters = new List<IDbDataParameter>();
             this.serviceProvider = serviceProvider;
+            _funList = funList;
             this.dbOption = dbOption;
         }
 
         protected IDbProvider _dbPrivoder;
         protected object sql;
         protected List<IDbDataParameter> Parameters;
-        private readonly IEnumerable<IFuncVisit> funlist;
+        private readonly IEnumerable<IFuncVisit> _funList;
         private readonly IServiceProvider serviceProvider;
         protected readonly DbOption dbOption;
 
-        public virtual object GetSql (Expression expression = null)
+        /// <summary>
+        /// Gets the sql.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
+        public virtual object GetSql(Expression expression = null)
         {
             if (expression != null)
-                Visit (expression);
+                Visit(expression);
             return sql;
         }
 
-        public IEnumerable<IDbDataParameter> GetParameters ()
+        /// <summary>
+        /// Gets the parameters.
+        /// </summary>
+        /// <returns>A list of IDbDataParameters.</returns>
+        public IEnumerable<IDbDataParameter> GetParameters()
         {
             return Parameters;
         }
 
-        protected override Expression VisitMember (MemberExpression node)
+        /// <summary>
+        /// Visits the member.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
+        protected override Expression VisitMember(MemberExpression node)
         {
             if (node.Member is FieldInfo)
             {
-                var obj = (node.Member as FieldInfo)?.GetValue ((node.Expression as ConstantExpression)?.Value);
-                this.sql = AddParamers (obj);
+                var obj = (node.Member as FieldInfo)?.GetValue((node.Expression as ConstantExpression)?.Value);
+                this.sql = AddParamers(obj);
             }
             else if (node.Member is PropertyInfo)
             {
-                string tableName = TableUtlis.GetTableName ((node.Member as PropertyInfo)?.DeclaringType);
+                string tableName = TableUtlis.GetTableName((node.Member as PropertyInfo)?.DeclaringType);
                 sql = $"[{tableName}].[{node.Member.Name}]";
             }
             return node;
         }
 
-        protected override Expression VisitMethodCall (MethodCallExpression node)
+        /// <summary>
+        /// Visits the method call.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
+        protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             var argument0 = node.Arguments[0];
-            var call = GetSql (argument0);
+            var call = GetSql(argument0);
             object member = null;
             if (node.Object == null && node.Arguments.Count == 2)
             {
-                member = GetSql (node.Arguments[1]);
+                member = GetSql(node.Arguments[1]);
             }
             else
             {
-                member = GetSql (node.Object);
+                member = GetSql(node.Object);
             }
 
             switch (node.Method.Name)
@@ -78,7 +112,7 @@ namespace Brochure.ORM.Visitors
                     }
                     else if (call is IEnumerable)
                     {
-                        var listStr = string.Join (',', (call as IEnumerable).OfType<object> ().Select (t => _dbPrivoder.GetObjectType (t)));
+                        var listStr = string.Join(',', (call as IEnumerable).OfType<object>().Select(t => _dbPrivoder.GetObjectType(t)));
                         sql = $"{member} in ({listStr})";
                     }
                     break;
@@ -103,32 +137,42 @@ namespace Brochure.ORM.Visitors
                     sql = $"max({member})";
                     break;
                 default:
-                    var fun = funlist?.FirstOrDefault (t => t.FuncName == node.Method.Name);
+                    var fun = _funList?.FirstOrDefault(t => t.FuncName == node.Method.Name);
                     if (fun != null)
                     {
-                        sql = fun.GetExcuteSql (call, member);
+                        sql = fun.GetExcuteSql(call, member);
                     }
                     break;
             }
             return node;
         }
 
-        protected override Expression VisitConstant (ConstantExpression node)
+        /// <summary>
+        /// Visits the constant.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
+        protected override Expression VisitConstant(ConstantExpression node)
         {
-            sql = AddParamers (node.Value);
+            sql = AddParamers(node.Value);
             return node;
         }
 
-        private object AddParamers (object obj)
+        /// <summary>
+        /// Adds the paramers.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An object.</returns>
+        private object AddParamers(object obj)
         {
             if (!dbOption.IsUseParamers)
             {
                 return obj;
             }
-            var parms = _dbPrivoder.GetDbDataParameter ();
+            var parms = _dbPrivoder.GetDbDataParameter();
             parms.ParameterName = $"{_dbPrivoder.GetParamsSymbol()}p{Parameters.Count}";
             parms.Value = obj;
-            Parameters.Add (parms);
+            Parameters.Add(parms);
             return parms.ParameterName;
         }
     }
