@@ -9,16 +9,29 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 namespace Brochure.Core.Server
 {
+    /// <summary>
+    /// The plugin application builder factory.
+    /// </summary>
     public class PluginApplicationBuilderFactory : IApplicationBuilderFactory
     {
         private readonly IServiceProvider provider;
         private readonly IPluginManagers pluginManagers;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginApplicationBuilderFactory"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="pluginManagers">The plugin managers.</param>
         public PluginApplicationBuilderFactory(IServiceProvider provider, IPluginManagers pluginManagers)
         {
             this.provider = provider;
             this.pluginManagers = pluginManagers;
         }
+        /// <summary>
+        /// Creates the builder.
+        /// </summary>
+        /// <param name="serverFeatures">The server features.</param>
+        /// <returns>An IApplicationBuilder.</returns>
         public IApplicationBuilder CreateBuilder(IFeatureCollection serverFeatures)
         {
             var plugins = pluginManagers.GetPlugins().OfType<Plugins>();

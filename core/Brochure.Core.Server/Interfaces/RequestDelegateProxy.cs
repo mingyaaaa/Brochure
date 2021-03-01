@@ -3,8 +3,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace Brochure.Core.Server
 {
+    /// <summary>
+    /// The request delegate proxy.
+    /// </summary>
     public class RequestDelegateProxy
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestDelegateProxy"/> class.
+        /// </summary>
+        /// <param name="middleName">The middle name.</param>
+        /// <param name="id">The id.</param>
+        /// <param name="order">The order.</param>
+        /// <param name="factory">The factory.</param>
         public RequestDelegateProxy(string middleName, Guid id, int order, Func<RequestDelegate, RequestDelegate> factory)
         {
             this.MiddleName = middleName;

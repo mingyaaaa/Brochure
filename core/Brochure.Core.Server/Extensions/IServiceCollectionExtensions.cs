@@ -10,8 +10,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core.Server
 {
+    /// <summary>
+    /// The i service collection extensions.
+    /// </summary>
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds the plugin controller.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>A Task.</returns>
         internal static async Task AddPluginController(this IServiceCollection services)
         {
             var mvcBuilder = services.AddMvcCore();
@@ -36,6 +44,12 @@ namespace Brochure.Core.Server
             }
         }
 
+        /// <summary>
+        /// Adds the brochure server.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="action">The action.</param>
+        /// <returns>A Task.</returns>
         public static async Task AddBrochureServer(this IServiceCollection services, Action<ApplicationOption> action = null)
         {
             services.AddLogging(t => t.AddConsole());

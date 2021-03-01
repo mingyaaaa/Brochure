@@ -6,18 +6,34 @@ using Microsoft.Extensions.Primitives;
 
 namespace Brochure.Core.Server
 {
+    /// <summary>
+    /// The plugin action descriptor change provider.
+    /// </summary>
     public class PluginActionDescriptorChangeProvider : IActionDescriptorChangeProvider
     {
-        public static PluginActionDescriptorChangeProvider Instance { get; } = new PluginActionDescriptorChangeProvider ();
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        public static PluginActionDescriptorChangeProvider Instance { get; } = new PluginActionDescriptorChangeProvider();
 
+        /// <summary>
+        /// Gets the token source.
+        /// </summary>
         public CancellationTokenSource TokenSource { get; private set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether has changed.
+        /// </summary>
         public bool HasChanged { get; set; }
 
-        public IChangeToken GetChangeToken ()
+        /// <summary>
+        /// Gets the change token.
+        /// </summary>
+        /// <returns>An IChangeToken.</returns>
+        public IChangeToken GetChangeToken()
         {
-            TokenSource = new CancellationTokenSource ();
-            return new CancellationChangeToken (TokenSource.Token);
+            TokenSource = new CancellationTokenSource();
+            return new CancellationChangeToken(TokenSource.Token);
         }
     }
 }
