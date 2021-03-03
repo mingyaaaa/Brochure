@@ -14,7 +14,7 @@ namespace Brochure.ORM
     public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase
     {
         protected readonly DbContext context;
-        private readonly IQueryBuilder _queryBuilder;
+        protected readonly IQueryBuilder queryBuilder;
         protected readonly DbData dbData;
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
@@ -23,7 +23,7 @@ namespace Brochure.ORM
         public RepositoryBase(DbContext context, IQueryBuilder queryBuilder)
         {
             this.context = context;
-            _queryBuilder = queryBuilder;
+            this.queryBuilder = queryBuilder;
             dbData = context.GetDbData();
         }
         /// <summary>
@@ -44,7 +44,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<int> Delete(string id)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var q = query.WhereAnd(t => t.Id == id) as IWhereQuery;
             return await Delete(q);
         }
@@ -56,7 +56,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<int> DeleteMany(IEnumerable<string> ids)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var q = query.WhereAnd(t => ids.Contains(t.Id)) as IWhereQuery;
             return await Delete(q);
         }
@@ -68,7 +68,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<IEnumerable<string>> DeleteManyReturnError(IEnumerable<string> ids)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var errorIds = new List<string>();
             foreach (var item in ids)
             {
@@ -100,7 +100,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<T> Get(string id)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var q = query.WhereAnd(t => t.Id == id);
             return await Get(q);
         }
@@ -159,7 +159,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<IEnumerable<T>> List(IEnumerable<string> ids)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var q = query.WhereAnd(t => ids.Contains(t.Id));
             return await List(q);
         }
@@ -186,7 +186,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<int> Update(string id, T entity)
         {
-            var query = _queryBuilder.Build<T>();
+            var query = queryBuilder.Build<T>();
             var q = query.WhereAnd(t => t.Id == id) as IWhereQuery;
             return await Update(q, entity);
         }

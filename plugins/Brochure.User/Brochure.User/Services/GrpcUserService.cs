@@ -16,6 +16,7 @@ using Google.Protobuf.Collections;
 using Brochure.User.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
+using Brochure.User.Services.Interfaces;
 
 namespace Brochure.User.Services
 {

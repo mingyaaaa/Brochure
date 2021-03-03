@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.Abstract.Models;
-using Brochure.User.Entrities;
 using Brochure.User.Models;
-using Brochure.User.Repository;
-using Brochure.User.Services;
+using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

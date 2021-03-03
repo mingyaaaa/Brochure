@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.User.Repository;
-using Brochure.User.Services;
+using Brochure.User.Services.Imps;
+using Brochure.User.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 namespace Brochure.User
 {
