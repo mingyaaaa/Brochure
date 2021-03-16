@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using Brochure.Abstract;
+using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
 
 namespace Brochure.Utils
@@ -13,20 +14,20 @@ namespace Brochure.Utils
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public IRecord ReadJsonFile (string filePath)
+        public IRecord ReadJsonFile(string filePath)
         {
-            if (!File.Exists (filePath))
+            if (!File.Exists(filePath))
                 return null;
-            var jsonStr = File.ReadAllText (filePath);
-            var record = JsonSerializer.Deserialize<IRecord> (jsonStr);
+            var jsonStr = File.ReadAllText(filePath);
+            var record = JsonSerializer.Deserialize<IRecord>(jsonStr);
             return record;
         }
 
-        public bool ArrayJsonValid (string str)
+        public bool ArrayJsonValid(string str)
         {
             try
             {
-                var json = JsonDocument.Parse (str);
+                var json = JsonDocument.Parse(str);
                 return json.RootElement.ValueKind == JsonValueKind.Array;
             }
             catch (System.Exception)
@@ -35,11 +36,11 @@ namespace Brochure.Utils
             }
         }
 
-        public bool ObjectJsonValid (string str)
+        public bool ObjectJsonValid(string str)
         {
             try
             {
-                var json = JsonDocument.Parse (str);
+                var json = JsonDocument.Parse(str);
                 return json.RootElement.ValueKind == JsonValueKind.Object;
             }
             catch (System.Exception)
@@ -48,37 +49,37 @@ namespace Brochure.Utils
             }
         }
 
-        public T ConverToJson<T> (string str)
+        public T ConverToJson<T>(string str)
         {
-            return JsonSerializer.Deserialize<T> (str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
-        public string ConverToJsonString (object o)
+        public string ConverToJsonString(object o)
         {
-            return JsonSerializer.Serialize (o);
+            return JsonSerializer.Serialize(o);
         }
 
-        public T ReadJsonFile<T> (string filePath)
+        public T ReadJsonFile<T>(string filePath)
         {
-            if (!File.Exists (filePath))
-                return (T) (object) null;
-            var jsonStr = File.ReadAllText (filePath);
-            return JsonSerializer.Deserialize<T> (jsonStr);
+            if (!File.Exists(filePath))
+                return (T)(object)null;
+            var jsonStr = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<T>(jsonStr);
         }
 
-        public T ConverToObject<T> (string str)
+        public T ConverToObject<T>(string str)
         {
-            return JsonSerializer.Deserialize<T> (str);
+            return JsonSerializer.Deserialize<T>(str);
         }
 
-        public string ConverToString (object obj)
+        public string ConverToString(object obj)
         {
-            return JsonSerializer.Serialize (obj);
+            return JsonSerializer.Serialize(obj);
         }
 
-        public T Get<T> (string path)
+        public T Get<T>(string path)
         {
-            return new ConfigurationBuilder ().AddJsonFile (path).Build ().Get<T> ();
+            return new ConfigurationBuilder().AddJsonFile(path).Build().Get<T>();
         }
     }
 }

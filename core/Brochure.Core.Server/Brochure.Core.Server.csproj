@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Brochure.Core" Version="0.0.0.7733" />
+    <PackageReference Include="Brochure.Core" Version="0.0.0.*">
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

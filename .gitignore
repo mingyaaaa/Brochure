@@ -11,3 +11,4 @@
 **/*.csproj.user
 **/.DS_Store
 /LocalPackage
+**/node_modules

@@ -6,19 +6,22 @@ using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Models;
-using Brochure.Core;
+using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
 using Brochure.Core.Module;
 using Brochure.Core.RPC;
 using Brochure.Extensions;
-using Brochure.SysInterface;
 using Brochure.Utils;
+using Brochure.Utils.SystemUtils;
 using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Brochure.Core
 {
+    /// <summary>
+    /// The i service collection extensions.
+    /// </summary>
     public static class IServiceCollectionExtensions
     {
 

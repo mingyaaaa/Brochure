@@ -1,23 +1,14 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Abstract.Utils;
 using Brochure.Core;
-using Brochure.Core.Models;
-using Brochure.Core.Module;
-using Brochure.SysInterface;
-using Brochure.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
-using Moq.Protected;
 
 namespace Brochure.Test
 {

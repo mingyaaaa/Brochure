@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Brochure.Abstract;
+using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
-using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

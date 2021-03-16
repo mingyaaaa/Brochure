@@ -1,6 +1,6 @@
 using System;
 using Brochure.Abstract;
-using Brochure.Utils;
+using Brochure.Abstract.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

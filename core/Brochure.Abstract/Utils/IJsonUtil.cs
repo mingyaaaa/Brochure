@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using Brochure.Abstract;
-
-namespace Brochure.Utils
+namespace Brochure.Abstract.Utils
 {
+    /// <summary>
+    /// The json util.
+    /// </summary>
     public interface IJsonUtil
     {
         /// <summary>
