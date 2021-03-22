@@ -136,8 +136,7 @@ namespace Brochure.Core.Server
                         }
                     }
                 }
-                app.Invoke(t);
-                return Task.CompletedTask;
+                return app.Invoke(t);
             };
         }
 
