@@ -5,16 +5,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.PluginsDI
 {
+    /// <summary>
+    /// The plugin service provider factory.
+    /// </summary>
     public class PluginServiceProviderFactory : IServiceProviderFactory<IServiceCollection>
     {
-        public IServiceCollection CreateBuilder (IServiceCollection services)
+        /// <summary>
+        /// Creates the builder.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>An IServiceCollection.</returns>
+        public IServiceCollection CreateBuilder(IServiceCollection services)
         {
             return services;
         }
 
-        public IServiceProvider CreateServiceProvider (IServiceCollection containerBuilder)
+        /// <summary>
+        /// Creates the service provider.
+        /// </summary>
+        /// <param name="containerBuilder">The container builder.</param>
+        /// <returns>An IServiceProvider.</returns>
+        public IServiceProvider CreateServiceProvider(IServiceCollection containerBuilder)
         {
-            return containerBuilder.BuildPluginServiceProvider ();
+            return containerBuilder.BuildPluginServiceProvider();
         }
     }
 }

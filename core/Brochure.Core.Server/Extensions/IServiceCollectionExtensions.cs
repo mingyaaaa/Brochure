@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Core.Extenstions;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -23,7 +24,7 @@ namespace Brochure.Core.Server
         internal static async Task AddPluginController(this IServiceCollection services)
         {
             var mvcBuilder = services.AddMvcCore();
-            var provider = services.BuildServiceProvider();
+            var provider = services.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
             var application = provider.GetService<IBApplication>() as BApplication;
             application.ApplicationPartManager = mvcBuilder.PartManager;

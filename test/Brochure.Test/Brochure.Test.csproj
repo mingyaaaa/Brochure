@@ -6,8 +6,9 @@
   <ItemGroup>
     <PackageReference Include="AspectCore.Core" Version="2.1.0" />
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.1.0" />
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7733" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7733" />
+    <PackageReference Include="AutoFixture.AutoMoq" Version="4.15.0" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.*" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.16.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />

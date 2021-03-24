@@ -8,56 +8,52 @@ namespace Brochure.Abstract
     public interface IPluginManagers
     {
         /// <summary>
-        /// 解析插件
-        /// </summary>
-        /// <param name="serviceDescriptors"></param>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        Task ResolverPlugins (IServiceProvider services);
-
-        /// <summary>
         /// 注册插件
         /// </summary>
         /// <param name="plugin"></param>
-        void Regist (IPlugins plugin);
+        void Regist(IPlugins plugin);
 
         /// <summary>
         /// 移除插件
         /// </summary>
         /// <param name="plugin"></param>
-        Task Remove (IPlugins plugin);
-
+        Task Remove(IPlugins plugin);
+        /// <summary>
+        /// 移除插件
+        /// </summary>
+        /// <param name="plugin"></param>
+        Task Remove(Guid key);
         /// <summary>
         /// 获取插件详情
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IPlugins GetPlugin (Guid key);
+        IPlugins GetPlugin(Guid key);
 
         /// <summary>
         /// 获取当前插件
         /// </summary>
         /// <returns></returns>
-        List<IPlugins> GetPlugins ();
+        List<IPlugins> GetPlugins();
 
         /// <summary>
         /// 判断插件是否存在
         /// </summary>
         /// <returns></returns>
-        bool IsExistPlugins (Guid id);
+        bool IsExistPlugins(Guid id);
 
         /// <summary>
         /// 获取插件路径
         /// </summary>
         /// <returns></returns>
-        string GetBasePluginsPath ();
+        string GetBasePluginsPath();
 
         /// <summary>
         /// 获取当前插件版本
         /// </summary>
         /// <param name="version"></param>
         /// <returns></returns>
-        long GetPluginVersion (Guid key);
+        long GetPluginVersion(Guid key);
 
     }
 }

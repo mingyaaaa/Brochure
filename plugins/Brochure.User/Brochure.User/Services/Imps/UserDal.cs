@@ -1,14 +1,13 @@
 ﻿using Brochure.Abstract;
 using Brochure.ORM.Querys;
+using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Entrities;
-using Brochure.User.Models;
 using Brochure.User.Repository;
 using Brochure.User.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Brochure.User.Services.Imps

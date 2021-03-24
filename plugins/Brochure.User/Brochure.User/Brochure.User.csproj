@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Program</StartAction>
-    <StartProgram>..\..\Brochure.Server.Main\bin\Debug\net5.0\Brochure.Server.Main.dll</StartProgram>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -15,10 +14,11 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7736" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7736" />
-    <PackageReference Include="Grpc.Core" Version="2.35.0" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7761" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7761" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />

@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Abstract.Utils;
 using Brochure.Core;
 using Brochure.Core.Server;
 using Brochure.Utils;
@@ -17,6 +18,7 @@ namespace Brochure.Server.Main.Controllers
     [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "Main")]
     public class TestController : ControllerBase
     {
         private readonly IPluginLoader pluginLoader;

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Server;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Brochure.Server.Main
 {
@@ -37,14 +40,18 @@ namespace Brochure.Server.Main
         /// Configures the services.
         /// </summary>
         /// <param name="services">The services.</param>
-        public async void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Main", Version = "v1" });
+                c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
+                c.DocInclusionPredicate((docName, apiDes) =>
+                {
+                    return true;
+                });
             });
             services.AddControllers();
-            await services.AddBrochureServer();
+            services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         // 
@@ -64,7 +71,7 @@ namespace Brochure.Server.Main
             app.IntertMiddle("swagger", Guid.Empty, 8, () => app.UseSwagger());
             app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Main v1");
+                c.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
             }));
 
             var log = app.ApplicationServices.GetService<ILogger<Startup>>();

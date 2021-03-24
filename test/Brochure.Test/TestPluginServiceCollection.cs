@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
@@ -24,16 +25,18 @@ namespace Brochure.Test
 
         public TestPluginServiceCollection()
         {
-            base.InitBaseService();
+
             Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext>();
-            Service.AddSingleton<IPluginManagers, PluginManagers>();
+            Service.TryAddSingleton<IPluginManagers, PluginManagers>();
             Service.AddSingleton<IModuleLoader, ModuleLoader>();
             Service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
             Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction>();
             Service.AddSingleton<IPluginContext, PluginContext>();
             Service.AddSingleton<IPluginLoader, PluginLoader>();
+            base.InitBaseService();
             var objectFactoryMock = GetMockService<IObjectFactory>();
             objectFactoryMock.Setup(t => t.Create<ConcurrentDictionary<Guid, IPlugins>>()).Returns(new ConcurrentDictionary<Guid, IPlugins>());
+
         }
 
         [TestMethod]
@@ -140,7 +143,40 @@ namespace Brochure.Test
             Assert.AreEqual(2, collection.Count());
         }
 
+        [TestMethod]
+        public async Task TestBuilderPluginService()
+        {
+            var provider = Service.BuildPluginServiceProvider();
+            var manager = provider.GetService<IPluginManagers>();
+            var p1 = new P1(provider);
+            manager.Regist(p1);
+
+            var provider1 = Service.BuildPluginServiceProvider();
+            var manager1 = provider1.GetService<IPluginManagers>();
+            Assert.AreSame(manager, manager1);
+        }
+
+        [TestMethod("测试插件中使用主程序的依赖服务")]
+        public void Test1()
+        {
+            Service.AddSingleton<ImpTest2>();
+            var provider = Service.BuildPluginServiceProvider();
+            var manager = provider.GetService<IPluginManagers>();
+            var p1 = new P1(provider);
+            var pluginService = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
+            pluginService.AddSingleton<ImpTest3>();
+            manager.Regist(p1);
+            manager = provider.GetService<IPluginManagers>();
+        }
+
     }
+
+    public class TestOption
+    {
+        public int P1 { get; set; } = 1;
+        public int P2 { get; set; } = 1;
+    }
+
 
     public interface ITestInterceptor : IDisposable
     {
@@ -188,6 +224,15 @@ namespace Brochure.Test
             Trace.TraceInformation("ImpTest2");
         }
     }
+    public class ImpTest3
+    {
+        public class Option
+        {
+        }
+        public ImpTest3(ImpTest2 impTest2)
+        {
+        }
+    }
 
     public class Option<T>
     {
@@ -203,6 +248,8 @@ namespace Brochure.Test
     {
         public P2(IServiceProvider service) : base(service) { }
     }
+
+
     public class ConfigureRouteOptions : IConfigureOptions<RouteOptions>
     {
 

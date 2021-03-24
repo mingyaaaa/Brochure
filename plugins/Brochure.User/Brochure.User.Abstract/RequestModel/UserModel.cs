@@ -1,21 +1,20 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Brochure.Abstract;
-using Brochure.Extensions;
-using Brochure.ORM;
-using Brochure.User.Entrities;
-namespace Brochure.User.Models
-{
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// The user model.
-    /// </summary>
+namespace Brochure.User.Abstract.RequestModel
+{
     public class UserModel
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserModel"/> class.
         /// </summary>
-        public UserModel () : base () { }
+        public UserModel()
+        {
+        }
 
         /// <summary>
         /// 姓名

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.User.Models;
+using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +12,8 @@ namespace Brochure.User.Controllers
     /// 用户接口
     /// </summary>
     [Route("api/v1/[controller]")]
+    [ApiController]
+    [ApiExplorerSettings(GroupName = "User")]
     public class UserController : ControllerBase
     {
         private readonly IObjectFactory objectFactory;

@@ -15,6 +15,7 @@
   </ItemGroup>
     <ItemGroup>
     <Folder Include="Protos\" />
+    <Folder Include="ResponseModel\" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Protos\user.proto" CompileOutputs="false">

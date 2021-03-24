@@ -15,41 +15,41 @@ namespace Brochure.Authority
 {
     public class AuthorityPlugin : Plugins
     {
-        public AuthorityPlugin (IServiceProvider service) : base (service) { }
+        public AuthorityPlugin(IServiceProvider service) : base(service) { }
 
-        public override Task<bool> StartingAsync (out string errorMsg)
+        public override Task<bool> StartingAsync(out string errorMsg)
         {
             errorMsg = string.Empty;
-            var pluginServiceCollection = this.Context.GetPluginContext<PluginServiceCollectionContext> ();
-            pluginServiceCollection.AddAuthentication (t =>
-            {
-                t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer (t =>
+            var pluginServiceCollection = this.Context.GetPluginContext<PluginServiceCollectionContext>();
+            pluginServiceCollection.AddAuthentication(t =>
+           {
+               t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+               t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+           }).AddJwtBearer(t =>
 
-                {
-                    t.RequireHttpsMetadata = true;
-                    t.SaveToken = true;
-                    t.TokenValidationParameters = new TokenValidationParameters ()
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes ("123")),
-                        ValidIssuer = "http://localhost:5000",
-                        ValidAudience = "api"
-                    };
-                });
+               {
+                   t.RequireHttpsMetadata = false;
+                   t.SaveToken = true;
+                   t.TokenValidationParameters = new TokenValidationParameters()
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("123")),
+                       ValidIssuer = "http://localhost:5000",
+                       ValidAudience = "api"
+                   };
+               });
             // pluginServiceCollection.AddAuthorization ();
 
             // Context.AddIdentityServer ().AddDeveloperSigningCredential ()
             //     .AddInMemoryClients (InitMemoryData.GetClients ())
             //     .AddInMemoryApiResources (InitMemoryData.GetApiResources ());
-            pluginServiceCollection.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService> ();
-            return Task.FromResult (true);
+            pluginServiceCollection.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
+            return Task.FromResult(true);
         }
     }
     public static class InitMemoryData
     {
-        public static IEnumerable<Client> GetClients ()
+        public static IEnumerable<Client> GetClients()
         {
             var result = new List<Client>
             {
@@ -77,9 +77,9 @@ namespace Brochure.Authority
             };
             return result;
         }
-        public static IEnumerable<ApiResource> GetApiResources ()
+        public static IEnumerable<ApiResource> GetApiResources()
         {
-            var result = new List<ApiResource> ()
+            var result = new List<ApiResource>()
             {
                 new ApiResource ("api1"),
                 new ApiResource ("api2"),

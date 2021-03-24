@@ -1,22 +1,13 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Brochure.User.Repository;
 using Grpc.Core;
 using User.Rpc;
 using static User.Rpc.UserService;
 using UseModel = User.Rpc;
-using Brochure.ORM;
-using Brochure.ORM.Querys;
-using Brochure.User.Entrities;
-using System.Collections.Generic;
 using Brochure.Abstract;
-using Brochure.User.Models;
-using Google.Protobuf.Collections;
-using Brochure.User.Abstract;
-using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.User.Services.Interfaces;
+using Brochure.User.Abstract.RequestModel;
 
 namespace Brochure.User.Services
 {

@@ -5,6 +5,7 @@ using Brochure.Abstract.Utils;
 using Brochure.Core;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -43,7 +44,7 @@ namespace Brochure.Test
         }
         private void SetMockService<T>(IMock<T> mockService) where T : class
         {
-            Service.AddSingleton<T>(mockService.Object);
+            Service.TryAddSingleton<T>(mockService.Object);
             MockService.Add(typeof(T), mockService);
         }
         public Mock<T> GetMockService<T>() where T : class

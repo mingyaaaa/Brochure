@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Brochure.Abstract": {
+      "commandName": "Executable",
+      "executablePath": "F:\\GitProgram\\bin\\Brochure.Server.Main.exe"
+    }
+  }
+}

@@ -1,14 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.Abstract.Models;
-using Brochure.ORM.Querys;
-using Brochure.User.Entrities;
-using Brochure.User.Models;
-using Brochure.User.Repository;
+using Brochure.User.Abstract.RequestModel;
 
 namespace Brochure.User.Services.Interfaces
 {

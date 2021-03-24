@@ -1,9 +1,14 @@
 using System.Threading.Tasks;
 using Brochure.Core;
+using Brochure.Core.Extenstions;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 namespace Brochure.User
 {
     /// <summary>
@@ -30,6 +35,10 @@ namespace Brochure.User
             var pluginService = this.Context.GetPluginContext<PluginServiceCollectionContext>();
             pluginService.AddScoped<IUserDal, UserDal>();
             pluginService.AddScoped<IUserRepository, UserRepository>();
+            pluginService.AddSwaggerGen(t =>
+            {
+                t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
+            });
             return base.StartingAsync(out errorMsg);
         }
     }

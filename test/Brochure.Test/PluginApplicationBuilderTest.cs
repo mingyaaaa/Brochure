@@ -41,5 +41,24 @@ namespace Brochure.Test
             var count = middleManager.GetMiddlesList().Count;
             Assert.AreEqual(1, count);
         }
+
+        [TestMethod]
+        public async Task TestUseConfig()
+        {
+            var listener = new DiagnosticListener("Microsoft.AspNetCore");
+            Service.TryAddSingleton<DiagnosticListener>(listener);
+            Service.AddOptions();
+            Service.AddRouting();
+            await Service.AddBrochureServer();
+            var provider = Service.BuildPluginServiceProvider();
+            var manager = provider.GetService<IPluginManagers>();
+
+            var middleManager = provider.GetService<IMiddleManager>();
+            var builderFactory = new ApplicationBuilderFactory(provider);
+            var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
+            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider, manager);
+            var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
+            builder.ConfigPlugin();
+        }
     }
 }

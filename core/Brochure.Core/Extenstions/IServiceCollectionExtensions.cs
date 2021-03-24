@@ -53,6 +53,8 @@ namespace Brochure.Core
             //加载一些核心的程序
             service.InitApplicationCore();
 
+
+
             return service;
         }
 
@@ -94,8 +96,9 @@ namespace Brochure.Core
 
         internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
         {
+
             //注入插件模块
-            var provider = service.BuildPluginServiceProvider();
+            var provider = service.BuildServiceProvider();
             //加载模块
             var modelLoader = provider.GetService<IModuleLoader>();
             //处理当前程序集和入口程序集
@@ -104,6 +107,7 @@ namespace Brochure.Core
             {
                 modelLoader.LoadModule(provider, service, item);
             }
+
             return service;
         }
 

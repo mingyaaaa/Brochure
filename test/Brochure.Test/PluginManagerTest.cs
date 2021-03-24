@@ -54,8 +54,8 @@ namespace Brochure.Test
             var msg = string.Empty;
             pluginMock.Setup(t => t.StartingAsync(out msg)).Returns(Task.FromResult(true));
 
-            var manager = autoMock.CreateInstance<PluginManagers>();
-            await manager.ResolverPlugins(serviceProviderMock.Object);
+            var manager = autoMock.CreateInstance<PluginLoader>();
+            await manager.LoadPlugin(serviceProviderMock.Object);
             modulerMock.Verify(t => t.LoadModule(It.IsAny<IServiceProvider>(), It.IsAny<PluginServiceCollectionContext>(), It.IsAny<Assembly>()));
             pluginMock.Verify(t => t.StartingAsync(out msg));
         }
@@ -86,8 +86,8 @@ namespace Brochure.Test
             autoMock.Use(loaderActionMock.Object);
 
             autoMock.Use<IObjectFactory>(objectFactory.Object);
-            var ins = autoMock.CreateInstance<PluginManagers>();
-            await ins.ResolverPlugins(serviceProviderMock.Object);
+            var ins = autoMock.CreateInstance<PluginLoader>();
+            await ins.LoadPlugin(serviceProviderMock.Object);
 
             loaderActionMock.Verify(t => t.Invoke(It.IsAny<Guid>()), Times.Once);
         }
