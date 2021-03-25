@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Kernel;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
@@ -19,8 +22,12 @@ namespace Brochure.Test
             Service = new ServiceCollection();
             MockService = new Dictionary<Type, object>();
             Log = new Mock<ILogger<BaseTest>>();
+            Fixture = new Fixture();
+            Fixture.Customize(new AutoMoqCustomization());
+            Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
         }
         protected IServiceCollection Service { get; }
+        protected IFixture Fixture;
         protected Dictionary<Type, object> MockService { get; }
 
         protected Mock<ILogger<BaseTest>> Log { get; }
@@ -56,4 +63,9 @@ namespace Brochure.Test
 
         }
     }
+
+    /// <summary>
+    /// The test plugin.
+    /// </summary>
+
 }

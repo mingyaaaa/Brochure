@@ -26,6 +26,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestAddBrochureCoreServer()
         {
+            services.AddControllers();//此处需要加入这个 否则  会出错误
             await services.AddBrochureServer();
         }
     }

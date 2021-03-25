@@ -48,9 +48,16 @@ namespace Brochure.Core.PluginsDI
             {
                 if (item.Lifetime == ServiceLifetime.Singleton && !item.ServiceType.IsGenericType)
                 {
-                    var a = provider.GetService(item.ServiceType);
-                    if (a != null)
-                        t_service.AddSingleton(item.ServiceType, a);
+                    try
+                    {
+                        var a = provider.GetService(item.ServiceType);
+                        if (a != null)
+                            t_service.AddSingleton(item.ServiceType, a);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+
                 }
                 else
                 {
@@ -64,7 +71,6 @@ namespace Brochure.Core.PluginsDI
             {
                 var pluginsServiceCollection = item.Context.GetPluginContext<PluginServiceCollectionContext>();
                 t_provider = BuildServiceResolver(MergerCollection(_services, pluginsServiceCollection));
-                //t_provider = BuildServiceResolver(pluginsServiceCollection);
                 foreach (var serviceDescriptor in pluginsServiceCollection)
                 {
                     action(serviceDescriptor, t_provider);

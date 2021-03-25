@@ -42,16 +42,16 @@ namespace Brochure.Server.Main
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
-                c.DocInclusionPredicate((docName, apiDes) =>
-                {
-                    return true;
-                });
-            });
             services.AddControllers();
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
+            //    c.DocInclusionPredicate((docName, apiDes) =>
+            //    {
+            //        return true;
+            //    });
+            //});
         }
 
         // 

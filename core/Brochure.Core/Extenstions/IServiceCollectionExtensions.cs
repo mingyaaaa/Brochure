@@ -36,7 +36,7 @@ namespace Brochure.Core
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
             //加载一些基本的工具类
             //工具类初始化
-            service.TryAddSingleton<IPluginManagers, PluginManagers>();
+            service.TryAddSingleton<IPluginManagers>(new PluginManagers());
             service.TryAddSingleton<IJsonUtil>(new JsonUtil());
             service.TryAddSingleton<IReflectorUtil>(new ReflectorUtil());
             service.TryAddSingleton<IObjectFactory>(new ObjectFactory());

@@ -22,7 +22,7 @@ namespace Brochure.Core
 
         private readonly ISysDirectory directory;
         private readonly IJsonUtil jsonUtil;
-        private readonly ILogger<PluginManagers> log;
+        private readonly ILogger<PluginLoader> log;
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
         private readonly IPluginManagers _pluginManagers;
@@ -40,7 +40,7 @@ namespace Brochure.Core
         /// <param name="objectFactory">The object factory.</param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
-            ILogger<PluginManagers> log,
+            ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
             IPluginManagers pluginManagers,
@@ -187,6 +187,7 @@ namespace Brochure.Core
                 try
                 {
                     context.UnLoad();
+                    NotifyUnload(key);
                 }
                 catch (Exception ex)
                 {

@@ -27,7 +27,7 @@ namespace Brochure.Test
         {
 
             Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext>();
-            Service.TryAddSingleton<IPluginManagers, PluginManagers>();
+            Service.TryAddSingleton<IPluginManagers>(new PluginManagers());
             Service.AddSingleton<IModuleLoader, ModuleLoader>();
             Service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
             Service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction>();
@@ -143,7 +143,7 @@ namespace Brochure.Test
             Assert.AreEqual(2, collection.Count());
         }
 
-        [TestMethod]
+        [TestMethod("保证IPluginManager在所有容器中的实例一致")]
         public async Task TestBuilderPluginService()
         {
             var provider = Service.BuildPluginServiceProvider();

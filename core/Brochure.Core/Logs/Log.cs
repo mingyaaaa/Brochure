@@ -9,56 +9,56 @@ namespace Brochure.Core
         internal static ILogger Logger { get; set; }
         internal static IServiceCollection Services { get; set; }
         private static ILoggerFactory factory;
-        public Log ()
+        public Log()
         {
-            factory = Services.GetServiceInstance<ILoggerFactory> ();
+            factory = Services.GetServiceInstance<ILoggerFactory>();
         }
 
-        public static void Info (string msg)
+        public static void Info(string msg)
         {
-            EnsureLogger ();
-            Logger.LogInformation (msg);
+            EnsureLogger();
+            Logger.LogInformation(msg);
         }
-        public static void Error (string msg, Exception e = null)
+        public static void Error(string msg, Exception e = null)
         {
-            EnsureLogger ();
-            Logger.LogError (msg, e);
+            EnsureLogger();
+            Logger.LogError(msg, e);
         }
-        public static void Warning (string msg)
+        public static void Warning(string msg)
         {
-            EnsureLogger ();
-            Logger.LogWarning (msg);
-        }
-
-        public static void Info<T> (string msg)
-        {
-            var logger = factory.CreateLogger<T> ();
-            logger.LogInformation (msg);
-        }
-        public static void Error<T> (string msg, Exception e = null)
-        {
-            var logger = factory.CreateLogger<T> ();
-            logger.LogError (msg, e);
-        }
-        public static void Warning<T> (string msg)
-        {
-            var logger = factory.CreateLogger<T> ();
-            logger.LogWarning (msg);
+            EnsureLogger();
+            Logger.LogWarning(msg);
         }
 
-        private static void EnsureLogger ()
+        public static void Info<T>(string msg)
+        {
+            var logger = factory.CreateLogger<T>();
+            logger.LogInformation(msg);
+        }
+        public static void Error<T>(string msg, Exception e = null)
+        {
+            var logger = factory.CreateLogger<T>();
+            logger.LogError(msg, e);
+        }
+        public static void Warning<T>(string msg)
+        {
+            var logger = factory.CreateLogger<T>();
+            logger.LogWarning(msg);
+        }
+
+        private static void EnsureLogger()
         {
             if (Logger == null)
             {
-                EnsureLoggerFactorty ();
-                Logger = Services.GetServiceInstance<ILoggerFactory> ()?.CreateLogger ("Brochure");
+                EnsureLoggerFactorty();
+                Logger = Services.GetServiceInstance<ILoggerFactory>()?.CreateLogger("Brochure");
             }
         }
-        private static void EnsureLoggerFactorty ()
+        private static void EnsureLoggerFactorty()
         {
             if (factory == null)
             {
-                factory = Services.GetServiceInstance<ILoggerFactory> ();
+                factory = Services.GetServiceInstance<ILoggerFactory>();
             }
         }
     }
