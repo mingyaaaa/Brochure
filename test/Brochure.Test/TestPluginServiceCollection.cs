@@ -26,7 +26,6 @@ namespace Brochure.Test
         public TestPluginServiceCollection()
         {
 
-            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext>();
             Service.TryAddSingleton<IPluginManagers>(new PluginManagers());
             Service.AddSingleton<IModuleLoader, ModuleLoader>();
             Service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
@@ -46,8 +45,8 @@ namespace Brochure.Test
             var managers = mProvider.GetService<IPluginManagers>();
             var p1 = new P1(mProvider);
             managers.Regist(p1);
-            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            p1Context.AddSingleton<ITestInterceptor, ImpTestInterceptor>();
+            var p1Context = p1.Context;
+            p1Context.Services.AddSingleton<ITestInterceptor, ImpTestInterceptor>();
             var a = mProvider.GetService<ITestInterceptor>();
             Assert.IsNotNull(a);
         }
@@ -61,8 +60,8 @@ namespace Brochure.Test
             var managers = mProvider.GetService<IPluginManagers>();
             var p1 = new P1(mProvider);
             managers.Regist(p1);
-            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            p1Context.AddScoped<ITestInterceptor, ImpTestInterceptor>();
+            var p1Context = p1.Context;
+            p1Context.Services.AddScoped<ITestInterceptor, ImpTestInterceptor>();
             var test2 = mProvider.GetService<ITest2>();
             using (var scope = mProvider.CreateScope())
             {
@@ -84,8 +83,8 @@ namespace Brochure.Test
             var managers = mProvider.GetService<IPluginManagers>();
             var p1 = new P1(mProvider);
             managers.Regist(p1);
-            var p1Context = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            p1Context.AddScoped<ITestInterceptor, ImpTestInterceptor>();
+            var p1Context = p1.Context;
+            p1Context.Services.AddScoped<ITestInterceptor, ImpTestInterceptor>();
             var a1 = mProvider.GetService<ITest1>();
             var a2 = mProvider.GetService<ITest1>();
             Assert.AreNotSame(a1, a2);
@@ -101,8 +100,8 @@ namespace Brochure.Test
             var test1 = provider.GetService<ITest1>();
             var p1 = new P1(provider);
             managers.Regist(p1);
-            var context = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            context.AddSingleton<ITest2, ImpTest2>();
+            var context = p1.Context;
+            context.Services.AddSingleton<ITest2, ImpTest2>();
             var test2 = provider.GetService<ITest1>();
             Assert.AreSame(test1, test2);
         }
@@ -137,8 +136,8 @@ namespace Brochure.Test
             Assert.AreEqual(1, collection.Count());
             var p1 = new P1(provider);
             managers.Regist(p1);
-            var context = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            context.AddSingleton<ITest1, ImpTest11>();
+            var context = p1.Context;
+            context.Services.AddSingleton<ITest1, ImpTest11>();
             collection = provider.GetService<IEnumerable<ITest1>>();
             Assert.AreEqual(2, collection.Count());
         }
@@ -163,8 +162,8 @@ namespace Brochure.Test
             var provider = Service.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
             var p1 = new P1(provider);
-            var pluginService = p1.Context.GetPluginContext<PluginServiceCollectionContext>();
-            pluginService.AddSingleton<ImpTest3>();
+            var pluginService = p1.Context;
+            pluginService.Services.AddSingleton<ImpTest3>();
             manager.Regist(p1);
             manager = provider.GetService<IPluginManagers>();
         }
@@ -241,12 +240,12 @@ namespace Brochure.Test
 
     public class P1 : Plugins
     {
-        public P1(IServiceProvider service) : base(service) { }
+        public P1(IServiceProvider service) : base(new PluginContext()) { }
     }
 
     public class P2 : Plugins
     {
-        public P2(IServiceProvider service) : base(service) { }
+        public P2(IServiceProvider service) : base(new PluginContext()) { }
     }
 
 

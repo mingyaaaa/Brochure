@@ -26,10 +26,9 @@ namespace Brochure.Core.Server
                 if (item is Plugins pp)
                 {
                     var configs = reflectUtil.GetObjectOfBase<IStarupConfigure>(item.Assembly);
-                    var pluginMiddleContext = pp.Context.GetPluginContext<PluginMiddleContext>();
                     foreach (var config in configs)
                     {
-                        config.Configure(item.Key, pluginMiddleContext);
+                        config.Configure(item.Key, app);
                     }
                 }
             }

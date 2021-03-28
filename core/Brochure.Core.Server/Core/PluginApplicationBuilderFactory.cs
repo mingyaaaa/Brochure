@@ -34,11 +34,6 @@ namespace Brochure.Core.Server
         /// <returns>An IApplicationBuilder.</returns>
         public IApplicationBuilder CreateBuilder(IFeatureCollection serverFeatures)
         {
-            var plugins = pluginManagers.GetPlugins().OfType<Plugins>();
-            foreach (var item in plugins)
-            {
-                item.Context.Add(new PluginMiddleContext(provider, item.Key));
-            }
             var builder = new PluginApplicationBuilder(new ApplicationBuilder(provider, serverFeatures));
             return builder;
         }

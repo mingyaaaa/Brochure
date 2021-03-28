@@ -20,7 +20,6 @@ namespace Brochure.Test
         public InterceptorTest()
         {
             base.InitBaseService();
-            Service.AddSingleton<IPluginContextDescript, PluginServiceCollectionContext>();
             Service.AddSingleton<IPluginManagers, PluginManagers>();
             Service.AddSingleton<IModuleLoader, ModuleLoader>();
             Service.AddSingleton<IPluginLoader, PluginLoader>();

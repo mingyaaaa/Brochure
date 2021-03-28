@@ -69,7 +69,7 @@ namespace Brochure.Core.PluginsDI
                 action(item, t_provider);
             foreach (var item in plugins)
             {
-                var pluginsServiceCollection = item.Context.GetPluginContext<PluginServiceCollectionContext>();
+                var pluginsServiceCollection = item.Context.Services;
                 t_provider = BuildServiceResolver(MergerCollection(_services, pluginsServiceCollection));
                 foreach (var serviceDescriptor in pluginsServiceCollection)
                 {

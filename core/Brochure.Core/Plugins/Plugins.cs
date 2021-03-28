@@ -11,11 +11,18 @@ namespace Brochure.Core
     public abstract class Plugins : IPlugins
     {
         public IPluginContext Context { get; }
-        public Plugins (IServiceProvider service)
+
+        public Plugins() : this(new PluginContext())
+        {
+
+        }
+
+        public Plugins(IPluginContext pluginContexts)
         {
             Order = int.MaxValue;
-            Context = service.GetService<IPluginContext> ();
+            Context = pluginContexts;
         }
+
 
         public Guid Key { get; set; }
         public string Name { get; set; }
@@ -30,26 +37,26 @@ namespace Brochure.Core
         /// <summary>
         /// 配置服务
         /// </summary>
-        public virtual Task StartAsync ()
+        public virtual Task StartAsync()
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task ExitAsync ()
+        public virtual Task ExitAsync()
         {
             return Task.CompletedTask;
         }
 
-        public virtual Task<bool> StartingAsync (out string errorMsg)
+        public virtual Task<bool> StartingAsync(out string errorMsg)
         {
             errorMsg = string.Empty;
-            return Task.FromResult (true);
+            return Task.FromResult(true);
         }
 
-        public virtual Task<bool> ExitingAsync (out string errorMsg)
+        public virtual Task<bool> ExitingAsync(out string errorMsg)
         {
             errorMsg = string.Empty;
-            return Task.FromResult (true);
+            return Task.FromResult(true);
         }
     }
 }

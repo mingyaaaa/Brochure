@@ -125,8 +125,7 @@ namespace Brochure.Core
                     if (p != null && p is IPlugins plugin)
                     {
                         pluginKey = p.Key;
-                        var pluginServiceCollectionContext = plugin.Context.GetPluginContext<PluginServiceCollectionContext>();
-                        _moduleLoader.LoadModule(provider, pluginServiceCollectionContext, plugin.Assembly);
+                        _moduleLoader.LoadModule(provider, plugin.Context.Services, plugin.Assembly);
                         if (await StartPlugin(plugin))
                         {
                             _pluginManagers.Regist(plugin);

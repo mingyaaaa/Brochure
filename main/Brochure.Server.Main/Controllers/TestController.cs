@@ -60,11 +60,11 @@ namespace Brochure.Server.Main.Controllers
             if (application is BApplication app)
             {
                 var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure>(plugin.Assembly);
-                var context = new PluginMiddleContext(app.ServiceProvider, plugin.Key);
-                plugin.Context.Add(context);
+                //         var context = new PluginMiddleContext(app.ServiceProvider, plugin.Key);
+                //  plugin.Context.Services.Add(context);
                 foreach (var item in startConfigs)
                 {
-                    item.Configure(plugin.Key, context);
+                    item.Configure(plugin.Key, app.Builder);
                 }
                 app.ApplicationPartManager.ApplicationParts.Add(new AssemblyPart(plugin.Assembly));
             }

@@ -37,7 +37,6 @@ namespace Brochure.Test
             var name = "PA";
             var provider = new Mock<IServiceProvider>();
             var jsonUtilMock = new Mock<IJsonUtil>();
-            var pluginContextDescript = new Mock<IPluginContextDescript>();
             jsonUtilMock.Setup(t => t.Get<PluginConfig>(pluginConfigPath)).Returns(new PluginConfig() { Key = guid, Name = name, AssemblyName = "test.dll" });
             var loadContextMock = new Mock<IPluginsLoadContext>();
             objFactoryMock.Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(provider.Object, It.IsAny<IAssemblyDependencyResolverProxy>()))
@@ -93,11 +92,11 @@ namespace Brochure.Test
 
         protected class PA : Plugins
         {
-            public PA(IServiceProvider service) : base(service) { }
+            public PA(IServiceProvider service) : base() { }
         }
         protected class PB : Plugins
         {
-            public PB(IServiceProvider service) : base(service) { }
+            public PB(IServiceProvider service) : base() { }
         }
     }
 }
