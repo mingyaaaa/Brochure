@@ -8,9 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.User.Abstract", "B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B28FCAD7-18A0-4319-8887-6FEE2F5B8DAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.User.WebApi", "Brochure.User.WebApi\Brochure.User.WebApi.csproj", "{C08EB4AB-7BC0-4220-ACF9-DE50337896CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.User.WebApi", "Brochure.User.WebApi\Brochure.User.WebApi.csproj", "{C08EB4AB-7BC0-4220-ACF9-DE50337896CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brochure.User.Test", "Brochure.User.Test\Brochure.User.Test.csproj", "{B442068A-1D74-43A0-82DA-519C5345F661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.User.Test", "Brochure.User.Test\Brochure.User.Test.csproj", "{B442068A-1D74-43A0-82DA-519C5345F661}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

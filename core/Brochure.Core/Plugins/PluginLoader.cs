@@ -79,7 +79,7 @@ namespace Brochure.Core
             if (allPluginTypes.Count == 2)
                 throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
-            var plugin = (Plugins)objectFactory.Create(pluginType, provider);
+            var plugin = (Plugins)objectFactory.Create(pluginType);
             SetPluginValues(pluginConfig, assemably, ref plugin);
             pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
             return ValueTask.FromResult((IPlugins)plugin);
@@ -116,6 +116,7 @@ namespace Brochure.Core
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
+            var listPlugins = new List<IPlugins>();
             foreach (var pluginConfigPath in allPluginPath)
             {
                 Guid pluginKey = Guid.Empty;
@@ -128,7 +129,7 @@ namespace Brochure.Core
                         _moduleLoader.LoadModule(provider, plugin.Context.Services, plugin.Assembly);
                         if (await StartPlugin(plugin))
                         {
-                            _pluginManagers.Regist(plugin);
+                            listPlugins.Add(plugin);
                             NotifyLoad(plugin.Key);
                             continue;
                         }
@@ -138,10 +139,13 @@ namespace Brochure.Core
                 catch (Exception e)
                 {
                     log.LogError(e, e.Message);
-                    await _pluginManagers.Remove(pluginKey);
                     if (pluginKey != Guid.Empty)
                         await UnLoad(pluginKey);
                 }
+            }
+            foreach (var item in listPlugins)
+            {
+                _pluginManagers.Regist(item);
             }
         }
         private void NotifyUnload(Guid key)

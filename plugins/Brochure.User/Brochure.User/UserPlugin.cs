@@ -4,10 +4,12 @@ using Brochure.Core.Extenstions;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Brochure.User
 {
@@ -20,7 +22,7 @@ namespace Brochure.User
         /// Initializes a new instance of the <see cref="UserPlugin"/> class.
         /// </summary>
         /// <param name="service">The service.</param>
-        public UserPlugin(System.IServiceProvider service) : base(service)
+        public UserPlugin()
         {
 
         }
@@ -32,12 +34,15 @@ namespace Brochure.User
         /// <returns>A Task.</returns>
         public override Task<bool> StartingAsync(out string errorMsg)
         {
-            var pluginService = this.Context.GetPluginContext<PluginServiceCollectionContext>();
-            pluginService.AddScoped<IUserDal, UserDal>();
-            pluginService.AddScoped<IUserRepository, UserRepository>();
-            pluginService.AddSwaggerGen(t =>
+            Context.Services.AddScoped<IUserDal, UserDal>();
+            Context.Services.AddScoped<IUserRepository, UserRepository>();
+            Context.Services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
+            });
+            Context.Services.Configure<SwaggerUIOptions>(t =>
+            {
+                t.SwaggerEndpoint("/swagger/user_v1/swagger.json", "User");
             });
             return base.StartingAsync(out errorMsg);
         }

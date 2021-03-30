@@ -22,7 +22,7 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="pluginManagers">The plugin managers.</param>
-        public PluginApplicationBuilderFactory(IServiceProvider provider, IPluginManagers pluginManagers)
+        public PluginApplicationBuilderFactory(IPluginServiceProvider provider, IPluginManagers pluginManagers)
         {
             this.provider = provider;
             this.pluginManagers = pluginManagers;

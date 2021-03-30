@@ -18,6 +18,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\GiteeProgram\Swashbuckle.AspNetCore\src\Swashbuckle.AspNetCore.SwaggerUI\Swashbuckle.AspNetCore.SwaggerUI.csproj" />
     <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
     <ProjectReference Include="..\..\core\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>

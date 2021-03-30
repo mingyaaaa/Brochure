@@ -43,7 +43,6 @@ namespace Brochure.Server.Main
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
@@ -52,6 +51,8 @@ namespace Brochure.Server.Main
                     return true;
                 });
             });
+            services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
+
         }
 
         // 
@@ -67,13 +68,6 @@ namespace Brochure.Server.Main
             {
                 app.UseDeveloperExceptionPage();
             }
-            // 添加Swagger有关中间件
-            app.IntertMiddle("swagger", Guid.Empty, 8, () => app.UseSwagger());
-            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
-            }));
-
             var log = app.ApplicationServices.GetService<ILogger<Startup>>();
             var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>>();
             routeOption.Value.SuppressCheckForUnhandledSecurityMetadata = true;
@@ -82,8 +76,15 @@ namespace Brochure.Server.Main
                 t.ServiceProvider = app.ApplicationServices;
                 t.Builder = app;
             }
+            // 添加Swagger有关中间件
+            app.IntertMiddle("swagger", Guid.Empty, 7, () => app.UseSwagger());
+            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
+            }));
             app.IntertMiddle("main-routing", Guid.Empty, 10, () => app.UseRouting());
             app.ConfigPlugin();
+
             app.IntertMiddle("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints(endpoints => endpoints.MapControllers()));
         }
     }

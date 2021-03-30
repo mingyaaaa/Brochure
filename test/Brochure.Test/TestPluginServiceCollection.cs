@@ -168,6 +168,97 @@ namespace Brochure.Test
             manager = provider.GetService<IPluginManagers>();
         }
 
+
+        [TestMethod("测试主服务工厂方法")]
+        public void TestBuilderPluginServiceFacroty()
+        {
+            var a = 1;
+            Service.AddTransient<ITest1>(t =>
+            {
+                a++;
+                return new ImpTest1();
+            });
+            Service.AddScoped<ITest2>(t =>
+             {
+                 a++;
+                 return new ImpTest2();
+             });
+            var mProvider = Service.BuildPluginServiceProvider();
+            var managers = mProvider.GetService<IPluginManagers>();
+            var p1 = new P1(mProvider);
+            managers.Regist(p1);
+            var a1 = mProvider.GetService<ITest1>();
+            var a2 = mProvider.GetService<ITest1>();
+            Assert.AreEqual(a, 3);
+
+            using var scope = mProvider.CreateScope();
+            var a11 = scope.ServiceProvider.GetService<ITest2>();
+            var a22 = scope.ServiceProvider.GetService<ITest2>();
+            Assert.AreEqual(a, 4);
+            Assert.AreSame(a11, a22);
+        }
+
+        [TestMethod("测试插件工厂方法")]
+        public void TestBuilderPluginServiceFacroty1()
+        {
+            var a = 1;
+            var mProvider = Service.BuildPluginServiceProvider();
+            var managers = mProvider.GetService<IPluginManagers>();
+            var p1 = new P1(mProvider);
+            managers.Regist(p1);
+
+            p1.Context.Services.AddScoped<ITest2>(t =>
+            {
+                a++;
+                return new ImpTest2();
+            });
+
+            p1.Context.Services.AddTransient<ITest1>(t =>
+            {
+                a++;
+                return new ImpTest1();
+            });
+            var a1 = mProvider.GetService<ITest1>();
+            var a2 = mProvider.GetService<ITest1>();
+            Assert.AreEqual(a, 3);
+
+
+            using var scope = mProvider.CreateScope();
+            var a11 = scope.ServiceProvider.GetService<ITest2>();
+            var a22 = scope.ServiceProvider.GetService<ITest2>();
+            Assert.AreSame(a11, a22);
+            Assert.AreEqual(4, a);
+        }
+
+        [TestMethod("测试插件Options处理")]
+        public void TestBuilderPluginServiceFacrotyOption()
+        {
+            Service.AddSingleton(typeof(IOptions<>));
+            Service.AddScoped(typeof(IOptionsSnapshot<>));
+            var a = 1;
+            var mProvider = Service.BuildPluginServiceProvider();
+            var managers = mProvider.GetService<IPluginManagers>();
+            var p1 = new P1(mProvider);
+            managers.Regist(p1);
+
+            p1.Context.Services.Configure<TestOption>(t =>
+            {
+                a++;
+                t.P1 = 2;
+            });
+
+            using var scope = mProvider.CreateScope();
+            var a11 = scope.ServiceProvider.GetService<IOptionsSnapshot<TestOption>>().Value;
+            Assert.AreEqual(2, a);
+            Assert.AreEqual(2, a11.P1);
+
+            using var scope1 = mProvider.CreateScope();
+            var a22 = scope1.ServiceProvider.GetService<IOptionsSnapshot<TestOption>>().Value;
+            Assert.AreEqual(3, a);
+            Assert.AreEqual(2, a22.P1);
+        }
+
+
     }
 
     public class TestOption

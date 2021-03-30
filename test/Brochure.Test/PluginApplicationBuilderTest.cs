@@ -43,7 +43,7 @@ namespace Brochure.Test
             var middleManager = provider.GetService<IMiddleManager>();
             var builderFactory = new ApplicationBuilderFactory(provider);
             var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
-            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider, manager);
+            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider as IPluginServiceProvider, manager);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
             builder.IntertMiddle("main-routing", Guid.Empty, 10, () => builder.UseRouting());
             var count = middleManager.GetMiddlesList().Count;
@@ -64,7 +64,7 @@ namespace Brochure.Test
             var middleManager = provider.GetService<IMiddleManager>();
             var builderFactory = new ApplicationBuilderFactory(provider);
             var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
-            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider, manager);
+            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider as IPluginServiceProvider, manager);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
             builder.ConfigPlugin();
         }
