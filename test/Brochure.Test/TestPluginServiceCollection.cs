@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
+using AutoFixture;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
@@ -43,7 +44,7 @@ namespace Brochure.Test
         {
             var mProvider = Service.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
             var p1Context = p1.Context;
             p1Context.Services.AddSingleton<ITestInterceptor, ImpTestInterceptor>();
@@ -58,7 +59,7 @@ namespace Brochure.Test
             Service.AddSingleton<ITest2, ImpTest2>();
             var mProvider = Service.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
             var p1Context = p1.Context;
             p1Context.Services.AddScoped<ITestInterceptor, ImpTestInterceptor>();
@@ -81,7 +82,7 @@ namespace Brochure.Test
             Service.AddTransient<ITest1, ImpTest1>();
             var mProvider = Service.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
             var p1Context = p1.Context;
             p1Context.Services.AddScoped<ITestInterceptor, ImpTestInterceptor>();
@@ -98,7 +99,7 @@ namespace Brochure.Test
             var provider = Service.BuildPluginServiceProvider();
             var managers = provider.GetService<IPluginManagers>();
             var test1 = provider.GetService<ITest1>();
-            var p1 = new P1(provider);
+            var p1 = new P1();
             managers.Regist(p1);
             var context = p1.Context;
             context.Services.AddSingleton<ITest2, ImpTest2>();
@@ -119,7 +120,7 @@ namespace Brochure.Test
             var provider = Service.BuildPluginServiceProvider();
             var test1 = provider.GetService<IOptions<RouteOptions>>();
             Assert.IsNotNull(test1.Value);
-            var p1 = new P1(provider);
+            var p1 = new P1();
             managers.Regist(p1);
             var test2 = provider.GetService<IOptions<RouteOptions>>();
         }
@@ -134,7 +135,7 @@ namespace Brochure.Test
             var collection = provider.GetService<IEnumerable<ITest1>>();
             Assert.IsNotNull(collection);
             Assert.AreEqual(1, collection.Count());
-            var p1 = new P1(provider);
+            var p1 = new P1();
             managers.Regist(p1);
             var context = p1.Context;
             context.Services.AddSingleton<ITest1, ImpTest11>();
@@ -147,7 +148,7 @@ namespace Brochure.Test
         {
             var provider = Service.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
-            var p1 = new P1(provider);
+            var p1 = new P1();
             manager.Regist(p1);
 
             var provider1 = Service.BuildPluginServiceProvider();
@@ -161,7 +162,7 @@ namespace Brochure.Test
             Service.AddSingleton<ImpTest2>();
             var provider = Service.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
-            var p1 = new P1(provider);
+            var p1 = new P1();
             var pluginService = p1.Context;
             pluginService.Services.AddSingleton<ImpTest3>();
             manager.Regist(p1);
@@ -185,7 +186,7 @@ namespace Brochure.Test
              });
             var mProvider = Service.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
             var a1 = mProvider.GetService<ITest1>();
             var a2 = mProvider.GetService<ITest1>();
@@ -204,7 +205,7 @@ namespace Brochure.Test
             var a = 1;
             var mProvider = Service.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
 
             p1.Context.Services.AddScoped<ITest2>(t =>
@@ -233,12 +234,12 @@ namespace Brochure.Test
         [TestMethod("测试插件Options处理")]
         public void TestBuilderPluginServiceFacrotyOption()
         {
-            Service.AddSingleton(typeof(IOptions<>));
-            Service.AddScoped(typeof(IOptionsSnapshot<>));
+            var server = new ServiceCollection();
+            server.AddSingleton<IPluginManagers>(new PluginManagers());
             var a = 1;
-            var mProvider = Service.BuildPluginServiceProvider();
+            var mProvider = server.BuildPluginServiceProvider();
             var managers = mProvider.GetService<IPluginManagers>();
-            var p1 = new P1(mProvider);
+            var p1 = new P1();
             managers.Regist(p1);
 
             p1.Context.Services.Configure<TestOption>(t =>
@@ -258,6 +259,29 @@ namespace Brochure.Test
             Assert.AreEqual(2, a22.P1);
         }
 
+        [TestMethod("泛型类的实例依赖注入")]
+        public void MyTestMethod()
+        {
+
+            var fix = new Fixture();
+            var a = fix.Create<string>();
+            var count = 0;
+            var mProvider = Service.BuildPluginServiceProvider();
+            var managers = mProvider.GetService<IPluginManagers>();
+            var p1 = new P1();
+            managers.Regist(p1);
+
+            p1.Context.Services.AddSingleton<IOption<ITest1>>(new ImpOption<ITest1>(t =>
+            {
+                count++;
+            })
+            { Op = a });
+
+            var p = mProvider.GetService<IOption<ITest1>>();
+            Assert.AreEqual(a, p.Op);
+            p.Invoke();
+            Assert.AreEqual(1, count);
+        }
 
     }
 
@@ -282,11 +306,13 @@ namespace Brochure.Test
     }
     public interface ITest1 : IDisposable
     {
-
+        int PTest1 { get; set; }
     }
 
     public class ImpTest1 : ITest1
     {
+        public int PTest1 { get; set; }
+
         public void Dispose()
         {
             Trace.TraceInformation("ImpTest1");
@@ -295,6 +321,8 @@ namespace Brochure.Test
 
     public class ImpTest11 : ITest1
     {
+        public int PTest1 { get; set; }
+
         public void Dispose()
         {
 
@@ -324,19 +352,37 @@ namespace Brochure.Test
         }
     }
 
-    public class Option<T>
+    public interface IOption<T>
     {
+        string Op { get; set; }
 
+        void Invoke();
+    }
+
+    public class ImpOption<T> : IOption<T>
+    {
+        private readonly Action<T> _action;
+
+        public ImpOption(Action<T> action)
+        {
+            _action = action;
+        }
+        public string Op { get; set; }
+
+        public void Invoke()
+        {
+            _action.Invoke((T)(object)null);
+        }
     }
 
     public class P1 : Plugins
     {
-        public P1(IServiceProvider service) : base(new PluginContext()) { }
+        public P1() : base(new PluginContext()) { }
     }
 
     public class P2 : Plugins
     {
-        public P2(IServiceProvider service) : base(new PluginContext()) { }
+        public P2() : base(new PluginContext()) { }
     }
 
 

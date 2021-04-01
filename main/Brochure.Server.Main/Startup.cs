@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Brochure.Server.Main
 {
@@ -46,13 +47,12 @@ namespace Brochure.Server.Main
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
-                c.DocInclusionPredicate((docName, apiDes) =>
-                {
-                    return true;
-                });
+            });
+            services.Configure<SwaggerUIOptions>(t =>
+            {
+                t.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
             });
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
-
         }
 
         // 
@@ -76,12 +76,11 @@ namespace Brochure.Server.Main
                 t.ServiceProvider = app.ApplicationServices;
                 t.Builder = app;
             }
+            var bb = app.ApplicationServices.GetServices<IConfigureOptions<SwaggerUIOptions>>();
+            var a = app.ApplicationServices.GetService<IOptionsSnapshot<SwaggerUIOptions>>().Value;
             // 添加Swagger有关中间件
             app.IntertMiddle("swagger", Guid.Empty, 7, () => app.UseSwagger());
-            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
-            }));
+            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI());
             app.IntertMiddle("main-routing", Guid.Empty, 10, () => app.UseRouting());
             app.ConfigPlugin();
 

@@ -44,9 +44,10 @@ namespace Brochure.Core
             string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
             if (assemblyPath != null && !_sysAssemblyNameList.Contains(assemblyName.Name))
             {
-                return LoadFromAssemblyPath(assemblyPath);
+                var ass = LoadFromAssemblyPath(assemblyPath);
+                _sysAssemblyNameList.Add(assemblyName.Name);
+                return ass;
             }
-            _sysAssemblyNameList.Add(assemblyPath);
             return null;
         }
 

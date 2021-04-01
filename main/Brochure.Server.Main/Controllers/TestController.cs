@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 namespace Brochure.Server.Main.Controllers
 {
     /// <summary>
-    /// 
+    /// The test controller.
     /// </summary>
     [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
-    [ApiExplorerSettings(GroupName = "Main")]
+    [ApiExplorerSettings(GroupName = "main_v1")]
     public class TestController : ControllerBase
     {
         private readonly IPluginLoader pluginLoader;

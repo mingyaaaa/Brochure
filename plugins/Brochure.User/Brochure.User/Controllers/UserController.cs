@@ -13,7 +13,7 @@ namespace Brochure.User.Controllers
     /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
-    [ApiExplorerSettings(GroupName = "User")]
+    [ApiExplorerSettings(GroupName = "user_v1")]
     public class UserController : ControllerBase
     {
         private readonly IObjectFactory objectFactory;

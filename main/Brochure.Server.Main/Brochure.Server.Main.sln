@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core.Server", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Core", "..\..\core\Brochure.Core\Brochure.Core.csproj", "{86277172-25D1-4B1A-BD6B-158382D66D80}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swashbuckle.AspNetCore.SwaggerUI", "..\..\..\..\GiteeProgram\Swashbuckle.AspNetCore\src\Swashbuckle.AspNetCore.SwaggerUI\Swashbuckle.AspNetCore.SwaggerUI.csproj", "{73969EBF-970C-4096-B1DF-F1095D91D367}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{86277172-25D1-4B1A-BD6B-158382D66D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86277172-25D1-4B1A-BD6B-158382D66D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86277172-25D1-4B1A-BD6B-158382D66D80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73969EBF-970C-4096-B1DF-F1095D91D367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73969EBF-970C-4096-B1DF-F1095D91D367}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73969EBF-970C-4096-B1DF-F1095D91D367}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73969EBF-970C-4096-B1DF-F1095D91D367}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
