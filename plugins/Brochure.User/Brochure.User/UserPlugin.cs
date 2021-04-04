@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
@@ -39,6 +41,13 @@ namespace Brochure.User
             Context.Services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
+                var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
+                // 获取xml文件名
+                var xmlFile = $"{fileName}.xml";
+                // 获取xml文件路径
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName, xmlFile);
+                // 添加控制器层注释，true表示显示控制器注释
+                t.IncludeXmlComments(xmlPath, true);
             });
             Context.Services.Configure<SwaggerUIOptions>(t =>
             {

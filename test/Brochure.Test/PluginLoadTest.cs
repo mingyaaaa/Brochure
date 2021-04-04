@@ -51,7 +51,7 @@ namespace Brochure.Test
 
             objFactoryMock.Setup(t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>()).Returns(new ConcurrentDictionary<Guid, IPluginsLoadContext>());
             reflectorUtilMock.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new List<Type>() { typeof(PA) });
-            objFactoryMock.Setup(t => t.Create(It.IsAny<Type>(), provider.Object)).Returns(new PA(provider.Object));
+            objFactoryMock.Setup(t => t.Create(It.IsAny<Type>())).Returns(new PA(provider.Object));
             loader = autoMock.CreateInstance<PluginLoader>();
             var plugin = await loader.LoadPlugin(provider.Object, pluginConfigPath);
             Assert.AreEqual(guid, plugin.Key);

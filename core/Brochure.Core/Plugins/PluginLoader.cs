@@ -80,7 +80,7 @@ namespace Brochure.Core
                 throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
             var pluginType = allPluginTypes[0];
             var plugin = (Plugins)objectFactory.Create(pluginType);
-            SetPluginValues(pluginConfig, assemably, ref plugin);
+            SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
             pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
             return ValueTask.FromResult((IPlugins)plugin);
         }
@@ -212,7 +212,7 @@ namespace Brochure.Core
         /// <param name="config">The config.</param>
         /// <param name="assembly">The assembly.</param>
         /// <param name="plugin">The plugin.</param>
-        private void SetPluginValues(PluginConfig config, Assembly assembly, ref Plugins plugin)
+        private void SetPluginValues(string pluginDir, PluginConfig config, Assembly assembly, ref Plugins plugin)
         {
             if (config == null)
                 throw new ArgumentException(nameof(PluginConfig));
@@ -224,6 +224,7 @@ namespace Brochure.Core
             plugin.Name = config.Name;
             plugin.Version = config.Version;
             plugin.Order = config.Order;
+            plugin.PluginDirectory = pluginDir;
         }
 
     }

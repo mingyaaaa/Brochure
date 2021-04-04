@@ -67,7 +67,7 @@ namespace Brochure.Test
 
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>(), It.IsAny<IServiceProvider>())).Returns(plugin);
+            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>(), It.IsAny<object>())).Returns(loadPluginContext.Object);
 
             await ins.LoadPlugin(serviceProviderMock.Object);
@@ -101,7 +101,7 @@ namespace Brochure.Test
 
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>(), It.IsAny<IServiceProvider>())).Returns(plugin);
+            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>(), It.IsAny<object>())).Returns(loadPluginContext.Object);
 
             await ins.LoadPlugin(serviceProviderMock.Object);

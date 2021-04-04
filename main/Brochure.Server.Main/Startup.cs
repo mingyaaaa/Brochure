@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Server;
@@ -47,6 +49,14 @@ namespace Brochure.Server.Main
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
+
+                // 获取xml文件名
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                // 获取xml文件路径
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                // 添加控制器层注释，true表示显示控制器注释
+                c.IncludeXmlComments(xmlPath, true);
+
             });
             services.Configure<SwaggerUIOptions>(t =>
             {
