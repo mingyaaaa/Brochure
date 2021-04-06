@@ -67,22 +67,32 @@ namespace Brochure.Core
         /// <returns>A ValueTask.</returns>
         public ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
         {
-            var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
-            var pluginDir = Path.GetDirectoryName(pluginConfigPath);
-            var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
-            var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>(pluginPath);
-            var locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext>(provider, assemblyDependencyResolverProxy);
-            var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
-            var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
-            if (allPluginTypes.Count == 0)
-                throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
-            if (allPluginTypes.Count == 2)
-                throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
-            var pluginType = allPluginTypes[0];
-            var plugin = (Plugins)objectFactory.Create(pluginType);
-            SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
-            pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-            return ValueTask.FromResult((IPlugins)plugin);
+            IPluginsLoadContext locadContext = null;
+            try
+            {
+                var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
+                var pluginDir = Path.GetDirectoryName(pluginConfigPath);
+                var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
+                var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>(pluginPath);
+                locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext>(provider, assemblyDependencyResolverProxy);
+                var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
+                var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
+                if (allPluginTypes.Count == 0)
+                    throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
+                if (allPluginTypes.Count == 2)
+                    throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
+                var pluginType = allPluginTypes[0];
+                var plugin = (Plugins)objectFactory.Create(pluginType);
+                SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
+                pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
+                return ValueTask.FromResult((IPlugins)plugin);
+            }
+            catch (Exception e)
+            {
+                log.LogError(e, e.Message);
+                locadContext?.UnLoad();
+                throw;
+            }
         }
 
         /// <summary>
@@ -117,35 +127,42 @@ namespace Brochure.Core
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             var listPlugins = new List<IPlugins>();
+            //加载程序集
             foreach (var pluginConfigPath in allPluginPath)
             {
                 Guid pluginKey = Guid.Empty;
                 try
                 {
                     var p = await LoadPlugin(provider, pluginConfigPath);
-                    if (p != null && p is IPlugins plugin)
+                    if (p != null)
                     {
-                        pluginKey = p.Key;
-                        _moduleLoader.LoadModule(provider, plugin.Context.Services, plugin.Assembly);
-                        if (await StartPlugin(plugin))
-                        {
-                            listPlugins.Add(plugin);
-                            NotifyLoad(plugin.Key);
-                            continue;
-                        }
+                        listPlugins.Add(p);
                     }
-                    throw new Exception($"{p.Name}插件加载失败");
                 }
                 catch (Exception e)
                 {
                     log.LogError(e, e.Message);
-                    if (pluginKey != Guid.Empty)
-                        await UnLoad(pluginKey);
                 }
             }
-            foreach (var item in listPlugins)
+            //执行插件初始化
+            foreach (var plugin in listPlugins)
             {
-                _pluginManagers.Regist(item);
+                try
+                {
+                    _moduleLoader.LoadModule(provider, plugin.Context.Services, plugin.Assembly);
+                    if (await StartPlugin(plugin))
+                    {
+                        _pluginManagers.Regist(plugin);
+                        NotifyLoad(plugin.Key);
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.LogError(e, e.Message);
+                    if (plugin.Key != Guid.Empty)
+                        await UnLoad(plugin.Key);
+                }
+
             }
         }
         private void NotifyUnload(Guid key)

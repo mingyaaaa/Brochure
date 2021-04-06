@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using AspectCore.DynamicProxy.Parameters;
 using Brochure.Abstract;
 using Brochure.Abstract.PluginDI;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,15 @@ namespace Brochure.Core
         public IPluginServiceProvider Service { get; }
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private readonly HashSet<string> _sysAssemblyNameList;
+        private static HashSet<string> MainAssemblies;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
+        /// </summary>
+        static PluginsLoadContext()
+        {
+            MainAssemblies = new HashSet<string>(Default.Assemblies.Select(t => t.GetName().Name));
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
@@ -31,7 +41,7 @@ namespace Brochure.Core
             if (this.Service == null)
                 throw new Exception("请传入IPluginServiceProvider类型");
             _resolver = resolverProxy;
-            _sysAssemblyNameList = new HashSet<string>(Default.Assemblies.Select(t => t.GetName().Name));
+            _sysAssemblyNameList = new HashSet<string>();
         }
 
         /// <summary>
@@ -42,7 +52,7 @@ namespace Brochure.Core
         protected override Assembly Load(AssemblyName assemblyName)
         {
             string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            if (assemblyPath != null && !_sysAssemblyNameList.Contains(assemblyName.Name))
+            if (assemblyPath != null && !ContainAssembly(assemblyName.Name))
             {
                 var ass = LoadFromAssemblyPath(assemblyPath);
                 _sysAssemblyNameList.Add(assemblyName.Name);
@@ -83,5 +93,17 @@ namespace Brochure.Core
         {
             Unload();
         }
+        /// <summary>
+        /// Contains the assembly.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A bool.</returns>
+        private bool ContainAssembly(string name)
+        {
+            if (MainAssemblies.Contains(name) || _sysAssemblyNameList.Contains(name))
+                return true;
+            return false;
+        }
+
     }
 }
