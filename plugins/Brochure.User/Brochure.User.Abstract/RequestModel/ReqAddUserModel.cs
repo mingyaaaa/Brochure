@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace Brochure.User.Abstract.RequestModel
 {
-    public class UserModel
+    /// <summary>
+    /// The req add user model.
+    /// </summary>
+    public class ReqAddUserModel
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserModel"/> class.
-        /// </summary>
-        public UserModel()
-        {
-        }
-
         /// <summary>
         /// 姓名
         /// </summary>
@@ -25,7 +21,7 @@ namespace Brochure.User.Abstract.RequestModel
         /// 年龄
         /// </summary>
         /// <value></value>
-        public int Age { get; set; }
+        public int? Age { get; set; }
         /// <summary>
         /// 证件号
         /// </summary>

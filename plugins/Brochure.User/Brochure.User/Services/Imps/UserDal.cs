@@ -62,9 +62,9 @@ namespace Brochure.User.Services.Imps
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IEnumerable<UserModel>> GetUsers(IEnumerable<string> ids)
+        public async ValueTask<IEnumerable<ReqUserModel>> GetUsers(IEnumerable<string> ids)
         {
-            var list = new List<UserModel>();
+            var list = new List<ReqUserModel>();
             var idsList = ids.ToList();
             var count = idsList.Count;
             if (count == 0)
@@ -78,7 +78,7 @@ namespace Brochure.User.Services.Imps
             var entrity = await repository.List(query);
             foreach (var item in entrity)
             {
-                var model = objectFactory.Create<UserEntrity, UserModel>(item);
+                var model = objectFactory.Create<UserEntrity, ReqUserModel>(item);
                 list.Add(model);
             }
             return list;
@@ -89,9 +89,9 @@ namespace Brochure.User.Services.Imps
         /// </summary>
         /// <param name="users">The users.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IEnumerable<UserModel>> InsertUsers(IEnumerable<UserModel> users)
+        public async ValueTask<IEnumerable<ReqUserModel>> InsertUsers(IEnumerable<ReqUserModel> users)
         {
-            var userEntirys = users.Select(t => objectFactory.Create<UserModel, UserEntrity>(t));
+            var userEntirys = users.Select(t => objectFactory.Create<ReqUserModel, UserEntrity>(t));
             var list = await repository.Insert(userEntirys);
             return users;
         }

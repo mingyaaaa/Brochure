@@ -41,7 +41,7 @@ namespace Brochure.User.Services
             var userResponse = new UserResponse();
             foreach (var item in user)
             {
-                var obj = _objectFactory.Create<UserModel, UseModel.User>(item);
+                var obj = _objectFactory.Create<ReqUserModel, UseModel.User>(item);
                 userResponse.Users.Add(obj);
             }
             return userResponse;
@@ -76,7 +76,7 @@ namespace Brochure.User.Services
         public override async Task<UserResponse> Insert(MutiUserRequest request, ServerCallContext context)
         {
             var users = request.Users.ToList();
-            var inserUsers = users.Select(t => _objectFactory.Create<UserModel>(t));
+            var inserUsers = users.Select(t => _objectFactory.Create<ReqUserModel>(t));
             var r = await _userDal.InsertUsers(inserUsers);
             var rsp = new UserResponse();
             foreach (var item in r)

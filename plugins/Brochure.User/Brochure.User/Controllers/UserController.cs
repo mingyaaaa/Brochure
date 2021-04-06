@@ -37,9 +37,9 @@ namespace Brochure.User.Controllers
         /// <returns>A Task.</returns>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromQuery] UserModel user)
+        public async Task<IActionResult> AddUser([FromQuery] ReqAddUserModel user)
         {
-            var r = await userDal.InsertUsers(new List<UserModel>() { user });
+            var r = await userDal.InsertUsers(new List<ReqAddUserModel>() { user });
             if (r == null)
                 return Problem("添加错误");
             return new JsonResult(r);
@@ -65,8 +65,8 @@ namespace Brochure.User.Controllers
         /// <param name="model">The model.</param>
         /// <returns>A Task.</returns>
         [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromQuery] string userId, [FromBody] UserModel model)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser([FromQuery] string userId, [FromBody] ReqUpdateUserModel model)
         {
             var record = objectFactory.Create(model);
             var r = await userDal.UpdateUser(userId, record);
