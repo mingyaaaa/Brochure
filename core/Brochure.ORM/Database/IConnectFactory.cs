@@ -2,28 +2,47 @@ using System;
 using System.Data;
 namespace Brochure.ORM.Database
 {
+    /// <summary>
+    /// The connect factory.
+    /// </summary>
     public interface IConnectFactory
     {
-        IDbConnection CreaConnection ();
+        /// <summary>
+        /// Creates the connection.
+        /// </summary>
+        /// <returns>An IDbConnection.</returns>
+        IDbConnection CreateConnection();
     }
+    /// <summary>
+    /// The connect factory.
+    /// </summary>
     public class ConnectFactory : IConnectFactory
     {
         private readonly IDbProvider provider;
         private IDbConnection dbConnection;
         private readonly DbOption dbOption;
 
-        public ConnectFactory (IDbProvider provider , DbOption dbOption)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectFactory"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="dbOption">The db option.</param>
+        public ConnectFactory(IDbProvider provider, DbOption dbOption)
         {
             this.provider = provider;
             this.dbOption = dbOption;
         }
-        public IDbConnection CreaConnection ()
+        /// <summary>
+        /// Creates the connection.
+        /// </summary>
+        /// <returns>An IDbConnection.</returns>
+        public IDbConnection CreateConnection()
         {
             if (dbConnection != null)
                 return dbConnection;
-            dbConnection = provider.GetDbConnection ();
-            if (string.IsNullOrWhiteSpace (dbOption.ConnectionString))
-                throw new Exception ("请设置数据库连接字符串");
+            dbConnection = provider.GetDbConnection();
+            if (string.IsNullOrWhiteSpace(dbOption.ConnectionString))
+                throw new Exception("请设置数据库连接字符串");
             dbConnection.ConnectionString = dbOption.ConnectionString;
             dbOption.DatabaseName = dbConnection.Database;
             return dbConnection;

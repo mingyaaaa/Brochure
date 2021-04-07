@@ -13,13 +13,13 @@ namespace Brochure.ORM.Querys
         Query<T> Build<T>();
 
     }
-    public class QueryBuilder : IQueryBuilder
+    public class DefaultQueryBuilder : IQueryBuilder
     {
         private readonly IDbProvider dbProvider;
         private readonly DbOption dbOption;
         private readonly IVisitProvider visitProvider;
 
-        public QueryBuilder(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
+        public DefaultQueryBuilder(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
         {
             this.dbProvider = dbProvider;
             this.dbOption = dbOption;

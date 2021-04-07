@@ -14,8 +14,8 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7780" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7780" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7781" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7781" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1">
@@ -38,4 +38,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties pluginsetting_1json__JsonSchema="https://beaujs.com/schema.json" /></VisualStudio></ProjectExtensions>
 </Project>

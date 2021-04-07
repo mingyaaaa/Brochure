@@ -15,23 +15,23 @@ namespace LinqDbQueryTest.Datas
         public AutoMocker MockService;
         protected IServiceCollection Services;
         protected IServiceProvider Provider;
-        public BaseTest ()
+        public BaseTest()
         {
-            MockService = new AutoMocker ();
-            Services = new ServiceCollection ();
-            Services.AddScoped<IDbProvider, MySqlDbProvider> ();
-            Services.AddScoped<IVisitProvider, VisitProvider> ();
-            Services.AddTransient<ExpressionVisitor, WhereVisitor> ();
-            Services.AddTransient<ExpressionVisitor, GroupVisitor> ();
-            Services.AddTransient<ExpressionVisitor, OrderVisitor> ();
-            Services.AddTransient<ExpressionVisitor, SelectVisitor> ();
-            Services.AddTransient<ExpressionVisitor, JoinVisitor> ();
-            Services.AddTransient<ExpressionVisitor, HavingVisitor> ();
-            Services.AddScoped<DbSql, MySqlDbSql> ();
-            Services.AddScoped<IQueryBuilder, QueryBuilder> ();
-            Services.AddSingleton<IConnectFactory, ConnectFactory> ();
-            Services.AddSingleton<DbOption, MySqlOption> ();
-            Provider = Services.BuildServiceProvider ();
+            MockService = new AutoMocker();
+            Services = new ServiceCollection();
+            Services.AddScoped<IDbProvider, MySqlDbProvider>();
+            Services.AddScoped<IVisitProvider, VisitProvider>();
+            Services.AddTransient<ExpressionVisitor, WhereVisitor>();
+            Services.AddTransient<ExpressionVisitor, GroupVisitor>();
+            Services.AddTransient<ExpressionVisitor, OrderVisitor>();
+            Services.AddTransient<ExpressionVisitor, SelectVisitor>();
+            Services.AddTransient<ExpressionVisitor, JoinVisitor>();
+            Services.AddTransient<ExpressionVisitor, HavingVisitor>();
+            Services.AddScoped<DbSql, MySqlDbSql>();
+            Services.AddScoped<IQueryBuilder, DefaultQueryBuilder>();
+            Services.AddSingleton<IConnectFactory, ConnectFactory>();
+            Services.AddSingleton<DbOption, MySqlOption>();
+            Provider = Services.BuildServiceProvider();
         }
     }
 }
