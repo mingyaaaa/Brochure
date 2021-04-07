@@ -1,6 +1,7 @@
 ﻿using Brochure.Abstract;
 using Brochure.ORM.Querys;
 using Brochure.User.Abstract.RequestModel;
+using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Entrities;
 using Brochure.User.Repository;
 using Brochure.User.Services.Interfaces;
@@ -62,13 +63,12 @@ namespace Brochure.User.Services.Imps
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IEnumerable<ReqUserModel>> GetUsers(IEnumerable<string> ids)
+        public async ValueTask<IEnumerable<UserEntrity>> GetUsers(IEnumerable<string> ids)
         {
-            var list = new List<ReqUserModel>();
             var idsList = ids.ToList();
             var count = idsList.Count;
             if (count == 0)
-                return list;
+                return new List<UserEntrity>();
             Expression<Func<UserEntrity, bool>> fun = null;
             if (count == 1)
                 fun = t => t.Id == idsList[0];
@@ -76,12 +76,7 @@ namespace Brochure.User.Services.Imps
                 fun = t => ids.Contains(t.Id);
             var query = builder.Build<UserEntrity>().WhereAnd(fun);
             var entrity = await repository.List(query);
-            foreach (var item in entrity)
-            {
-                var model = objectFactory.Create<UserEntrity, ReqUserModel>(item);
-                list.Add(model);
-            }
-            return list;
+            return entrity;
         }
 
         /// <summary>
@@ -89,11 +84,11 @@ namespace Brochure.User.Services.Imps
         /// </summary>
         /// <param name="users">The users.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IEnumerable<ReqUserModel>> InsertUsers(IEnumerable<ReqUserModel> users)
+        public async ValueTask<IEnumerable<UserEntrity>> InsertUsers(IEnumerable<ReqAddUserModel> users)
         {
-            var userEntirys = users.Select(t => objectFactory.Create<ReqUserModel, UserEntrity>(t));
+            var userEntirys = users.Select(t => objectFactory.Create<ReqAddUserModel, UserEntrity>(t));
             var list = await repository.Insert(userEntirys);
-            return users;
+            return userEntirys;
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Abstract.ResponseModel;
+using Brochure.User.Entrities;
 
 namespace Brochure.User.Services.Interfaces
 {
@@ -16,7 +17,7 @@ namespace Brochure.User.Services.Interfaces
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A ValueTask.</returns>
-        ValueTask<IEnumerable<RspUserModel>> GetUsers(IEnumerable<string> ids);
+        ValueTask<IEnumerable<UserEntrity>> GetUsers(IEnumerable<string> ids);
 
         /// <summary>
         /// Updates the user.
@@ -45,6 +46,6 @@ namespace Brochure.User.Services.Interfaces
         /// </summary>
         /// <param name="users">The users.</param>
         /// <returns>A ValueTask.</returns>
-        ValueTask<IEnumerable<RspUserModel>> InsertUsers(IEnumerable<ReqAddUserModel> users);
+        ValueTask<IEnumerable<UserEntrity>> InsertUsers(IEnumerable<ReqAddUserModel> users);
     }
 }

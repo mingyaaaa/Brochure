@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApiClientCore;
 using WebApiClientCore.Attributes;
 
 namespace Brochure.User.WebApi
@@ -12,7 +13,7 @@ namespace Brochure.User.WebApi
     /// <summary>
     /// The user web api.
     /// </summary>
-    public interface IUserWebApi
+    public interface IUserWebApi : IHttpApi
     {
         /// <summary>
         /// Adds the.

@@ -13,12 +13,8 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7762" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7778" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
-    <ProjectReference Include="..\..\core\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>
 </Project>

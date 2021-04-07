@@ -8,19 +8,30 @@
 
   <ItemGroup>
     <None Remove="GrpcTest.cs~RF23e4c2c1.TMP" />
+    <None Remove="setting.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="setting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.16.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
     <PackageReference Include="coverlet.collector" Version="1.3.0" />
+    <PackageReference Include="WebApiClient.AOT" Version="1.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
     <ProjectReference Include="..\Brochure.User.WebApi\Brochure.User.WebApi.csproj" />
-    <ProjectReference Include="..\Brochure.User\Brochure.User.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
