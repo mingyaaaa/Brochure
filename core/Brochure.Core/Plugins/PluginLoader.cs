@@ -178,6 +178,11 @@ namespace Brochure.Core
             foreach (var item in _loadActions)
                 item.Invoke(key);
         }
+        /// <summary>
+        /// Starts the plugin.
+        /// </summary>
+        /// <param name="plugin">The plugin.</param>
+        /// <returns>A Task.</returns>
         private async Task<bool> StartPlugin(IPlugins plugin)
         {
             //处理插件          

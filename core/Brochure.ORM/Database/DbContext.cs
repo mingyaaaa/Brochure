@@ -3,6 +3,9 @@ using Brochure.ORM.Visitors;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The db context.
+    /// </summary>
     public abstract class DbContext
     {
         private readonly DbDatabase dbDatabase;
@@ -14,7 +17,18 @@ namespace Brochure.ORM
         private readonly DbData dbData;
         private readonly IVisitProvider visitProvider;
 
-        public DbContext (DbDatabase dbDatabase,
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbContext"/> class.
+        /// </summary>
+        /// <param name="dbDatabase">The db database.</param>
+        /// <param name="dbTable">The db table.</param>
+        /// <param name="dbColumns">The db columns.</param>
+        /// <param name="dbIndex">The db index.</param>
+        /// <param name="dbData">The db data.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="visitProvider">The visit provider.</param>
+        public DbContext(DbDatabase dbDatabase,
             DbTable dbTable, DbColumns dbColumns,
             DbIndex dbIndex, DbData dbData,
             DbOption dbOption,
@@ -30,41 +44,73 @@ namespace Brochure.ORM
             this.visitProvider = visitProvider;
         }
 
-        public DbOption GetDbOption ()
+        /// <summary>
+        /// Gets the db option.
+        /// </summary>
+        /// <returns>A DbOption.</returns>
+        public DbOption GetDbOption()
         {
             return dbOption;
         }
 
-        public DbData GetDbData ()
+        /// <summary>
+        /// Gets the db data.
+        /// </summary>
+        /// <returns>A DbData.</returns>
+        public DbData GetDbData()
         {
             return this.dbData;
         }
 
-        public DbDatabase GetDatabase ()
+        /// <summary>
+        /// Gets the database.
+        /// </summary>
+        /// <returns>A DbDatabase.</returns>
+        public DbDatabase GetDatabase()
         {
             return dbDatabase;
         }
 
-        public DbTable GetDbTable ()
+        /// <summary>
+        /// Gets the db table.
+        /// </summary>
+        /// <returns>A DbTable.</returns>
+        public DbTable GetDbTable()
         {
             return dbTable;
         }
 
-        public DbColumns GetColumns ()
+        /// <summary>
+        /// Gets the columns.
+        /// </summary>
+        /// <returns>A DbColumns.</returns>
+        public DbColumns GetColumns()
         {
             return dbColumns;
         }
 
-        public DbIndex GetDbIndex ()
+        /// <summary>
+        /// Gets the db index.
+        /// </summary>
+        /// <returns>A DbIndex.</returns>
+        public DbIndex GetDbIndex()
         {
             return dbIndex;
         }
-        public IDbProvider GetDbProvider ()
+        /// <summary>
+        /// Gets the db provider.
+        /// </summary>
+        /// <returns>An IDbProvider.</returns>
+        public IDbProvider GetDbProvider()
         {
             return this.dbProvider;
         }
 
-        public IVisitProvider GetVisitProvider ()
+        /// <summary>
+        /// Gets the visit provider.
+        /// </summary>
+        /// <returns>An IVisitProvider.</returns>
+        public IVisitProvider GetVisitProvider()
         {
             return visitProvider;
         }

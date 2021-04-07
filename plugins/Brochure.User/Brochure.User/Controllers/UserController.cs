@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.User.Abstract.RequestModel;
+using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Services.Interfaces;
+using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brochure.User.Controllers
@@ -14,6 +18,7 @@ namespace Brochure.User.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "user_v1")]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status500InternalServerError)]
     public class UserController : ControllerBase
     {
         private readonly IObjectFactory objectFactory;
@@ -37,7 +42,8 @@ namespace Brochure.User.Controllers
         /// <returns>A Task.</returns>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromQuery] ReqAddUserModel user)
+        [ProducesResponseType(typeof(ReqAddUserModel), StatusCodes.Status200OK)]
+        public async Task<ActionResult<RspUserModel>> AddUser([FromBody] ReqAddUserModel user)
         {
             var r = await userDal.InsertUsers(new List<ReqAddUserModel>() { user });
             if (r == null)

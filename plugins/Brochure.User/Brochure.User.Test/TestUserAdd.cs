@@ -24,15 +24,15 @@ namespace Brochure.User.Test
             });
             base.ConfigureService(services);
         }
-        [TestMethod]
-        public async Task MyTestMethod()
+        [TestMethod("测试添加人员")]
+        public async Task TestAdd()
         {
             var api = this.Service.GetService<IUserWebApi>();
             var req = Fixture.Create<ReqAddUserModel>();
             var rsp = await api.Add(req);
 
             Assert.AreEqual(req.IdCard, rsp.IdCard);
-            Assert.AreEqual(req.Name, rsp.IdCard);
+            Assert.AreEqual(req.Name, rsp.Name);
 
         }
     }

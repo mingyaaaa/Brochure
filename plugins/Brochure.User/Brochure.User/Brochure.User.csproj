@@ -14,11 +14,11 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7776" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7776" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7780" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7780" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" >
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

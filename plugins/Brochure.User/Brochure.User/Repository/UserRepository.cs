@@ -12,13 +12,13 @@ namespace Brochure.User.Repository
     /// <summary>
     /// The user repository.
     /// </summary>
-    internal class UserRepository : RepositoryBase<UserEntrity>, IUserRepository
+    public class UserRepository : RepositoryBase<UserEntrity>, IUserRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
         /// </summary>
         /// <param name="dbContext">The db context.</param>
         /// <param name="queryBuilder">The query builder.</param>
-        internal UserRepository(DbContext dbContext, IQueryBuilder queryBuilder) : base(dbContext, queryBuilder) { }
+        public UserRepository(DbContext dbContext, IQueryBuilder queryBuilder) : base(dbContext, queryBuilder) { }
     }
 }
