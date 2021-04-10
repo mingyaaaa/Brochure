@@ -25,19 +25,19 @@ namespace Brochure.ORM.Database
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="connectFactory">The connect factory.</param>
         /// <param name="objectFactory">The object factory.</param>
-        protected DbData(DbOption dbOption, DbSql dbSql, TransactionManager transactionManager, IConnectFactory connectFactory, IObjectFactory objectFactory)
+        protected DbData(DbOption dbOption, DbSql dbSql, ITransactionManager transactionManager, IConnectFactory connectFactory, IObjectFactory objectFactory)
         {
             Option = dbOption;
             this._dbSql = dbSql;
             this._transactionManager = transactionManager;
             this._connectFactory = connectFactory;
             _objectFactory = objectFactory;
-            _dbConnection = connectFactory.CreaConnection();
+            _dbConnection = connectFactory.CreateConnection();
         }
 
         protected DbOption Option;
         private readonly DbSql _dbSql;
-        private readonly TransactionManager _transactionManager;
+        private readonly ITransactionManager _transactionManager;
         private readonly IConnectFactory _connectFactory;
         private readonly IObjectFactory _objectFactory;
 
@@ -173,7 +173,7 @@ namespace Brochure.ORM.Database
         {
             var sql = query.GetSql();
             var parms = query.GetDbDataParameters();
-            var connect = _connectFactory.CreaConnection();
+            var connect = _connectFactory.CreateConnection();
             var command = connect.CreateCommand();
             command.CommandText = sql;
             command.Parameters.AddRange(parms);
@@ -195,7 +195,7 @@ namespace Brochure.ORM.Database
         {
             var sql = query.GetSql();
             var parms = query.GetDbDataParameters();
-            var connect = _connectFactory.CreaConnection();
+            var connect = _connectFactory.CreateConnection();
             var command = connect.CreateCommand();
             command.CommandText = sql;
             command.Parameters.AddRange(parms);
@@ -220,7 +220,7 @@ namespace Brochure.ORM.Database
         /// <returns>An IDbCommand.</returns>
         private IDbCommand CreateDbCommand()
         {
-            var connect = _connectFactory.CreaConnection();
+            var connect = _connectFactory.CreateConnection();
             var command = connect.CreateCommand();
             command.Transaction = _transactionManager.GetDbTransaction();
             return command;

@@ -2,7 +2,7 @@ namespace Brochure.ORM.Database
 {
     public interface ITransactionFactory
     {
-        ITransaction GetTransaction ();
+        ITransaction GetTransaction();
     }
 
     public class TransactionFactory : ITransactionFactory
@@ -11,24 +11,24 @@ namespace Brochure.ORM.Database
         private readonly DbOption dbOption;
         private readonly IConnectFactory connectFactory;
 
-        public TransactionFactory (ITransactionManager transactionManager, DbOption dbOption, IConnectFactory connectFactory)
+        public TransactionFactory(ITransactionManager transactionManager, DbOption dbOption, IConnectFactory connectFactory)
         {
             this.transactionManager = transactionManager;
             this.dbOption = dbOption;
             this.connectFactory = connectFactory;
         }
-        public ITransaction GetTransaction ()
+        public ITransaction GetTransaction()
         {
             if (transactionManager.IsEmpty)
             {
-                var connect = connectFactory.CreaConnection ();
-                connect.Open ();
-                var transaction = connect.BeginTransaction ();
-                return new Transaction (transaction);
+                var connect = connectFactory.CreateConnection();
+                connect.Open();
+                var transaction = connect.BeginTransaction();
+                return new Transaction(transaction);
             }
             else
             {
-                return new InnerTransaction (dbOption);
+                return new InnerTransaction(dbOption);
             }
         }
     }

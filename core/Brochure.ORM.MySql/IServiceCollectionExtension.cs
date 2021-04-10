@@ -39,7 +39,7 @@ namespace Brochure.ORM.MySql
                 return option;
             });
             services.TryAddScoped<DbSql, MySqlDbSql>();
-            services.TryAddScoped<TransactionManager, MySqlTransactionManager>();
+            services.TryAddScoped<ITransactionManager, MySqlTransactionManager>();
             services.TryAddScoped<DbContext, MySqlDbContext>();
             return services;
         }

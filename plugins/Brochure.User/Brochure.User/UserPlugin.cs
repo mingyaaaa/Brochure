@@ -3,13 +3,16 @@ using System.IO;
 using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
+using Brochure.ORM.MySql;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MySql.Data.MySqlClient;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -38,6 +41,15 @@ namespace Brochure.User
         {
             Context.Services.AddScoped<IUserDal, UserDal>();
             Context.Services.AddScoped<IUserRepository, UserRepository>();
+            Context.Services.AddMySql(t =>
+            {
+                var mysqlBuilder = new MySqlConnectionStringBuilder();
+                mysqlBuilder.Database = "test";
+                mysqlBuilder.UserID = "root";
+                mysqlBuilder.Password = "123";
+                mysqlBuilder.Server = "192.168.137.101";
+                t.ConnectionString = mysqlBuilder.ToString();
+            });
             Context.Services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });

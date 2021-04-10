@@ -9,7 +9,7 @@ namespace Brochure.ORM.Database
         private readonly DbSql _dbSql;
         private readonly IConnectFactory connectFactory;
 
-        protected DbIndex (DbOption option, DbSql dbSql, IConnectFactory connectFactory)
+        protected DbIndex(DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
             this._dbSql = dbSql;
@@ -17,33 +17,33 @@ namespace Brochure.ORM.Database
         }
 
         [Transaction]
-        public Task<long> CreateIndexAsync (string tableName, string[] columnNames, string indexName, string sqlIndex)
+        public Task<long> CreateIndexAsync(string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
-            return Task.Run (() => CreateIndex (tableName, columnNames, indexName, sqlIndex));
+            return Task.Run(() => CreateIndex(tableName, columnNames, indexName, sqlIndex));
         }
 
         [Transaction]
-        public virtual long CreateIndex (string tableName, string[] columnNames, string indexName, string sqlIndex)
+        public virtual long CreateIndex(string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
-            var connection = connectFactory.CreaConnection ();
-            var command = connection.CreateCommand ();
-            command.CommandText = _dbSql.GetCreateIndexSql (tableName, columnNames, indexName, sqlIndex);
-            return command.ExecuteNonQuery ();
+            var connection = connectFactory.CreateConnection();
+            var command = connection.CreateCommand();
+            command.CommandText = _dbSql.GetCreateIndexSql(tableName, columnNames, indexName, sqlIndex);
+            return command.ExecuteNonQuery();
         }
 
         [Transaction]
-        public Task<long> DeleteIndexAsync (string tableName, string indexName)
+        public Task<long> DeleteIndexAsync(string tableName, string indexName)
         {
-            return Task.Run (() => DeleteIndex (tableName, indexName));
+            return Task.Run(() => DeleteIndex(tableName, indexName));
         }
 
         [Transaction]
-        public virtual long DeleteIndex (string tableName, string indexName)
+        public virtual long DeleteIndex(string tableName, string indexName)
         {
-            var connection = connectFactory.CreaConnection ();
-            var command = connection.CreateCommand ();
-            command.CommandText = _dbSql.GetDeleteIndexSql (tableName, indexName);
-            return command.ExecuteNonQuery ();
+            var connection = connectFactory.CreateConnection();
+            var command = connection.CreateCommand();
+            command.CommandText = _dbSql.GetDeleteIndexSql(tableName, indexName);
+            return command.ExecuteNonQuery();
         }
     }
 }
