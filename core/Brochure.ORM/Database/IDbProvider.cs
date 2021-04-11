@@ -41,5 +41,12 @@ namespace Brochure.ORM
         /// </summary>
         /// <returns>A TypeMap.</returns>
         TypeMap GetTypeMap();
+
+        /// <summary>
+        /// Formats the field name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A string.</returns>
+        string FormatFieldName(string name);
     }
 }

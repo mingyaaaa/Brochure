@@ -5,10 +5,24 @@ using MySql.Data.MySqlClient;
 
 namespace Brochure.LinqDbQuery.MySql
 {
+    /// <summary>
+    /// The my sql option.
+    /// </summary>
     public class MySqlOption : DbOption
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlOption"/> class.
+        /// </summary>
         public MySqlOption() { }
 
+        /// <summary>
+        /// Uses the mysq.
+        /// </summary>
+        /// <param name="server">The server.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="pwd">The pwd.</param>
+        /// <param name="database">The database.</param>
+        /// <param name="connectTimeOut">The connect time out.</param>
         public void UseMysq(string server, string user, string pwd, string database = "", int connectTimeOut = 30)
         {
             var builder = new MySqlConnectionStringBuilder();

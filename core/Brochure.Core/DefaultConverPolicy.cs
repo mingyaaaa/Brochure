@@ -7,8 +7,9 @@ using Brochure.Utils;
 
 namespace Brochure.Core
 {
+
     /// <summary>
-    /// 默认使用的是jsonConver
+    /// The default conver policy.
     /// </summary>
     public class DefaultConverPolicy : IConverPolicy
     {

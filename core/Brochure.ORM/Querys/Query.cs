@@ -13,18 +13,18 @@ namespace Brochure.ORM
 
         protected List<IDbDataParameter> DbParameters;
 
-        protected Query (IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider)
+        protected Query(IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider)
         {
             this.option = option;
-            InitData ();
+            InitData();
             this.dbProvider = dbProvider;
             this.visitProvider = visitProvider;
         }
 
-        private void InitData ()
+        private void InitData()
         {
-            DbParameters = new List<IDbDataParameter> ();
-            InitMainTableNames ();
+            DbParameters = new List<IDbDataParameter>();
+            InitMainTableNames();
         }
 
         protected string selectSql;
@@ -39,9 +39,9 @@ namespace Brochure.ORM
         private readonly IDbProvider dbProvider;
         private readonly IVisitProvider visitProvider;
 
-        private string AddWhiteSpace (string str)
+        private string AddWhiteSpace(string str)
         {
-            if (!string.IsNullOrWhiteSpace (str))
+            if (!string.IsNullOrWhiteSpace(str))
                 return str + " ";
             return string.Empty;
         }
@@ -66,115 +66,116 @@ namespace Brochure.ORM
         //     return result;
         // }
 
-        protected T Join<T> (Type type, Expression expression) where T : Query
+        protected T Join<T>(Type type, Expression expression) where T : Query
         {
-            var joinVisitor = visitProvider.Builder<JoinVisitor> ();
-            joinVisitor.SetTableName (type);
-            joinVisitor.Visit (expression);
+            var joinVisitor = visitProvider.Builder<JoinVisitor>();
+            joinVisitor.SetTableName(type);
+            joinVisitor.Visit(expression);
             string t_joinSql;
-            if (string.IsNullOrWhiteSpace (joinSql))
+            if (string.IsNullOrWhiteSpace(joinSql))
                 t_joinSql = $"{joinVisitor.GetSql()}";
             else
                 t_joinSql = $"{joinSql} {joinVisitor.GetSql()}";
-            var tt = this.Copy<T> ();
+            var tt = this.Copy<T>();
             tt.joinSql = t_joinSql;
             return tt;
         }
 
-        protected T OrderBy<T> (Expression fun) where T : Query
+        protected T OrderBy<T>(Expression fun) where T : Query
         {
-            var orderVisitor = visitProvider.Builder<OrderVisitor> ();
-            orderVisitor.Visit (fun);
-            var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
-            var tt = this.Copy<T> ();
+            var orderVisitor = visitProvider.Builder<OrderVisitor>();
+            orderVisitor.Visit(fun);
+            var t_orderSql = orderVisitor.GetSql()?.ToString() ?? string.Empty;
+            var tt = this.Copy<T>();
             tt.orderSql = t_orderSql;
             return tt;
         }
-        protected T OrderBy<T> (string str) where T : Query
+        protected T OrderBy<T>(string str) where T : Query
         {
             this.orderSql = str;
-            return (T) this;
+            return (T)this;
         }
 
-        protected T OrderByDesc<T> (Expression fun) where T : Query
+        protected T OrderByDesc<T>(Expression fun) where T : Query
         {
-            var orderVisitor = visitProvider.Builder<OrderVisitor> ();
+            var orderVisitor = visitProvider.Builder<OrderVisitor>();
             orderVisitor.IsAes = false;
-            orderVisitor.Visit (fun);
-            var t_orderSql = orderVisitor.GetSql ()?.ToString () ?? string.Empty;
-            var tt = this.Copy<T> ();
+            orderVisitor.Visit(fun);
+            var t_orderSql = orderVisitor.GetSql()?.ToString() ?? string.Empty;
+            var tt = this.Copy<T>();
             tt.orderSql = t_orderSql;
             return tt;
         }
-        protected T OrderByDesc<T> (string str) where T : Query
+        protected T OrderByDesc<T>(string str) where T : Query
         {
             this.orderSql = str;
-            return (T) this;
+            return (T)this;
         }
-        protected T Select<T> (Expression fun) where T : Query
+        protected T Select<T>(Expression fun) where T : Query
         {
-            var selectVisitor = visitProvider.Builder<SelectVisitor> ();
-            selectVisitor.Visit (fun);
-            var t_selectSql = selectVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var selectVisitor = visitProvider.Builder<SelectVisitor>();
+            selectVisitor.Visit(fun);
+            var t_selectSql = selectVisitor.GetSql()?.ToString() ?? string.Empty;
+            //todo 此处如果FormateField 包含 正则表达式的特殊字符串 则需要进行转义
             //如果有group 则需要将Key替换成对应的分组属性
-            if (t_selectSql.ContainsReg (@"\[<>f__AnonymousType[0-9]`[0-9]\]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.ContainsReg($@"{dbProvider.FormatFieldName(@"<>f__AnonymousType[0-9]`[0-9]")}") && !string.IsNullOrWhiteSpace(groupSql))
             {
-                var groupField = groupSql.Replace ("group by", "").Trim ();
-                var groupFields = groupField.Split (',');
+                var groupField = groupSql.Replace("group by", "").Trim();
+                var groupFields = groupField.Split(',');
                 foreach (var item in groupFields)
                 {
-                    var filed = item.Split ('.') [1];
-                    t_selectSql = t_selectSql.ReplaceReg ($@"\[<>f__AnonymousType[0-9]`[0-9]\].\[{filed.Trim('[', ']')}\]", item);
+                    var filed = item.Split('.')[1];
+                    t_selectSql = t_selectSql.ReplaceReg($@"{dbProvider.FormatFieldName(@"<>f__AnonymousType[0-9]`[0-9]")}.{filed}", item);
                 }
             }
-            if (t_selectSql.ContainsReg (@"\[IGrouping`[0-9]\].\[Key\]") && !string.IsNullOrWhiteSpace (groupSql))
+            if (t_selectSql.ContainsReg($@"{dbProvider.FormatFieldName(@"IGrouping`[0-9]")}.{dbProvider.FormatFieldName(@"Key")}") && !string.IsNullOrWhiteSpace(groupSql))
             {
-                var groupField = groupSql.Replace ("group by", "").Trim ();
+                var groupField = groupSql.Replace("group by", "").Trim();
 
-                t_selectSql = t_selectSql.ReplaceReg (@"\[IGrouping`[0-9]\].\[Key\]", groupField);
+                t_selectSql = t_selectSql.ReplaceReg($@"{dbProvider.FormatFieldName(@"IGrouping`[0-9]")}.{dbProvider.FormatFieldName(@"Key")}", groupField);
             }
-            t_selectSql += JoinTableNames ();
+            t_selectSql += JoinTableNames();
             T tt;
             if (this is T t)
                 tt = t;
             else
-                tt = this.Copy<T> ();
+                tt = this.Copy<T>();
             tt.selectSql = t_selectSql;
             return tt;
         }
 
-        protected T WhereAnd<T> (Expression fun) where T : Query
+        protected T WhereAnd<T>(Expression fun) where T : Query
         {
-            var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
-            whereVisitor.AddParamters (this.DbParameters);
-            whereVisitor.Visit (fun);
-            var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var whereVisitor = visitProvider.BuilderNew<WhereVisitor>();
+            whereVisitor.AddParamters(this.DbParameters);
+            whereVisitor.Visit(fun);
+            var sql = whereVisitor.GetSql()?.ToString() ?? string.Empty;
             string t_whereSql = string.Empty;
-            if (string.IsNullOrWhiteSpace (whereSql))
+            if (string.IsNullOrWhiteSpace(whereSql))
             {
                 t_whereSql = sql;
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace (sql))
+                if (!string.IsNullOrWhiteSpace(sql))
                 {
                     t_whereSql = $"{whereSql} and ({sql.Replace("where ", "")})";
                 }
             }
-            var parameters = whereVisitor.GetParameters ();
-            var tt = this.Copy<T> ();
+            var parameters = whereVisitor.GetParameters();
+            var tt = this.Copy<T>();
             tt.whereSql = t_whereSql;
-            tt.DbParameters = parameters.ToList ();
+            tt.DbParameters = parameters.ToList();
             return tt;
         }
-        public T WhereAnd<T> (string str) where T : Query
+        public T WhereAnd<T>(string str) where T : Query
         {
-            if (string.IsNullOrWhiteSpace (str))
+            if (string.IsNullOrWhiteSpace(str))
             {
-                return (T) this;
+                return (T)this;
             }
             string t_whereSql;
-            if (string.IsNullOrWhiteSpace (whereSql))
+            if (string.IsNullOrWhiteSpace(whereSql))
             {
                 t_whereSql = str;
             }
@@ -183,17 +184,17 @@ namespace Brochure.ORM
                 t_whereSql = $"{whereSql} and ({str})";
             }
             this.whereSql = t_whereSql;
-            return (T) this;
+            return (T)this;
         }
 
-        public T WhereOr<T> (string str) where T : Query
+        public T WhereOr<T>(string str) where T : Query
         {
-            if (string.IsNullOrWhiteSpace (str))
+            if (string.IsNullOrWhiteSpace(str))
             {
-                return (T) this;
+                return (T)this;
             }
             string t_whereSql;
-            if (string.IsNullOrWhiteSpace (whereSql))
+            if (string.IsNullOrWhiteSpace(whereSql))
             {
                 t_whereSql = str;
             }
@@ -202,44 +203,44 @@ namespace Brochure.ORM
                 t_whereSql = $"{whereSql} or ({str})";
             }
             this.whereSql = t_whereSql;
-            return (T) this;
+            return (T)this;
         }
-        protected T WhereOr<T> (Expression fun) where T : Query
+        protected T WhereOr<T>(Expression fun) where T : Query
         {
-            var whereVisitor = visitProvider.BuilderNew<WhereVisitor> ();
-            whereVisitor.AddParamters (this.DbParameters);
-            whereVisitor.Visit (fun);
-            var sql = whereVisitor.GetSql ()?.ToString () ?? string.Empty;
+            var whereVisitor = visitProvider.BuilderNew<WhereVisitor>();
+            whereVisitor.AddParamters(this.DbParameters);
+            whereVisitor.Visit(fun);
+            var sql = whereVisitor.GetSql()?.ToString() ?? string.Empty;
             string t_whereSql = string.Empty;
-            if (string.IsNullOrWhiteSpace (whereSql))
+            if (string.IsNullOrWhiteSpace(whereSql))
             {
                 t_whereSql = sql;
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace (sql))
+                if (!string.IsNullOrWhiteSpace(sql))
                     t_whereSql = $"{whereSql} or ({sql.Replace("where ", "")})";
             }
-            var parameters = whereVisitor.GetParameters ();
-            var tt = this.Copy<T> ();
+            var parameters = whereVisitor.GetParameters();
+            var tt = this.Copy<T>();
             tt.whereSql = t_whereSql;
-            tt.DbParameters = parameters.ToList ();
+            tt.DbParameters = parameters.ToList();
             return tt;
         }
 
-        protected T Groupby<T> (Expression fun) where T : Query
+        protected T Groupby<T>(Expression fun) where T : Query
         {
-            var groupVisit = visitProvider.Builder<GroupVisitor> ();
-            groupVisit.Visit (fun);
-            var t_groupSql = groupVisit.GetSql ().ToString ();
-            var tt = this.Copy<T> ();
+            var groupVisit = visitProvider.Builder<GroupVisitor>();
+            groupVisit.Visit(fun);
+            var t_groupSql = groupVisit.GetSql().ToString();
+            var tt = this.Copy<T>();
             tt.groupSql = t_groupSql;
             return tt;
         }
 
-        protected T Copy<T> () where T : Query
+        protected T Copy<T>() where T : Query
         {
-            var query = (T) Activator.CreateInstance (typeof (T), this.dbProvider, this.option, this.visitProvider);
+            var query = (T)Activator.CreateInstance(typeof(T), this.dbProvider, this.option, this.visitProvider);
             query.selectSql = this.selectSql;
             query.whereSql = this.whereSql;
             query.groupSql = this.groupSql;
@@ -247,42 +248,42 @@ namespace Brochure.ORM
             query.orderSql = this.orderSql;
             query.parameters = this.parameters;
             query.mainTableNames = this.mainTableNames;
-            query.DbParameters = new List<IDbDataParameter> (this.DbParameters);
+            query.DbParameters = new List<IDbDataParameter>(this.DbParameters);
             return query;
         }
 
-        public string GetSql ()
+        public string GetSql()
         {
-            if (string.IsNullOrWhiteSpace (selectSql))
+            if (string.IsNullOrWhiteSpace(selectSql))
             {
                 selectSql = $"select * from {JoinTableNames()}";
             }
-            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim ();
+            return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim();
         }
 
-        public string GetWhereSql ()
+        public string GetWhereSql()
         {
-            return AddWhiteSpace (whereSql);
+            return AddWhiteSpace(whereSql);
         }
 
-        public List<IDbDataParameter> GetDbDataParameters ()
+        public List<IDbDataParameter> GetDbDataParameters()
         {
             return DbParameters;
         }
 
-        protected string JoinTableNames ()
+        protected string JoinTableNames()
         {
-            return string.Join (",", mainTableNames.Select (t => $"[{t}]"));
+            return string.Join(",", mainTableNames.Select(t => $"{dbProvider.FormatFieldName(t)}"));
         }
 
-        private void InitMainTableNames ()
+        private void InitMainTableNames()
         {
-            mainTableNames = new List<string> ();
-            var thisTypes = this.GetType ();
-            var types = thisTypes.GetGenericArguments ();
+            mainTableNames = new List<string>();
+            var thisTypes = this.GetType();
+            var types = thisTypes.GetGenericArguments();
             foreach (var item in types)
             {
-                this.mainTableNames.Add (TableUtlis.GetTableName (item));
+                this.mainTableNames.Add(TableUtlis.GetTableName(item));
             }
         }
     }

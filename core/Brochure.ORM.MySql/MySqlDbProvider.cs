@@ -7,49 +7,82 @@ using MySql.Data.MySqlClient;
 
 namespace Brochure.LinqDbQuery.MySql
 {
+    /// <summary>
+    /// The my sql db provider.
+    /// </summary>
     public class MySqlDbProvider : IDbProvider
     {
         private readonly DbOption dbOption;
 
-        public MySqlDbProvider (DbOption dbOption)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlDbProvider"/> class.
+        /// </summary>
+        /// <param name="dbOption">The db option.</param>
+        public MySqlDbProvider(DbOption dbOption)
         {
             this.dbOption = dbOption;
         }
 
-        public IDbConnection GetDbConnection ()
+        /// <summary>
+        /// Formats the field name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A string.</returns>
+        public string FormatFieldName(string name)
         {
-            return new MySqlConnection ();
+            return $"`{name}`";
         }
 
-        public IDbDataParameter GetDbDataParameter ()
+        /// <summary>
+        /// Gets the db connection.
+        /// </summary>
+        /// <returns>An IDbConnection.</returns>
+        public IDbConnection GetDbConnection()
         {
-            return new MySqlParameter ();
+            return new MySqlConnection();
         }
 
-        public string GetObjectType (object obj)
+        public IDbDataParameter GetDbDataParameter()
+        {
+            return new MySqlParameter();
+        }
+
+        /// <summary>
+        /// Gets the object type.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>A string.</returns>
+        public string GetObjectType(object obj)
         {
             if (obj == null)
                 return null;
             string str = string.Empty;
             if (dbOption.IsUseParamers)
             {
-                str = obj.ToString ();
+                str = obj.ToString();
             }
             else
             {
                 if (obj is string)
                     str = $"'{obj}'";
                 else if (obj is int || obj is double || obj is float)
-                    str = obj.ToString ();
+                    str = obj.ToString();
             }
             return str;
         }
 
-        public string GetOperateSymbol (object left, ExpressionType expressionType, object right)
+        /// <summary>
+        /// Gets the operate symbol.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="expressionType">The expression type.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>A string.</returns>
+        public string GetOperateSymbol(object left, ExpressionType expressionType, object right)
         {
             var str = string.Empty;
-            string leftStr = left.ToString ();
-            var rightObject = GetObjectType (right);
+            string leftStr = left.ToString();
+            var rightObject = GetObjectType(right);
             if (expressionType == ExpressionType.Equal)
             {
                 if (right == null)
@@ -75,14 +108,22 @@ namespace Brochure.LinqDbQuery.MySql
             return str;
         }
 
-        public string GetParamsSymbol ()
+        /// <summary>
+        /// Gets the params symbol.
+        /// </summary>
+        /// <returns>A string.</returns>
+        public string GetParamsSymbol()
         {
             return "@";
         }
 
-        public TypeMap GetTypeMap ()
+        /// <summary>
+        /// Gets the type map.
+        /// </summary>
+        /// <returns>A TypeMap.</returns>
+        public TypeMap GetTypeMap()
         {
-            return new MySqlTypeMap ();
+            return new MySqlTypeMap();
         }
 
     }

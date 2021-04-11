@@ -36,7 +36,7 @@ namespace Brochure.ORM.Visitors
         {
             var left = GetSql(node.Left);
             var right = GetSql(node.Right);
-            sql = $"join [{tableName}] on {left} = {right}";
+            sql = $"join {_dbPrivoder.FormatFieldName(tableName)} on {left} = {right}";
             return node;
         }
     }

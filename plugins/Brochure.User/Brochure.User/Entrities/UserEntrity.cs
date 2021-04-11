@@ -6,6 +6,7 @@ namespace Brochure.User.Entrities
     /// <summary>
     /// The user entrity.
     /// </summary>
+    [Table("user")]
     public class UserEntrity : EntityBase
     {
         /// <summary>

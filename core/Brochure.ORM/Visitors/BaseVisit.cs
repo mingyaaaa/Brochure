@@ -79,7 +79,7 @@ namespace Brochure.ORM.Visitors
             else if (node.Member is PropertyInfo)
             {
                 string tableName = TableUtlis.GetTableName((node.Member as PropertyInfo)?.DeclaringType);
-                sql = $"[{tableName}].[{node.Member.Name}]";
+                sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
             }
             return node;
         }
