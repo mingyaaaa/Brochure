@@ -41,7 +41,7 @@ namespace Brochure.ORMTest.Querys
                 School = "dd",
             };
             var sql = dbSql.GetInsertSql(obj);
-            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`) values('dd','11',1)", sql.Item1);
+            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values('dd','11',1,0)", sql.Item1);
             sql = dbSql.GetDeleteSql<Students>(t => t.ClassId == "1" && t.ClassCount == 2);
             Assert.AreEqual("delete from `Students` where `Students`.`ClassId` = '1' and `Students`.`ClassCount` = 2", sql.Item1);
             sql = dbSql.GetUpdateSql<Students>(new
@@ -62,7 +62,7 @@ namespace Brochure.ORMTest.Querys
             };
             option.IsUseParamers = true;
             var sql = dbSql.GetInsertSql(obj);
-            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`) values(@School,@ClassId,@ClassCount)", sql.Item1);
+            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values(@School,@ClassId,@ClassCount,@No)", sql.Item1);
 
             Assert.AreEqual(sql.Item2.FirstOrDefault(t => t.ParameterName == "@School").Value, "dd");
             Assert.AreEqual(sql.Item2.FirstOrDefault(t => t.ParameterName == "@ClassId").Value, "11");
@@ -92,7 +92,7 @@ namespace Brochure.ORMTest.Querys
             sql = dbSql.GetAllTableName("testdb");
             Assert.AreEqual("select table_name from information_schema.tables where table_schema='testdb'", sql);
             sql = dbSql.GetCreateTableSql<Students>();
-            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal,PRIMARY KEY ( Id ))", sql);
+            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal,No decimal,PRIMARY KEY ( Id ))", sql);
             sql = dbSql.GetDeleteTableSql("testTable");
             Assert.AreEqual("drop table testTable", sql);
             sql = dbSql.GetUpdateTableNameSql("testTable", "newTable");

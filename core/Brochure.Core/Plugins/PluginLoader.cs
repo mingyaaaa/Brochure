@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,7 @@ namespace Brochure.Core
         private readonly IModuleLoader _moduleLoader;
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
+        private readonly ApplicationOption _applicationOption;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginLoader"/> class.
@@ -46,7 +48,8 @@ namespace Brochure.Core
             IPluginManagers pluginManagers,
             IModuleLoader moduleLoader,
             IEnumerable<IPluginLoadAction> loadActions,
-            IEnumerable<IPluginUnLoadAction> unLoadActions)
+            IEnumerable<IPluginUnLoadAction> unLoadActions,
+            ApplicationOption applicationOption)
         {
             this.directory = directory;
             this.jsonUtil = jsonUtil;
@@ -58,6 +61,7 @@ namespace Brochure.Core
             _moduleLoader = moduleLoader;
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
+            _applicationOption = applicationOption;
         }
         /// <summary>
         /// Loads the plugin.
@@ -247,7 +251,23 @@ namespace Brochure.Core
             plugin.Version = config.Version;
             plugin.Order = config.Order;
             plugin.PluginDirectory = pluginDir;
+            plugin.PluginConfiguration = GetPluginConfigSection(config);
         }
 
+        /// <summary>
+        /// Gets the plugin config section.
+        /// </summary>
+        /// <param name="pluginConfig">The plugin config.</param>
+        /// <returns>An IConfiguration.</returns>
+        private IConfiguration GetPluginConfigSection(PluginConfig pluginConfig)
+        {
+            var dllName = Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName);
+            var configurtion = _applicationOption.Configuration.GetSection(dllName);
+            if (configurtion == null)
+            {
+                configurtion = _applicationOption.Configuration.GetSection(pluginConfig.Key.ToString());
+            }
+            return configurtion;
+        }
     }
 }

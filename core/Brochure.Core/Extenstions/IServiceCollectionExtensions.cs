@@ -14,6 +14,7 @@ using Brochure.Extensions;
 using Brochure.Utils;
 using Brochure.Utils.SystemUtils;
 using Grpc.AspNetCore.Server;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -24,13 +25,12 @@ namespace Brochure.Core
     /// </summary>
     public static class IServiceCollectionExtensions
     {
-
         /// <summary>
         /// 添加服务
         /// </summary>
         /// <param name="service"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBrochureCore(this IServiceCollection service, Action<ApplicationOption> appAction = null)
+        public static IServiceCollection AddBrochureCore(this IServiceCollection service, Action<ApplicationOption> appAction = null, IConfiguration configuration = null)
         {
 
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
@@ -47,13 +47,11 @@ namespace Brochure.Core
             service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
             service.AddSingleton<IPluginLoader, PluginLoader>();
             service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction>();
-            var option = new ApplicationOption(service);
+            var option = new ApplicationOption(service, configuration);
             appAction?.Invoke(option);
+            service.TryAddSingleton(option);
             //加载一些核心的程序
             service.InitApplicationCore();
-
-
-
             return service;
         }
 

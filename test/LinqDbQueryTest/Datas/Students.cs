@@ -11,5 +11,7 @@ namespace Brochure.ORMTest
         public string PeopleId { get; set; }
 
         public int ClassCount { get; set; }
+
+        public decimal No { get; set; }
     }
 }

@@ -9,7 +9,17 @@ namespace Brochure.Abstract
     /// </summary>
     public interface IModule
     {
-        Task ConfigModule (IServiceCollection services);
-        Task Initialization (IServiceProvider services);
+        /// <summary>
+        /// Configs the module.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>A Task.</returns>
+        Task ConfigModule(IServiceCollection services);
+        /// <summary>
+        /// Initializations the.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>A Task.</returns>
+        Task Initialization(IServiceProvider services);
     }
 }

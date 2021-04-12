@@ -45,39 +45,7 @@ namespace Brochure.Test
             serviceProviderMock = new Mock<IServiceProvider>();
         }
 
-        [TestMethod]
-        public async Task TestResolvePlugins()
-        {
-            var autoMock = new AutoMocker();
-            Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
-            var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
-            var pluginConfig = Fixture.Create<PluginConfig>();
-            var assemably = Fixture.Create<Assembly>();
-            loadPluginContext.Setup(t => t.LoadAssembly(It.IsAny<AssemblyName>())).Returns(assemably);
-            var serviceProvider = Fixture.Freeze<Mock<IServiceProvider>>();
-            Fixture.Customize(new AutoMoqCustomization());
-            serviceProvider.Setup(t => t.GetService(typeof(IPluginContext))).Returns(new Mock<IPluginContext>().Object);
-            var plugin = Fixture.Create<Plugins>();
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>()).Returns(new ConcurrentDictionary<Guid, IPluginsLoadContext>());
-            var ins = autoMock.CreateInstance<PluginLoader>();
-            var loaderActionMock = autoMock.GetMock<IPluginLoadAction>();
-            var directoryMokc = autoMock.GetMock<ISysDirectory>();
-            directoryMokc.Setup(t => t.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
-                .Returns(allPluginPath);
 
-            autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
-            autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>(), It.IsAny<object>())).Returns(loadPluginContext.Object);
-
-            await ins.LoadPlugin(serviceProviderMock.Object);
-            var manager = autoMock.CreateInstance<PluginLoader>();
-            await manager.LoadPlugin(serviceProviderMock.Object);
-
-            autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceProvider>(), It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
-            var str = string.Empty;
-            // plugin.Verify(t => t.StartingAsync(out str), Times.Once);
-        }
 
         [TestMethod]
         public async Task TestLoadAction()

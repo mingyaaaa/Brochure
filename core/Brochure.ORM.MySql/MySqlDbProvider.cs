@@ -65,7 +65,7 @@ namespace Brochure.LinqDbQuery.MySql
             {
                 if (obj is string)
                     str = $"'{obj}'";
-                else if (obj is int || obj is double || obj is float)
+                else if (obj is int || obj is double || obj is float || obj is decimal)
                     str = obj.ToString();
             }
             return str;

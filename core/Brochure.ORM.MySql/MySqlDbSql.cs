@@ -69,7 +69,7 @@ namespace Brochure.LinqDbQuery.MySql
                         || pType == nameof(TypeCode.Decimal))
                         columSql = $"{columSql}";
                     else
-                        columSql = $"{columSql}({64})";
+                        columSql = $"{columSql}(255)";
                 }
                 if (item.GetCustomAttribute(typeof(KeyAttribute), true) is KeyAttribute _)
                 {

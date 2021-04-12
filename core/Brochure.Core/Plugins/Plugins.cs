@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
@@ -75,6 +76,11 @@ namespace Brochure.Core
         /// Gets the path.
         /// </summary>
         public string PluginDirectory { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the plugin configuration.
+        /// </summary>
+        public IConfiguration PluginConfiguration { get; internal set; }
 
         /// <summary>
         /// 配置服务
