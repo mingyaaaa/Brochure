@@ -10,6 +10,7 @@ using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
@@ -31,6 +32,7 @@ namespace Brochure.Core
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
         private readonly ApplicationOption _applicationOption;
+        private readonly IHostEnvironment _hostEnvironment;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginLoader"/> class.
@@ -49,7 +51,8 @@ namespace Brochure.Core
             IModuleLoader moduleLoader,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
-            ApplicationOption applicationOption)
+            ApplicationOption applicationOption,
+            IHostEnvironment hostEnvironment)
         {
             this.directory = directory;
             this.jsonUtil = jsonUtil;
@@ -62,6 +65,7 @@ namespace Brochure.Core
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
             _applicationOption = applicationOption;
+            _hostEnvironment = hostEnvironment;
         }
         /// <summary>
         /// Loads the plugin.
@@ -251,7 +255,7 @@ namespace Brochure.Core
             plugin.Version = config.Version;
             plugin.Order = config.Order;
             plugin.PluginDirectory = pluginDir;
-            plugin.PluginConfiguration = GetPluginConfigSection(config);
+            plugin.PluginConfiguration = GetPluginConfigSection(config, pluginDir);
         }
 
         /// <summary>
@@ -259,15 +263,50 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfig">The plugin config.</param>
         /// <returns>An IConfiguration.</returns>
-        private IConfiguration GetPluginConfigSection(PluginConfig pluginConfig)
+        private IConfiguration GetPluginConfigSection(PluginConfig pluginConfig, string pluginDir)
         {
             var dllName = Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName);
-            var configurtion = _applicationOption.Configuration.GetSection(dllName);
+            IConfiguration configurtion = _applicationOption.Configuration?.GetSection(dllName);
             if (configurtion == null)
             {
-                configurtion = _applicationOption.Configuration.GetSection(pluginConfig.Key.ToString());
+                configurtion = _applicationOption.Configuration?.GetSection(pluginConfig.Key.ToString());
+            }
+            //查询插件中的配置文件 默认使用插件中的配置文件覆盖 主程序中的配置文件
+            var pluginSettingEnvFile = GetPluginSettingFile();
+            var pluginSettingFile = "pluginSetting.json";
+            var pluginSettingPath = Path.Combine(pluginDir, pluginSettingFile);
+            var pluginSettingEnvPath = Path.Combine(pluginDir, pluginSettingEnvFile);
+            var configurationEnv = BuildConfiguration(pluginSettingEnvPath);
+            if (configurationEnv != null)
+            {
+                configurtion = jsonUtil.MergeConfiguration(configurtion, configurationEnv);
+            }
+            var pluginConfiguration = BuildConfiguration(pluginSettingPath);
+            if (pluginConfiguration != null)
+            {
+                configurtion = jsonUtil.MergeConfiguration(configurtion, pluginConfiguration);
             }
             return configurtion;
+        }
+
+
+
+
+        private IConfiguration BuildConfiguration(string path)
+        {
+            if (!File.Exists(path))
+                return null;
+            if (Path.GetExtension(path) != ".json")
+                throw new Exception("插件配置文件错误,请使用Json文件");
+            var build = new ConfigurationBuilder();
+            build.AddJsonFile(path);
+            return build.Build();
+        }
+
+
+        private string GetPluginSettingFile()
+        {
+            return $"plugin{_hostEnvironment.EnvironmentName}.json";
         }
     }
 }
