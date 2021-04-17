@@ -1,3 +1,8 @@
 ﻿{
-
+  "db": {
+    "server": "192.168.137.101",
+    "user": "root",
+    "pwd": "123",
+    "database": "test"
+  }
 }

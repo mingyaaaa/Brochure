@@ -29,7 +29,7 @@ namespace LinqDbQueryTest.Datas
             Services.AddTransient<ExpressionVisitor, HavingVisitor>();
             Services.AddScoped<DbSql, MySqlDbSql>();
             Services.AddScoped<IQueryBuilder, DefaultQueryBuilder>();
-            Services.AddSingleton<IConnectFactory, ConnectFactory>();
+            Services.AddScoped<IConnectFactory, ConnectFactory>();
             Services.AddSingleton<DbOption, MySqlOption>();
             Provider = Services.BuildServiceProvider();
         }

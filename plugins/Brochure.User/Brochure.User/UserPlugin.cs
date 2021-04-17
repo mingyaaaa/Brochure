@@ -44,10 +44,11 @@ namespace Brochure.User
             Context.Services.AddMySql(t =>
             {
                 var mysqlBuilder = new MySqlConnectionStringBuilder();
-                mysqlBuilder.Database = "test";
-                mysqlBuilder.UserID = "root";
-                mysqlBuilder.Password = "123";
-                mysqlBuilder.Server = "192.168.137.101";
+                var dbSection = PluginConfiguration.GetSection("db");
+                mysqlBuilder.Database = dbSection.GetValue<string>("database");
+                mysqlBuilder.UserID = dbSection.GetValue<string>("user");
+                mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
+                mysqlBuilder.Server = dbSection.GetValue<string>("server");
                 t.ConnectionString = mysqlBuilder.ToString();
             });
             Context.Services.ConfigureSwaggerGen(t =>

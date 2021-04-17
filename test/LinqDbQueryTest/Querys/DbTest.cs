@@ -100,6 +100,14 @@ namespace Brochure.ORMTest.Querys
             Trace.TraceInformation(sql);
         }
 
+        [TestMethod("测试创建MySql表类型数据")]
+        public void TestMySqlDbTypeTable()
+        {
+            var sql = dbSql.GetCreateTableSql<DbTypeEntiry>();
+            Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255) not null,DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sql);
+            Trace.TraceInformation(sql);
+        }
+
         [TestMethod]
         public void TestDbColumn()
         {

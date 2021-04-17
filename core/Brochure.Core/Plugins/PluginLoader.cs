@@ -267,41 +267,43 @@ namespace Brochure.Core
         {
             var dllName = Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName);
             IConfiguration configurtion = _applicationOption.Configuration?.GetSection(dllName);
+            var builder = new ConfigurationBuilder();
             if (configurtion == null)
             {
                 configurtion = _applicationOption.Configuration?.GetSection(pluginConfig.Key.ToString());
+                if (configurtion != null)
+                    builder.AddConfiguration(configurtion);
             }
             //查询插件中的配置文件 默认使用插件中的配置文件覆盖 主程序中的配置文件
+
             var pluginSettingEnvFile = GetPluginSettingFile();
             var pluginSettingFile = "pluginSetting.json";
             var pluginSettingPath = Path.Combine(pluginDir, pluginSettingFile);
             var pluginSettingEnvPath = Path.Combine(pluginDir, pluginSettingEnvFile);
-            var configurationEnv = BuildConfiguration(pluginSettingEnvPath);
-            if (configurationEnv != null)
+            if (File.Exists(pluginSettingEnvPath))
             {
-                configurtion = jsonUtil.MergeConfiguration(configurtion, configurationEnv);
+                builder.AddJsonFile(pluginSettingEnvPath);
             }
-            var pluginConfiguration = BuildConfiguration(pluginSettingPath);
-            if (pluginConfiguration != null)
+            if (File.Exists(pluginSettingPath))
             {
-                configurtion = jsonUtil.MergeConfiguration(configurtion, pluginConfiguration);
+                builder.AddJsonFile(pluginSettingPath);
             }
-            return configurtion;
+            return builder.Build();
         }
 
 
 
 
-        private IConfiguration BuildConfiguration(string path)
-        {
-            if (!File.Exists(path))
-                return null;
-            if (Path.GetExtension(path) != ".json")
-                throw new Exception("插件配置文件错误,请使用Json文件");
-            var build = new ConfigurationBuilder();
-            build.AddJsonFile(path);
-            return build.Build();
-        }
+        //private IConfiguration BuildConfiguration(string path)
+        //{
+        //    if (!File.Exists(path))
+        //        return null;
+        //    if (Path.GetExtension(path) != ".json")
+        //        throw new Exception("插件配置文件错误,请使用Json文件");
+        //    var build = new ConfigurationBuilder();
+        //    build.AddJsonFile(path);
+        //    return build.Build();
+        //}
 
 
         private string GetPluginSettingFile()

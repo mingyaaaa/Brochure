@@ -5,13 +5,20 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The connect factory.
     /// </summary>
-    public interface IConnectFactory
+    public interface IConnectFactory : IDisposable
     {
         /// <summary>
         /// Creates the connection.
         /// </summary>
         /// <returns>An IDbConnection.</returns>
         IDbConnection CreateConnection();
+
+        /// <summary>
+        /// Creates the and open connection.
+        /// </summary>
+        /// <returns>An IDbConnection.</returns>
+        IDbConnection CreateAndOpenConnection();
+
     }
     /// <summary>
     /// The connect factory.
@@ -46,6 +53,23 @@ namespace Brochure.ORM.Database
             dbConnection.ConnectionString = dbOption.ConnectionString;
             dbOption.DatabaseName = dbConnection.Database;
             return dbConnection;
+        }
+
+        /// <summary>
+        /// Creates the and open connection.
+        /// </summary>
+        /// <returns>An IDbConnection.</returns>
+        public IDbConnection CreateAndOpenConnection()
+        {
+            var connect = CreateConnection();
+            connect.Open();
+            return connect;
+        }
+
+        public void Dispose()
+        {
+            this.dbConnection.Dispose();
+            this.dbConnection = null;
         }
     }
 }

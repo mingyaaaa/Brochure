@@ -33,40 +33,44 @@ namespace Brochure.Test
             var count = service.GetServiceInstances<IMA>().Count();
             Assert.AreEqual(2, count);
         }
+
+
+
+        public interface IA
+        {
+
+        }
+        public class A : IA, ISingleton
+        {
+        }
+        public class A2 : IA, ISingleton
+        {
+        }
+
+        public interface IB
+        {
+
+        }
+        public class B : IB, ISingleton
+        {
+        }
+        public interface IC
+        {
+
+        }
+        public class C : IC, ISingleton
+        {
+        }
+        public interface IMA
+        {
+        }
+        public class MA : IMA, IMutiSingleton
+        {
+        };
+        public class MA2 : IMA, IMutiSingleton
+        {
+        };
     }
 
-    public interface IA
-    {
 
-    }
-    public class A : IA, ISingleton
-    {
-    }
-    public class A2 : IA, ISingleton
-    {
-    }
-
-    public interface IB
-    {
-
-    }
-    public class B : IB, ISingleton
-    {
-    }
-    public interface IC
-    {
-
-    }
-    public class C : IC, ISingleton
-    {
-    }
-    public interface IMA
-    {
-    }
-    public class MA : IMA, IMutiSingleton
-    {
-    };
-    public class MA2 : IMA, IMutiSingleton
-    {
-    };
 }

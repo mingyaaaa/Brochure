@@ -44,16 +44,147 @@ namespace Brochure.Test
             count.Verify(t => t.Count(), Times.AtLeast(1));
         }
 
+        [TestMethod]
+        public void TestInterceptorContextSingletonTest()
+        {
+            Service.AddSingleton<ITestA, ImpTestA>();
+            Service.AddSingleton<ICount, ImpCount>();
+            //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
+            var provider = Service.BuildPluginServiceProvider();
+            var test = provider.GetService<ITestA>();
+            var count = provider.GetService<ICount>();
+            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变 
+            Assert.AreEqual(2, count.GetCount());
+            test.Test();
+            Assert.AreEqual(4, count.GetCount());
+        }
+
+
+        [TestMethod]
+        public void TestInterceptorTest()
+        {
+            var service = new ServiceCollection();
+            service.AddSingleton<IPluginManagers>(new PluginManagers());
+            service.AddSingleton<ITestA, ImpTestA>();
+            service.AddSingleton<ICount, ImpCount>();
+            //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
+            var provider = service.BuildPluginServiceProvider();
+            var test = provider.GetService<ITestA>();
+            var count = provider.GetService<ICount>();
+            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变 
+            Assert.AreEqual(2, count.GetCount());
+            test.Test();
+            Assert.AreEqual(4, count.GetCount());
+        }
+
+
+        [TestMethod]
+        public void TestInterceptorContextSingletonAndScopeTest()
+        {
+            var mock = new Mock<ICount>();
+            Service.AddSingleton<ITestA, ImpTestA>();
+            Service.AddScoped<ICount>(t =>
+            {
+                mock.Object.Count();
+                return mock.Object;
+            });
+            //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
+            var provider = Service.BuildPluginServiceProvider();
+            var test = provider.GetService<ITestA>();//此处的拦截器
+            test.Test();
+            mock.Verify(t => t.Count(), Times.Exactly(3));
+        }
+
+        [TestMethod]
+        public void TestInterceptorContextScopeAndSingletonTest()
+        {
+            var mock = new Mock<ICount>();
+            Service.AddScoped<ITestA, ImpTestA>();
+            Service.AddSingleton<ICount>(mock.Object);
+            var provider = Service.BuildPluginServiceProvider();
+            using (var scope = provider.CreateScope())
+            {
+                var test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(2));
+                test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(4));
+            }
+            using (var scope = provider.CreateScope())
+            {
+                var test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(6));
+            }
+
+        }
+
+        [TestMethod]
+        public void TestInterceptorContextScopedAndScopedTest()
+        {
+            var mock = new Mock<ICount>();
+            Service.AddScoped<ITestA, ImpTestA>();
+            Service.AddScoped<ICount>(t =>
+            {
+                mock = new Mock<ICount>();
+                mock.Object.Count();
+                return mock.Object;
+            });
+            var provider = Service.BuildPluginServiceProvider();
+            using (var scope = provider.CreateScope())
+            {
+                var test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(3));
+                test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(5));
+            }
+            using (var scope = provider.CreateScope())
+            {
+                var test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(3));
+                test = scope.ServiceProvider.GetService<ITestA>();
+                test.Test();
+                mock.Verify(t => t.Count(), Times.Exactly(5));
+            }
+
+        }
+
+
     }
     public interface ITestA
     {
+
         void Test();
     }
 
     public class ImpTestA : ITestA
     {
+        private readonly ICount _iCount;
+
+        public ImpTestA(ICount ICount)
+        {
+            _iCount = ICount;
+        }
+        [TestAttInterceptor]
+        public void Test() { _iCount.Count(); }
+    }
+
+    public interface ITestB
+    {
+
+        void Test();
+    }
+
+    public class ImpTestB : ITestB
+    {
+        [TestAttInterceptor]
         public void Test() { }
     }
+
     public class TestInterceptor : AbstractInterceptor
     {
 
@@ -70,9 +201,37 @@ namespace Brochure.Test
             return Task.CompletedTask;
         }
     }
+
+    public class TestAttInterceptorAttribute : AbstractInterceptorAttribute
+    {
+
+        public override Task Invoke(AspectContext context, AspectDelegate next)
+        {
+            var count = context.ServiceProvider.GetService<ICount>();
+            count.Count();
+            next(context);
+            return Task.CompletedTask;
+        }
+    }
     public interface ICount
     {
         [NonAspect]
         void Count();
+
+        int GetCount();
+    }
+
+    public class ImpCount : ICount
+    {
+        private int count = 0;
+        public void Count()
+        {
+            count++;
+        }
+
+        public int GetCount()
+        {
+            return count;
+        }
     }
 }

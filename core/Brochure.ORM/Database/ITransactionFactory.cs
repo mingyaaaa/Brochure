@@ -21,10 +21,7 @@ namespace Brochure.ORM.Database
         {
             if (transactionManager.IsEmpty)
             {
-                var connect = connectFactory.CreateConnection();
-                connect.Open();
-                var transaction = connect.BeginTransaction();
-                return new Transaction(transaction);
+                return new Transaction(connectFactory);
             }
             else
             {

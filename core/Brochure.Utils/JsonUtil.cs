@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
@@ -122,25 +123,6 @@ namespace Brochure.Utils
             return new ConfigurationBuilder().AddJsonFile(path).Build().Get<T>();
         }
 
-        /// <summary>
-        /// Merges the configuration.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <param name="configuration1">The configuration1.</param>
-        /// <returns>An IConfiguration.</returns>
-        public IConfiguration MergeConfiguration(IConfiguration configuration, IConfiguration configuration1)
-        {
-            var children = configuration.GetChildren();
-            var r = new ConfigurationBuilder();
-            foreach (var item in children)
-            {
-                var section = configuration1.GetSection(item.Key);
-                if (section == null)
-                    continue;
-                var sectionConfiguration = MergeConfiguration(item, section);
-                r.AddConfiguration(sectionConfiguration);
-            }
-            return r.Build();
-        }
+
     }
 }

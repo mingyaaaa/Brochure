@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspectCore.Core" Version="2.1.0" />
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7798" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7798" />
+    <PackageReference Include="AspectCore.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />

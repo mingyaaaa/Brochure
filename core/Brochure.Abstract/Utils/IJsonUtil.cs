@@ -51,13 +51,5 @@ namespace Brochure.Abstract.Utils
         /// <param name="path"></param>
         /// <returns></returns>
         T Get<T>(string path);
-
-        /// <summary>
-        /// Merges the configuration.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <param name="configuration1">The configuration1.</param>
-        /// <returns>An IConfiguration.</returns>
-        IConfiguration MergeConfiguration(IConfiguration configuration, IConfiguration configuration1);
     }
 }
