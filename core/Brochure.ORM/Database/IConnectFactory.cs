@@ -66,9 +66,12 @@ namespace Brochure.ORM.Database
             return connect;
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
-            this.dbConnection.Dispose();
+            this.dbConnection?.Dispose();
             this.dbConnection = null;
         }
     }

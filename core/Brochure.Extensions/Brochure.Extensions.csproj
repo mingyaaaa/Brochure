@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.7799" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.7803" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
