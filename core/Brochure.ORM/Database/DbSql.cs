@@ -10,6 +10,9 @@ using Brochure.ORM.Atrributes;
 using Brochure.ORM.Visitors;
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The db sql.
+    /// </summary>
     public abstract class DbSql
     {
         protected DbOption Option;
@@ -25,6 +28,11 @@ namespace Brochure.ORM
             this.visitProvider = visitProvider;
         }
 
+        /// <summary>
+        /// Gets the delete sql.
+        /// </summary>
+        /// <param name="whereFunc">The where func.</param>
+        /// <returns>A Tuple.</returns>
         public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T>(Expression<Func<T, bool>> whereFunc)
         {
             var whereSql = string.Empty;
@@ -41,6 +49,11 @@ namespace Brochure.ORM
             return Tuple.Create(sql, parms);
         }
 
+        /// <summary>
+        /// Gets the delete sql.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A Tuple.</returns>
         public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T>(IWhereQuery query)
         {
             var whereSql = string.Empty;
@@ -54,6 +67,11 @@ namespace Brochure.ORM
             var sql = $"delete from  {dbProvider.FormatFieldName(tableName)} {whereSql}";
             return Tuple.Create(sql, parms);
         }
+        /// <summary>
+        /// Gets the insert sql.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>A Tuple.</returns>
         public virtual Tuple<string, List<IDbDataParameter>> GetInsertSql<T>(T obj)
         {
             var doc = obj.As<IRecord>();
@@ -93,6 +111,12 @@ namespace Brochure.ORM
             return Tuple.Create(sql, pams);
         }
 
+        /// <summary>
+        /// Gets the update sql.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="whereFunc">The where func.</param>
+        /// <returns>A Tuple.</returns>
         public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T>(object obj, Expression<Func<T, bool>> whereFunc)
         {
             var whereSql = string.Empty;
@@ -128,6 +152,12 @@ namespace Brochure.ORM
             sql = $"{sql}{fieldList.Join(",")} {whereSql}";
             return Tuple.Create(sql, parms);
         }
+        /// <summary>
+        /// Gets the update sql.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="query">The query.</param>
+        /// <returns>A Tuple.</returns>
         public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T>(object obj, IWhereQuery query)
         {
             var whereSql = string.Empty;
@@ -164,26 +194,50 @@ namespace Brochure.ORM
 
         #region Database
 
+        /// <summary>
+        /// Gets the data base name count sql.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetDataBaseNameCountSql(string databaseName)
         {
             return $"SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='{databaseName}'";
         }
 
+        /// <summary>
+        /// Gets the delete database sql.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetDeleteDatabaseSql(string databaseName)
         {
             return $"drop database {databaseName}";
         }
 
+        /// <summary>
+        /// Gets the all table name.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetAllTableName(string databaseName)
         {
             return $"select table_name from information_schema.tables where table_schema='{databaseName}'";
         }
 
+        /// <summary>
+        /// Gets the create database sql.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetCreateDatabaseSql(string databaseName)
         {
             return $"create database {databaseName}";
         }
 
+        /// <summary>
+        /// Gets the all database name sql.
+        /// </summary>
+        /// <returns>A string.</returns>
         public virtual string GetAllDatabaseNameSql()
         {
             return "select schema_name from information_schema.schemata";
@@ -192,6 +246,10 @@ namespace Brochure.ORM
 
         #region DataTable
 
+        /// <summary>
+        /// Gets the create table sql.
+        /// </summary>
+        /// <returns>A string.</returns>
         public virtual string GetCreateTableSql<T>()
         {
             var type = typeof(T);
@@ -283,16 +341,32 @@ namespace Brochure.ORM
             return sql;
         }
 
+        /// <summary>
+        /// Gets the table name count sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetTableNameCountSql(string tableName)
         {
             return $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}'";
         }
 
+        /// <summary>
+        /// Gets the update table name sql.
+        /// </summary>
+        /// <param name="oldName">The old name.</param>
+        /// <param name="newName">The new name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetUpdateTableNameSql(string oldName, string newName)
         {
             return $"alter table {oldName} rename {newName}";
         }
 
+        /// <summary>
+        /// Gets the delete table sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetDeleteTableSql(string tableName)
         {
             return $"drop table {tableName}";
@@ -301,16 +375,38 @@ namespace Brochure.ORM
 
         #region Column
 
+        /// <summary>
+        /// Gets the colums sql.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <param name="tableName">The table name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetColumsSql(string databaseName, string tableName)
         {
             return $"select column_name from information_schema.columns where table_schema='{databaseName}' and table_name='{tableName}'";
         }
 
+        /// <summary>
+        /// Gets the colums name count sql.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnName">The column name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetColumsNameCountSql(string databaseName, string tableName, string columnName)
         {
             return $"select COUNT(1) from information_schema.columns WHERE table_schema='{databaseName}' and table_name = '{tableName}' and column_name = '{columnName}'";
         }
 
+        /// <summary>
+        /// Gets the rename column name sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="odlName">The odl name.</param>
+        /// <param name="newName">The new name.</param>
+        /// <param name="typeCode">The type code.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>A string.</returns>
         public virtual string GetRenameColumnNameSql(string tableName, string odlName, string newName, TypeCode typeCode, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType(typeCode.ToString());
@@ -320,6 +416,15 @@ namespace Brochure.ORM
             return $"alter table {tableName} change column {odlName} {newName} {sqlType}{lengthStr}";
         }
 
+        /// <summary>
+        /// Gets the update column sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnName">The column name.</param>
+        /// <param name="typeCode">The type code.</param>
+        /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>A string.</returns>
         public virtual string GetUpdateColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType(typeCode.ToString());
@@ -333,6 +438,15 @@ namespace Brochure.ORM
             return sql;
         }
 
+        /// <summary>
+        /// Gets the addll column sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnName">The column name.</param>
+        /// <param name="typeCode">The type code.</param>
+        /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>A string.</returns>
         public virtual string GetAddllColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0)
         {
             var sqlType = _typeMap.GetSqlType(typeCode.ToString());
@@ -348,6 +462,12 @@ namespace Brochure.ORM
             return sql;
         }
 
+        /// <summary>
+        /// Gets the delete column sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnName">The column name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetDeleteColumnSql(string tableName, string columnName)
         {
             return $"alter table {tableName} drop column {columnName}";
@@ -356,17 +476,37 @@ namespace Brochure.ORM
         #endregion
 
         #region Index
+        /// <summary>
+        /// Gets the create index sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="columnNames">The column names.</param>
+        /// <param name="indexName">The index name.</param>
+        /// <param name="sqlIndex">The sql index.</param>
+        /// <returns>A string.</returns>
         public virtual string GetCreateIndexSql(string tableName, string[] columnNames, string indexName, string sqlIndex)
         {
             return $"create {sqlIndex} {indexName} on {tableName}({string.Join(",", columnNames)})";
         }
 
+        /// <summary>
+        /// Gets the delete index sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <param name="indexName">The index name.</param>
+        /// <returns>A string.</returns>
         public virtual string GetDeleteIndexSql(string tableName, string indexName)
         {
             return $"drop index {indexName} on {tableName}";
         }
         #endregion
 
+        /// <summary>
+        /// Gets the length str.
+        /// </summary>
+        /// <param name="length">The length.</param>
+        /// <param name="code">The code.</param>
+        /// <returns>A string.</returns>
         private string GetLengthStr(int length, TypeCode code)
         {
 

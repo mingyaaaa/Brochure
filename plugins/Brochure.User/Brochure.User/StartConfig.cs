@@ -25,6 +25,7 @@ namespace Brochure.User
         {
             using var scope = applicationBuilder.ApplicationServices.CreateScope();
             var dbContext = scope.ServiceProvider.GetService<DbContext>();
+            var exist = dbContext.GetDbTable().IsExistTable(nameof(UserEntrity).ToLower());
             await dbContext.GetDbTable().CreateTableAsync<UserEntrity>();
         }
     }

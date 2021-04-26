@@ -62,7 +62,8 @@ namespace Brochure.ORM.Database
         public IDbConnection CreateAndOpenConnection()
         {
             var connect = CreateConnection();
-            connect.Open();
+            if (connect.State == ConnectionState.Closed)
+                connect.Open();
             return connect;
         }
 
