@@ -1,58 +1,43 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The table utlis.
+    /// </summary>
     public static class TableUtlis
     {
-        public static string GetTableName<T> ()
+        private static ConcurrentDictionary<string, string> _tableNameCache = new ConcurrentDictionary<string, string>();
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
+        /// <returns>A string.</returns>
+        public static string GetTableName<T>()
         {
-            var type = typeof (T);
-            return GetTableName (type);
+            var type = typeof(T);
+            return GetTableName(type);
         }
 
-        public static string GetTableName (Type type)
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>A string.</returns>
+        public static string GetTableName(Type type)
         {
             if (type == null)
-                throw new Exception ("");
+                throw new Exception("");
             var tableName = type.Name;
-            if (type.GetCustomAttribute (typeof (TableAttribute)) is TableAttribute tableAttribute)
+            if (_tableNameCache.TryGetValue(type.FullName, tableName))
+                return tableName;
+            if (type.GetCustomAttribute(typeof(TableAttribute)) is TableAttribute tableAttribute)
                 tableName = tableAttribute.Name;
+            _tableNameCache.TryAdd(type.FullName, tableName);
             return tableName;
-        }
-
-        public static T ConverFromIDataReader<T> (IDataReader reader)
-        {
-            var obj = Activator.CreateInstance<T> ();
-            PropertyInfo[] propertys = obj.GetType ().GetProperties ();
-            List<string> fieldNameList = new List<string> ();
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                fieldNameList.Add (reader.GetName (i));
-            }
-            foreach (PropertyInfo property in propertys)
-            {
-                if (!property.CanWrite)
-                    continue;
-                string fieldName = property.Name;
-                if (fieldNameList.Contains (fieldName))
-                {
-                    object value = reader[fieldName];
-                    if (value is DBNull)
-                        continue;
-                    try
-                    {
-                        property.SetValue (obj, value);
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
-            }
-            return obj;
         }
     }
 }

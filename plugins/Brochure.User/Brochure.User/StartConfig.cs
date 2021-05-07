@@ -8,19 +8,25 @@ using Brochure.User.Entrities;
 
 namespace Brochure.User
 {
+    /// <summary>
+    /// The start config.
+    /// </summary>
     public class StartConfig : IStarupConfigure
     {
+        /// <summary>
+        /// Configures the.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="builder">The builder.</param>
         public void Configure(Guid key, IApplicationBuilder builder)
         {
-            // 添加Swagger有关中间件
-            //builder.IntertMiddle("user_swagger", Guid.Empty, 7, () => builder.UseSwagger());
-            //builder.IntertMiddle("user_swaggerUI", Guid.Empty, 8, () => builder.UseSwaggerUI(c =>
-            //{
-            //    //  c.SwaggerEndpoint("/swagger/user_v1/swagger.json", "User");
-            //}));
             InitDb(builder);
         }
 
+        /// <summary>
+        /// Inits the db.
+        /// </summary>
+        /// <param name="applicationBuilder">The application builder.</param>
         private async void InitDb(IApplicationBuilder applicationBuilder)
         {
             using var scope = applicationBuilder.ApplicationServices.CreateScope();

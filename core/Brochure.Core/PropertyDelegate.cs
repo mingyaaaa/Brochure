@@ -10,7 +10,7 @@ namespace Brochure.Core
     /// <summary>
     /// 默认使用的是jsonConver
     /// </summary>
-    public class PropertyDelegate<T1, T2> where T1 : class where T2 : class
+    public class PropertyDelegate<T1, T2> where T1 : class where T2 : class, new()
     {
 
         private readonly Type t1Type;
@@ -27,7 +27,7 @@ namespace Brochure.Core
         {
             var properties = t1Type.GetProperties();
             var t2Properties = t2Type.GetProperties();
-            var t2 = ReflectorUtil.Instance.CreateInstance<T2>();
+            var t2 = new T2();
             foreach (var item in properties)
             {
                 var propertyType = item.PropertyType;
@@ -65,7 +65,7 @@ namespace Brochure.Core
     /// <summary>
     /// The record property delegate.
     /// </summary>
-    public class GetValuePropertyDelegate<T1> where T1 : class
+    public class GetValuePropertyDelegate<T1> where T1 : class, new()
     {
         private readonly Type t1Type;
         /// <summary>
@@ -84,7 +84,7 @@ namespace Brochure.Core
         public T1 ConverTo(IGetValue read)
         {
             var properties = t1Type.GetProperties();
-            var t1 = ReflectorUtil.Instance.CreateInstance<T1>();
+            var t1 = new T1();
             foreach (var item in properties)
             {
                 var propertyType = item.PropertyType;

@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using Brochure.Abstract;
+using Brochure.Abstract.Models;
 using Brochure.Core;
 
 namespace Brochure.Core
@@ -87,9 +88,14 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>A T2.</returns>
-        public T2 Create<T1, T2>(T1 model) where T1 : class where T2 : class
+        public T2 Create<T1, T2>(T1 model) where T1 : class where T2 : class, new()
         {
-            return policy.ConverTo<T1, T2>(model);
+            var t2 = policy.ConverTo<T1, T2>(model);
+            if (model is IConverPolicy<T2>)
+            {
+                ((IConverPolicy<T2>)model).ConverTo(t2);
+            }
+            return t2;
         }
 
         /// <summary>
@@ -100,7 +106,7 @@ namespace Brochure.Core
         /// <returns>A T2.</returns>
         public T2 Create<T1, T2>(T1 model, IConverPolicy converPolicy)
         where T1 : class
-        where T2 : class
+        where T2 : class, new()
         {
             return converPolicy.ConverTo<T1, T2>(model);
         }
@@ -110,7 +116,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="record">The record.</param>
         /// <returns>A T1.</returns>
-        public T1 Create<T1>(IRecord record) where T1 : class
+        public T1 Create<T1>(IRecord record) where T1 : class, new()
         {
             var policy = new GetValueConverPolicy();
             return Create<IRecord, T1>(record, policy);
@@ -123,7 +129,7 @@ namespace Brochure.Core
         public IRecord Create<T1>(T1 obj) where T1 : class
         {
             var policy = new ObjectToRecordConverPolicy();
-            return Create<T1, IRecord>(obj, policy);
+            return Create<T1, Record>(obj, policy);
         }
 
         /// <summary>

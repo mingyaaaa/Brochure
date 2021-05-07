@@ -20,7 +20,7 @@ namespace Brochure.Core
         /// <returns>A T2.</returns>
         public T2 ConverTo<T1, T2>(T1 model)
         where T1 : class
-        where T2 : class
+        where T2 : class, new()
         {
             var policy = new PropertyDelegate<T1, T2>();
             return policy.ConverTo(model);
@@ -34,7 +34,7 @@ namespace Brochure.Core
     {
         public T2 ConverTo<T1, T2>(T1 model)
         where T1 : class
-        where T2 : class
+        where T2 : class, new()
         {
             if (!(model is IGetValue))
                 return null;
@@ -55,7 +55,7 @@ namespace Brochure.Core
         /// <returns>A T2.</returns>
         public T2 ConverTo<T1, T2>(T1 model)
         where T1 : class
-        where T2 : class
+        where T2 : class, new()
         {
             var policy = new ObjectToRecordDelegate<T1>();
             return (T2)policy.ConverTo(model);

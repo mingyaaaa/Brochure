@@ -7,12 +7,21 @@ using Brochure.Extensions;
 using Brochure.ORM.Visitors;
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The query.
+    /// </summary>
     public abstract class Query : IQuery, IWhereQuery
     {
         private readonly DbOption option;
 
         protected List<IDbDataParameter> DbParameters;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Query"/> class.
+        /// </summary>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="option">The option.</param>
+        /// <param name="visitProvider">The visit provider.</param>
         protected Query(IDbProvider dbProvider, DbOption option, IVisitProvider visitProvider)
         {
             this.option = option;
@@ -21,6 +30,9 @@ namespace Brochure.ORM
             this.visitProvider = visitProvider;
         }
 
+        /// <summary>
+        /// Inits the data.
+        /// </summary>
         private void InitData()
         {
             DbParameters = new List<IDbDataParameter>();
@@ -39,6 +51,11 @@ namespace Brochure.ORM
         private readonly IDbProvider dbProvider;
         private readonly IVisitProvider visitProvider;
 
+        /// <summary>
+        /// Adds the white space.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A string.</returns>
         private string AddWhiteSpace(string str)
         {
             if (!string.IsNullOrWhiteSpace(str))
@@ -66,6 +83,12 @@ namespace Brochure.ORM
         //     return result;
         // }
 
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A T.</returns>
         protected T Join<T>(Type type, Expression expression) where T : Query
         {
             var joinVisitor = visitProvider.Builder<JoinVisitor>();
@@ -81,6 +104,11 @@ namespace Brochure.ORM
             return tt;
         }
 
+        /// <summary>
+        /// Orders the by.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T OrderBy<T>(Expression fun) where T : Query
         {
             var orderVisitor = visitProvider.Builder<OrderVisitor>();
@@ -90,12 +118,22 @@ namespace Brochure.ORM
             tt.orderSql = t_orderSql;
             return tt;
         }
+        /// <summary>
+        /// Orders the by.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A T.</returns>
         protected T OrderBy<T>(string str) where T : Query
         {
             this.orderSql = str;
             return (T)this;
         }
 
+        /// <summary>
+        /// Orders the by desc.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T OrderByDesc<T>(Expression fun) where T : Query
         {
             var orderVisitor = visitProvider.Builder<OrderVisitor>();
@@ -106,11 +144,21 @@ namespace Brochure.ORM
             tt.orderSql = t_orderSql;
             return tt;
         }
+        /// <summary>
+        /// Orders the by desc.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A T.</returns>
         protected T OrderByDesc<T>(string str) where T : Query
         {
             this.orderSql = str;
             return (T)this;
         }
+        /// <summary>
+        /// Selects the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T Select<T>(Expression fun) where T : Query
         {
             var selectVisitor = visitProvider.Builder<SelectVisitor>();
@@ -144,6 +192,11 @@ namespace Brochure.ORM
             return tt;
         }
 
+        /// <summary>
+        /// Wheres the and.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T WhereAnd<T>(Expression fun) where T : Query
         {
             var whereVisitor = visitProvider.BuilderNew<WhereVisitor>();
@@ -168,6 +221,11 @@ namespace Brochure.ORM
             tt.DbParameters = parameters.ToList();
             return tt;
         }
+        /// <summary>
+        /// Wheres the and.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A T.</returns>
         public T WhereAnd<T>(string str) where T : Query
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -187,6 +245,11 @@ namespace Brochure.ORM
             return (T)this;
         }
 
+        /// <summary>
+        /// Wheres the or.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A T.</returns>
         public T WhereOr<T>(string str) where T : Query
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -205,6 +268,11 @@ namespace Brochure.ORM
             this.whereSql = t_whereSql;
             return (T)this;
         }
+        /// <summary>
+        /// Wheres the or.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T WhereOr<T>(Expression fun) where T : Query
         {
             var whereVisitor = visitProvider.BuilderNew<WhereVisitor>();
@@ -228,6 +296,11 @@ namespace Brochure.ORM
             return tt;
         }
 
+        /// <summary>
+        /// Groupbies the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>A T.</returns>
         protected T Groupby<T>(Expression fun) where T : Query
         {
             var groupVisit = visitProvider.Builder<GroupVisitor>();
@@ -238,6 +311,10 @@ namespace Brochure.ORM
             return tt;
         }
 
+        /// <summary>
+        /// Copies the.
+        /// </summary>
+        /// <returns>A T.</returns>
         protected T Copy<T>() where T : Query
         {
             var query = (T)Activator.CreateInstance(typeof(T), this.dbProvider, this.option, this.visitProvider);
@@ -252,6 +329,10 @@ namespace Brochure.ORM
             return query;
         }
 
+        /// <summary>
+        /// Gets the sql.
+        /// </summary>
+        /// <returns>A string.</returns>
         public string GetSql()
         {
             if (string.IsNullOrWhiteSpace(selectSql))
@@ -261,21 +342,36 @@ namespace Brochure.ORM
             return $"{AddWhiteSpace(selectSql)}{AddWhiteSpace(joinSql)}{AddWhiteSpace(groupSql)}{AddWhiteSpace(whereSql)}{AddWhiteSpace(orderSql)}".Trim();
         }
 
+        /// <summary>
+        /// Gets the where sql.
+        /// </summary>
+        /// <returns>A string.</returns>
         public string GetWhereSql()
         {
             return AddWhiteSpace(whereSql);
         }
 
+        /// <summary>
+        /// Gets the db data parameters.
+        /// </summary>
+        /// <returns>A list of IDbDataParameters.</returns>
         public List<IDbDataParameter> GetDbDataParameters()
         {
             return DbParameters;
         }
 
+        /// <summary>
+        /// Joins the table names.
+        /// </summary>
+        /// <returns>A string.</returns>
         protected string JoinTableNames()
         {
             return string.Join(",", mainTableNames.Select(t => $"{dbProvider.FormatFieldName(t)}"));
         }
 
+        /// <summary>
+        /// Inits the main table names.
+        /// </summary>
         private void InitMainTableNames()
         {
             mainTableNames = new List<string>();
