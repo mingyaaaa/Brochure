@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Brochure.Abstract
 {
-    public interface IRecord : IEnumerator
+    public interface IRecord : IEnumerator, IGetValue
     {
         /// <summary>
         /// 添加数据

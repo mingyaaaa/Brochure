@@ -114,6 +114,19 @@ namespace Brochure.Core
         /// <summary>
         /// Creates the.
         /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="converPolicy">The conver policy.</param>
+        /// <returns>A T2.</returns>
+        public T2 Create<T1, T2>(T1 model, IConverPolicy<T1, T2> converPolicy)
+     where T1 : class
+     where T2 : class, new()
+        {
+            return converPolicy.ConverTo(model);
+        }
+
+        /// <summary>
+        /// Creates the.
+        /// </summary>
         /// <param name="record">The record.</param>
         /// <returns>A T1.</returns>
         public T1 Create<T1>(IRecord record) where T1 : class, new()
@@ -128,7 +141,7 @@ namespace Brochure.Core
         /// <returns>An IRecord.</returns>
         public IRecord Create<T1>(T1 obj) where T1 : class
         {
-            var policy = new ObjectToRecordConverPolicy();
+            var policy = new ObjectToRecordConverPolicy<T1>();
             return Create<T1, Record>(obj, policy);
         }
 
@@ -137,9 +150,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <returns>A T.</returns>
-        public T Create<T>(IGetValue reader) where T : class
+        public T Create<T>(IGetValue data) where T : class, new()
         {
-            throw new NotImplementedException();
+            var policy = new GetValueConverPolicy();
+            return Create<IGetValue, T>(data, policy);
         }
 
     }

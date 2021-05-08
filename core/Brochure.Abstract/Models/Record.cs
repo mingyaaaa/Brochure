@@ -9,7 +9,7 @@ namespace Brochure.Abstract.Models
     /// 文档类型
     /// </summary>
     /// <typeparam name="BDocument"></typeparam>
-    public class Record : IRecord, IGetValue
+    public class Record : IRecord
     {
         private readonly IDictionary<string, object> _dic;
 

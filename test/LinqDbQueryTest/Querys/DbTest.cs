@@ -92,7 +92,7 @@ namespace Brochure.ORMTest.Querys
             sql = dbSql.GetAllTableName("testdb");
             Assert.AreEqual("select table_name from information_schema.tables where table_schema='testdb'", sql);
             sql = dbSql.GetCreateTableSql<Students>();
-            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal,No decimal,PRIMARY KEY ( Id ))", sql);
+            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))", sql);
             sql = dbSql.GetDeleteTableSql("testTable");
             Assert.AreEqual("drop table testTable", sql);
             sql = dbSql.GetUpdateTableNameSql("testTable", "newTable");
@@ -104,7 +104,7 @@ namespace Brochure.ORMTest.Querys
         public void TestMySqlDbTypeTable()
         {
             var sql = dbSql.GetCreateTableSql<DbTypeEntiry>();
-            Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255) not null,DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sql);
+            Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255),DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sql);
             Trace.TraceInformation(sql);
         }
 
@@ -120,7 +120,7 @@ namespace Brochure.ORMTest.Querys
             sql = dbSql.GetDeleteColumnSql("testTable", "testColumn");
             Assert.AreEqual("alter table testTable drop column testColumn", sql);
             sql = dbSql.GetRenameColumnNameSql("testTable", "testColumn", "newColumn", TypeCode.Boolean);
-            Assert.AreEqual("alter table testTable change column testColumn newColumn decimal(1)", sql);
+            Assert.AreEqual("alter table testTable change column testColumn newColumn tinyint", sql);
             sql = dbSql.GetUpdateColumnSql("testTable", "testColumn", TypeCode.String, true, 200);
             Assert.AreEqual("alter table testTable modify testColumn nvarchar(200) not null", sql);
             Trace.TraceInformation(sql);

@@ -40,13 +40,13 @@ namespace Brochure.Test
         [TestMethod]
         public void TestObjectToRecordConverPolicy()
         {
-            var policy = new ObjectToRecordConverPolicy();
+            var policy = new ObjectToRecordConverPolicy<Pa>();
             var a = new Pa()
             {
                 A = "aa",
                 B = 3
             };
-            var b = policy.ConverTo<Pa, IRecord>(a);
+            var b = policy.ConverTo(a);
             Assert.AreEqual(b[nameof(Pa.A)], "aa");
             Assert.AreEqual(b[nameof(Pa.B)], 3);
         }

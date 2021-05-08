@@ -62,10 +62,12 @@ namespace Brochure.Abstract
         T2 Create<T1, T2>(T1 model, IConverPolicy converPolicy) where T1 : class where T2 : class, new();
 
         /// <summary>
-        /// 安装Key值对应转换
+        /// Creates the.
         /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        T1 Create<T1>(IRecord record) where T1 : class, new();
+        /// <param name="model">The model.</param>
+        /// <param name="converPolicy">The conver policy.</param>
+        /// <returns>A T2.</returns>
+        T2 Create<T1, T2>(T1 model, IConverPolicy<T1, T2> converPolicy) where T1 : class where T2 : class, new();
 
         /// <summary>
         /// Creates the.
@@ -80,7 +82,7 @@ namespace Brochure.Abstract
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <returns>A T.</returns>
-        T Create<T>(IGetValue reader) where T : class;
+        T Create<T>(IGetValue reader) where T : class, new();
 
     }
 }

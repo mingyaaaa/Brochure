@@ -51,13 +51,16 @@ namespace Brochure.ORMTest.Transaction
             var dbOptionMock = new Mock<DbOption>();
             var transactionMock = new Mock<ITransaction>();
             var connectFactoryMock = new Mock<IConnectFactory>();
-
+            var IdbConnectMock = new Mock<IDbConnection>();
+            var IdbTransactionMock = new Mock<IDbTransaction>();
             var services = Mock.Of<IServiceProvider>(sp =>
 
                sp.GetService(typeof(ITransactionManager)) == transactionManagerMock.Object &&
                sp.GetService(typeof(DbOption)) == dbOptionMock.Object &&
                sp.GetService(typeof(ITransactionFactory)) == factoryMock.Object
             );
+            IdbConnectMock.Setup(t => t.BeginTransaction()).Returns(IdbTransactionMock.Object);
+            connectFactoryMock.Setup(t => t.CreateAndOpenConnection()).Returns(IdbConnectMock.Object);
 
             aspectContextMock.Setup(t => t.ServiceProvider).Returns(services);
             factoryMock.SetupSequence(t => t.GetTransaction())

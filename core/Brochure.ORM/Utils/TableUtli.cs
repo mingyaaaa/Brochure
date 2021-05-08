@@ -31,9 +31,10 @@ namespace Brochure.ORM
         {
             if (type == null)
                 throw new Exception("");
-            var tableName = type.Name;
-            if (_tableNameCache.TryGetValue(type.FullName, tableName))
+            var tableName = string.Empty;
+            if (_tableNameCache.TryGetValue(type.FullName, out tableName))
                 return tableName;
+            tableName = type.Name;
             if (type.GetCustomAttribute(typeof(TableAttribute)) is TableAttribute tableAttribute)
                 tableName = tableAttribute.Name;
             _tableNameCache.TryAdd(type.FullName, tableName);

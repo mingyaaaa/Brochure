@@ -30,6 +30,7 @@ namespace Brochure.LinqDbQuery.MySql
                     isNullType = true;
                     pType = item.PropertyType.GenericTypeArguments[0].Name;
                 }
+
                 var aType = _typeMap.GetSqlType(pType);
                 var columSql = $"{item.Name} {aType}";
                 if (item.Name == "SequenceId")
@@ -89,7 +90,11 @@ namespace Brochure.LinqDbQuery.MySql
                     keys.Add(item.Name);
                 }
                 var isNotNullAttribute = item.GetCustomAttribute(typeof(NotNullAttribute), true);
-                if (isNotNullAttribute != null && isNullType)
+                if (item.PropertyType == typeof(string) && isNotNullAttribute == null)
+                {
+                    isNullType = true;
+                }
+                else if (isNotNullAttribute != null && isNullType)
                 {
                     throw new NotSupportedException("可空类型不能被NotNull标记");
                 }

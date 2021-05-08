@@ -46,19 +46,13 @@ namespace Brochure.Core
     /// <summary>
     /// The object to record conver policy.
     /// </summary>
-    public class ObjectToRecordConverPolicy : IConverPolicy
+    public class ObjectToRecordConverPolicy<T1> : IConverPolicy<T1, Record> where T1 : class
     {
-        /// <summary>
-        /// Convers the to.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns>A T2.</returns>
-        public T2 ConverTo<T1, T2>(T1 model)
-        where T1 : class
-        where T2 : class, new()
+
+        public Record ConverTo(T1 model)
         {
             var policy = new ObjectToRecordDelegate<T1>();
-            return (T2)policy.ConverTo(model);
+            return (Record)policy.ConverTo(model);
         }
     }
 

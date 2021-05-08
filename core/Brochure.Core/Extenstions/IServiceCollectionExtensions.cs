@@ -17,6 +17,8 @@ using Grpc.AspNetCore.Server;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace Brochure.Core
 {
@@ -42,6 +44,7 @@ namespace Brochure.Core
             service.TryAddSingleton<IObjectFactory>(new ObjectFactory());
             service.TryAddSingleton<ISysDirectory>(new SysDirectory());
             service.TryAddSingleton<IModuleLoader, ModuleLoader>();
+            service.TryAddSingleton<IHostEnvironment, HostingEnvironment>();
             service.AddTransient<IPluginContext, PluginContext>();
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration>();
             service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
