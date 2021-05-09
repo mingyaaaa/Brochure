@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\core\Brochure.Abstract\Brochure.Abstract.csproj" />
     <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
+    <ProjectReference Include="..\..\core\Brochure.Core\Brochure.Core.csproj" />
     <ProjectReference Include="..\..\core\Brochure.ORM.MySql\Brochure.ORM.MySql.csproj" />
   </ItemGroup>
 </Project>

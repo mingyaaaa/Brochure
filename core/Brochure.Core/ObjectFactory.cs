@@ -68,6 +68,7 @@ namespace Brochure.Core
     public partial class ObjectFactory
     {
         private readonly IConverPolicy policy;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectFactory"/> class.
         /// </summary>
@@ -83,6 +84,7 @@ namespace Brochure.Core
         {
             this.policy = policy;
         }
+
         /// <summary>
         /// Creates the.
         /// </summary>
@@ -124,16 +126,6 @@ namespace Brochure.Core
             return converPolicy.ConverTo(model);
         }
 
-        /// <summary>
-        /// Creates the.
-        /// </summary>
-        /// <param name="record">The record.</param>
-        /// <returns>A T1.</returns>
-        public T1 Create<T1>(IRecord record) where T1 : class, new()
-        {
-            var policy = new GetValueConverPolicy();
-            return Create<IRecord, T1>(record, policy);
-        }
         /// <summary>
         /// Creates the.
         /// </summary>
