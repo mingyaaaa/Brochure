@@ -24,6 +24,7 @@ namespace Brochure.User.Test
             });
             base.ConfigureService(services);
         }
+
         [TestMethod("测试添加人员")]
         public async Task TestAdd()
         {

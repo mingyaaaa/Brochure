@@ -82,8 +82,7 @@ namespace Brochure.ORM.Database
         /// <returns>A Task.</returns>
         public Task<bool> IsExistTableAsync<T>()
         {
-            var tableName = TableUtlis.GetTableName<T>();
-            return Task.Run(() => IsExistTable(tableName));
+            return Task.Run(() => IsExistTable<T>());
         }
 
         /// <summary>
@@ -91,13 +90,23 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>A bool.</returns>
-        public virtual bool IsExistTable(string tableName)
+        protected virtual bool IsExistTable(string tableName)
         {
-            var connection = connectFactory.CreateConnection();
+            var connection = connectFactory.CreateAndOpenConnection();
             var command = connection.CreateCommand();
             command.CommandText = dbSql.GetTableNameCountSql(tableName);
-            var r = (int)command.ExecuteScalar();
+            var r = (long)command.ExecuteScalar();
             return r >= 1;
+        }
+
+        /// <summary>
+        /// Are the exist table.
+        /// </summary>
+        /// <returns>A bool.</returns>
+        public virtual bool IsExistTable<T>()
+        {
+            var tableName = TableUtlis.GetTableName<T>();
+            return IsExistTable(tableName);
         }
 
         /// <summary>
@@ -132,7 +141,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual long DeleteTable(string tableName)
         {
-            var connection = connectFactory.CreateConnection();
+            var connection = connectFactory.CreateAndOpenConnection();
             var command = connection.CreateCommand();
             command.CommandText = dbSql.GetDeleteTableSql(tableName);
             return command.ExecuteNonQuery();

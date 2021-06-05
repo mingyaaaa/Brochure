@@ -8,12 +8,6 @@
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.7825">
-    </PackageReference>
-    <PackageReference Include="Brochure.Extensions" Version="0.0.0.7825">
-    </PackageReference>
-    <PackageReference Include="Brochure.Utils" Version="0.0.0.7825">
-    </PackageReference>
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />

@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "d56b7e50d2b0e2923023";
+/******/ 	var hotCurrentHash = "c9559f13c11791c95157";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -20104,7 +20104,7 @@ function createInstance(config) {
     var createApi = modules_1.defaultApiCreator(context, usedPlugins);
     var root = createApi({
         name: 'root',
-        version: "1.0.0" || false,
+        version: "1.0.1" || false,
         hash: '',
     });
     var options = helpers_1.createPiletOptions({
@@ -21884,12 +21884,12 @@ function installPiralDebug(options) {
         debug: 'v0',
         instance: {
             name: "Main.Web",
-            version: "1.0.0",
+            version: "1.0.1",
             dependencies: "",
             context,
         },
         build: {
-            date: "2021-03-07T12:53:26.438Z",
+            date: "2021-05-10T12:11:25.067Z",
             cli: "0.12.4",
             compat: "0.12",
         },
@@ -58624,16 +58624,15 @@ var layout = {
       className: "tile cols-".concat(columns, " rows-").concat(rows)
     }, children);
   },
-  Layout: function Layout(_ref4) {
+  // Layout: ({ children }) => (
+  //   <div>
+  //     <Notifications />
+  //     <Menu type="general" />
+  //     <div className="container">{children}</div>
+  //   </div>
+  // ),
+  MenuContainer: function MenuContainer(_ref4) {
     var children = _ref4.children;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](piral__WEBPACK_IMPORTED_MODULE_1__["Notifications"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](piral__WEBPACK_IMPORTED_MODULE_1__["Menu"], {
-      type: "general"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", {
-      className: "container"
-    }, children));
-  },
-  MenuContainer: function MenuContainer(_ref5) {
-    var children = _ref5.children;
 
     var _React$useState = react__WEBPACK_IMPORTED_MODULE_0__["useState"](true),
         _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -58664,16 +58663,16 @@ var layout = {
     }, children, defaultMenuItems)))));
   },
   MenuItem: MenuItem,
-  NotificationsHost: function NotificationsHost(_ref6) {
-    var children = _ref6.children;
+  NotificationsHost: function NotificationsHost(_ref5) {
+    var children = _ref5.children;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", {
       className: "notifications"
     }, children);
   },
-  NotificationsToast: function NotificationsToast(_ref7) {
-    var options = _ref7.options,
-        onClose = _ref7.onClose,
-        children = _ref7.children;
+  NotificationsToast: function NotificationsToast(_ref6) {
+    var options = _ref6.options,
+        onClose = _ref6.onClose,
+        children = _ref6.children;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", {
       className: "notification-toast ".concat(options.type)
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", {

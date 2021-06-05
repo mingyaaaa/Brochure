@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Brochure.Core" Version="0.0.0.7825">
-    </PackageReference>
+    <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Brochure.ORM;
 
 namespace Brochure.User.Entrities

@@ -14,8 +14,8 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7825" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7825" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7855" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7855" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1">
@@ -42,5 +42,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

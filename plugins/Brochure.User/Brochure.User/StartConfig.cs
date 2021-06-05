@@ -5,6 +5,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Brochure.ORM;
 using Brochure.User.Entrities;
+using Microsoft.Extensions.Logging;
 
 namespace Brochure.User
 {
@@ -18,7 +19,7 @@ namespace Brochure.User
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="builder">The builder.</param>
-        public void Configure(Guid key, IApplicationBuilder builder)
+        public async void Configure(Guid key, IApplicationBuilder builder)
         {
             InitDb(builder);
         }
@@ -29,10 +30,20 @@ namespace Brochure.User
         /// <param name="applicationBuilder">The application builder.</param>
         private async void InitDb(IApplicationBuilder applicationBuilder)
         {
-            using var scope = applicationBuilder.ApplicationServices.CreateScope();
-            var dbContext = scope.ServiceProvider.GetService<DbContext>();
-            var exist = dbContext.GetDbTable().IsExistTable(nameof(UserEntrity).ToLower());
-            await dbContext.GetDbTable().CreateTableAsync<UserEntrity>();
+            var log = applicationBuilder.ApplicationServices.GetRequiredService<ILogger<StartConfig>>();
+            try
+            {
+                using var scope = applicationBuilder.ApplicationServices.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<DbContext>();
+                var exist = await dbContext.GetDbTable().IsExistTableAsync<UserEntrity>();
+                if (!exist)
+                    await dbContext.GetDbTable().CreateTableAsync<UserEntrity>();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, ex.Message);
+            }
+
         }
     }
 }

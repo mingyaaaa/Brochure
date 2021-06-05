@@ -1,5 +1,7 @@
 using System;
 using System.Linq.Expressions;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Database;
@@ -15,6 +17,9 @@ namespace LinqDbQueryTest.Datas
         public AutoMocker MockService;
         protected IServiceCollection Services;
         protected IServiceProvider Provider;
+
+        public Fixture Fixture { get; }
+
         public BaseTest()
         {
             MockService = new AutoMocker();
@@ -32,6 +37,9 @@ namespace LinqDbQueryTest.Datas
             Services.AddScoped<IConnectFactory, ConnectFactory>();
             Services.AddSingleton<DbOption, MySqlOption>();
             Provider = Services.BuildServiceProvider();
+
+            Fixture = new Fixture();
+            Fixture.Customize(new AutoMoqCustomization());
         }
     }
 }

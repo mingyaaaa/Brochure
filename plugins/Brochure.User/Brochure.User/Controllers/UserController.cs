@@ -19,6 +19,7 @@ namespace Brochure.User.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName = "user_v1")]
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status500InternalServerError)]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IObjectFactory objectFactory;
@@ -40,7 +41,6 @@ namespace Brochure.User.Controllers
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns>A Task.</returns>
-        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(ReqAddUserModel), StatusCodes.Status200OK)]
         public async Task<ActionResult<RspUserModel>> AddUser([FromBody] ReqAddUserModel user)
@@ -56,7 +56,6 @@ namespace Brochure.User.Controllers
         /// </summary>
         /// <param name="userIds">The user ids.</param>
         /// <returns>A Task.</returns>
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUser([FromQuery] string[] userIds)
         {
@@ -70,7 +69,6 @@ namespace Brochure.User.Controllers
         /// <param name="userId">The user id.</param>
         /// <param name="model">The model.</param>
         /// <returns>A Task.</returns>
-        [Authorize]
         [HttpPatch]
         public async Task<IActionResult> UpdateUser([FromQuery] string userId, [FromBody] ReqUpdateUserModel model)
         {

@@ -72,7 +72,11 @@ namespace Brochure.ORM.Database
         /// </summary>
         public void Dispose()
         {
-            this.dbConnection?.Dispose();
+            if (this.dbConnection == null)
+                return;
+            if (this.dbConnection.State != ConnectionState.Closed)
+                this.dbConnection.Close();
+            this.dbConnection.Dispose();
             this.dbConnection = null;
         }
     }
