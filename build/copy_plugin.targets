@@ -1,16 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup Condition="'$(Configuration)' == 'Release' ">
-        <MySourceFiles Include="$(TargetDir)/**/*.*" Exclude="$(TargetDir)/**/*.pdb">
-		   <DescDir>$(ProjectDir)/../../../../bin/Plugins/$(ProjectName)/</DescDir>
-		</MySourceFiles>		
-    </ItemGroup>
-	 <ItemGroup Condition="'$(Configuration)' == 'Debug' ">
-        <MySourceFiles Include="$(TargetDir)/**/*.*">
-		   <DescDir>$(ProjectDir)/../../../../bin/Plugins/$(ProjectName)/</DescDir>
-		</MySourceFiles>		
-    </ItemGroup>
- <Target Name="AfterBuildCopy" AfterTargets="Build">
+  <ItemGroup Condition="'$(Configuration)' == 'Release' ">
+    <MySourceFiles Include="$(TargetDir)/**/*.*" Exclude="$(TargetDir)/**/*.pdb">
+      <DescDir>$(ProjectDir)/../../../../bin/Plugins/$(ProjectName)/</DescDir>
+    </MySourceFiles>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' ">
+    <MySourceFiles Include="$(TargetDir)/**/*.*">
+      <DescDir>$(ProjectDir)/../../../bin/plugins/$(ProjectName)/</DescDir>
+    </MySourceFiles>
+  </ItemGroup>
+  <Target Name="AfterBuildCopy" AfterTargets="Build">
     <MakeDir Directories="%(MySourceFiles.DescDir)"></MakeDir>
     <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'%(DescDir)/%(RecursiveDir)%(Filename)%(Extension)')" UseHardlinksIfPossible="True"></Copy>
- </Target>
+  </Target>
 </Project>

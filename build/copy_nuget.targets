@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PackageOutputPath>../../../lib/</PackageOutputPath>
+    <PackageOutputPath>../../lib/</PackageOutputPath>
     <VersionSuffix>0.0.0.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("1999-12-3"))).TotalDays)</VersionSuffix>
     <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">0.0.0.1</AssemblyVersion>
     <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>

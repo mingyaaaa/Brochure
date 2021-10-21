@@ -1,10 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Brochure.Core.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {

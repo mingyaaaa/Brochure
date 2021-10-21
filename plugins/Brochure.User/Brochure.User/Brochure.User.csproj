@@ -14,20 +14,20 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7855" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7855" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7991" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7991" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1">
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
+      <PrivateAssets>none</PrivateAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="plugin.config" />
     <None Remove="pluginSetting.json" />
+    <None Remove="Repository\IUserRepository.cs~RF33da279.TMP" />
   </ItemGroup>
   <ItemGroup>
     <None Update="plugin.config">
@@ -41,6 +41,9 @@
     <Content Include="pluginSetting.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

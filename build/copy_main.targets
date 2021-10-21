@@ -6,6 +6,6 @@
         <MySourceFiles Include="$(TargetDir)/**/*.*"/>
     </ItemGroup>
  <Target Name="AfterBuildCopy" AfterTargets="Build">
-     <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'$(ProjectDir)../../../bin/%(RecursiveDir)%(Filename)%(Extension)')" UseHardlinksIfPossible="True"></Copy>
+     <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'$(ProjectDir)../../bin/%(RecursiveDir)%(Filename)%(Extension)')" UseHardlinksIfPossible="True"></Copy>
  </Target>
 </Project>

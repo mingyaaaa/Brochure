@@ -2,7 +2,8 @@
   "profiles": {
     "Brochure.User": {
       "commandName": "Executable",
-      "executablePath": "F:\\GitProgram\\bin\\Brochure.Server.Main.exe"
+      "executablePath": "E:\\GitProgram\\Brochure\\bin\\Brochure.Server.Main.exe",
+      "nativeDebugging": true
     }
   }
 }

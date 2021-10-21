@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.PluginsDI
 {
+    /// <summary>
+    /// The plugins service provider.
+    /// </summary>
     public class PluginsServiceProvider : IPluginServiceProvider, IServiceScopeFactory, IServiceResolver
     {
         private IPluginManagers managers;
@@ -17,12 +20,25 @@ namespace Brochure.Core.PluginsDI
         private int pluginCount = -1;
         private readonly IServiceCollection _services;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginsServiceProvider"/> class.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public PluginsServiceProvider(IServiceCollection services)
         {
             this._services = services;
         }
+
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose() { }
 
+        /// <summary>
+        /// Gets the service.
+        /// </summary>
+        /// <param name="serviceType">The service type.</param>
+        /// <returns>An object.</returns>
         public object GetService(Type serviceType)
         {
             if (managers == null)
@@ -40,7 +56,11 @@ namespace Brochure.Core.PluginsDI
             return obj;
         }
 
-        public IServiceProvider PopuPlugin()
+        /// <summary>
+        /// Popus the plugin.
+        /// </summary>
+        /// <returns>An IServiceProvider.</returns>
+        private IServiceProvider PopuPlugin()
         {
             var plugins = this.managers.GetPlugins().OfType<Plugins>().ToList();
             IServiceCollection t_service = new ServiceCollection();
@@ -57,7 +77,6 @@ namespace Brochure.Core.PluginsDI
                     catch (Exception e)
                     {
                     }
-
                 }
                 else
                 {
@@ -77,7 +96,6 @@ namespace Brochure.Core.PluginsDI
                 }
             }
             return BuildServiceResolver(t_service);
-
         }
 
         /// <summary>
@@ -95,7 +113,6 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceProvider.</returns>
         private IServiceProvider BuildServiceResolver(IServiceCollection services)
         {
-
             return services.BuildServiceContextProvider(t =>
              {
                  var serviceDefinition = t.FirstOrDefault(t => t.ServiceType == typeof(IServiceScopeFactory));
@@ -104,7 +121,6 @@ namespace Brochure.Core.PluginsDI
                  t.AddInstance<IPluginServiceProvider>(this);
              });
         }
-
 
         /// <summary>
         /// Resolves the.

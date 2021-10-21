@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Services.Interfaces;
-using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Logging;
+
 namespace Brochure.Core
 {
     /// <summary>
@@ -69,7 +70,7 @@ namespace Brochure.Core
         public string GetBasePluginsPath()
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
-            return Path.Combine(basePath, "Plugins");
+            return Path.Combine(basePath, "plugins");
         }
 
         /// <summary>
