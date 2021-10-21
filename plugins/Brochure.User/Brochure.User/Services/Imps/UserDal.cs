@@ -69,13 +69,7 @@ namespace Brochure.User.Services.Imps
             var count = idsList.Count;
             if (count == 0)
                 return new List<UserEntrity>();
-            Expression<Func<UserEntrity, bool>> fun = null;
-            if (count == 1)
-                fun = t => t.Id == idsList[0];
-            else
-                fun = t => ids.Contains(t.Id);
-            var query = builder.Build<UserEntrity>().WhereAnd(fun);
-            var entrity = await repository.List(query);
+            var entrity = await repository.List(ids);
             return entrity;
         }
 

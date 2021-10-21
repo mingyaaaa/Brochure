@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
@@ -160,7 +161,14 @@ namespace Brochure.ORM
         public async Task<IEnumerable<T>> List(IEnumerable<string> ids)
         {
             var query = queryBuilder.Build<T>();
-            var q = query.WhereAnd(t => ids.Contains(t.Id));
+            Expression<Func<T, bool>> fun = null;
+            var hasIds = new HashSet<string>(ids);
+            var count = hasIds.Count;
+            if (count == 1)
+                fun = t => t.Id == ids.First();
+            else
+                fun = t => hasIds.Contains(t.Id);
+            var q = query.WhereAnd(fun);
             return await List(q);
         }
 
