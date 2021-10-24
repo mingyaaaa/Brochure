@@ -1,16 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 <TargetFramework>net5.0</TargetFramework>
-    <OutputType>Library</OutputType>
+
   </PropertyGroup>
     <ItemGroup>
-    <Folder Include="Protos\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Protobuf Include="Protos\user.proto" CompileOutputs="false">
-      <OutputDir>
-      </OutputDir>
+    <Protobuf Include="Protos\organization.proto" CompileOutputs="false">
+		<OutputDir>
+		</OutputDir>
      </Protobuf>
   </ItemGroup>
   <ItemGroup>
@@ -23,5 +20,7 @@
        <Publish />
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResponesModel\" />
+  </ItemGroup>
 </Project>
-  

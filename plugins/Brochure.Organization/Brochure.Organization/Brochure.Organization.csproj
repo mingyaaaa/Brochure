@@ -15,13 +15,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7728" />
-    <PackageReference Include="Grpc.Core" Version="2.29.0" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7993" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7992" />
+    <PackageReference Include="Grpc.Core" Version="2.41.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Brochure.Orgainzation.Abstract\Brochure.Orgainzation.Abstract.csproj" />
+      <ProjectReference Include="..\Brochure.Organization.Abstract\Brochure.Organization.Abstract.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Models\" />
     </ItemGroup>
   <Import Project="../../../build/copy_plugin.targets" />
 </Project>

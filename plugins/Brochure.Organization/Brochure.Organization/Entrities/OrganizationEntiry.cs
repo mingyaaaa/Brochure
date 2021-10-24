@@ -1,9 +1,9 @@
 using System;
 using Brochure.ORM;
 
-namespace Brochure.Orgainzation.Entrities
+namespace Brochure.Organization.Entrities
 {
-    public class OraginzationEntiry : EntityBase
+    public class OrganizationEntiry : EntityBase
     {
         public string Name { get; set; }
         public string ParentId { get; set; }

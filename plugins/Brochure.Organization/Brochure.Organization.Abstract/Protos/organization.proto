@@ -1,0 +1,26 @@
+syntax = "proto3";
+package Proto.Organization.Grpc;
+message Organization{
+    string id=1;
+    string name=2;
+    string parentId=3;
+}
+message OrganizationRequest {
+    repeated string Ids=1;
+}
+message MutiOrganizationRequest{
+    repeated Organization Organization=1;
+}
+message FailIdsResponse {
+    repeated string Ids=1;
+}
+message OrganizationResponse{
+    repeated Organization Organization=1;
+}
+service OrganizationService {
+    rpc GetOrganization (OrganizationRequest) returns (OrganizationResponse);
+    rpc DeleteOrganization (OrganizationRequest) returns (FailIdsResponse);
+    rpc UpdateOrganization (OrganizationRequest) returns(FailIdsResponse);
+    rpc Insert (OrganizationRequest) returns (OrganizationResponse);
+    rpc InsertMuti (MutiOrganizationRequest) returns (OrganizationResponse);
+}

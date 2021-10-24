@@ -8,7 +8,6 @@ using Brochure.Abstract;
 using Brochure.Extensions;
 using Brochure.User.Services.Interfaces;
 using Brochure.User.Abstract.RequestModel;
-using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Entrities;
 
 namespace Brochure.User.Services
