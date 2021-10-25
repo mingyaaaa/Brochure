@@ -20,7 +20,4 @@
        <Publish />
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ResponesModel\" />
-  </ItemGroup>
 </Project>
