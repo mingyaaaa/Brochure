@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Core.Server.Extensions;
 using Brochure.Organization.Abstract.RequestModel;
 using Brochure.Organization.DAL.Interfaces;
 using Brochure.Organization.Repository;
@@ -25,9 +26,9 @@ namespace Brochure.Organization.Controllers
         public async Task<IActionResult> AddOraginzation ([FromQuery] ReqAddOrgModel oraginzation)
         {
             var r = await _orgsDal.InsertOrgs (new[] { oraginzation});
-            if (r == null)
-                return Problem ("添加错误");
-            return new JsonResult (r);
+            if (r == -1)
+                return this.JsonError(500,"添加错误");
+            return this.JsonData(r);
         }
 
         [Authorize]
@@ -35,7 +36,7 @@ namespace Brochure.Organization.Controllers
         public async Task<IActionResult> DeleteOraginzation ([FromQuery] string[] oraginzationIds)
         {
             var r = await _orgsDal.DeleteOrgRtnErrorIds (oraginzationIds);
-            return new JsonResult (r);
+            return this.JsonData(r);
         }
 
         [Authorize]
@@ -44,7 +45,7 @@ namespace Brochure.Organization.Controllers
         {
             var record = _objectFactory.Create(model);
             var r = await _orgsDal.UpdateOrg (oraginzationId, record);
-            return new JsonResult (r);
+            return this.JsonData (r);
         }
 
     }

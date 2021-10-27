@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Abstract.Models;
+using Brochure.Core.Server.Extensions;
 using Brochure.User.Abstract.RequestModel;
-using Brochure.User.Abstract.ResponseModel;
+using Brochure.User.Entrities;
 using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +16,9 @@ namespace Brochure.User.Controllers
     /// 用户接口
     /// </summary>
     [Route("api/v1/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "user_v1")]
-    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status500InternalServerError)]
     [Authorize]
     public class UserController : ControllerBase
     {
@@ -40,13 +42,13 @@ namespace Brochure.User.Controllers
         /// <param name="user">The user.</param>
         /// <returns>A Task.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ReqAddUserModel), StatusCodes.Status200OK)]
-        public async Task<ActionResult<RspUserModel>> AddUser([FromBody] ReqAddUserModel user)
+       [ProducesResponseType(typeof(Result<UserEntrity>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddUser([FromBody] ReqAddUserModel user)
         {
             var r = await userDal.InsertUsers(new List<ReqAddUserModel>() { user });
             if (r == null)
-                return Problem("添加错误");
-            return new JsonResult(r);
+                return this.JsonError(500, "添加错误");
+            return this.JsonData(r);
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace Brochure.User.Controllers
         public async Task<IActionResult> DeleteUser([FromQuery] string[] userIds)
         {
             var r = await userDal.DeleteUsers(userIds);
-            return new JsonResult(r);
+            return this.JsonData(r);
         }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace Brochure.User.Controllers
         {
             var record = objectFactory.Create(model);
             var r = await userDal.UpdateUser(userId, record);
-            return new JsonResult(r);
+            return this.JsonData(r);
         }
 
         //查询服务

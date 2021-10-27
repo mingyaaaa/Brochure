@@ -10,6 +10,8 @@ namespace Brochure.Abstract.Models
         int Code { get; }
 
         object Data { get; }
+
+
     }
 
     public interface IResult<T> : IResult
@@ -19,7 +21,6 @@ namespace Brochure.Abstract.Models
 
     public class Result : IResult
     {
-        private readonly object _data;
 
         public Result(int code, string msg)
         {
@@ -28,7 +29,7 @@ namespace Brochure.Abstract.Models
         }
         public Result(object data, int code = 0, string msg = "") : this(code, msg)
         {
-            _data = data;
+            Data = data;
         }
         public string Msg { get; }
 
@@ -36,11 +37,18 @@ namespace Brochure.Abstract.Models
 
         public object Data { get; }
 
-        public T GetData<T>() 
+        public static IResult OK => new Result(0, "");
+
+    }
+
+    public static class ResultExtensions {
+
+        public static T GetData<T>(this IResult result)
         {
-           return (T)_data;
+            return (T)result.Data;
         }
     }
+
 
     public class Result<T> : IResult<T>
     { 
@@ -59,11 +67,11 @@ namespace Brochure.Abstract.Models
         public int Code { get ;  }
         public object Data => _data;
 
-        public static IResult<T> OK => new Result<T>((T)(object)null);
 
         public T GetData()
         {
             return _data;
         }
+
     }
 }

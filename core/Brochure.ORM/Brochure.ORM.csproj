@@ -11,9 +11,9 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-    <PackageReference Include="AspectCore.Abstractions" Version="2.1.0" />
-    <PackageReference Include="AspectCore.Core" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="AspectCore.Abstractions" Version="2.2.0" />
+    <PackageReference Include="AspectCore.Core" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>

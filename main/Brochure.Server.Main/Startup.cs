@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Server;
 using Microsoft.AspNetCore.Builder;
@@ -13,8 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Brochure.Server.Main
@@ -56,11 +53,11 @@ namespace Brochure.Server.Main
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 // 添加控制器层注释，true表示显示控制器注释
                 c.IncludeXmlComments(xmlPath, true);
-
             });
             services.Configure<SwaggerUIOptions>(t =>
             {
                 t.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
+            
             });
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
         }
