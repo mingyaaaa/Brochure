@@ -1,6 +1,5 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Brochure.ORM;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Brochure.User.Entrities
 {
@@ -8,7 +7,7 @@ namespace Brochure.User.Entrities
     /// The user entrity.
     /// </summary>
     [Table("user")]
-    public class UserEntrity : EntityBase
+    public class UserEntrity : EntityBase, IEntityKey<string>
     {
         /// <summary>
         /// 姓名
@@ -35,5 +34,6 @@ namespace Brochure.User.Entrities
         /// </summary>
         /// <value></value>
         public string Password { get; set; }
+        public string Id { get; set; }
     }
 }

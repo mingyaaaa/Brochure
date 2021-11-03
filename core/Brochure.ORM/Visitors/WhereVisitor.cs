@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 
@@ -8,7 +7,7 @@ namespace Brochure.ORM.Visitors
     /// <summary>
     /// The where visitor.
     /// </summary>
-    public class WhereVisitor : ORMVisitor, ICloneable
+    public class WhereVisitor : ORMVisitor
     {
         private readonly IEnumerable<IFuncVisit> _funcVisits;
 
@@ -39,9 +38,9 @@ namespace Brochure.ORM.Visitors
         /// <returns>An Expression.</returns>
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            var left = AddBrackets(GetSql(node.Left));
+            var left = AddBrackets(base.GetSql(node.Left));
             var exType = node.NodeType;
-            var right = AddBrackets(GetSql(node.Right));
+            var right = AddBrackets(base.GetSql(node.Right));
             sql = _dbPrivoder.GetOperateSymbol(left, exType, right);
             return node;
         }
@@ -53,15 +52,8 @@ namespace Brochure.ORM.Visitors
         /// <returns>An object.</returns>
         public override object GetSql(Expression expression = null)
         {
-            if (expression != null)
-            {
-                return base.GetSql(expression);
-            }
-            else
-            {
-                sql = $"where {sql}";
-                return sql;
-            }
+            base.GetSql(expression);
+            return sql;
         }
 
         /// <summary>
@@ -79,15 +71,6 @@ namespace Brochure.ORM.Visitors
                 return str;
             }
             return obj;
-        }
-
-        /// <summary>
-        /// Clones the.
-        /// </summary>
-        /// <returns>An object.</returns>
-        public object Clone()
-        {
-            return new WhereVisitor(_dbPrivoder, dbOption, _funcVisits);
         }
     }
 }

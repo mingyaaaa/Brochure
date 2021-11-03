@@ -1,5 +1,3 @@
-using System;
-using System.Linq.Expressions;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Brochure.LinqDbQuery.MySql;
@@ -9,6 +7,8 @@ using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
 using Moq.AutoMock;
+using System;
+using System.Linq.Expressions;
 
 namespace LinqDbQueryTest.Datas
 {
@@ -26,6 +26,7 @@ namespace LinqDbQueryTest.Datas
             Services = new ServiceCollection();
             Services.AddScoped<IDbProvider, MySqlDbProvider>();
             Services.AddScoped<IVisitProvider, VisitProvider>();
+            Services.AddScoped<IQueryBuilder, QueryBuilder>();
             Services.AddTransient<ExpressionVisitor, WhereVisitor>();
             Services.AddTransient<ExpressionVisitor, GroupVisitor>();
             Services.AddTransient<ExpressionVisitor, OrderVisitor>();
@@ -33,7 +34,6 @@ namespace LinqDbQueryTest.Datas
             Services.AddTransient<ExpressionVisitor, JoinVisitor>();
             Services.AddTransient<ExpressionVisitor, HavingVisitor>();
             Services.AddScoped<DbSql, MySqlDbSql>();
-            Services.AddScoped<IQueryBuilder, DefaultQueryBuilder>();
             Services.AddScoped<IConnectFactory, ConnectFactory>();
             Services.AddSingleton<DbOption, MySqlOption>();
             Provider = Services.BuildServiceProvider();

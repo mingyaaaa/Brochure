@@ -1,18 +1,12 @@
 using System;
-using Brochure.Abstract;
-using Brochure.Core;
-using Brochure.ORM;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("LinqDbQueryTest")]
 
 namespace Brochure.ORM
 {
     public abstract class EntityBase
     {
-        /// <summary>
-        /// 主建
-        /// </summary>
-        /// <returns></returns>
-        public string Id { get; set; } = Guid.NewGuid ().ToString ();
-
         /// <summary>
         /// 创建时间
         /// </summary>
@@ -24,16 +18,29 @@ namespace Brochure.ORM
         /// </summary>
         /// <value></value>
         public long SequenceId { get; set; }
-
     }
+
+    /// <summary>
+    /// The entity key.
+    /// </summary>
+    public interface IEntityKey<T> where T : class, IComparable<T>
+    {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        T Id { get; set; }
+    }
+
     public interface IEntiryCreator
     {
         Guid Creator { get; set; }
     }
+
     public interface IEntityUpdator
     {
         Guid Updator { get; set; }
     }
+
     public interface IEntityUpdateTime
     {
         DateTime UpdateTime { get; set; }

@@ -1,8 +1,7 @@
-using System;
-using System.Diagnostics;
-using AspectCore.DynamicProxy;
 using Brochure.Core.RPC;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Diagnostics;
 
 namespace Brochure.Test
 {
@@ -10,100 +9,100 @@ namespace Brochure.Test
     public class RpcTest
     {
 
-        public AClient CreateProxy ()
+        public AClient CreateProxy()
         {
-            var factory = new RpcPollyProxyFactory (new PollyOption () { RetryCount = 2 });
-            return new Rpc<AClient> (factory).Ins;
+            var factory = new RpcPollyProxyFactory(new PollyOption() { RetryCount = 2 });
+            return new Rpc<AClient>(factory).Ins;
         }
 
-        public AClient CreateMemoryProxy ()
+        public AClient CreateMemoryProxy()
         {
-            var factory = new RpcMemoryProxyFactory (new AService ());
-            return new Rpc<AClient> (factory).Ins;
-        }
-
-        [TestMethod]
-        public void CreateProxyTest ()
-        {
-            CreateProxy ();
+            var factory = new RpcMemoryProxyFactory(new AService());
+            return new Rpc<AClient>(factory).Ins;
         }
 
         [TestMethod]
-        public void ProxyTest ()
+        public void CreateProxyTest()
         {
-            var alient = CreateProxy ();
+            CreateProxy();
+        }
+
+        [TestMethod]
+        public void ProxyTest()
+        {
+            var alient = CreateProxy();
             const int initData = 4;
             alient.A = initData;
-            var r = alient.GetAValue (initData);
-            Assert.AreEqual (initData, r);
+            var r = alient.GetAValue(initData);
+            Assert.AreEqual(initData, r);
         }
 
         [TestMethod]
-        public void ProxyException ()
+        public void ProxyException()
         {
-            var alient = CreateProxy ();
+            var alient = CreateProxy();
             const int initData = 4;
             alient.A = initData;
-            Assert.ThrowsException<AspectInvocationException> (() => alient.GetAValue (initData - 1));
+            Assert.ThrowsException<Exception>(() => alient.GetAValue(initData - 1));
         }
 
         [TestMethod]
-        public void ProxyRetryCount ()
+        public void ProxyRetryCount()
         {
-            var alient = CreateProxy ();
+            var alient = CreateProxy();
             var initData = 4;
             alient.A = initData;
             try
             {
-                alient.GetAValue (initData - 1);
+                alient.GetAValue(initData - 1);
             }
             catch (System.Exception)
             {
-                Trace.TraceInformation (alient.A.ToString ());
+                Trace.TraceInformation(alient.A.ToString());
             }
             //执行一次  重试两次 共三次
-            Assert.AreEqual (initData + 3, alient.A);
+            Assert.AreEqual(initData + 3, alient.A);
         }
 
         [TestMethod]
-        public void CreateMemoryProxyTest ()
+        public void CreateMemoryProxyTest()
         {
-            CreateMemoryProxy ();
+            CreateMemoryProxy();
         }
 
         [TestMethod]
-        public void MemoryProxyExcuteTest ()
+        public void MemoryProxyExcuteTest()
         {
-            var ins = CreateMemoryProxy ();
+            var ins = CreateMemoryProxy();
             var i = 1;
-            var a = ins.GetAValue (i);
-            Assert.AreEqual (i + 1, a);
+            var a = ins.GetAValue(i);
+            Assert.AreEqual(i + 1, a);
         }
     }
 
     public class AClient
     {
         public int A { get; set; }
-        public virtual int GetAValue (int a)
+        public virtual int GetAValue(int a)
         {
             if (A != a)
             {
                 A++;
-                throw new Exception ();
+                throw new Exception();
             }
             return a;
         }
     }
     public abstract class ABase
     {
-        public virtual int GetAValue (int a)
+        public virtual int GetAValue(int a)
         {
-            throw new Exception ();
+            throw new Exception();
         }
     }
     public class AService : ABase
     {
-        public override int GetAValue (int a)
+        public override int GetAValue(int a)
         {
             return 1 + a;
         }

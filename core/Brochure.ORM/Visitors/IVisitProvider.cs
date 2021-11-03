@@ -1,42 +1,31 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 namespace Brochure.ORM.Visitors
 {
     public interface IVisitProvider
     {
-        T Builder<T> () where T : ExpressionVisitor;
-        T BuilderNew<T> () where T : ExpressionVisitor, ICloneable;
+        T Builder<T>() where T : ExpressionVisitor;
     }
 
     public class VisitProvider : IVisitProvider
     {
-        private readonly IEnumerable<ExpressionVisitor> expressionVisitors;
+        private readonly IServiceProvider _serviceProvider;
 
-        public VisitProvider (IEnumerable<ExpressionVisitor> expressionVisitors)
+        public VisitProvider(
+            IServiceProvider serviceProvider)
         {
-            this.expressionVisitors = expressionVisitors;
+            _serviceProvider = serviceProvider;
         }
-        public T Builder<T> () where T : ExpressionVisitor
+        public T Builder<T>() where T : ExpressionVisitor
         {
-            var type = typeof (T);
-            var exp = expressionVisitors.FirstOrDefault (t => t.GetType ().FullName == type.FullName);
+            var expressionVisitors = _serviceProvider.GetServices<ExpressionVisitor>();
+            var type = typeof(T);
+            var exp = expressionVisitors.FirstOrDefault(t => t.GetType().FullName == type.FullName);
             if (exp == null)
-                throw new System.Exception ($"{type.FullName}服务没有注入");
-            return (T) exp;
-        }
-
-        public T BuilderNew<T> () where T : ExpressionVisitor, ICloneable
-        {
-            var type = typeof (T);
-            var exp = expressionVisitors.FirstOrDefault (t => t.GetType ().FullName == type.FullName);
-            if (exp == null)
-                throw new System.Exception ($"{type.FullName}服务没有注入");
-            if (!typeof (ICloneable).IsAssignableFrom (type))
-                throw new System.Exception ($"{type.FullName}必须实现ICloneable接口");
-            return (T) (exp as ICloneable)?.Clone ();
+                throw new System.Exception($"{type.FullName}服务没有注入");
+            return (T)exp;
         }
     }
 }

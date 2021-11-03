@@ -17,7 +17,7 @@ namespace Brochure.ORM.Extensions
             services.AddScoped<ExpressionVisitor, SelectVisitor>();
             services.AddScoped<ExpressionVisitor, WhereVisitor>();
             services.AddScoped<IVisitProvider, VisitProvider>();
-            services.AddTransient<IQueryBuilder, DefaultQueryBuilder>();
+            services.AddScoped<IQueryBuilder, QueryBuilder>();
             services.AddScoped<IConnectFactory, ConnectFactory>();
             services.AddScoped<ITransactionFactory, TransactionFactory>();
             return services;

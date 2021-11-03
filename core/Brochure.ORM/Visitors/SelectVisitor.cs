@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Brochure.ORM.Visitors
 {
     public class SelectVisitor : ORMVisitor
     {
-        public SelectVisitor(IDbProvider dbPrivoder, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbPrivoder, dbOption, funcVisits) { }
+        public SelectVisitor(IDbProvider dbPrivoder, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbPrivoder, dbOption, funcVisits)
+        {
+        }
 
         protected override Expression VisitNew(NewExpression node)
         {
@@ -16,11 +17,13 @@ namespace Brochure.ORM.Visitors
             for (int i = 0; i < parms.Count; i++)
             {
                 var member = members[i];
-                list.Add($"{GetSql(parms[i])} as {member.Name}");
+                list.Add($"{base.GetSql(parms[i])} as {member.Name}");
             }
-            sql = $"select {string.Join(",", list)} from ";
+            sql = $"{string.Join(",", list)}";
             return node;
         }
+
+
 
         protected override Expression VisitMemberInit(MemberInitExpression node)
         {
@@ -29,37 +32,29 @@ namespace Brochure.ORM.Visitors
             {
                 if (!(node.Bindings[i] is MemberAssignment member))
                     continue;
-                var field = GetSql(member.Expression);
+                var field = base.GetSql(member.Expression);
                 var alis = member.Member.Name;
                 list.Add($"{field} as {alis}");
             }
-            sql = $"select {string.Join(",", list)} from ";
+            sql = $"{string.Join(",", list)}";
             return node;
         }
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            var left = GetSql(node.Left);
+            var left = base.GetSql(node.Left);
             var exType = node.NodeType;
-            var right = GetSql(node.Right);
+            var right = base.GetSql(node.Right);
             sql = _dbPrivoder.GetOperateSymbol(left, exType, right);
             return node;
         }
 
         public override object GetSql(Expression expression = null)
         {
-            if (expression != null)
-            {
-                return base.GetSql(expression);
-            }
-            else
-            {
-                var sqlStr = sql?.ToString() ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(sqlStr) && !sqlStr.Contains("select"))
-                    return $"select {sql} from ";
-                else
-                    return sqlStr;
-            }
+            base.GetSql(expression);
+            sql = $"select {sql} from";
+            return sql;
         }
     }
+
 }

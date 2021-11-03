@@ -5,13 +5,16 @@ using Brochure.Abstract;
 using Brochure.ORM;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Database;
+using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 
 namespace Brochure.LinqDbQuery.MySql
 {
     public class MySqlDbSql : DbSql
     {
-        public MySqlDbSql(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider) : base(dbProvider, dbOption, visitProvider) { }
+        public MySqlDbSql(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider, IQueryBuilder queryBuilder) : base(dbProvider, dbOption, visitProvider, queryBuilder)
+        {
+        }
 
         public override string GetCreateTableSql<T>()
         {
@@ -106,7 +109,6 @@ namespace Brochure.LinqDbQuery.MySql
             }
             if (keys.Count == 0) { columSqls.Add($"PRIMARY KEY ( Id )"); }
             else if (keys.Count == 1) { columSqls.Add($"PRIMARY KEY ( {keys[0]} )"); }
-
             else { throw new NotSupportedException("暂时不支持联合主键，请使用联合唯一索引代替"); }
             if (string.IsNullOrWhiteSpace(tableName))
                 throw new Exception("当前TabelName的值为null 无法创建表");

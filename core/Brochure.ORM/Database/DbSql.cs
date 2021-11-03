@@ -1,13 +1,15 @@
+using Brochure.Abstract;
+using Brochure.Extensions;
+using Brochure.ORM.Atrributes;
+using Brochure.ORM.Querys;
+using Brochure.ORM.Visitors;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Brochure.Abstract;
-using Brochure.Extensions;
-using Brochure.ORM.Atrributes;
-using Brochure.ORM.Visitors;
+
 namespace Brochure.ORM
 {
     /// <summary>
@@ -19,13 +21,15 @@ namespace Brochure.ORM
         protected readonly TypeMap _typeMap;
         protected readonly IDbProvider dbProvider;
         protected readonly IVisitProvider visitProvider;
+        private readonly IQueryBuilder queryBuilder;
 
-        protected DbSql(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider)
+        protected DbSql(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider, IQueryBuilder queryBuilder)
         {
             this.Option = dbOption;
             _typeMap = dbProvider.GetTypeMap();
             this.dbProvider = dbProvider;
             this.visitProvider = visitProvider;
+            this.queryBuilder = queryBuilder;
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace Brochure.ORM
             {
                 var whereVisitor = visitProvider.Builder<WhereVisitor>();
                 whereVisitor.Visit(whereFunc);
-                whereSql = whereVisitor.GetSql().ToString();
+                whereSql = $"where { whereVisitor.GetSql()}";
                 parms.AddRange(whereVisitor.GetParameters());
             }
             var tableName = TableUtlis.GetTableName<T>();
@@ -54,19 +58,14 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Tuple.</returns>
-        public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T>(IWhereQuery query)
+        public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T>(IQuery query)
         {
-            var whereSql = string.Empty;
-            var parms = new List<IDbDataParameter>();
-            if (query != null)
-            {
-                whereSql = query.GetWhereSql();
-                parms.AddRange(query.GetDbDataParameters());
-            }
+            var whereSqlResult = query == null ? queryBuilder.Build(query) : new ParmsSqlResult();
             var tableName = TableUtlis.GetTableName<T>();
-            var sql = $"delete from  {dbProvider.FormatFieldName(tableName)} {whereSql}";
-            return Tuple.Create(sql, parms);
+            var sql = $"delete from  {dbProvider.FormatFieldName(tableName)} {whereSqlResult.SQL}";
+            return Tuple.Create(sql, whereSqlResult.Parameters);
         }
+
         /// <summary>
         /// Gets the insert sql.
         /// </summary>
@@ -152,25 +151,21 @@ namespace Brochure.ORM
             sql = $"{sql}{fieldList.Join(",")} {whereSql}";
             return Tuple.Create(sql, parms);
         }
+
         /// <summary>
         /// Gets the update sql.
         /// </summary>
         /// <param name="obj">The obj.</param>
         /// <param name="query">The query.</param>
         /// <returns>A Tuple.</returns>
-        public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T>(object obj, IWhereQuery query)
+        public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T>(object obj, IQuery query)
         {
-            var whereSql = string.Empty;
-            var parms = new List<IDbDataParameter>();
-            if (query != null)
-            {
-                whereSql = query.GetWhereSql();
-                parms.AddRange(query.GetDbDataParameters());
-            }
+            var whereSqlResult = query == null ? queryBuilder.Build(query) : new ParmsSqlResult();
             var tableName = TableUtlis.GetTableName<T>();
             var doc = obj.As<IRecord>();
             var sql = $"update {dbProvider.FormatFieldName(tableName)} set ";
             var fieldList = new List<string>();
+            var parms = new List<IDbDataParameter>(whereSqlResult.Parameters);
             foreach (var item in doc.Keys.ToList())
             {
                 var fieldStr = string.Empty;
@@ -188,7 +183,7 @@ namespace Brochure.ORM
                 }
                 fieldList.Add(fieldStr);
             }
-            sql = $"{sql}{fieldList.Join(",")} {whereSql}";
+            sql = $"{sql}{fieldList.Join(",")} {whereSqlResult.SQL}";
             return Tuple.Create(sql, parms);
         }
 
@@ -242,7 +237,8 @@ namespace Brochure.ORM
         {
             return "select schema_name from information_schema.schemata";
         }
-        #endregion
+
+        #endregion Database
 
         #region DataTable
 
@@ -376,7 +372,8 @@ namespace Brochure.ORM
         {
             return $"drop table {tableName}";
         }
-        #endregion
+
+        #endregion DataTable
 
         #region Column
 
@@ -478,9 +475,10 @@ namespace Brochure.ORM
             return $"alter table {tableName} drop column {columnName}";
         }
 
-        #endregion
+        #endregion Column
 
         #region Index
+
         /// <summary>
         /// Gets the create index sql.
         /// </summary>
@@ -504,7 +502,8 @@ namespace Brochure.ORM
         {
             return $"drop index {indexName} on {tableName}";
         }
-        #endregion
+
+        #endregion Index
 
         /// <summary>
         /// Gets the length str.
@@ -514,7 +513,6 @@ namespace Brochure.ORM
         /// <returns>A string.</returns>
         private string GetLengthStr(int length, TypeCode code)
         {
-
             if (code == TypeCode.Double || code == TypeCode.Single)
             {
                 length = length <= 0 ? 15 : length;

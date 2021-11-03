@@ -1,13 +1,14 @@
+using Brochure.Abstract;
+using Brochure.Extensions;
+using Brochure.ORM.Atrributes;
+using Brochure.ORM.Extensions;
+using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using Brochure.Abstract;
-using Brochure.Extensions;
-using Brochure.ORM.Atrributes;
-using Brochure.ORM.Extensions;
+
 namespace Brochure.ORM.Database
 {
     /// <summary>
@@ -25,13 +26,14 @@ namespace Brochure.ORM.Database
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="connectFactory">The connect factory.</param>
         /// <param name="objectFactory">The object factory.</param>
-        protected DbData(DbOption dbOption, DbSql dbSql, ITransactionManager transactionManager, IConnectFactory connectFactory, IObjectFactory objectFactory)
+        protected DbData(DbOption dbOption, DbSql dbSql, ITransactionManager transactionManager, IConnectFactory connectFactory, IObjectFactory objectFactory, IQueryBuilder queryBuilder)
         {
             Option = dbOption;
             this._dbSql = dbSql;
             this._transactionManager = transactionManager;
             this._connectFactory = connectFactory;
             _objectFactory = objectFactory;
+            this.queryBuilder = queryBuilder;
             _dbConnection = connectFactory.CreateConnection();
         }
 
@@ -40,6 +42,7 @@ namespace Brochure.ORM.Database
         private readonly ITransactionManager _transactionManager;
         private readonly IConnectFactory _connectFactory;
         private readonly IObjectFactory _objectFactory;
+        private readonly IQueryBuilder queryBuilder;
 
         /// <summary>
         /// Inserts the.
@@ -123,7 +126,7 @@ namespace Brochure.ORM.Database
         /// <param name="query">The query.</param>
         /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Update<T>(object obj, IWhereQuery query)
+        public virtual int Update<T>(object obj, IQuery query)
         {
             var sqlTuple = _dbSql.GetUpdateSql<T>(obj, query);
             var sql = sqlTuple.Item1;
@@ -155,7 +158,7 @@ namespace Brochure.ORM.Database
         /// <param name="query">The query.</param>
         /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Delete<T>(IWhereQuery query)
+        public virtual int Delete<T>(IQuery query)
         {
             var tuple = _dbSql.GetDeleteSql<T>(query);
             var command = CreateDbCommand();
@@ -171,11 +174,11 @@ namespace Brochure.ORM.Database
         /// <returns>A list of TS.</returns>
         public virtual IEnumerable<T> Query<T>(IQuery<T> query)
         {
-            var sql = query.GetSql();
-            var parms = query.GetDbDataParameters();
+            var queryResult = queryBuilder.Build(query);
+            var parms = queryResult.Parameters;
             var connect = _connectFactory.CreateConnection();
             var command = connect.CreateCommand();
-            command.CommandText = sql;
+            command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);
             var reader = command.ExecuteReader();
             var list = new List<T>();
@@ -186,6 +189,7 @@ namespace Brochure.ORM.Database
             }
             return list;
         }
+
         /// <summary>
         /// Queries the.
         /// </summary>
@@ -193,11 +197,11 @@ namespace Brochure.ORM.Database
         /// <returns>A list of TS.</returns>
         public virtual IEnumerable<T> Query<T>(IQuery query)
         {
-            var sql = query.GetSql();
-            var parms = query.GetDbDataParameters();
+            var queryResult = queryBuilder.Build(query);
+            var parms = queryResult.Parameters;
             var connect = _connectFactory.CreateConnection();
             var command = connect.CreateCommand();
-            command.CommandText = sql;
+            command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);
             var reader = command.ExecuteReader();
             var list = new List<T>();
@@ -225,6 +229,5 @@ namespace Brochure.ORM.Database
             command.Transaction = _transactionManager.GetDbTransaction();
             return command;
         }
-
     }
 }

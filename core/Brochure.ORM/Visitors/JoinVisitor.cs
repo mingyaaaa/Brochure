@@ -34,8 +34,8 @@ namespace Brochure.ORM.Visitors
         /// <returns>An Expression.</returns>
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            var left = GetSql(node.Left);
-            var right = GetSql(node.Right);
+            var left = base.GetSql(node.Left);
+            var right = base.GetSql(node.Right);
             sql = $"join {_dbPrivoder.FormatFieldName(tableName)} on {left} = {right}";
             return node;
         }

@@ -24,7 +24,7 @@ namespace Brochure.ORM.Extensions
             return dbData.Update(obj, where);
         }
 
-        public static int Update<T>(this DbContext dbContext, object obj, IWhereQuery query)
+        public static int Update<T>(this DbContext dbContext, object obj, IQuery query)
         {
             var dbData = dbContext.GetDbData();
             return dbData.Update<T>(obj, query);
@@ -36,7 +36,7 @@ namespace Brochure.ORM.Extensions
             return dbData.Delete(where);
         }
 
-        public static int Delete<T>(this DbContext dbContext, IWhereQuery query)
+        public static int Delete<T>(this DbContext dbContext, IQuery query)
         {
             var dbData = dbContext.GetDbData();
             return dbData.Delete<T>(query);

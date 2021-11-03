@@ -4,10 +4,8 @@ using Brochure.Organization.Abstract.RequestModel;
 using Brochure.Organization.DAL.Interfaces;
 using Brochure.Organization.Entrities;
 using Brochure.Organization.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Brochure.Organization.DAL.Imps
@@ -17,15 +15,15 @@ namespace Brochure.Organization.DAL.Imps
         private readonly IObjectFactory _objectFactory;
         private readonly IOrganizationRepository _oraginzationRepository;
 
-        public OrgsDal(IObjectFactory objectFactory,IOrganizationRepository oraginzationRepository) 
+        public OrgsDal(IObjectFactory objectFactory, IOrganizationRepository oraginzationRepository)
         {
             _objectFactory = objectFactory;
             _oraginzationRepository = oraginzationRepository;
         }
 
-        public  async ValueTask<int> DeleteOrg(string id)
+        public async ValueTask<int> DeleteOrg(string id)
         {
-           return await _oraginzationRepository.Delete(id);
+            return await _oraginzationRepository.Delete(id);
         }
 
         public async ValueTask<IEnumerable<string>> DeleteOrgRtnErrorIds(IEnumerable<string> ids)
@@ -35,14 +33,14 @@ namespace Brochure.Organization.DAL.Imps
 
         public async ValueTask<int> DeleteOrgs(IEnumerable<string> ids)
         {
-            return await  _oraginzationRepository.DeleteMany(ids);
+            return await _oraginzationRepository.DeleteMany(ids);
         }
 
         public async ValueTask<OrganizationModel> GetOrg(string id)
         {
             var org = await _oraginzationRepository.Get(id);
-            if (org != null) 
-               return _objectFactory.Create<OrganizationEntiry,OrganizationModel> (org);
+            if (org != null)
+                return _objectFactory.Create<OrganizationEntiry, OrganizationModel>(org);
             return null;
         }
 
@@ -61,7 +59,7 @@ namespace Brochure.Organization.DAL.Imps
         public async ValueTask<int> UpdateOrg(string id, IRecord record)
         {
             var org = _objectFactory.Create<OrganizationEntiry>(record);
-            return await _oraginzationRepository.Update(id,org);
+            return await _oraginzationRepository.Update(id, org);
         }
     }
 }

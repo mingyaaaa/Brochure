@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Brochure.ORM.Atrributes;
+using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
 {
@@ -95,7 +95,7 @@ namespace Brochure.ORM.Database
             var connection = connectFactory.CreateAndOpenConnection();
             var command = connection.CreateCommand();
             command.CommandText = dbSql.GetTableNameCountSql(tableName);
-            var r = (long)command.ExecuteScalar();
+            var r = (long)(command.ExecuteScalar());
             return r >= 1;
         }
 

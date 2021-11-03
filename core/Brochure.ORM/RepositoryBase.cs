@@ -1,11 +1,9 @@
+using Brochure.ORM.Database;
+using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Brochure.ORM.Database;
-using Brochure.ORM.Extensions;
-using Brochure.ORM.Querys;
 
 namespace Brochure.ORM
 {
@@ -15,72 +13,27 @@ namespace Brochure.ORM
     public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase
     {
         protected readonly DbContext context;
-        protected readonly IQueryBuilder queryBuilder;
         protected readonly DbData dbData;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public RepositoryBase(DbContext context, IQueryBuilder queryBuilder)
+        public RepositoryBase(DbContext context)
         {
             this.context = context;
-            this.queryBuilder = queryBuilder;
             dbData = context.GetDbData();
         }
+
         /// <summary>
         /// Deletes the.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Delete(IWhereQuery query)
+        public async Task<int> Delete(IQuery query)
         {
             var r = await Task.Run(() => dbData.Delete<T>(query)).ConfigureAwait(false);
             return r;
-        }
-
-        /// <summary>
-        /// Deletes the.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns>A Task.</returns>
-        public async Task<int> Delete(string id)
-        {
-            var query = queryBuilder.Build<T>();
-            var q = query.WhereAnd(t => t.Id == id) as IWhereQuery;
-            return await Delete(q);
-        }
-
-        /// <summary>
-        /// Deletes the many.
-        /// </summary>
-        /// <param name="ids">The ids.</param>
-        /// <returns>A Task.</returns>
-        public async Task<int> DeleteMany(IEnumerable<string> ids)
-        {
-            var query = queryBuilder.Build<T>();
-            var q = query.WhereAnd(t => ids.Contains(t.Id)) as IWhereQuery;
-            return await Delete(q);
-        }
-
-        /// <summary>
-        /// Deletes the many.
-        /// </summary>
-        /// <param name="ids">The ids.</param>
-        /// <returns>A Task.</returns>
-        public async Task<IEnumerable<string>> DeleteManyReturnError(IEnumerable<string> ids)
-        {
-            var query = queryBuilder.Build<T>();
-            var errorIds = new List<string>();
-            foreach (var item in ids)
-            {
-                var q = query.WhereAnd(t => ids.Contains(t.Id)) as IWhereQuery;
-                var r = await Delete(q);
-                if (r > 0)
-                {
-                    errorIds.Add(item);
-                }
-            }
-            return errorIds;
         }
 
         /// <summary>
@@ -92,18 +45,6 @@ namespace Brochure.ORM
         {
             var t = await Task.Run(() => dbData.Query<T>(query)).ConfigureAwait(false);
             return t.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets the.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <returns>A Task.</returns>
-        public async Task<T> Get(string id)
-        {
-            var query = queryBuilder.Build<T>();
-            var q = query.WhereAnd(t => t.Id == id);
-            return await Get(q);
         }
 
         /// <summary>
@@ -129,20 +70,6 @@ namespace Brochure.ORM
         }
 
         /// <summary>
-        /// Insets the and get.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns>A Task.</returns>
-        public async Task<T> InsetAndGet(T entity)
-        {
-            var r = await Insert(entity);
-            if (r <= 0)
-                return null;
-            var e = await Get(entity.Id);
-            return e;
-        }
-
-        /// <summary>
         /// Lists the.
         /// </summary>
         /// <param name="query">The query.</param>
@@ -154,50 +81,72 @@ namespace Brochure.ORM
         }
 
         /// <summary>
-        /// Lists the.
-        /// </summary>
-        /// <param name="ids">The ids.</param>
-        /// <returns>A Task.</returns>
-        public async Task<IEnumerable<T>> List(IEnumerable<string> ids)
-        {
-            var query = queryBuilder.Build<T>();
-            Expression<Func<T, bool>> fun = null;
-            var hasIds = new HashSet<string>(ids);
-            var count = hasIds.Count;
-            if (count == 1)
-                fun = t => t.Id == ids.First();
-            else
-                fun = t => hasIds.Contains(t.Id);
-            var q = query.WhereAnd(fun);
-            return await List(q);
-        }
-
-        /// <summary>
         /// Updates the.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Update(IWhereQuery query, T entity)
+        public async Task<int> Update(IQuery query, T entity)
         {
             if (query == null)
                 throw new Exception("query不能为null");
             var t = await Task.Run(() => dbData.Update<T>(entity, query)).ConfigureAwait(false);
             return t;
         }
+    }
 
-        /// <summary>
-        /// Updates the.
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="entity">The entity.</param>
-        /// <returns>A Task.</returns>
-        public async Task<int> Update(string id, T entity)
+    public abstract class RepositoryBase<T1, T2> : RepositoryBase<T1>, IRepository<T1, T2>
+        where T1 : EntityBase, IEntityKey<T2>
+        where T2 : class, IComparable<T2>
+    {
+        protected RepositoryBase(DbContext context) : base(context)
         {
-            var query = queryBuilder.Build<T>();
-            var q = query.WhereAnd(t => t.Id == id) as IWhereQuery;
-            return await Update(q, entity);
         }
 
+        public Task<int> Delete(T2 id)
+        {
+            return base.Delete(Query.Where<T1>(t => t.Id == id));
+        }
+
+        public Task<int> DeleteMany(IEnumerable<T2> ids)
+        {
+            return base.Delete(Query.Where<T1>(t => ids.Contains(t.Id)));
+        }
+
+        public async Task<IEnumerable<T2>> DeleteManyReturnError(IEnumerable<T2> ids)
+        {
+            var list = new List<T2>();
+            foreach (var item in ids)
+            {
+                var r = await Delete(Query.Where<T1>(t => t.Id == item));
+                if (r < 0)
+                    list.Add(item);
+            }
+            return list;
+        }
+
+        public Task<T1> Get(T2 id)
+        {
+            return base.Get(Query.Where<T1>(t => t.Id == id));
+        }
+
+        public async Task<T1> InsertAndGet(T1 userEntrity)
+        {
+            var a = await Insert(userEntrity);
+            if (a < 0)
+                return await base.Get(Query.Where<T1>(t => t.Id == userEntrity.Id));
+            return null;
+        }
+
+        public async Task<IList<T1>> List(IEnumerable<T2> ids)
+        {
+            var list = await base.List(Query.Where<T1>(t => ids.Contains(t.Id)));
+            return list.ToList();
+        }
+
+        public Task<int> Update(T2 id, T1 obj)
+        {
+            return base.Update(Query.Where<T1>(t => t.Id == id), obj);
+        }
     }
 }

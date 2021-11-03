@@ -1,14 +1,10 @@
 ﻿using Brochure.Abstract;
 using Brochure.ORM.Querys;
-using Brochure.User.Abstract.RequestModel;
-using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Entrities;
 using Brochure.User.Repository;
 using Brochure.User.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Brochure.User.Services.Imps
@@ -46,7 +42,6 @@ namespace Brochure.User.Services.Imps
             return userIds;
         }
 
-
         /// <summary>
         /// Deletes the users.
         /// </summary>
@@ -73,16 +68,21 @@ namespace Brochure.User.Services.Imps
             return entrity;
         }
 
+        public async ValueTask<UserEntrity> InsertAndGet(UserEntrity userEntrity)
+        {
+            var r = await repository.InsertAndGet(userEntrity);
+            return r;
+        }
+
         /// <summary>
         /// Inserts the users.
         /// </summary>
         /// <param name="users">The users.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IEnumerable<UserEntrity>> InsertUsers(IEnumerable<ReqAddUserModel> users)
+        public async ValueTask<int> InsertUsers(IEnumerable<UserEntrity> users)
         {
-            var userEntirys = users.Select(t => objectFactory.Create<ReqAddUserModel, UserEntrity>(t));
-            var list = await repository.Insert(userEntirys);
-            return userEntirys;
+            var r = await repository.Insert(users);
+            return r;
         }
 
         /// <summary>

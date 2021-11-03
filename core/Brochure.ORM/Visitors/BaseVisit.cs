@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Brochure.ORM;
 
 namespace Brochure.ORM.Visitors
 {
@@ -50,6 +49,11 @@ namespace Brochure.ORM.Visitors
         /// <returns>An object.</returns>
         public virtual object GetSql(Expression expression = null)
         {
+            return GetSqlBase(expression);
+        }
+
+        private object GetSqlBase(Expression expression = null)
+        {
             if (expression != null)
                 Visit(expression);
             return sql;
@@ -92,15 +96,15 @@ namespace Brochure.ORM.Visitors
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             var argument0 = node.Arguments[0];
-            var call = GetSql(argument0);
+            var call = this.GetSqlBase(argument0);
             object member = null;
             if (node.Object == null && node.Arguments.Count == 2)
             {
-                member = GetSql(node.Arguments[1]);
+                member = this.GetSqlBase(node.Arguments[1]);
             }
             else
             {
-                member = GetSql(node.Object);
+                member = this.GetSqlBase(node.Object);
             }
 
             switch (node.Method.Name)

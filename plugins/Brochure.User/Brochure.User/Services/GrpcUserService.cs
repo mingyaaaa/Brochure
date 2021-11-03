@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using User.Rpc;
 using static User.Rpc.UserService;
+
 using UseModel = User.Rpc;
+
 using Brochure.Abstract;
 using Brochure.Extensions;
 using Brochure.User.Services.Interfaces;
@@ -30,6 +32,7 @@ namespace Brochure.User.Services
             _userDal = userDal;
             _objectFactory = objectFactory;
         }
+
         /// <summary>
         /// Gets the user.
         /// </summary>
@@ -77,10 +80,10 @@ namespace Brochure.User.Services
         public override async Task<UserResponse> Insert(MutiUserRequest request, ServerCallContext context)
         {
             var users = request.Users.ToList();
-            var inserUsers = users.Select(t => _objectFactory.Create<ReqAddUserModel>(t));
+            var inserUsers = users.Select(t => _objectFactory.Create<UserEntrity>(t));
             var r = await _userDal.InsertUsers(inserUsers);
             var rsp = new UserResponse();
-            foreach (var item in r)
+            foreach (var item in inserUsers)
             {
                 var obj = _objectFactory.Create<UseModel.User>(item);
                 rsp.Users.Add(obj);

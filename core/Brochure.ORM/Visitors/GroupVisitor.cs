@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Brochure.ORM.Visitors
 {
@@ -20,10 +19,10 @@ namespace Brochure.ORM.Visitors
             {
                 if (!(node.Bindings[i] is MemberAssignment member))
                     continue;
-                var field = GetSql(member.Expression);
+                var field = base.GetSql(member.Expression);
                 list.Add($"{field}");
             }
-            sql = $"group by {string.Join(",", list)} from ";
+            sql = $"{string.Join(",", list)}";
             return node;
         }
 
@@ -38,9 +37,9 @@ namespace Brochure.ORM.Visitors
             var parms = node.Arguments;
             for (int i = 0; i < parms.Count; i++)
             {
-                list.Add($"{GetSql(parms[i])}");
+                list.Add($"{base.GetSql(parms[i])}");
             }
-            sql = $"group by {string.Join(",", list)} ";
+            sql = $"{string.Join(",", list)}";
             return node;
         }
 
@@ -51,18 +50,8 @@ namespace Brochure.ORM.Visitors
         /// <returns>An object.</returns>
         public override object GetSql(Expression expression = null)
         {
-            if (expression != null)
-            {
-                base.Visit(expression);
-            }
-            else
-            {
-                var str = sql?.ToString() ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(str) && !str.Contains("group"))
-                {
-                    sql = $"group by {str}";
-                }
-            }
+            base.Visit(expression);
+            sql = $"group by {sql}";
             return sql;
         }
     }
