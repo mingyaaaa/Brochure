@@ -3,7 +3,7 @@ using Brochure.ORM;
 using Brochure.ORM.Database;
 using MySql.Data.MySqlClient;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
     /// <summary>
     /// The my sql option.
@@ -31,8 +31,8 @@ namespace Brochure.LinqDbQuery.MySql
             builder.Password = pwd;
             builder.Database = database;
             builder.ConnectionTimeout = (uint)connectTimeOut;
-            this.ConnectionString = builder.ToString();
-            this.Timeout = connectTimeOut;
+            ConnectionString = builder.ToString();
+            Timeout = connectTimeOut;
         }
     }
 }

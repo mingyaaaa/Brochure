@@ -1,7 +1,7 @@
 using System;
 using Brochure.ORM;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
     public class MySqlTypeMap : TypeMap
     {

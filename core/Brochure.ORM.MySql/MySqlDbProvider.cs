@@ -5,7 +5,7 @@ using Brochure.ORM;
 using Brochure.ORM.Visitors;
 using MySql.Data.MySqlClient;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
     /// <summary>
     /// The my sql db provider.
@@ -125,6 +125,5 @@ namespace Brochure.LinqDbQuery.MySql
         {
             return new MySqlTypeMap();
         }
-
     }
 }

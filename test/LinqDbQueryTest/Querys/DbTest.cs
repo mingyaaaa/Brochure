@@ -4,13 +4,13 @@ using System.Linq;
 using Brochure.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
-using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 using LinqDbQueryTest.Datas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+
 namespace Brochure.ORMTest.Querys
 {
     [TestClass]
@@ -21,6 +21,7 @@ namespace Brochure.ORMTest.Querys
 
         private readonly DbSql dbSql;
         private Mock<TransactionManager> transactionManager;
+
         public DbTest()
         {
             transactionManager = new Mock<TransactionManager>();
@@ -69,7 +70,6 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(sql.Item2.FirstOrDefault(t => t.ParameterName == "@ClassCount").Value, 1);
         }
 
-
         [TestMethod]
         public void TestDbDatabase()
         {
@@ -87,8 +87,9 @@ namespace Brochure.ORMTest.Querys
         [TestMethod]
         public void TestDbTable()
         {
+            option.DatabaseName = "testdb";
             var sql = dbSql.GetTableNameCountSql("testTable");
-            Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable'", sql);
+            Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable' and TABLE_SCHEMA ='testdb'", sql);
             sql = dbSql.GetAllTableName("testdb");
             Assert.AreEqual("select table_name from information_schema.tables where table_schema='testdb'", sql);
             sql = dbSql.GetCreateTableSql<Students>();

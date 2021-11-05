@@ -1,5 +1,4 @@
-﻿using Brochure.LinqDbQuery.MySql;
-using Brochure.ORM.Database;
+﻿using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

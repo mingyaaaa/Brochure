@@ -1,6 +1,6 @@
-using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Database;
+using Brochure.ORM.MySql;
 using Brochure.ORM.Querys;
 using Brochure.ORMTest.Datas;
 using LinqDbQueryTest.Datas;
@@ -113,7 +113,6 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("select * from `Students`,`Peoples` order by `Students`.`ClassCount`,`Peoples`.`Age` desc", sql.SQL);
         }
 
-
         [TestMethod]
         public void QueryWhereAnd()
         {
@@ -178,7 +177,6 @@ namespace Brochure.ORMTest.Querys
             var r = queryBuilder.Build(q);
             Assert.AreEqual("select * from `Students` where `Students`.`ClassCount` = @p0 and `Students`.`ClassId` = @p1", r.SQL);
             Assert.AreEqual(2, r.Parameters.Count);
-
 
             var query1 = Query.Where<Students>(t => t.ClassId == "a");
             r = queryBuilder.Build(query1);

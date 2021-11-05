@@ -1,10 +1,10 @@
 using System;
 using AspectCore.DependencyInjection;
-using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
+using Brochure.ORM.MySql;
 using Brochure.ORM.Visitors;
 
 namespace Brochure.ORMTest

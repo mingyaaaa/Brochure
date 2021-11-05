@@ -4,7 +4,7 @@ using Brochure.ORM;
 using Brochure.ORM.Database;
 using Brochure.ORM.Querys;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
     /// <summary>
     /// The my sql db data.

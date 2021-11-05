@@ -8,14 +8,28 @@ using Brochure.ORM.Database;
 using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
+    /// <summary>
+    /// The my sql db sql.
+    /// </summary>
     public class MySqlDbSql : DbSql
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlDbSql"/> class.
+        /// </summary>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="visitProvider">The visit provider.</param>
+        /// <param name="queryBuilder">The query builder.</param>
         public MySqlDbSql(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider, IQueryBuilder queryBuilder) : base(dbProvider, dbOption, visitProvider, queryBuilder)
         {
         }
 
+        /// <summary>
+        /// Gets the create table sql.
+        /// </summary>
+        /// <returns>A string.</returns>
         public override string GetCreateTableSql<T>()
         {
             var type = typeof(T);
@@ -114,6 +128,16 @@ namespace Brochure.LinqDbQuery.MySql
                 throw new Exception("当前TabelName的值为null 无法创建表");
             var sql = $@"create table {tableName}({string.Join(",", columSqls)})";
             return sql;
+        }
+
+        /// <summary>
+        /// Gets the table name count sql.
+        /// </summary>
+        /// <param name="tableName">The table name.</param>
+        /// <returns>A string.</returns>
+        public override string GetTableNameCountSql(string tableName)
+        {
+            return $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}' and TABLE_SCHEMA ='{Option.DatabaseName }'";
         }
     }
 }

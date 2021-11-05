@@ -1,8 +1,8 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Brochure.LinqDbQuery.MySql;
 using Brochure.ORM;
 using Brochure.ORM.Database;
+using Brochure.ORM.MySql;
 using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;

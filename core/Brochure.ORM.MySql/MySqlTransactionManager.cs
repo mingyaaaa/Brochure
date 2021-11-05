@@ -1,9 +1,11 @@
 using Brochure.ORM.Database;
 
-namespace Brochure.LinqDbQuery.MySql
+namespace Brochure.ORM.MySql
 {
     public class MySqlTransactionManager : TransactionManager
     {
-        public MySqlTransactionManager () : base () { }
+        public MySqlTransactionManager() : base()
+        {
+        }
     }
 }

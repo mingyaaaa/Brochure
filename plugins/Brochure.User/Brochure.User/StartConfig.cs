@@ -43,7 +43,6 @@ namespace Brochure.User
             {
                 log.LogError(ex, ex.Message);
             }
-
         }
     }
 }
