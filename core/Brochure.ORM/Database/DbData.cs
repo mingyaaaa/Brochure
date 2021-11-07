@@ -16,8 +16,6 @@ namespace Brochure.ORM.Database
     /// </summary>
     public abstract class DbData : IDisposable
     {
-        private readonly IDbConnection _dbConnection;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DbData"/> class.
         /// </summary>
@@ -34,7 +32,6 @@ namespace Brochure.ORM.Database
             this._connectFactory = connectFactory;
             _objectFactory = objectFactory;
             this.queryBuilder = queryBuilder;
-            _dbConnection = connectFactory.CreateConnection();
         }
 
         protected DbOption Option;
@@ -176,7 +173,7 @@ namespace Brochure.ORM.Database
         {
             var queryResult = queryBuilder.Build(query);
             var parms = queryResult.Parameters;
-            var connect = _connectFactory.CreateConnection();
+            var connect = _connectFactory.CreateAndOpenConnection();
             var command = connect.CreateCommand();
             command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);
@@ -190,16 +187,16 @@ namespace Brochure.ORM.Database
             return list;
         }
 
-        /// <summary>
-        /// Queries the.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        /// <returns>A list of TS.</returns>
+        ///// <summary>
+        ///// Queries the.
+        ///// </summary>
+        ///// <param name="query">The query.</param>
+        ///// <returns>A list of TS.</returns>
         public virtual IEnumerable<T> Query<T>(IQuery query)
         {
             var queryResult = queryBuilder.Build(query);
             var parms = queryResult.Parameters;
-            var connect = _connectFactory.CreateConnection();
+            var connect = _connectFactory.CreateAndOpenConnection();
             var command = connect.CreateCommand();
             command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);

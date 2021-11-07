@@ -7,7 +7,7 @@
     <PackageReference Include="AspectCore.Core" Version="2.2.0" />
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
@@ -17,7 +17,7 @@
     </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.0.27" />
     <PackageReference Include="Quartz" Version="3.3.3" />
-    <PackageReference Include="Moq.AutoMock" Version="3.0.0" />
+    <PackageReference Include="Moq.AutoMock" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
   </ItemGroup>
   <ItemGroup>

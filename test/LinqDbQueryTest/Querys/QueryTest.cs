@@ -183,5 +183,51 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("where `Students`.`ClassId` = @p0", r.SQL);
             Assert.AreEqual(1, r.Parameters.Count);
         }
+
+        [TestMethod]
+        public void QueryWithIEntityKey()
+        {
+            IEntityKey<string> teacher = new Teachers();
+            var query = Query.From<Teachers>().Where(t => t.Id == teacher.Id);
+            var r = queryBuilder.Build(query);
+
+            Assert.AreEqual("select * from `Teachers` where `Teachers`.`Id` = @p0", r.SQL);
+
+            var teacher1 = new FTeachers();
+            query = Query.From<Teachers>().Where(t => t.Id == teacher1.Teachers.Id);
+            r = queryBuilder.Build(query);
+
+            Assert.AreEqual("select * from `Teachers` where `Teachers`.`Id` = @p0", r.SQL);
+
+            IEntityKey<string> tea = new Teachers();
+            IQuery q = Query.Where<Teachers>(t => t.Id == tea.Id);
+            r = queryBuilder.Build(q);
+
+            Assert.AreEqual("where `Teachers`.`Id` = @p0", r.SQL);
+        }
+
+        [TestMethod]
+        public void QueryGenericType()
+        {
+            var teacher = new Teachers();
+            var repository = new QueryGeneric<Teachers>(queryBuilder);
+            var sql = repository.GetGenericSql(teacher.Id);
+            Assert.AreEqual("", sql);
+        }
+
+        private class QueryGeneric<T> where T : IEntityKey<string>
+        {
+            private readonly IQueryBuilder _queryBuilder;
+
+            public QueryGeneric(IQueryBuilder queryBuilder)
+            {
+                _queryBuilder = queryBuilder;
+            }
+
+            public string GetGenericSql(string id)
+            {
+                return _queryBuilder.Build(Query.Where<T>((T t) => t.Id == id)).SQL;
+            }
+        }
     }
 }

@@ -1,9 +1,5 @@
 using Brochure.ORM;
-using Brochure.ORM.Querys;
 using Brochure.User.Entrities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Brochure.User.Repository
 {
@@ -12,6 +8,10 @@ namespace Brochure.User.Repository
     /// </summary>
     public class UserRepository : RepositoryBase<UserEntrity, string>, IUserRepository
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public UserRepository(DbContext context) : base(context)
         {
         }

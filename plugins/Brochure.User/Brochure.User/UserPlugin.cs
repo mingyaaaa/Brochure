@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Brochure.Core;
-using Brochure.Core.Extenstions;
 using Brochure.ORM.MySql;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
@@ -10,10 +9,8 @@ using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Brochure.User
@@ -29,7 +26,6 @@ namespace Brochure.User
         /// <param name="service">The service.</param>
         public UserPlugin()
         {
-
         }
 
         /// <summary>

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+
 namespace Brochure.ORM.Extensions
 {
     public static class DbContextExtensions
     {
         #region DbData
+
         public static int Insert<T>(this DbContext dbContext, T data)
         {
             var dbData = dbContext.GetDbData();
@@ -47,6 +49,7 @@ namespace Brochure.ORM.Extensions
             var dbData = dbContext.GetDbData();
             return dbData.Query<T>(query);
         }
-        #endregion
+
+        #endregion DbData
     }
 }

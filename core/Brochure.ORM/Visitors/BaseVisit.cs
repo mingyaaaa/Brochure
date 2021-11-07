@@ -59,6 +59,25 @@ namespace Brochure.ORM.Visitors
             return sql;
         }
 
+        private object GetConstantExpressValue(MemberExpression expression = null)
+        {
+            if (expression == null)
+                return null;
+            if (expression.Expression is MemberExpression memberExpression)
+            {
+                var obj = GetConstantExpressValue(memberExpression);
+                if (expression.Member is PropertyInfo propertyInfo)
+                {
+                    return propertyInfo.GetGetMethod().Invoke(obj, null);
+                }
+            }
+            if (expression.Member is FieldInfo)
+            {
+                return (expression.Member as FieldInfo)?.GetValue((expression.Expression as ConstantExpression)?.Value);
+            }
+            return null;
+        }
+
         /// <summary>
         /// Gets the parameters.
         /// </summary>
@@ -77,13 +96,22 @@ namespace Brochure.ORM.Visitors
         {
             if (node.Member is FieldInfo)
             {
-                var obj = (node.Member as FieldInfo)?.GetValue((node.Expression as ConstantExpression)?.Value);
+                var obj = GetConstantExpressValue(node);
                 this.sql = AddParamers(obj);
             }
-            else if (node.Member is PropertyInfo)
+            else if (node.Member is PropertyInfo propertyInfo)
             {
-                string tableName = TableUtlis.GetTableName((node.Member as PropertyInfo)?.DeclaringType);
-                sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+                if (node.Expression is MemberExpression memberExpression)
+                {
+                    var obj = GetConstantExpressValue(memberExpression);
+                    obj = propertyInfo.GetGetMethod().Invoke(obj, null);
+                    this.sql = AddParamers(obj);
+                }
+                else
+                {
+                    string tableName = TableUtlis.GetTableName((node.Member as PropertyInfo)?.DeclaringType);
+                    sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+                }
             }
             return node;
         }
@@ -120,26 +148,33 @@ namespace Brochure.ORM.Visitors
                         sql = $"{member} in ({listStr})";
                     }
                     break;
+
                 case FuncName.StartsWith:
                     if (call is string)
                         sql = $"{member} like '%{call}'";
                     break;
+
                 case FuncName.EndsWith:
                     if (call is string)
                         sql = $"{member} like '{call}%'";
                     break;
+
                 case FuncName.Count:
                     sql = $"count({call})";
                     break;
+
                 case FuncName.Sum:
                     sql = $"sum({member})";
                     break;
+
                 case FuncName.Min:
                     sql = $"min({member})";
                     break;
+
                 case FuncName.Max:
                     sql = $"max({member})";
                     break;
+
                 default:
                     var fun = _funList?.FirstOrDefault(t => t.FuncName == node.Method.Name);
                     if (fun != null)

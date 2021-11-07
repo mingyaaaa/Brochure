@@ -133,7 +133,7 @@ namespace Brochure.ORM
         public async Task<T1> InsertAndGet(T1 userEntrity)
         {
             var a = await Insert(userEntrity);
-            if (a < 0)
+            if (a > 0)
                 return await base.Get(Query.Where<T1>(t => t.Id == userEntrity.Id));
             return null;
         }
