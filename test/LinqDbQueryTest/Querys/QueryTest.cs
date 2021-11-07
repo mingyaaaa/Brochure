@@ -212,7 +212,7 @@ namespace Brochure.ORMTest.Querys
             var teacher = new Teachers();
             var repository = new QueryGeneric<Teachers>(queryBuilder);
             var sql = repository.GetGenericSql(teacher.Id);
-            Assert.AreEqual("", sql);
+            Assert.AreEqual("where `Teachers`.`Id` = @p0", sql);
         }
 
         private class QueryGeneric<T> where T : IEntityKey<string>

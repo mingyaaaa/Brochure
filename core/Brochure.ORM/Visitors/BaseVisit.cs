@@ -107,9 +107,14 @@ namespace Brochure.ORM.Visitors
                     obj = propertyInfo.GetGetMethod().Invoke(obj, null);
                     this.sql = AddParamers(obj);
                 }
-                else
+                else if (node.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
                 {
-                    string tableName = TableUtlis.GetTableName((node.Member as PropertyInfo)?.DeclaringType);
+                    string tableName = TableUtlis.GetTableName(unaryParamExpression.Type);
+                    sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+                }
+                else if (node.Expression is ParameterExpression parameterExpression)
+                {
+                    string tableName = TableUtlis.GetTableName(parameterExpression.Type);
                     sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
                 }
             }
@@ -185,6 +190,11 @@ namespace Brochure.ORM.Visitors
             }
             return node;
         }
+
+        //private Type AnalyseParamExpression(ParameterExpression parameterExpression)
+        //{
+        //    return
+        //}
 
         /// <summary>
         /// Visits the constant.
