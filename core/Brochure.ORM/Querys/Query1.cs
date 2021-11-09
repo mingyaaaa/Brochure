@@ -4,6 +4,9 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Querys
 {
+    /// <summary>
+    /// The query.
+    /// </summary>
     public class Query<T1> : Query, IQuery<T1>
     {
         /// <summary>
@@ -19,6 +22,11 @@ namespace Brochure.ORM.Querys
             return a;
         }
 
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1, T2> Join<T2>(Expression<Func<T1, T2, bool>> fun)
         {
             this.JoinExpression.Add((typeof(T2), fun));
@@ -27,6 +35,11 @@ namespace Brochure.ORM.Querys
             return a;
         }
 
+        /// <summary>
+        /// Groupbies the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<IGrouping<T2, T1>> Groupby<T2>(Expression<Func<T1, T2>> fun)
         {
             this.GroupExpress = fun;
@@ -35,58 +48,80 @@ namespace Brochure.ORM.Querys
             return a;
         }
 
+        /// <summary>
+        /// Orders the by.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> OrderBy(Expression<Func<T1, object>> fun)
         {
             OrderExpression = fun;
             return this;
         }
 
+        /// <summary>
+        /// Orders the by desc.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> OrderByDesc(Expression<Func<T1, object>> fun)
         {
             OrderDescExpression = fun;
             return this;
         }
 
+        /// <summary>
+        /// Wheres the and.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> WhereAnd(Expression<Func<T1, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.And, fun));
             return this;
         }
 
+        /// <summary>
+        /// Wheres the or.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> WhereOr(Expression<Func<T1, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.Or, fun));
             return this;
         }
 
-        public IQuery<T1> WhereAnd(string whereSql)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<T1> WhereOr(string whereSql)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<T1> OrderBy(string whereSql)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<T1> OrderbyDesc(string whereSql)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Distincts the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> Distinct()
         {
-            throw new NotImplementedException();
+            IsDistinct = true;
+            return this;
         }
 
+        /// <summary>
+        /// Wheres the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> Where(Expression<Func<T1, bool>> fun)
         {
             WhereExpression = fun;
+            return this;
+        }
+
+        public IQuery<T1> Take(int count)
+        {
+            TakeCount = count;
+            return this;
+        }
+
+        public IQuery<T1> Skip(int count)
+        {
+            SkipCount = count;
             return this;
         }
     }

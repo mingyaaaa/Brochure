@@ -7,21 +7,43 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Querys
 {
+    /// <summary>
+    /// The query builder.
+    /// </summary>
     public interface IQueryBuilder
     {
+        /// <summary>
+        /// Builds the.
+        /// </summary>
+        /// <param name="queryExpression">The query expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         ParmsSqlResult Build(IQuery queryExpression);
     }
 
+    /// <summary>
+    /// The query builder.
+    /// </summary>
     internal class QueryBuilder : IQueryBuilder
     {
         private readonly IVisitProvider visitProvider;
         private readonly IDbProvider dbProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
+        /// </summary>
+        /// <param name="visitProvider">The visit provider.</param>
+        /// <param name="dbProvider">The db provider.</param>
         public QueryBuilder(IVisitProvider visitProvider, IDbProvider dbProvider)
         {
             this.visitProvider = visitProvider;
             this.dbProvider = dbProvider;
         }
 
+        /// <summary>
+        /// Builds the.
+        /// </summary>
+        /// <param name="queryExpression">The query expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         public ParmsSqlResult Build(IQuery queryExpression)
         {
             var tableNames = queryExpression.MainTables.Select(t => dbProvider.FormatFieldName(TableUtlis.GetTableName(t)));
@@ -39,6 +61,12 @@ namespace Brochure.ORM.Querys
             return result;
         }
 
+        /// <summary>
+        /// Builds the from.
+        /// </summary>
+        /// <param name="hasSelectExpression">If true, has select expression.</param>
+        /// <param name="tables">The tables.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildFrom(bool hasSelectExpression, IEnumerable<string> tables)
         {
             var r = new ParmsSqlResult();
@@ -51,6 +79,12 @@ namespace Brochure.ORM.Querys
             return r;
         }
 
+        /// <summary>
+        /// Builds the select.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="groupSql">The group sql.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildSelect(Expression expression, string groupSql)
         {
             if (expression == null)
@@ -77,8 +111,12 @@ namespace Brochure.ORM.Querys
             return r;
         }
 
-
-
+        /// <summary>
+        /// Builds the where.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="whereList">The where list.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildWhere(Expression expression, IEnumerable<(string, Expression)> whereList)
         {
             var result = new ParmsSqlResult();
@@ -92,6 +130,13 @@ namespace Brochure.ORM.Querys
             return result;
         }
 
+        /// <summary>
+        /// Builds the where list.
+        /// </summary>
+        /// <param name="whereVisitor">The where visitor.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="whereSql">The where sql.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildWhereList(WhereVisitor whereVisitor, IEnumerable<(string, Expression)> expression, string whereSql)
         {
             var result = new ParmsSqlResult();
@@ -109,12 +154,23 @@ namespace Brochure.ORM.Querys
             return result;
         }
 
+        /// <summary>
+        /// Builds the group.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildGroup(Expression expression)
         {
             var visitor = this.visitProvider.Builder<GroupVisitor>();
             return Build(visitor, expression);
         }
 
+        /// <summary>
+        /// Builds the order.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="isAes">If true, is aes.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildOrder(Expression expression, bool isAes)
         {
             var visitor = this.visitProvider.Builder<OrderVisitor>();
@@ -122,6 +178,11 @@ namespace Brochure.ORM.Querys
             return Build(visitor, expression);
         }
 
+        /// <summary>
+        /// Builds the join.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult BuildJoin(IEnumerable<(Type, Expression)> expression)
         {
             var result = new ParmsSqlResult();
@@ -137,12 +198,23 @@ namespace Brochure.ORM.Querys
             return result;
         }
 
+        /// <summary>
+        /// Builds the having.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         public ParmsSqlResult BuildHaving(Expression expression)
         {
             var visitor = this.visitProvider.Builder<HavingVisitor>();
             return Build(visitor, expression);
         }
 
+        /// <summary>
+        /// Builds the.
+        /// </summary>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
         private ParmsSqlResult Build(ORMVisitor visitor, Expression expression)
         {
             var result = new ParmsSqlResult();
@@ -155,6 +227,11 @@ namespace Brochure.ORM.Querys
             return result;
         }
 
+        /// <summary>
+        /// Adds the white space.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A string.</returns>
         private string AddWhiteSpace(string str)
         {
             if (!string.IsNullOrWhiteSpace(str))

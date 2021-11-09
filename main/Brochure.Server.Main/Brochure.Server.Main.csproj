@@ -19,7 +19,7 @@
     <None Remove="plugins\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8018" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8020" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>

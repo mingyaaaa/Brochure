@@ -12,27 +12,74 @@ namespace Brochure.ORM.Querys
             WhereListExpression = new List<(string, Expression)>();
             JoinExpression = new List<(Type, Expression)>();
             LeftJoinExpress = new List<(Type, Expression)>();
+            IsDistinct = false;
         }
 
+        /// <summary>
+        /// Gets or sets the main tables.
+        /// </summary>
         public List<Type> MainTables { get; set; }
 
+        /// <summary>
+        /// Gets or sets the select expression.
+        /// </summary>
         public Expression SelectExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the where expression.
+        /// </summary>
         public Expression WhereExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the where list expression.
+        /// </summary>
         public IList<(string, Expression)> WhereListExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the order expression.
+        /// </summary>
         public Expression OrderExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the order desc expression.
+        /// </summary>
         public Expression OrderDescExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the join expression.
+        /// </summary>
         public IList<(Type, Expression)> JoinExpression { get; set; }
 
+        /// <summary>
+        /// Gets or sets the left join express.
+        /// </summary>
         public IList<(Type, Expression)> LeftJoinExpress { get; set; }
 
+        /// <summary>
+        /// Gets or sets the group express.
+        /// </summary>
         public Expression GroupExpress { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether is distinct.
+        /// </summary>
+        public bool IsDistinct { get; set; }
 
+        /// <summary>
+        /// Gets or sets the take count.
+        /// </summary>
+        public int TakeCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the skip count.
+        /// </summary>
+        public int SkipCount { get; set; }
+
+        /// <summary>
+        /// Wheres the.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T> Where<T>(Expression<Func<T, bool>> expression)
         {
             var obj = new Query<T>();
@@ -40,6 +87,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T> From<T>()
         {
             var obj = new Query<T>();
@@ -47,6 +98,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T1, T2> From<T1, T2>()
         {
             var obj = new Query<T1, T2>();
@@ -55,6 +110,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T1, T2, T3> From<T1, T2, T3>()
         {
             var obj = new Query<T1, T2, T3>();
@@ -64,6 +123,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T1, T2, T3, T4> From<T1, T2, T3, T4>()
         {
             var obj = new Query<T1, T2, T3, T4>();
@@ -74,6 +137,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public static IQuery<T1, T2, T3, T4, T5> From<T1, T2, T3, T4, T5>()
         {
             var obj = new Query<T1, T2, T3, T4, T5>();
@@ -85,6 +152,10 @@ namespace Brochure.ORM.Querys
             return obj;
         }
 
+        /// <summary>
+        /// Copies the property.
+        /// </summary>
+        /// <param name="des">The des.</param>
         protected void CopyProperty(Query des)
         {
             des.MainTables = this.MainTables;

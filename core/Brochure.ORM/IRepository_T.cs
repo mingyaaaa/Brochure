@@ -14,7 +14,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<T> Get(IQuery query);
+        Task<T> Get(IQuery<T> query);
 
         /// <summary>
         /// Updates the.
@@ -36,7 +36,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<IEnumerable<T>> List(IQuery query);
+        Task<IEnumerable<T>> List(IQuery<T> query);
 
         /// <summary>
         /// Inserts the.
