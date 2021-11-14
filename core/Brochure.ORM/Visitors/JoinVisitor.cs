@@ -9,7 +9,7 @@ namespace Brochure.ORM.Visitors
     /// </summary>
     public class JoinVisitor : ORMVisitor
     {
-        private string tableName;
+        private string joinTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JoinVisitor"/> class.
@@ -25,8 +25,14 @@ namespace Brochure.ORM.Visitors
         /// <param name="tableType">The table type.</param>
         public void SetTableName(Type tableType)
         {
-            tableName = TableUtlis.GetTableName(tableType);
+            joinTable = _dbPrivoder.FormatFieldName(TableUtlis.GetTableName(tableType));
         }
+
+        public void SetTableName(string subQuery)
+        {
+            joinTable = subQuery;
+        }
+
         /// <summary>
         /// Visits the binary.
         /// </summary>
@@ -36,7 +42,7 @@ namespace Brochure.ORM.Visitors
         {
             var left = base.GetSql(node.Left);
             var right = base.GetSql(node.Right);
-            sql = $"join {_dbPrivoder.FormatFieldName(tableName)} on {left} = {right}";
+            sql = $"join {joinTable} on {left} = {right}";
             return node;
         }
     }

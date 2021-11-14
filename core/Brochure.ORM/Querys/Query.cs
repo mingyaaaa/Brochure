@@ -8,17 +8,17 @@ namespace Brochure.ORM.Querys
     {
         public Query()
         {
-            MainTables = new List<Type>();
+            MainTables = new List<BaseSubQueryType>();
             WhereListExpression = new List<(string, Expression)>();
-            JoinExpression = new List<(Type, Expression)>();
-            LeftJoinExpress = new List<(Type, Expression)>();
+            JoinExpression = new List<(BaseSubQueryType, Expression)>();
+            LeftJoinExpress = new List<(BaseSubQueryType, Expression)>();
             IsDistinct = false;
         }
 
         /// <summary>
         /// Gets or sets the main tables.
         /// </summary>
-        public List<Type> MainTables { get; set; }
+        public List<BaseSubQueryType> MainTables { get; set; }
 
         /// <summary>
         /// Gets or sets the select expression.
@@ -48,12 +48,12 @@ namespace Brochure.ORM.Querys
         /// <summary>
         /// Gets or sets the join expression.
         /// </summary>
-        public IList<(Type, Expression)> JoinExpression { get; set; }
+        public IList<(BaseSubQueryType, Expression)> JoinExpression { get; set; }
 
         /// <summary>
         /// Gets or sets the left join express.
         /// </summary>
-        public IList<(Type, Expression)> LeftJoinExpress { get; set; }
+        public IList<(BaseSubQueryType, Expression)> LeftJoinExpress { get; set; }
 
         /// <summary>
         /// Gets or sets the group express.
@@ -94,7 +94,29 @@ namespace Brochure.ORM.Querys
         public static IQuery<T> From<T>()
         {
             var obj = new Query<T>();
-            obj.MainTables.Add(typeof(T));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T)));
+            return obj;
+        }
+
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
+        public static IQuery<T> From<T>(IQuery<T> query)
+        {
+            var obj = new Query<T>();
+            obj.MainTables.Add(new QuerySubQueryType(query));
+            return obj;
+        }
+
+        /// <summary>
+        /// Froms the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
+        public static IQuery<T1, T2> From<T1, T2>(IQuery<T1> query)
+        {
+            var obj = new Query<T1, T2>();
+            obj.MainTables.Add(new QuerySubQueryType(query));
             return obj;
         }
 
@@ -105,8 +127,8 @@ namespace Brochure.ORM.Querys
         public static IQuery<T1, T2> From<T1, T2>()
         {
             var obj = new Query<T1, T2>();
-            obj.MainTables.Add(typeof(T1));
-            obj.MainTables.Add(typeof(T2));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T2)));
             return obj;
         }
 
@@ -117,9 +139,9 @@ namespace Brochure.ORM.Querys
         public static IQuery<T1, T2, T3> From<T1, T2, T3>()
         {
             var obj = new Query<T1, T2, T3>();
-            obj.MainTables.Add(typeof(T1));
-            obj.MainTables.Add(typeof(T2));
-            obj.MainTables.Add(typeof(T3));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T2)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T3)));
             return obj;
         }
 
@@ -130,10 +152,10 @@ namespace Brochure.ORM.Querys
         public static IQuery<T1, T2, T3, T4> From<T1, T2, T3, T4>()
         {
             var obj = new Query<T1, T2, T3, T4>();
-            obj.MainTables.Add(typeof(T1));
-            obj.MainTables.Add(typeof(T2));
-            obj.MainTables.Add(typeof(T3));
-            obj.MainTables.Add(typeof(T4));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T2)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T3)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T4)));
             return obj;
         }
 
@@ -144,11 +166,11 @@ namespace Brochure.ORM.Querys
         public static IQuery<T1, T2, T3, T4, T5> From<T1, T2, T3, T4, T5>()
         {
             var obj = new Query<T1, T2, T3, T4, T5>();
-            obj.MainTables.Add(typeof(T1));
-            obj.MainTables.Add(typeof(T2));
-            obj.MainTables.Add(typeof(T3));
-            obj.MainTables.Add(typeof(T4));
-            obj.MainTables.Add(typeof(T5));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T2)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T3)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T4)));
+            obj.MainTables.Add(new TableNameSubQueryType(typeof(T5)));
             return obj;
         }
 

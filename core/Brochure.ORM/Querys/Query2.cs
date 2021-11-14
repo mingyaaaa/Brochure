@@ -15,7 +15,15 @@ namespace Brochure.ORM.Querys
         /// <returns>An IQuery.</returns>
         public IQuery<T1, T2, T3> Join<T3>(Expression<Func<T1, T2, T3, bool>> fun)
         {
-            this.JoinExpression.Add((typeof(T3), fun));
+            return Join(null, fun);
+        }
+
+        public IQuery<T1, T2, T3> Join<T3>(IQuery<T3> query, Expression<Func<T1, T2, T3, bool>> fun)
+        {
+            if (query == null)
+                this.JoinExpression.Add((new TableNameSubQueryType(typeof(T3)), fun));
+            else
+                JoinExpression.Add((new QuerySubQueryType(query), fun));
             var a = new Query<T1, T2, T3>();
             base.CopyProperty(a);
             return a;

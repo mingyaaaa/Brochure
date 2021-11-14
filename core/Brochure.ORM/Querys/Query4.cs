@@ -22,14 +22,28 @@ namespace Brochure.ORM.Querys
         /// <summary>
         /// Joins the.
         /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
+        public IQuery<T1, T2, T3, T4, T5> Join<T5>(IQuery<T5> query, Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
+        {
+            if (query == null)
+                this.JoinExpression.Add((new TableNameSubQueryType(typeof(T5)), fun));
+            else
+                JoinExpression.Add((new QuerySubQueryType(query), fun));
+            var a = new Query<T1, T2, T3, T4, T5>();
+            base.CopyProperty(a);
+            return a;
+        }
+
+        /// <summary>
+        /// Joins the.
+        /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         public IQuery<T1, T2, T3, T4, T5> Join<T5>(Expression<Func<T1, T2, T3, T4, T5, bool>> fun)
         {
-            this.JoinExpression.Add((typeof(T5), fun));
-            var a = new Query<T1, T2, T3, T4, T5>();
-            base.CopyProperty(a);
-            return a;
+            return Join(null, fun);
         }
 
         /// <summary>

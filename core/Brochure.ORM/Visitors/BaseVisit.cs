@@ -29,7 +29,8 @@ namespace Brochure.ORM.Visitors
         protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider serviceProvider = null)
         {
             _dbPrivoder = dbProvider;
-            this.Parameters = new List<IDbDataParameter>();
+            Parameters = new Dictionary<string, IDbDataParameter>();
+            TableTypeDic = new Dictionary<int, Type>();
             this.serviceProvider = serviceProvider;
             _funList = funList;
             this.dbOption = dbOption;
@@ -37,7 +38,8 @@ namespace Brochure.ORM.Visitors
 
         protected IDbProvider _dbPrivoder;
         protected object sql;
-        protected List<IDbDataParameter> Parameters;
+        protected Dictionary<string, IDbDataParameter> Parameters;
+        protected Dictionary<int, Type> TableTypeDic;
         private readonly IEnumerable<IFuncVisit> _funList;
         private readonly IServiceProvider serviceProvider;
         protected readonly DbOption dbOption;
@@ -78,13 +80,43 @@ namespace Brochure.ORM.Visitors
             return null;
         }
 
+        private object GetRootExpressValue(MemberExpression expression)
+        {
+            if (expression.Expression is MemberExpression memberExpression)
+            {
+                return GetRootExpressValue(memberExpression);
+            }
+            else if (expression.Expression is ParameterExpression parameterExpression)
+            {
+                return parameterExpression.Type;
+            }
+            else if (expression.Expression is ConstantExpression constantExpression)
+            {
+                if (expression.Member is FieldInfo)
+                {
+                    return AddParamers((expression.Member as FieldInfo)?.GetValue(constantExpression.Value));
+                }
+            }
+            else if (expression.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
+            {
+                string tableName = TableUtlis.GetTableName(unaryParamExpression.Type);
+                return $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(expression.Member.Name)}";
+            }
+            return null;
+        }
+
         /// <summary>
         /// Gets the parameters.
         /// </summary>
         /// <returns>A list of IDbDataParameters.</returns>
-        public IEnumerable<IDbDataParameter> GetParameters()
+        public Dictionary<string, IDbDataParameter> GetParameters()
         {
             return Parameters;
+        }
+
+        public Dictionary<int, Type> GetTableDic()
+        {
+            return TableTypeDic;
         }
 
         /// <summary>
@@ -94,31 +126,46 @@ namespace Brochure.ORM.Visitors
         /// <returns>An Expression.</returns>
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (node.Member is FieldInfo)
+            var obj = GetRootExpressValue(node);
+            if (obj is Type type)
             {
-                var obj = GetConstantExpressValue(node);
-                this.sql = AddParamers(obj);
+                var tableKey = type.GetHashCode();
+                TableTypeDic.TryAdd(tableKey, type);
+                sql = $"{tableKey}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
             }
-            else if (node.Member is PropertyInfo propertyInfo)
+            else
             {
-                if (node.Expression is MemberExpression memberExpression)
-                {
-                    var obj = GetConstantExpressValue(memberExpression);
-                    obj = propertyInfo.GetGetMethod().Invoke(obj, null);
-                    this.sql = AddParamers(obj);
-                }
-                else if (node.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
-                {
-                    string tableName = TableUtlis.GetTableName(unaryParamExpression.Type);
-                    sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
-                }
-                else if (node.Expression is ParameterExpression parameterExpression)
-                {
-                    string tableName = TableUtlis.GetTableName(parameterExpression.Type);
-                    sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
-                }
+                sql = obj;
             }
             return node;
+            //if (node.Member is FieldInfo)
+            //{
+            //    var obj = GetConstantExpressValue(node);
+            //    this.sql = AddParamers(obj);
+            //}
+            //else if (node.Member is PropertyInfo propertyInfo)
+            //{
+            //    if (node.Expression is MemberExpression memberExpression)
+            //    {
+            //        var obj = GetConstantExpressValue(memberExpression);
+            //        if (obj == null)
+            //        {
+            //        }
+            //        obj = propertyInfo.GetGetMethod().Invoke(obj, null);
+            //        this.sql = AddParamers(obj);
+            //    }
+            //    else if (node.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
+            //    {
+            //        string tableName = TableUtlis.GetTableName(unaryParamExpression.Type);
+            //        sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+            //    }
+            //    else if (node.Expression is ParameterExpression parameterExpression)
+            //    {
+            //        string tableName = TableUtlis.GetTableName(parameterExpression.Type);
+            //        sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+            //    }
+            //}
+            //return node;
         }
 
         /// <summary>
@@ -219,9 +266,9 @@ namespace Brochure.ORM.Visitors
                 return obj;
             }
             var parms = _dbPrivoder.GetDbDataParameter();
-            parms.ParameterName = $"{_dbPrivoder.GetParamsSymbol()}p{Parameters.Count}";
+            parms.ParameterName = Guid.NewGuid().ToString();
             parms.Value = obj;
-            Parameters.Add(parms);
+            Parameters.Add(parms.ParameterName, parms);
             return parms.ParameterName;
         }
     }

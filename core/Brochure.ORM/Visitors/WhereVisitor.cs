@@ -23,15 +23,6 @@ namespace Brochure.ORM.Visitors
         }
 
         /// <summary>
-        /// Adds the paramters.
-        /// </summary>
-        /// <param name="pams">The pams.</param>
-        public void AddParamters(IEnumerable<IDbDataParameter> pams)
-        {
-            this.Parameters.AddRange(pams ?? new List<IDbDataParameter>());
-        }
-
-        /// <summary>
         /// Visits the binary.
         /// </summary>
         /// <param name="node">The node.</param>

@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Core.Extenstions;
 using Brochure.Extensions;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Querys;
@@ -9,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
 namespace Brochure.ORM
 {
@@ -40,17 +42,22 @@ namespace Brochure.ORM
         public virtual Tuple<string, List<IDbDataParameter>> GetDeleteSql<T>(Expression<Func<T, bool>> whereFunc)
         {
             var whereSql = string.Empty;
-            var parms = new List<IDbDataParameter>();
+            var parms = new Dictionary<string, IDbDataParameter>();
+            var tableTypeDic = new Dictionary<int, Type>();
             if (whereFunc != null)
             {
                 var whereVisitor = visitProvider.Builder<WhereVisitor>();
                 whereVisitor.Visit(whereFunc);
                 whereSql = $"where { whereVisitor.GetSql()}";
                 parms.AddRange(whereVisitor.GetParameters());
+                tableTypeDic.AddRange(whereVisitor.GetTableDic());
             }
             var tableName = TableUtlis.GetTableName<T>();
             var sql = $"delete from {dbProvider.FormatFieldName(tableName)} {whereSql}";
-            return Tuple.Create(sql, parms);
+            var stringBuild = new StringBuilder(sql);
+            var t_p = queryBuilder.RenameParameter(stringBuild, parms);
+            queryBuilder.RenameTableType(stringBuild, tableTypeDic);
+            return Tuple.Create(stringBuild.ToString(), t_p.ToList());
         }
 
         /// <summary>
@@ -119,7 +126,7 @@ namespace Brochure.ORM
         public virtual Tuple<string, List<IDbDataParameter>> GetUpdateSql<T>(object obj, Expression<Func<T, bool>> whereFunc)
         {
             var whereSql = string.Empty;
-            var parms = new List<IDbDataParameter>();
+            var parms = new Dictionary<string, IDbDataParameter>();
             if (whereFunc != null)
             {
                 var whereVisitor = visitProvider.Builder<WhereVisitor>();
@@ -137,10 +144,10 @@ namespace Brochure.ORM
                 if (Option.IsUseParamers)
                 {
                     var param = dbProvider.GetDbDataParameter();
-                    param.ParameterName = $"{dbProvider.GetParamsSymbol()}{item}";
+                    param.ParameterName = Guid.NewGuid().ToString();
                     param.Value = doc[item];
                     fieldStr = $"{dbProvider.FormatFieldName(item)}={param.ParameterName}";
-                    parms.Add(param);
+                    parms.Add(param.ParameterName, param);
                 }
                 else
                 {
@@ -149,7 +156,9 @@ namespace Brochure.ORM
                 fieldList.Add(fieldStr);
             }
             sql = $"{sql}{fieldList.Join(",")} {whereSql}";
-            return Tuple.Create(sql, parms);
+            var stringBuilder = new StringBuilder(sql);
+            var t_p = queryBuilder.RenameParameter(stringBuilder, parms);
+            return Tuple.Create(stringBuilder.ToString(), t_p.ToList());
         }
 
         /// <summary>

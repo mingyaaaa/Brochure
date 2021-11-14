@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Brochure.ORM.Querys;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -28,7 +29,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets the main tables.
         /// </summary>
-        List<Type> MainTables { get; }
+        List<BaseSubQueryType> MainTables { get; }
 
         /// <summary>
         /// Gets the select expression.
@@ -58,12 +59,12 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets the join expression.
         /// </summary>
-        IList<(Type, Expression)> JoinExpression { get; }
+        IList<(BaseSubQueryType, Expression)> JoinExpression { get; }
 
         /// <summary>
         /// Gets the left join express.
         /// </summary>
-        IList<(Type, Expression)> LeftJoinExpress { get; }
+        IList<(BaseSubQueryType, Expression)> LeftJoinExpress { get; }
 
         /// <summary>
         /// Gets the group express.
@@ -82,6 +83,14 @@ namespace Brochure.ORM
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T1, T2> Join<T2>(Expression<Func<T1, T2, bool>> fun);
+
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="subQuery">The sub query.</param>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
+        IQuery<T1, T2> Join<T2>(IQuery<T2> subQuery, Expression<Func<T1, T2, bool>> fun);
 
         /// <summary>
         /// Groupbies the.
@@ -170,6 +179,13 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3> Join<T3>(Expression<Func<T1, T2, T3, bool>> fun);
 
         /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
+        IQuery<T1, T2, T3> Join<T3>(IQuery<T3> query, Expression<Func<T1, T2, T3, bool>> fun);
+
+        /// <summary>
         /// Wheres the.
         /// </summary>
         /// <param name="fun">The fun.</param>
@@ -222,6 +238,13 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3, T4> Join<T4>(Expression<Func<T1, T2, T3, T4, bool>> fun);
 
         /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
+        IQuery<T1, T2, T3, T4> Join<T4>(IQuery<T4> query, Expression<Func<T1, T2, T3, T4, bool>> fun);
+
+        /// <summary>
         /// Wheres the.
         /// </summary>
         /// <param name="fun">The fun.</param>
@@ -272,6 +295,13 @@ namespace Brochure.ORM
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T1, T2, T3, T4, T5> Join<T5>(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
+
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
+        IQuery<T1, T2, T3, T4, T5> Join<T5>(IQuery<T5> query, Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
 
         /// <summary>
         /// Wheres the.
