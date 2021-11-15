@@ -138,34 +138,6 @@ namespace Brochure.ORM.Visitors
                 sql = obj;
             }
             return node;
-            //if (node.Member is FieldInfo)
-            //{
-            //    var obj = GetConstantExpressValue(node);
-            //    this.sql = AddParamers(obj);
-            //}
-            //else if (node.Member is PropertyInfo propertyInfo)
-            //{
-            //    if (node.Expression is MemberExpression memberExpression)
-            //    {
-            //        var obj = GetConstantExpressValue(memberExpression);
-            //        if (obj == null)
-            //        {
-            //        }
-            //        obj = propertyInfo.GetGetMethod().Invoke(obj, null);
-            //        this.sql = AddParamers(obj);
-            //    }
-            //    else if (node.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
-            //    {
-            //        string tableName = TableUtlis.GetTableName(unaryParamExpression.Type);
-            //        sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
-            //    }
-            //    else if (node.Expression is ParameterExpression parameterExpression)
-            //    {
-            //        string tableName = TableUtlis.GetTableName(parameterExpression.Type);
-            //        sql = $"{_dbPrivoder.FormatFieldName(tableName)}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
-            //    }
-            //}
-            //return node;
         }
 
         /// <summary>
@@ -237,11 +209,6 @@ namespace Brochure.ORM.Visitors
             }
             return node;
         }
-
-        //private Type AnalyseParamExpression(ParameterExpression parameterExpression)
-        //{
-        //    return
-        //}
 
         /// <summary>
         /// Visits the constant.

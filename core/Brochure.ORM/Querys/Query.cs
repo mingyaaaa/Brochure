@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Querys
 {
-    public class Query : IQuery
+    public class Query : IQuery, IWhereQuery
     {
         public Query()
         {
@@ -80,7 +80,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An IQuery.</returns>
-        public static IQuery<T> Where<T>(Expression<Func<T, bool>> expression)
+        public static IWhereQuery<T> Where<T>(Expression<Func<T, bool>> expression)
         {
             var obj = new Query<T>();
             obj.WhereExpression = expression;

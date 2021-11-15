@@ -6,7 +6,7 @@ namespace Brochure.ORM.Querys
     /// <summary>
     /// The query.
     /// </summary>
-    public class Query<T1, T2, T3, T4> : Query, IQuery<T1, T2, T3, T4>
+    public class Query<T1, T2, T3, T4> : Query, IQuery<T1, T2, T3, T4>, IWhereQuery<T1, T2, T3, T4>
     {
         /// <summary>
         /// Selects the.
@@ -86,7 +86,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1, T2, T3, T4> WhereAnd(Expression<Func<T1, T2, T3, T4, bool>> fun)
+        public IWhereQuery<T1, T2, T3, T4> WhereAnd(Expression<Func<T1, T2, T3, T4, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.And, fun));
             return this;
@@ -97,7 +97,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1, T2, T3, T4> WhereOr(Expression<Func<T1, T2, T3, T4, bool>> fun)
+        public IWhereQuery<T1, T2, T3, T4> WhereOr(Expression<Func<T1, T2, T3, T4, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.Or, fun));
             return this;
@@ -108,7 +108,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1, T2, T3, T4> Where(Expression<Func<T1, T2, T3, T4, bool>> fun)
+        public IWhereQuery<T1, T2, T3, T4> Where(Expression<Func<T1, T2, T3, T4, bool>> fun)
         {
             WhereExpression = fun;
             return this;

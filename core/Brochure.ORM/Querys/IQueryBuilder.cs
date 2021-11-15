@@ -36,16 +36,18 @@ namespace Brochure.ORM.Querys
     {
         private readonly IVisitProvider _visitProvider;
         private readonly IDbProvider _dbProvider;
+        private readonly DbOption _dbOption;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
         /// </summary>
         /// <param name="visitProvider">The visit provider.</param>
         /// <param name="dbProvider">The db provider.</param>
-        public QueryBuilder(IVisitProvider visitProvider, IDbProvider dbProvider)
+        public QueryBuilder(IVisitProvider visitProvider, IDbProvider dbProvider, DbOption dbOption)
         {
             this._visitProvider = visitProvider;
             this._dbProvider = dbProvider;
+            _dbOption = dbOption;
         }
 
         /// <summary>
@@ -105,15 +107,41 @@ namespace Brochure.ORM.Querys
             tableTypeDic.AddRange(orderDesParams.TableTypeDic);
             tempTableDic.AddRange(orderDesParams.TempTable);
 
-            var selectParasm = BuildSelect(queryExpression.SelectExpression, groupParms.SQL);
-            parm.AddRange(selectParasm.Params);
-            tableTypeDic.AddRange(selectParasm.TableTypeDic);
-            tempTableDic.AddRange(selectParasm.TempTable);
-            if (selectParasm.Type != null)
-                type = selectParasm.Type;
+            var selectParams = BuildSelect(queryExpression.SelectExpression, groupParms.SQL);
+            parm.AddRange(selectParams.Params);
+            tableTypeDic.AddRange(selectParams.TableTypeDic);
+            tempTableDic.AddRange(selectParams.TempTable);
+            var limitParams = BuildTakeAndSkip(queryExpression.TakeCount, queryExpression.SkipCount);
+            parm.AddRange(limitParams.Params);
+            tableTypeDic.AddRange(limitParams.TableTypeDic);
+            tempTableDic.AddRange(limitParams.TempTable);
 
-            var sql = $"{selectParasm.SQL}{fromSqlResult.SQL}{joinParams.SQL}{groupParms.SQL}{whereParams.SQL}{orderParams.SQL}{orderDesParams.SQL}";
+            if (selectParams.Type != null)
+                type = selectParams.Type;
+
+            var sql = $"{selectParams.SQL}{fromSqlResult.SQL}{joinParams.SQL}{groupParms.SQL}{whereParams.SQL}{orderParams.SQL}{orderDesParams.SQL}{limitParams.SQL}";
             return new SqlParam(sql, parm, tableTypeDic, tempTableDic, groupDic, type);
+        }
+
+        private SqlParam BuildTakeAndSkip(int take, int skip)
+        {
+            if (take == 0 && skip == 0)
+                return SqlParam.Empty;
+            var r = new SqlParam();
+            Func<int, string> fun = t =>
+            {
+                if (!_dbOption.IsUseParamers)
+                    return t.ToString();
+                var parms = _dbProvider.GetDbDataParameter();
+                parms.ParameterName = Guid.NewGuid().ToString();
+                parms.Value = t;
+                r.Params.Add(parms.ParameterName, parms);
+                return parms.ParameterName;
+            };
+            var takeStr = take == 0 ? string.Empty : fun(take);
+            var skipStr = skip == 0 ? string.Empty : $"{fun(skip)},";
+            r.SQL = AddWhiteSpace($"limit {skipStr}{takeStr}");
+            return r;
         }
 
         /// <summary>

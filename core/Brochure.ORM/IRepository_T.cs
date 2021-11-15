@@ -1,3 +1,4 @@
+using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<T> Get(IQuery<T> query);
+        Task<T> Get(IWhereQuery<T> query);
 
         /// <summary>
         /// Updates the.
@@ -22,14 +23,14 @@ namespace Brochure.ORM
         /// <param name="query">The query.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        Task<int> Update(IQuery query, T entity);
+        Task<int> Update(IWhereQuery query, T entity);
 
         /// <summary>
         /// Deletes the.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<int> Delete(IQuery query);
+        Task<int> Delete(IWhereQuery query);
 
         /// <summary>
         /// Lists the.
@@ -53,6 +54,9 @@ namespace Brochure.ORM
         Task<int> Insert(IEnumerable<T> entity);
     }
 
+    /// <summary>
+    /// The repository.
+    /// </summary>
     public interface IRepository<T1, T2> : IRepository<T1> where T1 : EntityBase, IEntityKey<T2>
          where T2 : class, IComparable<T2>
     {

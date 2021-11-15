@@ -118,21 +118,21 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1> Where(Expression<Func<T1, bool>> fun);
+        IWhereQuery<T1> Where(Expression<Func<T1, bool>> fun);
 
         /// <summary>
         /// Wheres the and.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1> WhereAnd(Expression<Func<T1, bool>> fun);
+        IWhereQuery<T1> WhereAnd(Expression<Func<T1, bool>> fun);
 
         /// <summary>
         /// Wheres the or.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1> WhereOr(Expression<Func<T1, bool>> fun);
+        IWhereQuery<T1> WhereOr(Expression<Func<T1, bool>> fun);
 
         /// <summary>
         /// Distincts the.
@@ -190,21 +190,21 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2> Where(Expression<Func<T1, T2, bool>> fun);
+        IWhereQuery<T1, T2> Where(Expression<Func<T1, T2, bool>> fun);
 
         /// <summary>
         /// Wheres the and.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2> WhereAnd(Expression<Func<T1, T2, bool>> fun);
+        IWhereQuery<T1, T2> WhereAnd(Expression<Func<T1, T2, bool>> fun);
 
         /// <summary>
         /// Wheres the or.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2> WhereOr(Expression<Func<T1, T2, bool>> fun);
+        IWhereQuery<T1, T2> WhereOr(Expression<Func<T1, T2, bool>> fun);
 
         /// <summary>
         /// Orders the by.
@@ -249,21 +249,21 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3> Where(Expression<Func<T1, T2, T3, bool>> fun);
+        IWhereQuery<T1, T2, T3> Where(Expression<Func<T1, T2, T3, bool>> fun);
 
         /// <summary>
         /// Wheres the and.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3> WhereAnd(Expression<Func<T1, T2, T3, bool>> fun);
+        IWhereQuery<T1, T2, T3> WhereAnd(Expression<Func<T1, T2, T3, bool>> fun);
 
         /// <summary>
         /// Wheres the or.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3> WhereOr(Expression<Func<T1, T2, T3, bool>> fun);
+        IWhereQuery<T1, T2, T3> WhereOr(Expression<Func<T1, T2, T3, bool>> fun);
 
         /// <summary>
         /// Orders the by.
@@ -308,21 +308,21 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4> Where(Expression<Func<T1, T2, T3, T4, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4> Where(Expression<Func<T1, T2, T3, T4, bool>> fun);
 
         /// <summary>
         /// Wheres the and.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4> WhereAnd(Expression<Func<T1, T2, T3, T4, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4> WhereAnd(Expression<Func<T1, T2, T3, T4, bool>> fun);
 
         /// <summary>
         /// Wheres the or.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4> WhereOr(Expression<Func<T1, T2, T3, T4, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4> WhereOr(Expression<Func<T1, T2, T3, T4, bool>> fun);
 
         /// <summary>
         /// Orders the by.
@@ -353,21 +353,21 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4, T5> Where(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4, T5> Where(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
 
         /// <summary>
         /// Wheres the and.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4, T5> WhereAnd(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4, T5> WhereAnd(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
 
         /// <summary>
         /// Wheres the or.
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T1, T2, T3, T4, T5> WhereOr(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
+        IWhereQuery<T1, T2, T3, T4, T5> WhereOr(Expression<Func<T1, T2, T3, T4, T5, bool>> fun);
 
         /// <summary>
         /// Orders the by.

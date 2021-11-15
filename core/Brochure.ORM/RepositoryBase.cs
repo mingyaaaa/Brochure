@@ -30,7 +30,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Delete(IQuery query)
+        public async Task<int> Delete(IWhereQuery query)
         {
             var r = await Task.Run(() => dbData.Delete<T>(query)).ConfigureAwait(false);
             return r;
@@ -41,9 +41,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<T> Get(IQuery<T> query)
+        public async Task<T> Get(IWhereQuery<T> query)
         {
-            query.Select<T>();
+            query.Select<T>().Take(1);
             var t = await Task.Run(() => dbData.Query<T>(query)).ConfigureAwait(false);
             return t.FirstOrDefault();
         }
@@ -88,7 +88,7 @@ namespace Brochure.ORM
         /// <param name="query">The query.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Update(IQuery query, T entity)
+        public async Task<int> Update(IWhereQuery query, T entity)
         {
             if (query == null)
                 throw new Exception("query不能为null");

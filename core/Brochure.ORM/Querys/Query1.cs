@@ -7,7 +7,7 @@ namespace Brochure.ORM.Querys
     /// <summary>
     /// The query.
     /// </summary>
-    public class Query<T1> : Query, IQuery<T1>
+    public class Query<T1> : Query, IQuery<T1>, IWhereQuery<T1>
     {
         /// <summary>
         /// Selects the.
@@ -83,7 +83,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1> WhereAnd(Expression<Func<T1, bool>> fun)
+        public IWhereQuery<T1> WhereAnd(Expression<Func<T1, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.And, fun));
             return this;
@@ -94,7 +94,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1> WhereOr(Expression<Func<T1, bool>> fun)
+        public IWhereQuery<T1> WhereOr(Expression<Func<T1, bool>> fun)
         {
             WhereListExpression.Add((DbOperationName.Or, fun));
             return this;
@@ -115,7 +115,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
-        public IQuery<T1> Where(Expression<Func<T1, bool>> fun)
+        public IWhereQuery<T1> Where(Expression<Func<T1, bool>> fun)
         {
             WhereExpression = fun;
             return this;

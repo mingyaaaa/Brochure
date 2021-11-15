@@ -207,6 +207,15 @@ namespace Brochure.ORMTest.Querys
         }
 
         [TestMethod]
+        public void QueryTakeAndSkip()
+        {
+            var query = Query.From<Teachers>().Take(1);
+            var r = queryBuilder.Build(query);
+            Assert.AreEqual("select * from `Teachers` limit @p0", r.SQL);
+            Assert.AreEqual(1, r.Parameters.Count);
+        }
+
+        [TestMethod]
         public void QueryGenericType()
         {
             var teacher = new Teachers();
