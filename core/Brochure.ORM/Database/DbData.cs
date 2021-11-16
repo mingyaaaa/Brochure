@@ -169,7 +169,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A list of TS.</returns>
-        public virtual IEnumerable<T> Query<T>(IQuery<T> query)
+        public virtual IEnumerable<T> Query<T>(IQuery<T> query) where T : class, new()
         {
             var queryResult = queryBuilder.Build(query);
             var parms = queryResult.Parameters;
@@ -192,7 +192,7 @@ namespace Brochure.ORM.Database
         ///// </summary>
         ///// <param name="query">The query.</param>
         ///// <returns>A list of TS.</returns>
-        public virtual IEnumerable<T> Query<T>(IQuery query)
+        public virtual IEnumerable<T> Query<T>(IQuery query) where T : class, new()
         {
             var queryResult = queryBuilder.Build(query);
             var parms = queryResult.Parameters;

@@ -44,7 +44,7 @@ namespace Brochure.ORM.Extensions
             return dbData.Delete<T>(query);
         }
 
-        public static IEnumerable<T> Query<T>(this DbContext dbContext, IQuery query)
+        public static IEnumerable<T> Query<T>(this DbContext dbContext, IQuery query) where T : class, new()
         {
             var dbData = dbContext.GetDbData();
             return dbData.Query<T>(query);

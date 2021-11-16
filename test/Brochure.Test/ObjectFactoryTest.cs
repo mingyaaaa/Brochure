@@ -3,6 +3,7 @@ using Brochure.Abstract;
 using Brochure.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace Brochure.Test
 {
@@ -67,14 +68,35 @@ namespace Brochure.Test
             var testa = Fixture.Create<TestA>();
             var a = factory.Create<TestA, TestB>(testa);
             Assert.AreEqual(-1, a.A);
-
         }
 
+        [TestMethod]
+        public void TestCreateObj()
+        {
+            IObjectFactory factory = new ObjectFactory();
+            var a = factory.Create<TestB>(new GetValueC(new Dictionary<string, object>()
+            {
+                [nameof(TestB.A)] = 1
+            }));
+            Assert.AreEqual(1, a.A);
+        }
+
+        [TestMethod]
+        public void TestCreateGenier()
+        {
+            IObjectFactory factory = new ObjectFactory();
+            Genet f2 = new Genet(factory);
+            var a = f2.Create<TestB>(new GetValueC(new Dictionary<string, object>()
+            {
+                [nameof(TestB.A)] = 1
+            }));
+            Assert.AreEqual(1, a.A);
+        }
 
         public interface ITestA
         {
-
         }
+
         public class TestA : ITestA, IConverPolicy<TestB>
         {
             public int? A { get; set; }
@@ -97,27 +119,61 @@ namespace Brochure.Test
         public interface ITestC
         {
         }
+
         public class TestC : ITestC
         {
             public TestC()
             {
-
             }
+
             public TestC(int a, string str, TestA testA)
             {
                 C = a;
                 this.Str = str;
                 TestA = testA;
             }
+
             public int C { get; set; }
 
             public string Str { get; set; }
 
             public TestA TestA { get; set; }
         }
+
+        public class GetValueC : IGetValue
+        {
+            private readonly IDictionary<string, object> _dic;
+
+            public GetValueC(IDictionary<string, object> dic)
+            {
+                _dic = dic;
+            }
+
+            public T GetValue<T>(string propertyName)
+            {
+                return (T)GetValue(propertyName);
+            }
+
+            public object GetValue(string propertyName)
+            {
+                _dic.TryGetValue(propertyName, out var obj);
+                return obj;
+            }
+        }
+
+        public class Genet
+        {
+            private readonly IObjectFactory _objectFactory;
+
+            public Genet(IObjectFactory objectFactory)
+            {
+                _objectFactory = objectFactory;
+            }
+
+            public T Create<T>(IGetValue getValue) where T : class, new()
+            {
+                return _objectFactory.Create<T>(getValue);
+            }
+        }
     }
 }
-
-
-
-

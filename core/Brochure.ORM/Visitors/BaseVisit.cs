@@ -84,7 +84,12 @@ namespace Brochure.ORM.Visitors
         {
             if (expression.Expression is MemberExpression memberExpression)
             {
-                return GetRootExpressValue(memberExpression);
+                var obj = GetRootExpressValue(memberExpression);
+                //   return obj;
+                if (expression.Member is PropertyInfo propertyInfo && obj is ObjectValue valueObj)
+                {
+                    return new ObjectValue(propertyInfo.GetGetMethod().Invoke(valueObj.Value, null));
+                }
             }
             else if (expression.Expression is ParameterExpression parameterExpression)
             {
@@ -94,7 +99,7 @@ namespace Brochure.ORM.Visitors
             {
                 if (expression.Member is FieldInfo)
                 {
-                    return AddParamers((expression.Member as FieldInfo)?.GetValue(constantExpression.Value));
+                    return new ObjectValue((expression.Member as FieldInfo)?.GetValue(constantExpression.Value));
                 }
             }
             else if (expression.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
@@ -132,6 +137,10 @@ namespace Brochure.ORM.Visitors
                 var tableKey = type.GetHashCode();
                 TableTypeDic.TryAdd(tableKey, type);
                 sql = $"{tableKey}.{_dbPrivoder.FormatFieldName(node.Member.Name)}";
+            }
+            else if (obj is ObjectValue valueObj)
+            {
+                sql = AddParamers(valueObj.Value);
             }
             else
             {
@@ -237,6 +246,16 @@ namespace Brochure.ORM.Visitors
             parms.Value = obj;
             Parameters.Add(parms.ParameterName, parms);
             return parms.ParameterName;
+        }
+
+        private class ObjectValue
+        {
+            internal ObjectValue(object obj)
+            {
+                Value = obj;
+            }
+
+            public object Value { get; set; }
         }
     }
 }

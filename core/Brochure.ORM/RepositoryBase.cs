@@ -10,7 +10,7 @@ namespace Brochure.ORM
     /// <summary>
     /// 仓储基类
     /// </summary>
-    public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase
+    public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase, new()
     {
         protected readonly DbContext context;
         protected readonly DbData dbData;
@@ -43,8 +43,8 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<T> Get(IWhereQuery<T> query)
         {
-            Query.From<T>(query).Take(1);
-            var t = await Task.Run(() => dbData.Query<T>(query)).ConfigureAwait(false);
+            var tQuery = Query.From<T>(query).Take(1);
+            var t = await Task.Run(() => dbData.Query<T>(tQuery)).ConfigureAwait(false);
             return t.FirstOrDefault();
         }
 
@@ -101,7 +101,7 @@ namespace Brochure.ORM
     /// The repository base.
     /// </summary>
     public abstract class RepositoryBase<T1, T2> : RepositoryBase<T1>, IRepository<T1, T2>
-        where T1 : EntityBase, IEntityKey<T2>
+        where T1 : EntityBase, IEntityKey<T2>, new()
         where T2 : class, IComparable<T2>
     {
         /// <summary>

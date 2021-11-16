@@ -192,6 +192,7 @@ namespace Brochure.ORMTest.Querys
             var r = queryBuilder.Build(query);
 
             Assert.AreEqual("select * from `Teachers` where `Teachers`.`Id` = @p0", r.SQL);
+            Assert.AreEqual(teacher.Id, r.Parameters[0].Value);
 
             var teacher1 = new FTeachers();
             query = Query.From<Teachers>().Where(t => t.Id == teacher1.Teachers.Id);
