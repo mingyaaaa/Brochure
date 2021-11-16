@@ -22,6 +22,12 @@ namespace Brochure.ORM.Querys
             return a;
         }
 
+        public IQuery<T1> Select()
+        {
+            this.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
+            return this;
+        }
+
         /// <summary>
         /// Joins the.
         /// </summary>

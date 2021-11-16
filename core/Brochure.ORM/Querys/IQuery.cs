@@ -70,6 +70,12 @@ namespace Brochure.ORM
         /// Gets the group express.
         /// </summary>
         Expression GroupExpress { get; }
+
+        /// <summary>
+        /// 判断是否只有Where的sql语句
+        /// </summary>
+        /// <returns>A bool.</returns>
+        bool IsWhereSql();
     }
 
     /// <summary>
@@ -160,6 +166,12 @@ namespace Brochure.ORM
         /// <param name="expression">The expression.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T> Select<T>(Expression<Func<T1, T>> expression = null);
+
+        /// <summary>
+        /// Selects the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
+        IQuery<T1> Select();
     }
 
     public interface IQuery<T1, T2> : IQuery

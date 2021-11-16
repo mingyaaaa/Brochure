@@ -43,7 +43,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<T> Get(IWhereQuery<T> query)
         {
-            query.Select<T>().Take(1);
+            Query.From<T>(query).Take(1);
             var t = await Task.Run(() => dbData.Query<T>(query)).ConfigureAwait(false);
             return t.FirstOrDefault();
         }

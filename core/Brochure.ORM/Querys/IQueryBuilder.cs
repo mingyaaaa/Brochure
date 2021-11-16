@@ -157,29 +157,36 @@ namespace Brochure.ORM.Querys
             if (subQueryTypes.Count() == 0)
                 return r;
             if (!hasSelectExpression)
-                stringBuilder.Append("select * from ");
+                stringBuilder.Append(AddWhiteSpace("select * from"));
             var typeObjList = subQueryTypes.Select(t => t.GetSubQueryType()).ToList();
             var typeList = typeObjList.OfType<Type>();
-            if (typeList.Any())//致命当前查询返回的类型
+            if (typeList.Any())//当前查询返回的类型
             {
                 r.Type = typeList.First();
             }
             var tableNames = typeList.Select(t => _dbProvider.FormatFieldName(TableUtlis.GetTableName(t)));
-            stringBuilder.Append(string.Join(',', tableNames));
+            stringBuilder.Append(AddWhiteSpace(string.Join(',', tableNames)));
             var queryList = typeObjList.OfType<IQuery>();
             foreach (var item in queryList)
             {
                 var t_r = BuildSub(item);//处理子查询
-                                         //   stringBuilder.Append($"({t_r.SQL}) TEMP")
                 r.Type = t_r.Type;
                 r.GroupDic.AddRange(t_r.GroupDic);
                 r.TableTypeDic.AddRange(t_r.TableTypeDic);
                 r.Params.AddRange(t_r.Params);
-                var tableKey = r.Type.GetHashCode();
-                r.TempTable.Add(tableKey);
-                stringBuilder.Append($"({t_r.SQL}) {tableKey}");
+                //如果Type为Null 表示没有只有条件查询语句
+                if (r.Type == null)
+                {
+                    stringBuilder.Append(AddWhiteSpace(t_r.SQL));
+                }
+                else
+                {
+                    var tableKey = r.Type.GetHashCode();
+                    r.TempTable.Add(tableKey);
+                    stringBuilder.Append($"({t_r.SQL}) {tableKey}");
+                }
             }
-            r.SQL = AddWhiteSpace(stringBuilder.ToString());
+            r.SQL = AddWhiteSpace(stringBuilder.ToString().Trim());
             //if (!hasSelectExpression)
             //    r.SQL = AddWhiteSpace($"select * from {string.Join(",", tables)}");
             //else

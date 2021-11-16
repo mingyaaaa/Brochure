@@ -51,5 +51,32 @@ namespace LinqDbQueryTest.Querys
             var r = queryBuilder.Build(q2);
             Assert.AreEqual("select * from `Students` join (select * from `Classes` ) TEMP0 on `Students`.`ClassId` = TEMP0.`Id`", r.SQL);
         }
+
+        [TestMethod]
+        public void TestWhereSubQuery()
+        {
+            var whereQuery = Query.Where<Students>(t => t.Id == "1");
+            var q = Query.From(whereQuery);
+            var r = queryBuilder.Build(q);
+            Assert.AreEqual("select * from `Students` where `Students`.`Id` = @p0", r.SQL);
+        }
+
+        [TestMethod]
+        public void TestWhereSubQuery1()
+        {
+            var whereQuery = Query.Where<Students>(t => t.Id == "1");
+            var q = Query.From(whereQuery).Select(t => t.ClassId);
+            var r = queryBuilder.Build(q);
+            Assert.AreEqual("select `Students`.`ClassId` from `Students` where `Students`.`Id` = @p0", r.SQL);
+        }
+
+        [TestMethod]
+        public void TestWhereSubQuery2()
+        {
+            var whereQuery = Query.Where<Students>(t => t.Id == "1");
+            var q = Query.From(whereQuery).Take(1);
+            var r = queryBuilder.Build(q);
+            Assert.AreEqual("select * from `Students` where `Students`.`Id` = @p0 limit @p1", r.SQL);
+        }
     }
 }

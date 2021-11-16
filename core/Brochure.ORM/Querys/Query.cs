@@ -106,6 +106,10 @@ namespace Brochure.ORM.Querys
         {
             var obj = new Query<T>();
             obj.MainTables.Add(new QuerySubQueryType(query));
+            if (query.IsWhereSql())
+            {
+                obj.MainTables.Add(new TableNameSubQueryType(typeof(T)));
+            }
             return obj;
         }
 
@@ -189,6 +193,15 @@ namespace Brochure.ORM.Querys
             des.SelectExpression = this.SelectExpression;
             des.WhereExpression = this.WhereExpression;
             des.WhereListExpression = this.WhereListExpression;
+        }
+
+        /// <summary>
+        /// Are the where sql.
+        /// </summary>
+        /// <returns>A bool.</returns>
+        public bool IsWhereSql()
+        {
+            return this.SelectExpression == null && MainTables.Count == 0;
         }
     }
 }
