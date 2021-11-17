@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.Core.Server;
+using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +12,8 @@ namespace Brochure.Test
     [TestClass]
     public class ServiceCollectionExtendsTest
     {
-        IServiceCollection services;
+        private IServiceCollection services;
+
         public ServiceCollectionExtendsTest()
         {
             services = new ServiceCollection();
@@ -34,7 +36,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestAddMysqlDb()
         {
-            services.AddMySql();
+            services.AddDbCore(t => t.AddMySql());
         }
     }
 }

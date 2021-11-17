@@ -7,6 +7,8 @@ using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Brochure.User.Controllers
@@ -48,6 +50,7 @@ namespace Brochure.User.Controllers
             var r = await userDal.InsertAndGet(entiry);
             if (r == null)
                 return this.JsonError(500, "添加错误");
+
             return this.JsonData(r);
         }
 

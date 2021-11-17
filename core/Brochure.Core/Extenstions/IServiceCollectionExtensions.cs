@@ -5,6 +5,7 @@ using System.Reflection;
 using AspectCore.Configuration;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
@@ -34,7 +35,6 @@ namespace Brochure.Core
         /// <returns></returns>
         public static IServiceCollection AddBrochureCore(this IServiceCollection service, Action<ApplicationOption> appAction = null, IConfiguration configuration = null)
         {
-
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
             //加载一些基本的工具类
             //工具类初始化
@@ -69,6 +69,7 @@ namespace Brochure.Core
             services.ConfigureDynamicProxy(configure);
             return services;
         }
+
         public static IServiceCollection AddGrpcService(this IServiceCollection services, Action<GrpcServiceOptions> configureOptions = null)
         {
             services.AddGrpc(configureOptions);
@@ -96,7 +97,6 @@ namespace Brochure.Core
 
         internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
         {
-
             //注入插件模块
             var provider = service.BuildServiceProvider();
             //加载模块
@@ -159,6 +159,7 @@ namespace Brochure.Core
             var type = typeof(T);
             return GetServiceInistaceType(services, type);
         }
+
         public static Type GetServiceInistaceType(this IServiceCollection services, Type type)
         {
             var instance = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
@@ -269,7 +270,6 @@ namespace Brochure.Core
             else if (serviceLifetime == ServiceLifetime.Scoped)
             {
                 services.TryAddScoped(baseType, impType);
-
             }
             else if (serviceLifetime == ServiceLifetime.Transient)
             {
@@ -286,13 +286,11 @@ namespace Brochure.Core
             else if (serviceLifetime == ServiceLifetime.Scoped)
             {
                 services.AddScoped(baseType, impType);
-
             }
             else if (serviceLifetime == ServiceLifetime.Transient)
             {
                 services.AddTransient(baseType, impType);
             }
         }
-
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Linq.Expressions;
+using Brochure.Core.Extenstions;
 using Brochure.ORM.Database;
 using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
@@ -20,6 +22,14 @@ namespace Brochure.ORM.Extensions
             services.AddScoped<IQueryBuilder, QueryBuilder>();
             services.AddScoped<IConnectFactory, ConnectFactory>();
             services.AddScoped<ITransactionFactory, TransactionFactory>();
+            return services;
+        }
+
+        public static IServiceCollection AddDbCore(this IServiceCollection services, Action<IDbBuilder> builderAction)
+        {
+            var builder = new DbBuilder(services);
+            builderAction.Invoke(builder);
+            DbContext.ServiceProvider = services.BuildPluginServiceProvider();
             return services;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,8 +11,9 @@ namespace Brochure.Core.Test
     public class NewClassTest
     {
         #region BDDocment
+
         [TestMethod]
-        public void NewBDDocment ()
+        public void NewBDDocment()
         {
             var obj = new
             {
@@ -19,13 +21,14 @@ namespace Brochure.Core.Test
                 ProTime = DateTime.Now,
                 ProString = "ProString"
             };
-            var doc = new Record (obj.AsDictionary ());
-            Assert.AreEqual (obj.ProInt, doc[nameof (obj.ProInt)]);
-            Assert.AreEqual (obj.ProTime, doc[nameof (obj.ProTime)]);
-            Assert.AreEqual (obj.ProString, doc[nameof (obj.ProString)]);
-            Assert.AreEqual (3, doc.Values.Count ());
-            Assert.AreEqual (3, doc.Keys.Count ());
+            var doc = new Record(obj.AsDictionary());
+            Assert.AreEqual(obj.ProInt, doc[nameof(obj.ProInt)]);
+            Assert.AreEqual(obj.ProTime, doc[nameof(obj.ProTime)]);
+            Assert.AreEqual(obj.ProString, doc[nameof(obj.ProString)]);
+            Assert.AreEqual(3, doc.Values.Count());
+            Assert.AreEqual(3, doc.Keys.Count());
         }
-        #endregion
+
+        #endregion BDDocment
     }
 }

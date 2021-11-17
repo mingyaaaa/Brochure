@@ -28,5 +28,12 @@ namespace Brochure.ORM.MySql
                 DbColumns dbColumns, DbIndex dbIndex, DbData dbData, DbOption dbOption, IDbProvider dbProvider, IVisitProvider visitProvider) :
             base(dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider, visitProvider)
         { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlDbContext"/> class.
+        /// </summary>
+        public MySqlDbContext() : base()
+        {
+        }
     }
 }

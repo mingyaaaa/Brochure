@@ -33,16 +33,16 @@ namespace Brochure.ORM
 
     public interface IEntiryCreator
     {
-        Guid Creator { get; set; }
+        string Creator { get; set; }
     }
 
     public interface IEntityUpdator
     {
-        Guid Updator { get; set; }
+        string Updator { get; set; }
     }
 
     public interface IEntityUpdateTime
     {
-        DateTime UpdateTime { get; set; }
+        long UpdateTime { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace Brochure.ORM
         public RepositoryBase(DbContext context)
         {
             this.context = context;
-            dbData = context.GetDbData();
+            dbData = context.Datas;
         }
 
         /// <summary>

@@ -18,12 +18,12 @@ using Moq;
 
 namespace Brochure.ORMTest.Transaction
 {
-
     [TestClass]
     public class TestTransaction
     {
-
-        public TestTransaction() { }
+        public TestTransaction()
+        {
+        }
 
         [TestMethod]
         public void TestTransactionDisableTrue()
@@ -162,7 +162,7 @@ namespace Brochure.ORMTest.Transaction
             dbConnectMock.Setup(t => t.BeginTransaction()).Returns(dbTransMock.Object);
 
             var collection = new ServiceCollection();
-            collection.AddMySql();
+            collection.AddDbCore(t => t.AddMySql());
             collection.AddScoped<IConnectFactory>(t => connectFactoryMock.Object);
             collection.AddSingleton<IPluginManagers>(new PluginManagers());
             collection.AddScoped<ISqlExcute, SqlExcute>();
@@ -186,7 +186,7 @@ namespace Brochure.ORMTest.Transaction
             dbConnectMock.Setup(t => t.BeginTransaction()).Returns(dbTransMock.Object);
 
             var collection = new ServiceCollection();
-            collection.AddMySql();
+            collection.AddDbCore(t => t.AddMySql());
             collection.AddScoped<IConnectFactory>(t => connectFactoryMock.Object);
             collection.AddSingleton<IPluginManagers>(new PluginManagers());
             collection.AddSingleton<ISqlExcute, SqlExcute>();
@@ -199,12 +199,12 @@ namespace Brochure.ORMTest.Transaction
             dbConnectMock.Verify(t => t.BeginTransaction(), Times.Exactly(2));
         }
 
-
         #region TestData
 
         public interface ISqlExcute
         {
             void InserData();
+
             void DeleteData();
         }
 
@@ -219,7 +219,6 @@ namespace Brochure.ORMTest.Transaction
                 _sqlExcute2 = sqlExcute2;
             }
 
-
             [Transaction]
             public void InserData()
             {
@@ -232,14 +231,16 @@ namespace Brochure.ORMTest.Transaction
             [Transaction]
             public void DeleteData()
             {
-
             }
         }
+
         public interface ISqlExcute2
         {
             void InserData();
+
             void DeleteData();
         }
+
         public class SqlExcute2 : ISqlExcute2
         {
             private readonly IConnectFactory _connectFactory;
@@ -248,7 +249,6 @@ namespace Brochure.ORMTest.Transaction
             {
                 _connectFactory = connectFactory;
             }
-
 
             [Transaction]
             public void InserData()
@@ -260,21 +260,18 @@ namespace Brochure.ORMTest.Transaction
             [Transaction]
             public void DeleteData()
             {
-
             }
         }
 
         public class TestAttInterceptorAttribute : AbstractInterceptorAttribute
         {
-
             public override Task Invoke(AspectContext context, AspectDelegate next)
             {
                 next(context);
                 return Task.CompletedTask;
             }
         }
-        #endregion
+
+        #endregion TestData
     }
-
-
 }

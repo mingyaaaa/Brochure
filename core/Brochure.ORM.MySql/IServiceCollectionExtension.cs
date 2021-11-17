@@ -15,15 +15,15 @@ namespace Brochure.ORM.MySql
     /// </summary>
     public static class IServiceCollectionExtension
     {
-
         /// <summary>
         /// Adds the my sql.
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="action">The action.</param>
         /// <returns>An IServiceCollection.</returns>
-        public static IServiceCollection AddMySql(this IServiceCollection services, Action<MySqlOption> action = null)
+        public static IServiceCollection AddMySql(this IDbBuilder builder, Action<MySqlOption> action = null)
         {
+            var services = builder.Service;
             services.AddVisit();
             services.TryAddScoped<DbDatabase, MySqlDbDatabase>();
             services.TryAddScoped<DbData, MySqlDbData>();

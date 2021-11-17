@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.ORM;

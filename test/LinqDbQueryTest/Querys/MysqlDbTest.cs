@@ -1,6 +1,4 @@
 using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
@@ -11,12 +9,13 @@ namespace Brochure.ORMTest.Querys
     {
         private IDbConnection dbConnection;
         private IDbTransaction transaction;
+
         public MysqlDbTest()
         {
             var builder = new MySqlConnectionStringBuilder();
-            builder.Server = "192.168.137.101";
-            builder.UserID = "root";
-            builder.Password = "123";
+            builder.Server = "192.168.0.6";
+            builder.UserID = "test";
+            builder.Password = "123456";
             builder.Database = "test";
             builder.ConnectionTimeout = 3;
             dbConnection = new MySqlConnection(builder.ToString());
@@ -111,13 +110,10 @@ namespace Brochure.ORMTest.Querys
             reader = command.ExecuteReader();
             reader.Close();
 
-
             command = dbConnection.CreateCommand();
             command.CommandText = "select * from user";
             reader = command.ExecuteReader();
             reader.Close();
-
         }
-
     }
 }

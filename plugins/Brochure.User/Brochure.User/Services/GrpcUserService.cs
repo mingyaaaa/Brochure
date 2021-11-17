@@ -7,10 +7,9 @@ using static User.Rpc.UserService;
 using UseModel = User.Rpc;
 
 using Brochure.Abstract;
-using Brochure.Extensions;
 using Brochure.User.Services.Interfaces;
-using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Entrities;
+using Brochure.Abstract.Extensions;
 
 namespace Brochure.User.Services
 {

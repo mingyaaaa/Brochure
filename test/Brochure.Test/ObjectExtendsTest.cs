@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,7 @@ namespace Brochure.Core.Test
         public int C { get; set; }
         public DateTime DateTime { get; set; }
     }
+
     public class B
     {
         public string BStr { get; set; }
@@ -179,7 +181,6 @@ namespace Brochure.Core.Test
         [TestMethod]
         public void IBConverTo()
         {
-
             var c = new C();
             var b = c.As<B>();
             Assert.AreEqual("C", b.BStr);

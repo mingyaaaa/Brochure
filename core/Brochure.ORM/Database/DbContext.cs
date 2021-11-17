@@ -1,21 +1,28 @@
+using Brochure.Abstract.PluginDI;
 using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Brochure.ORM
 {
     /// <summary>
     /// The db context.
     /// </summary>
-    public abstract class DbContext
+    public abstract class DbContext : IDisposable, IAsyncDisposable
     {
-        private readonly DbDatabase dbDatabase;
-        private readonly DbTable dbTable;
-        private readonly DbColumns dbColumns;
-        private readonly DbIndex dbIndex;
-        private readonly IDbProvider dbProvider;
-        private readonly DbOption dbOption;
-        private readonly DbData dbData;
-        private readonly IVisitProvider visitProvider;
+        public DbDatabase Database { get; }
+        public DbTable Tables { get; }
+        public DbColumns Columns { get; }
+        public DbIndex Indexs { get; }
+        public IDbProvider DbProvider { get; }
+        public DbOption DbOption { get; }
+        public DbData Datas { get; }
+        public IVisitProvider VisitProvider { get; }
+
+        internal static IServiceProvider ServiceProvider { get; set; }
+        private IServiceScope _serviceScope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
@@ -34,85 +41,38 @@ namespace Brochure.ORM
             DbOption dbOption,
             IDbProvider dbProvider, IVisitProvider visitProvider)
         {
-            this.dbData = dbData;
-            this.dbIndex = dbIndex;
-            this.dbColumns = dbColumns;
-            this.dbTable = dbTable;
-            this.dbDatabase = dbDatabase;
-            this.dbProvider = dbProvider;
-            this.dbOption = dbOption;
-            this.visitProvider = visitProvider;
+            this.Datas = dbData;
+            this.Indexs = dbIndex;
+            this.Columns = dbColumns;
+            this.Tables = dbTable;
+            this.Database = dbDatabase;
+            this.DbProvider = dbProvider;
+            this.DbOption = dbOption;
+            this.VisitProvider = visitProvider;
         }
 
-        /// <summary>
-        /// Gets the db option.
-        /// </summary>
-        /// <returns>A DbOption.</returns>
-        public DbOption GetDbOption()
+        public DbContext()
         {
-            return dbOption;
+            _serviceScope = ServiceProvider.CreateScope();
+            this.Datas = _serviceScope.ServiceProvider.GetRequiredService<DbData>();
+            this.Indexs = _serviceScope.ServiceProvider.GetRequiredService<DbIndex>();
+            this.Columns = _serviceScope.ServiceProvider.GetRequiredService<DbColumns>();
+            this.Tables = _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
+            this.Database = _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
+            this.DbProvider = _serviceScope.ServiceProvider.GetRequiredService<IDbProvider>();
+            this.DbOption = _serviceScope.ServiceProvider.GetRequiredService<DbOption>();
+            this.VisitProvider = _serviceScope.ServiceProvider.GetRequiredService<IVisitProvider>();
         }
 
-        /// <summary>
-        /// Gets the db data.
-        /// </summary>
-        /// <returns>A DbData.</returns>
-        public DbData GetDbData()
+        public ValueTask DisposeAsync()
         {
-            return this.dbData;
+            _serviceScope.Dispose();
+            return ValueTask.CompletedTask;
         }
 
-        /// <summary>
-        /// Gets the database.
-        /// </summary>
-        /// <returns>A DbDatabase.</returns>
-        public DbDatabase GetDatabase()
+        public void Dispose()
         {
-            return dbDatabase;
-        }
-
-        /// <summary>
-        /// Gets the db table.
-        /// </summary>
-        /// <returns>A DbTable.</returns>
-        public DbTable GetDbTable()
-        {
-            return dbTable;
-        }
-
-        /// <summary>
-        /// Gets the columns.
-        /// </summary>
-        /// <returns>A DbColumns.</returns>
-        public DbColumns GetColumns()
-        {
-            return dbColumns;
-        }
-
-        /// <summary>
-        /// Gets the db index.
-        /// </summary>
-        /// <returns>A DbIndex.</returns>
-        public DbIndex GetDbIndex()
-        {
-            return dbIndex;
-        }
-        /// <summary>
-        /// Gets the db provider.
-        /// </summary>
-        /// <returns>An IDbProvider.</returns>
-        public IDbProvider GetDbProvider()
-        {
-            return this.dbProvider;
-        }
-
-        /// <summary>
-        /// Gets the visit provider.
-        /// </summary>
-        /// <returns>An IVisitProvider.</returns>
-        public IVisitProvider GetVisitProvider()
-        {
-            return visitProvider;
+            _serviceScope.Dispose();
         }
     }
 }

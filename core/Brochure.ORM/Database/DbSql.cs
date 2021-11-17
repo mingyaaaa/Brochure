@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Core.Extenstions;
 using Brochure.Extensions;
 using Brochure.ORM.Atrributes;

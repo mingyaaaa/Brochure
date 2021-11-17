@@ -31,6 +31,7 @@ namespace Brochure.Test
             {
                 [nameof(Pa.A)] = "aa",
                 [nameof(Pa.B)] = 1,
+                [nameof(Pa.C)] = (decimal)22
             };
             var b = policy.ConverTo<IRecord, Pa>(record);
             Assert.AreEqual(b.A, "aa");
@@ -56,6 +57,7 @@ namespace Brochure.Test
     {
         public string A { get; set; }
         public int B { get; set; }
+        public long C { get; set; }
     }
 
     public class Pb

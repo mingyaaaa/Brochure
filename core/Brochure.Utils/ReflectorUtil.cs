@@ -1,4 +1,5 @@
-﻿using Brochure.Abstract.Utils;
+﻿using Brochure.Abstract.Extensions;
+using Brochure.Abstract.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,6 +114,7 @@ namespace Brochure.Utils
         {
             return GetSetPropertyValueFun<T1>(typeof(T2), propertyName) as Action<T1, T2>;
         }
+
         public Func<T1, T2> GetPropertyValueFun<T1, T2>(string propertyName)
         {
             // return GetPropertyValueFun<T1> (propertyName) as Func<T1, T2>;
@@ -140,10 +142,12 @@ namespace Brochure.Utils
         {
             var classType = typeof(T1);
             var propertyInfo = classType.GetProperty(propertyName);
+            var constTypeExpress = Expression.Constant(propertyInfo.PropertyType);
             var instance = Expression.Parameter(classType, "c");
             var valueProperty = Expression.Property(instance, propertyInfo);
             var valueExpress = Expression.Parameter(typeof(object), "v");
-            var typeAsExpress = Expression.Convert(valueExpress, propertyInfo.PropertyType);
+            var menthod = Expression.Call(typeof(ObjectExtend).GetMethod("As", new Type[] { typeof(object), typeof(Type) }), valueExpress, constTypeExpress);
+            var typeAsExpress = Expression.Convert(menthod, propertyInfo.PropertyType);
             var addAssignExpression = Expression.Assign(valueProperty, typeAsExpress);
             var lambdaExpression = Expression.Lambda<Action<T1, object>>(addAssignExpression, instance, valueExpress);
             return lambdaExpression.Compile();
@@ -152,7 +156,7 @@ namespace Brochure.Utils
         /// <summary>
         /// 获取属性值方法
         /// </summary>
-        /// <param name="classType"></param> 
+        /// <param name="classType"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
         public Func<object, object> GetPropertyValueFun(Type classType, string propertyName)
