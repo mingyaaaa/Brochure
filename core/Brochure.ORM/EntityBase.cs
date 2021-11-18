@@ -1,3 +1,4 @@
+using Brochure.ORM.Atrributes;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -17,6 +18,7 @@ namespace Brochure.ORM
         /// 序列号
         /// </summary>
         /// <value></value>
+        [Sequence]
         public long SequenceId { get; set; }
     }
 

@@ -4,6 +4,7 @@ using Brochure.Core.Extenstions;
 using Brochure.Extensions;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Querys;
+using Brochure.ORM.Utils;
 using Brochure.ORM.Visitors;
 using System;
 using System.Collections.Generic;
@@ -79,9 +80,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="obj">The obj.</param>
         /// <returns>A Tuple.</returns>
-        public virtual Tuple<string, List<IDbDataParameter>> GetInsertSql<T>(T obj)
+        public virtual Tuple<string, List<IDbDataParameter>> GetInsertSql<T>(T obj) where T : class
         {
-            var doc = obj.As<IRecord>();
+            var doc = EntityUtil.AsTableRecord(obj);
             var tableName = TableUtlis.GetTableName<T>();
             var sql = $"insert into {dbProvider.FormatFieldName(tableName)}";
             var pams = new List<IDbDataParameter>();
@@ -276,7 +277,8 @@ namespace Brochure.ORM
 
                 var aType = _typeMap.GetSqlType(pType);
                 var columSql = $"{item.Name} {aType}";
-                if (item.Name == "SequenceId")
+                var isSequence = item.GetCustomAttribute(typeof(SequenceAttribute), true) != null;
+                if (isSequence)
                 {
                     columSql = $"SequenceId int AUTO_INCREMENT";
                     columSqls.Add(columSql);

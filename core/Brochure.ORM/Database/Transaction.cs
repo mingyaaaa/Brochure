@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+
 namespace Brochure.ORM.Database
 {
     /// <summary>
@@ -11,14 +12,17 @@ namespace Brochure.ORM.Database
         /// Gets the isolation level.
         /// </summary>
         IsolationLevel IsolationLevel { get; }
+
         /// <summary>
         /// Gets a value indicating whether is complete.
         /// </summary>
         bool IsComplete { get; }
+
         /// <summary>
         /// Commits the.
         /// </summary>
         void Commit();
+
         /// <summary>
         /// Rollbacks the.
         /// </summary>
@@ -37,7 +41,6 @@ namespace Brochure.ORM.Database
     public class Transaction : ITransaction
     {
         private readonly IDbTransaction dbTransaction;
-        private readonly IConnectFactory _connectFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
@@ -47,7 +50,6 @@ namespace Brochure.ORM.Database
         {
             var dbConnection = connectFactory.CreateAndOpenConnection();
             this.dbTransaction = dbConnection.BeginTransaction();
-            _connectFactory = connectFactory;
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         public void Dispose()
         {
-            _connectFactory.Dispose();
+            //         _connectFactory.Dispose();
             IsComplete = true;
         }
 
@@ -102,7 +104,6 @@ namespace Brochure.ORM.Database
     /// </summary>
     public class InnerTransaction : ITransaction
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InnerTransaction"/> class.
         /// </summary>
@@ -155,5 +156,4 @@ namespace Brochure.ORM.Database
             Dispose();
         }
     }
-
 }

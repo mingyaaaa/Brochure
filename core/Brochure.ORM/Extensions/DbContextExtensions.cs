@@ -8,13 +8,13 @@ namespace Brochure.ORM.Extensions
     {
         #region DbData
 
-        public static int Insert<T>(this DbContext dbContext, T data)
+        public static int Insert<T>(this DbContext dbContext, T data) where T : class
         {
             var dbData = dbContext.Datas;
             return dbData.Insert(data);
         }
 
-        public static int InsertMany<T>(this DbContext dbContext, IEnumerable<T> datas)
+        public static int InsertMany<T>(this DbContext dbContext, IEnumerable<T> datas) where T : class
         {
             var dbData = dbContext.Datas;
             return dbData.InsertMany(datas);

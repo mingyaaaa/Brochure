@@ -47,7 +47,7 @@ namespace Brochure.ORM.Database
         /// <param name="obj">The obj.</param>
         /// <returns>An int.</returns>
         [Transaction]
-        public virtual int Insert<T>(T obj)
+        public virtual int Insert<T>(T obj) where T : class
         {
             var sqlTuple = _dbSql.GetInsertSql(obj);
             var sql = sqlTuple.Item1;
@@ -55,7 +55,8 @@ namespace Brochure.ORM.Database
             var command = CreateDbCommand();
             command.CommandText = sql;
             command.Parameters.AddRange(parms);
-            return command.ExecuteNonQuery();
+            var a = command.ExecuteNonQuery();
+            return a;
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace Brochure.ORM.Database
         /// <param name="objs">The objs.</param>
         /// <returns>An int.</returns>
         [Transaction]
-        public virtual int InsertMany<T>(IEnumerable<T> objs)
+        public virtual int InsertMany<T>(IEnumerable<T> objs) where T : class
         {
             var list = objs.ToList();
             var tableName = TableUtlis.GetTableName<T>();
@@ -221,7 +222,7 @@ namespace Brochure.ORM.Database
         /// <returns>An IDbCommand.</returns>
         private IDbCommand CreateDbCommand()
         {
-            var connect = _connectFactory.CreateConnection();
+            var connect = _connectFactory.CreateAndOpenConnection();
             var command = connect.CreateCommand();
             command.Transaction = _transactionManager.GetDbTransaction();
             return command;

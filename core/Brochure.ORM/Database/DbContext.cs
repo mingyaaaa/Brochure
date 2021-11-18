@@ -3,6 +3,7 @@ using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Brochure.ORM
@@ -20,6 +21,8 @@ namespace Brochure.ORM
         public DbOption DbOption { get; }
         public DbData Datas { get; }
         public IVisitProvider VisitProvider { get; }
+
+        private IDbConnection _connection;
 
         internal static IServiceProvider ServiceProvider { get; set; }
         private IServiceScope _serviceScope;
@@ -39,7 +42,7 @@ namespace Brochure.ORM
             DbTable dbTable, DbColumns dbColumns,
             DbIndex dbIndex, DbData dbData,
             DbOption dbOption,
-            IDbProvider dbProvider, IVisitProvider visitProvider)
+            IDbProvider dbProvider, IVisitProvider visitProvider, IConnectFactory connectFactory)
         {
             this.Datas = dbData;
             this.Indexs = dbIndex;
@@ -49,6 +52,7 @@ namespace Brochure.ORM
             this.DbProvider = dbProvider;
             this.DbOption = dbOption;
             this.VisitProvider = visitProvider;
+            _connection = connectFactory.CreateAndOpenConnection();
         }
 
         public DbContext()
@@ -62,17 +66,21 @@ namespace Brochure.ORM
             this.DbProvider = _serviceScope.ServiceProvider.GetRequiredService<IDbProvider>();
             this.DbOption = _serviceScope.ServiceProvider.GetRequiredService<DbOption>();
             this.VisitProvider = _serviceScope.ServiceProvider.GetRequiredService<IVisitProvider>();
+            var connectionFactory = _serviceScope.ServiceProvider.GetRequiredService<IConnectFactory>();
+            _connection = connectionFactory.CreateAndOpenConnection();
         }
 
         public ValueTask DisposeAsync()
         {
             _serviceScope.Dispose();
+            _connection.Dispose();
             return ValueTask.CompletedTask;
         }
 
         public void Dispose()
         {
             _serviceScope.Dispose();
+            _connection.Dispose();
         }
     }
 }

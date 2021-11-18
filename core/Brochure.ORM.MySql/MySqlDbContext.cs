@@ -25,8 +25,8 @@ namespace Brochure.ORM.MySql
         /// <param name="dbProvider">The db provider.</param>
         /// <param name="visitProvider">The visit provider.</param>
         public MySqlDbContext(DbDatabase dbDatabase, DbTable dbTable,
-                DbColumns dbColumns, DbIndex dbIndex, DbData dbData, DbOption dbOption, IDbProvider dbProvider, IVisitProvider visitProvider) :
-            base(dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider, visitProvider)
+                DbColumns dbColumns, DbIndex dbIndex, DbData dbData, DbOption dbOption, IDbProvider dbProvider, IVisitProvider visitProvider, IConnectFactory connectFactory) :
+            base(dbDatabase, dbTable, dbColumns, dbIndex, dbData, dbOption, dbProvider, visitProvider, connectFactory)
         { }
 
         /// <summary>

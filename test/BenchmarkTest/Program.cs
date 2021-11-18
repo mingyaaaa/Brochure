@@ -24,12 +24,18 @@ namespace BenchmarkTest
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             await insert.Insert();
-            stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
+
             stopwatch.Restart();
             await insert.InsertEf();
-            stopwatch.Stop();
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
+
+            stopwatch.Restart();
+            await insert.InsertOr();
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
             Console.ReadKey();
         }
     }
