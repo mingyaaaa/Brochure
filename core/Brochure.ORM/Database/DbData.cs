@@ -177,7 +177,7 @@ namespace Brochure.ORM.Database
             var command = connect.CreateCommand();
             command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
             var list = new List<T>();
             while (reader.Read())
             {
@@ -200,7 +200,7 @@ namespace Brochure.ORM.Database
             var command = connect.CreateCommand();
             command.CommandText = queryResult.SQL;
             command.Parameters.AddRange(parms);
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
             var list = new List<T>();
             while (reader.Read())
             {
