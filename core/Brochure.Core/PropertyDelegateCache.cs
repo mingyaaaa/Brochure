@@ -21,12 +21,12 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>A Func.</returns>
-        public static bool TryGetGetAction(string propertyName, out Func<T, object> func)
+        public static bool TryGetGetAction(string key, out Func<T, object> func)
         {
             func = null;
-            if (getPropertyFunCache.ContainsKey(propertyName))
+            if (getPropertyFunCache.ContainsKey(key))
             {
-                func = getPropertyFunCache[propertyName];
+                func = getPropertyFunCache[key];
                 return true;
             }
             return false;
@@ -50,14 +50,15 @@ namespace Brochure.Core
         /// <returns>An object? .</returns>
         public static object TryGet(PropertyInfo propertyInfo, T obj)
         {
-            if (TryGetGetAction(propertyInfo.Name, out Func<T, object> func))
+            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name;
+            if (TryGetGetAction(key, out Func<T, object> func))
             {
                 return func.Invoke(obj);
             }
             else
             {
                 var t_func = ReflectorUtil.Instance.GetPropertyValueFun<T>(propertyInfo.Name);
-                AddGetAction(propertyInfo.PropertyType.FullName + propertyInfo.Name, t_func);
+                AddGetAction(key, t_func);
                 return t_func(obj);
             }
         }
