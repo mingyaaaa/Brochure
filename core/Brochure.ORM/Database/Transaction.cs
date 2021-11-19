@@ -67,7 +67,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         public void Commit()
         {
-            dbTransaction.Commit();
+            dbTransaction?.Commit();
             Dispose();
         }
 
@@ -94,7 +94,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         public void Rollback()
         {
-            dbTransaction.Rollback();
+            dbTransaction?.Rollback();
             Dispose();
         }
     }

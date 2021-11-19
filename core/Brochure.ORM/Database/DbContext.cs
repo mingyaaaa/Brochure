@@ -73,16 +73,16 @@ namespace Brochure.ORM
 
         public ValueTask DisposeAsync()
         {
-            _serviceScope.Dispose();
-            _connection.Dispose();
+            _serviceScope?.Dispose();
+            _connection?.Dispose();
             return ValueTask.CompletedTask;
         }
 
         public void Dispose()
         {
             _transaction?.Commit();
-            _serviceScope.Dispose();
-            _connection.Dispose();
+            _serviceScope?.Dispose();
+            _connection?.Dispose();
             _transactionManager.RemoveTransaction(_transaction);
         }
 

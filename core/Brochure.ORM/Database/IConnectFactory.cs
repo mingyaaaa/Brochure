@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+
 namespace Brochure.ORM.Database
 {
     /// <summary>
@@ -18,8 +19,8 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <returns>An IDbConnection.</returns>
         IDbConnection CreateAndOpenConnection();
-
     }
+
     /// <summary>
     /// The connect factory.
     /// </summary>
@@ -39,6 +40,7 @@ namespace Brochure.ORM.Database
             this.provider = provider;
             this.dbOption = dbOption;
         }
+
         /// <summary>
         /// Creates the connection.
         /// </summary>
