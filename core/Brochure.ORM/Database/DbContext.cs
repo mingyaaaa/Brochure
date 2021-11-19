@@ -17,15 +17,17 @@ namespace Brochure.ORM
         public DbTable Tables { get; }
         public DbColumns Columns { get; }
         public DbIndex Indexs { get; }
-        public IDbProvider DbProvider { get; }
-        public DbOption DbOption { get; }
         public DbData Datas { get; }
-        public IVisitProvider VisitProvider { get; }
 
         private IDbConnection _connection;
 
         internal static IServiceProvider ServiceProvider { get; set; }
+
         private IServiceScope _serviceScope;
+        private readonly IConnectFactory _connectFactory;
+        private readonly ITransactionManager _transactionManager;
+        private readonly bool _isBeginTransaction;
+        private ITransaction _transaction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
@@ -41,21 +43,20 @@ namespace Brochure.ORM
         public DbContext(DbDatabase dbDatabase,
             DbTable dbTable, DbColumns dbColumns,
             DbIndex dbIndex, DbData dbData,
-            DbOption dbOption,
-            IDbProvider dbProvider, IVisitProvider visitProvider, IConnectFactory connectFactory)
+            IConnectFactory connectFactory,
+            ITransactionManager transactionManager)
         {
             this.Datas = dbData;
+            _connectFactory = connectFactory;
             this.Indexs = dbIndex;
             this.Columns = dbColumns;
             this.Tables = dbTable;
             this.Database = dbDatabase;
-            this.DbProvider = dbProvider;
-            this.DbOption = dbOption;
-            this.VisitProvider = visitProvider;
+            _transactionManager = transactionManager;
             _connection = connectFactory.CreateAndOpenConnection();
         }
 
-        public DbContext()
+        public DbContext(bool isBeginTransaction = false)
         {
             _serviceScope = ServiceProvider.CreateScope();
             this.Datas = _serviceScope.ServiceProvider.GetRequiredService<DbData>();
@@ -63,11 +64,11 @@ namespace Brochure.ORM
             this.Columns = _serviceScope.ServiceProvider.GetRequiredService<DbColumns>();
             this.Tables = _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
             this.Database = _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
-            this.DbProvider = _serviceScope.ServiceProvider.GetRequiredService<IDbProvider>();
-            this.DbOption = _serviceScope.ServiceProvider.GetRequiredService<DbOption>();
-            this.VisitProvider = _serviceScope.ServiceProvider.GetRequiredService<IVisitProvider>();
-            var connectionFactory = _serviceScope.ServiceProvider.GetRequiredService<IConnectFactory>();
-            _connection = connectionFactory.CreateAndOpenConnection();
+            this._connectFactory = _serviceScope.ServiceProvider.GetRequiredService<IConnectFactory>();
+            _transactionManager = _serviceScope.ServiceProvider.GetRequiredService<ITransactionManager>();
+            _connection = _connectFactory.CreateAndOpenConnection();
+            _isBeginTransaction = isBeginTransaction;
+            BenginTransaction();
         }
 
         public ValueTask DisposeAsync()
@@ -79,8 +80,37 @@ namespace Brochure.ORM
 
         public void Dispose()
         {
+            _transaction?.Commit();
             _serviceScope.Dispose();
             _connection.Dispose();
+            _transactionManager.RemoveTransaction(_transaction);
+        }
+
+        public ITransaction BenginTransaction()
+        {
+            if (_isBeginTransaction)
+            {
+                _transaction = new Transaction(_connectFactory);
+                _transactionManager.AddTransaction(_transaction);
+            }
+            else
+            {
+                _transaction = new InnerTransaction();
+                _transactionManager.AddTransaction(_transaction);
+            }
+            return _transaction;
+        }
+
+        public void Commit()
+        {
+            _transaction?.Commit();
+            Dispose();
+        }
+
+        public void Rollback()
+        {
+            _transaction?.Rollback();
+            Dispose();
         }
     }
 }

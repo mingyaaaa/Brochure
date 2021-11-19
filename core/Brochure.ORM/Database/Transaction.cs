@@ -108,9 +108,8 @@ namespace Brochure.ORM.Database
         /// Initializes a new instance of the <see cref="InnerTransaction"/> class.
         /// </summary>
         /// <param name="dbOption">The db option.</param>
-        public InnerTransaction(DbOption dbOption)
+        public InnerTransaction()
         {
-            IsolationLevel = dbOption.TransactionLevel;
         }
 
         /// <summary>

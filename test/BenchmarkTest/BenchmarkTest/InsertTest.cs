@@ -39,12 +39,13 @@ namespace BenchmarkTest.BenchmarkTest
             }));
 
             service.AddDbContext<MysqlContent>(t => t.UseMySQL("server=192.168.0.6;database=test;uid=test;pwd=123456"));
+            using var dbcontext = new MySqlDbContext();
         }
 
         [Benchmark]
         public async Task Insert()
         {
-            using var dbcontext = new MySqlDbContext();
+            using var dbcontext = new MySqlDbContext(true);
             for (int i = 0; i < Count; i++)
             {
                 var a = new UserEntrity();
@@ -74,18 +75,18 @@ namespace BenchmarkTest.BenchmarkTest
         {
             using var connect = new MySqlConnection("server=192.168.0.6;database=test;uid=test;pwd=123456");
             connect.Open();
+            var tr = connect.BeginTransaction();
             for (int i = 0; i < Count; i++)
             {
                 var id = Guid.NewGuid().ToString();
                 var com = connect.CreateCommand();
-                var tr = connect.BeginTransaction();
+
                 com.Transaction = tr;
                 com.CommandText = $"insert user(id,age,createtime) values(@p0,@p1,@p2)";
                 com.Parameters.Add(new MySqlParameter("@p0", id));
                 com.Parameters.Add(new MySqlParameter("@p1", 11));
                 com.Parameters.Add(new MySqlParameter("@p2", 111));
                 var a = com.ExecuteNonQuery();
-                tr.Commit();
                 //var com2 = connect.CreateCommand();
                 //com2.CommandText = $"select * from user where id=@p0";
                 //com2.Parameters.Add(new MySqlParameter("@p0", id));
@@ -95,6 +96,7 @@ namespace BenchmarkTest.BenchmarkTest
                 //};
                 //r.Close();
             }
+            tr.Commit();
             connect.Dispose();
         }
     }

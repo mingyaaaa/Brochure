@@ -29,19 +29,18 @@ namespace Brochure.ORM.Atrributes
                 var factory = context.ServiceProvider.GetService<ITransactionFactory>();
                 //此处如果transactionManager.IsEmpty为空则 返回Transaction 否则返回InnerTransaction
                 ITransaction transaction = factory.GetTransaction();
-                //    transactionManager.AddTransaction(transaction);
+                transactionManager.AddTransaction(transaction);
                 try
                 {
                     await next(context);
                 }
                 catch (Exception)
                 {
-                    //      transaction.Rollback();
+                    transaction.Rollback();
                     throw;
                 }
-                //    transaction.Commit();
-                transaction.Rollback();
-                //     transactionManager.RemoveTransaction(transaction);
+                transaction.Commit();
+                transactionManager.RemoveTransaction(transaction);
             }
         }
     }

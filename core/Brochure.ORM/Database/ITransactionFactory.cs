@@ -8,15 +8,14 @@ namespace Brochure.ORM.Database
     public class TransactionFactory : ITransactionFactory
     {
         private readonly ITransactionManager transactionManager;
-        private readonly DbOption dbOption;
         private readonly IConnectFactory connectFactory;
 
-        public TransactionFactory(ITransactionManager transactionManager, DbOption dbOption, IConnectFactory connectFactory)
+        public TransactionFactory(ITransactionManager transactionManager, IConnectFactory connectFactory)
         {
             this.transactionManager = transactionManager;
-            this.dbOption = dbOption;
             this.connectFactory = connectFactory;
         }
+
         public ITransaction GetTransaction()
         {
             if (transactionManager.IsEmpty)
@@ -25,7 +24,7 @@ namespace Brochure.ORM.Database
             }
             else
             {
-                return new InnerTransaction(dbOption);
+                return new InnerTransaction();
             }
         }
     }
