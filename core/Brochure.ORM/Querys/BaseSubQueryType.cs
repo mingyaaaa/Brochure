@@ -11,6 +11,10 @@ namespace Brochure.ORM.Querys
     /// </summary>
     public abstract class BaseSubQueryType
     {
+        /// <summary>
+        /// Gets the sub query type.
+        /// </summary>
+        /// <returns>An object.</returns>
         internal abstract object GetSubQueryType();
     }
 
@@ -21,11 +25,19 @@ namespace Brochure.ORM.Querys
     {
         private readonly Type _type;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableNameSubQueryType"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
         public TableNameSubQueryType(Type type)
         {
             _type = type;
         }
 
+        /// <summary>
+        /// Gets the sub query type.
+        /// </summary>
+        /// <returns>An object.</returns>
         internal override object GetSubQueryType()
         {
             return _type;
@@ -36,11 +48,19 @@ namespace Brochure.ORM.Querys
     {
         private readonly IQuery _query;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuerySubQueryType"/> class.
+        /// </summary>
+        /// <param name="query">The query.</param>
         public QuerySubQueryType(IQuery query)
         {
             _query = query;
         }
 
+        /// <summary>
+        /// Gets the sub query type.
+        /// </summary>
+        /// <returns>An object.</returns>
         internal override object GetSubQueryType()
         {
             return _query;

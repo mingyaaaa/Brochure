@@ -5,10 +5,19 @@ namespace Brochure.Abstract.Models
     public interface IResult
     {
 
+        /// <summary>
+        /// Gets the msg.
+        /// </summary>
         string Msg { get; }
 
+        /// <summary>
+        /// Gets the code.
+        /// </summary>
         int Code { get; }
 
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
         object Data { get; }
 
 
@@ -31,12 +40,24 @@ namespace Brochure.Abstract.Models
         {
             Data = data;
         }
+        /// <summary>
+        /// Gets the msg.
+        /// </summary>
         public string Msg { get; }
 
+        /// <summary>
+        /// Gets the code.
+        /// </summary>
         public int Code { get; }
 
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
         public object Data { get; }
 
+        /// <summary>
+        /// Gets the o k.
+        /// </summary>
         public static IResult OK => new Result(0, "");
 
     }
@@ -63,8 +84,17 @@ namespace Brochure.Abstract.Models
             _data = data;
         }
 
+        /// <summary>
+        /// Gets the msg.
+        /// </summary>
         public string Msg { get ; }
+        /// <summary>
+        /// Gets the code.
+        /// </summary>
         public int Code { get ;  }
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
         public object Data => _data;
 
 

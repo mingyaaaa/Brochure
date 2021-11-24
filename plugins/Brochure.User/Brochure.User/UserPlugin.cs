@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Brochure.Core;
+using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
@@ -37,16 +38,16 @@ namespace Brochure.User
         {
             Context.Services.AddScoped<IUserDal, UserDal>();
             Context.Services.AddScoped<IUserRepository, UserRepository>();
-            Context.Services.AddMySql(t =>
-            {
-                var mysqlBuilder = new MySqlConnectionStringBuilder();
-                var dbSection = PluginConfiguration.GetSection("db");
-                mysqlBuilder.Database = dbSection.GetValue<string>("database");
-                mysqlBuilder.UserID = dbSection.GetValue<string>("user");
-                mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
-                mysqlBuilder.Server = dbSection.GetValue<string>("server");
-                t.ConnectionString = mysqlBuilder.ToString();
-            });
+            Context.Services.AddDbCore(p => p.AddMySql(t =>
+              {
+                  var mysqlBuilder = new MySqlConnectionStringBuilder();
+                  var dbSection = PluginConfiguration.GetSection("db");
+                  mysqlBuilder.Database = dbSection.GetValue<string>("database");
+                  mysqlBuilder.UserID = dbSection.GetValue<string>("user");
+                  mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
+                  mysqlBuilder.Server = dbSection.GetValue<string>("server");
+                  t.ConnectionString = mysqlBuilder.ToString();
+              }));
             Context.Services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });

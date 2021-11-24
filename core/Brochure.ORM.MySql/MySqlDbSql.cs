@@ -30,8 +30,9 @@ namespace Brochure.ORM.MySql
         /// Gets the create table sql.
         /// </summary>
         /// <returns>A string.</returns>
-        public override string GetCreateTableSql<T>()
+        public override ISql GetCreateTableSql<T>()
         {
+            var r = new ParmsSqlResult();
             var type = typeof(T);
             var typeInfo = type.GetTypeInfo();
             var props = typeInfo.GetRuntimeProperties();
@@ -127,7 +128,8 @@ namespace Brochure.ORM.MySql
             if (string.IsNullOrWhiteSpace(tableName))
                 throw new Exception("当前TabelName的值为null 无法创建表");
             var sql = $@"create table {tableName}({string.Join(",", columSqls)})";
-            return sql;
+            r.SQL = sql;
+            return r;
         }
 
         /// <summary>
@@ -135,9 +137,11 @@ namespace Brochure.ORM.MySql
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>A string.</returns>
-        public override string GetTableNameCountSql(string tableName)
+        public override ISql GetTableNameCountSql(string tableName)
         {
-            return $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}' and TABLE_SCHEMA ='{Option.DatabaseName }'";
+            var result = new ParmsSqlResult();
+            result.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{tableName}' and TABLE_SCHEMA ='{Option.DatabaseName }'";
+            return result;
         }
     }
 }

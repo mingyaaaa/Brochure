@@ -287,7 +287,13 @@ namespace Brochure.Test
 
     public class TestOption
     {
+        /// <summary>
+        /// Gets or sets the p1.
+        /// </summary>
         public int P1 { get; set; } = 1;
+        /// <summary>
+        /// Gets or sets the p2.
+        /// </summary>
         public int P2 { get; set; } = 1;
     }
 
@@ -306,11 +312,17 @@ namespace Brochure.Test
     }
     public interface ITest1 : IDisposable
     {
+        /// <summary>
+        /// Gets or sets the p test1.
+        /// </summary>
         int PTest1 { get; set; }
     }
 
     public class ImpTest1 : ITest1
     {
+        /// <summary>
+        /// Gets or sets the p test1.
+        /// </summary>
         public int PTest1 { get; set; }
 
         public void Dispose()
@@ -321,6 +333,9 @@ namespace Brochure.Test
 
     public class ImpTest11 : ITest1
     {
+        /// <summary>
+        /// Gets or sets the p test1.
+        /// </summary>
         public int PTest1 { get; set; }
 
         public void Dispose()
@@ -354,6 +369,9 @@ namespace Brochure.Test
 
     public interface IOption<T>
     {
+        /// <summary>
+        /// Gets or sets the op.
+        /// </summary>
         string Op { get; set; }
 
         void Invoke();
@@ -367,6 +385,9 @@ namespace Brochure.Test
         {
             _action = action;
         }
+        /// <summary>
+        /// Gets or sets the op.
+        /// </summary>
         public string Op { get; set; }
 
         public void Invoke()

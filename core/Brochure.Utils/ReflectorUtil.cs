@@ -10,6 +10,9 @@ namespace Brochure.Utils
 {
     public class ReflectorUtil : IReflectorUtil
     {
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
         public static IReflectorUtil Instance => new ReflectorUtil();
 
         public IEnumerable<object> GetObjectOfBase(Assembly assembly, Type type)

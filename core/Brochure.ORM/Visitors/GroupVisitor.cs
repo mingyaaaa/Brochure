@@ -7,14 +7,28 @@ namespace Brochure.ORM.Visitors
 {
     public class GroupVisitor : ORMVisitor
     {
+        /// <summary>
+        /// Gets the group dic.
+        /// </summary>
         public Dictionary<string, string> GroupDic { get; }
         private bool isSetNew = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupVisitor"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="funcVisits">The func visits.</param>
         public GroupVisitor(IDbProvider provider, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(provider, dbOption, funcVisits)
         {
             GroupDic = new Dictionary<string, string>();
         }
 
+        /// <summary>
+        /// Gets the parent express value.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A string.</returns>
         private string GetParentExpressValue(MemberExpression expression)
         {
             if (expression.Expression is MemberExpression memberExpression)
@@ -72,6 +86,11 @@ namespace Brochure.ORM.Visitors
             return node;
         }
 
+        /// <summary>
+        /// Visits the member.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitMember(MemberExpression node)
         {
             sql = GetParentExpressValue(node);

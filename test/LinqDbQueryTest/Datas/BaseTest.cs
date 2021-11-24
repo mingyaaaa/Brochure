@@ -18,6 +18,9 @@ namespace LinqDbQueryTest.Datas
         protected IServiceCollection Services;
         protected IServiceProvider Provider;
 
+        /// <summary>
+        /// Gets the fixture.
+        /// </summary>
         public Fixture Fixture { get; }
 
         public BaseTest()

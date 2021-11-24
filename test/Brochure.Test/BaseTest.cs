@@ -27,10 +27,19 @@ namespace Brochure.Test
             Fixture.Customize(new AutoMoqCustomization());
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
         }
+        /// <summary>
+        /// Gets the service.
+        /// </summary>
         protected IServiceCollection Service { get; }
         protected IFixture Fixture;
+        /// <summary>
+        /// Gets the mock service.
+        /// </summary>
         protected Dictionary<Type, object> MockService { get; }
 
+        /// <summary>
+        /// Gets the log.
+        /// </summary>
         protected Mock<ILogger<BaseTest>> Log { get; }
 
         public void InitBaseService()

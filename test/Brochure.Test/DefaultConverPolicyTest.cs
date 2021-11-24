@@ -55,14 +55,29 @@ namespace Brochure.Test
 
     public class Pa
     {
+        /// <summary>
+        /// Gets or sets the a.
+        /// </summary>
         public string A { get; set; }
+        /// <summary>
+        /// Gets or sets the b.
+        /// </summary>
         public int B { get; set; }
+        /// <summary>
+        /// Gets or sets the c.
+        /// </summary>
         public long C { get; set; }
     }
 
     public class Pb
     {
+        /// <summary>
+        /// Gets or sets the a.
+        /// </summary>
         public string A { get; set; }
+        /// <summary>
+        /// Gets or sets the b.
+        /// </summary>
         public int B { get; set; }
     }
 }

@@ -6,6 +6,11 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
+    <Compile Remove="ApplicationInit\**" />
+    <EmbeddedResource Remove="ApplicationInit\**" />
+    <None Remove="ApplicationInit\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
@@ -20,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationInit\" />
     <Folder Include="Logs\" />
     <Folder Include="Application\" />
     <Folder Include="Plugins\" />

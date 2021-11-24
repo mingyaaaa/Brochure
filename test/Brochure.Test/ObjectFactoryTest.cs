@@ -13,7 +13,7 @@ namespace Brochure.Test
         [TestMethod]
         public void TestNullable()
         {
-            Action<TestA, TestB> action = (t, o) => t.A = (int)(object)o.A;
+            Action<TestA, TestB> action = (t, o) => t.A = (int?)(object)o.A;
             var obj = new ObjectFactory();
             var testa = Fixture.Create<TestB>();
             action(new TestA(), testa);
@@ -99,6 +99,9 @@ namespace Brochure.Test
 
         public class TestA : ITestA, IConverPolicy<TestB>
         {
+            /// <summary>
+            /// Gets or sets the a.
+            /// </summary>
             public int? A { get; set; }
 
             public TestB ConverTo(TestB obj = null)
@@ -113,6 +116,9 @@ namespace Brochure.Test
 
         public class TestB
         {
+            /// <summary>
+            /// Gets or sets the a.
+            /// </summary>
             public int A { get; set; }
         }
 
@@ -133,10 +139,19 @@ namespace Brochure.Test
                 TestA = testA;
             }
 
+            /// <summary>
+            /// Gets or sets the c.
+            /// </summary>
             public int C { get; set; }
 
+            /// <summary>
+            /// Gets or sets the str.
+            /// </summary>
             public string Str { get; set; }
 
+            /// <summary>
+            /// Gets or sets the test a.
+            /// </summary>
             public TestA TestA { get; set; }
         }
 

@@ -11,6 +11,10 @@ namespace Brochure.ORM
     /// </summary>
     public interface IDbProvider
     {
+        /// <summary>
+        /// Gets the params symbol.
+        /// </summary>
+        /// <returns>A string.</returns>
         string GetParamsSymbol();
         /// <summary>
         /// Gets the db data parameter.

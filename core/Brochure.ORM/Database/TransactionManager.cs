@@ -7,14 +7,32 @@ using System.Xml.Linq;
 
 namespace Brochure.ORM.Database
 {
+    /// <summary>
+    /// The transaction manager.
+    /// </summary>
     public interface ITransactionManager
     {
+        /// <summary>
+        /// Gets a value indicating whether is empty.
+        /// </summary>
         bool IsEmpty { get; }
 
+        /// <summary>
+        /// Adds the transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
         void AddTransaction(ITransaction transaction);
 
+        /// <summary>
+        /// Removes the transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
         void RemoveTransaction(ITransaction transaction);
 
+        /// <summary>
+        /// Gets the db transaction.
+        /// </summary>
+        /// <returns>An IDbTransaction.</returns>
         IDbTransaction GetDbTransaction();
     }
 
@@ -31,6 +49,10 @@ namespace Brochure.ORM.Database
             transactions = new List<ITransaction>();
         }
 
+        /// <summary>
+        /// Adds the transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
         public void AddTransaction(ITransaction transaction)
         {
             lock (lockObj)
@@ -39,8 +61,15 @@ namespace Brochure.ORM.Database
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether is empty.
+        /// </summary>
         public bool IsEmpty { get { return transactions.Count == 0; } }
 
+        /// <summary>
+        /// Removes the transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
         public void RemoveTransaction(ITransaction transaction)
         {
             lock (lockObj)
@@ -49,6 +78,10 @@ namespace Brochure.ORM.Database
             }
         }
 
+        /// <summary>
+        /// Gets the db transaction.
+        /// </summary>
+        /// <returns>An IDbTransaction.</returns>
         public IDbTransaction GetDbTransaction()
         {
             IDbTransaction dbTransaction = null;

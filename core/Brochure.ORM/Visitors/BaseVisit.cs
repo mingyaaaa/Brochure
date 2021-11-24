@@ -29,7 +29,7 @@ namespace Brochure.ORM.Visitors
         protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider serviceProvider = null)
         {
             _dbPrivoder = dbProvider;
-            Parameters = new Dictionary<string, IDbDataParameter>();
+            Parameters = new List<IDbDataParameter>();
             TableTypeDic = new Dictionary<int, Type>();
             this.serviceProvider = serviceProvider;
             _funList = funList;
@@ -38,7 +38,7 @@ namespace Brochure.ORM.Visitors
 
         protected IDbProvider _dbPrivoder;
         protected object sql;
-        protected Dictionary<string, IDbDataParameter> Parameters;
+        protected List<IDbDataParameter> Parameters;
         protected Dictionary<int, Type> TableTypeDic;
         private readonly IEnumerable<IFuncVisit> _funList;
         private readonly IServiceProvider serviceProvider;
@@ -54,6 +54,11 @@ namespace Brochure.ORM.Visitors
             return GetSqlBase(expression);
         }
 
+        /// <summary>
+        /// Gets the sql base.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
         private object GetSqlBase(Expression expression = null)
         {
             if (expression != null)
@@ -61,6 +66,11 @@ namespace Brochure.ORM.Visitors
             return sql;
         }
 
+        /// <summary>
+        /// Gets the constant express value.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
         private object GetConstantExpressValue(MemberExpression expression = null)
         {
             if (expression == null)
@@ -80,6 +90,11 @@ namespace Brochure.ORM.Visitors
             return null;
         }
 
+        /// <summary>
+        /// Gets the root express value.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
         private object GetRootExpressValue(MemberExpression expression)
         {
             if (expression.Expression is MemberExpression memberExpression)
@@ -114,11 +129,15 @@ namespace Brochure.ORM.Visitors
         /// Gets the parameters.
         /// </summary>
         /// <returns>A list of IDbDataParameters.</returns>
-        public Dictionary<string, IDbDataParameter> GetParameters()
+        public List<IDbDataParameter> GetParameters()
         {
             return Parameters;
         }
 
+        /// <summary>
+        /// Gets the table dic.
+        /// </summary>
+        /// <returns>A Dictionary.</returns>
         public Dictionary<int, Type> GetTableDic()
         {
             return TableTypeDic;
@@ -244,17 +263,24 @@ namespace Brochure.ORM.Visitors
             var parms = _dbPrivoder.GetDbDataParameter();
             parms.ParameterName = Guid.NewGuid().ToString();
             parms.Value = obj;
-            Parameters.Add(parms.ParameterName, parms);
+            Parameters.Add(parms);
             return parms.ParameterName;
         }
 
         private class ObjectValue
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ObjectValue"/> class.
+            /// </summary>
+            /// <param name="obj">The obj.</param>
             internal ObjectValue(object obj)
             {
                 Value = obj;
             }
 
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
             public object Value { get; set; }
         }
     }

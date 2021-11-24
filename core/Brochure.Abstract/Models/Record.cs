@@ -55,6 +55,9 @@ namespace Brochure.Abstract.Models
         [IgnoreDataMember]
         public IEnumerable<object> Values { get { return _dic.Values; } }
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         [IgnoreDataMember]
         public object Current { get; set; }
 

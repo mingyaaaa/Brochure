@@ -22,6 +22,10 @@ namespace Brochure.ORM.Querys
             return a;
         }
 
+        /// <summary>
+        /// Selects the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> Select()
         {
             this.MainTables.Add(new TableNameSubQueryType(typeof(T1)));
@@ -38,6 +42,12 @@ namespace Brochure.ORM.Querys
             return Join(null, fun);
         }
 
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="subQuery">The sub query.</param>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1, T2> Join<T2>(IQuery<T2> subQuery, Expression<Func<T1, T2, bool>> fun)
         {
             if (subQuery == null)
@@ -127,12 +137,22 @@ namespace Brochure.ORM.Querys
             return this;
         }
 
+        /// <summary>
+        /// Takes the.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> Take(int count)
         {
             TakeCount = count;
             return this;
         }
 
+        /// <summary>
+        /// Skips the.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1> Skip(int count)
         {
             SkipCount = count;

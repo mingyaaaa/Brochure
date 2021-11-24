@@ -13,14 +13,32 @@ namespace Brochure.ORM
     /// </summary>
     public abstract class DbContext : IDisposable, IAsyncDisposable
     {
+        /// <summary>
+        /// Gets the database.
+        /// </summary>
         public DbDatabase Database { get; }
+        /// <summary>
+        /// Gets the tables.
+        /// </summary>
         public DbTable Tables { get; }
+        /// <summary>
+        /// Gets the columns.
+        /// </summary>
         public DbColumns Columns { get; }
+        /// <summary>
+        /// Gets the indexs.
+        /// </summary>
         public DbIndex Indexs { get; }
+        /// <summary>
+        /// Gets the datas.
+        /// </summary>
         public DbData Datas { get; }
 
         private IDbConnection _connection;
 
+        /// <summary>
+        /// Gets or sets the service provider.
+        /// </summary>
         internal static IServiceProvider ServiceProvider { get; set; }
 
         private IServiceScope _serviceScope;
@@ -56,6 +74,10 @@ namespace Brochure.ORM
             _connection = connectFactory.CreateAndOpenConnection();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbContext"/> class.
+        /// </summary>
+        /// <param name="isBeginTransaction">If true, is begin transaction.</param>
         public DbContext(bool isBeginTransaction = false)
         {
             _serviceScope = ServiceProvider.CreateScope();
@@ -71,6 +93,10 @@ namespace Brochure.ORM
             BenginTransaction();
         }
 
+        /// <summary>
+        /// Disposes the async.
+        /// </summary>
+        /// <returns>A ValueTask.</returns>
         public ValueTask DisposeAsync()
         {
             _serviceScope?.Dispose();
@@ -78,6 +104,9 @@ namespace Brochure.ORM
             return ValueTask.CompletedTask;
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             _transaction?.Commit();
@@ -86,6 +115,10 @@ namespace Brochure.ORM
             _transactionManager.RemoveTransaction(_transaction);
         }
 
+        /// <summary>
+        /// Bengins the transaction.
+        /// </summary>
+        /// <returns>An ITransaction.</returns>
         public ITransaction BenginTransaction()
         {
             if (_isBeginTransaction)
@@ -101,12 +134,18 @@ namespace Brochure.ORM
             return _transaction;
         }
 
+        /// <summary>
+        /// Commits the.
+        /// </summary>
         public void Commit()
         {
             _transaction?.Commit();
             Dispose();
         }
 
+        /// <summary>
+        /// Rollbacks the.
+        /// </summary>
         public void Rollback()
         {
             _transaction?.Rollback();

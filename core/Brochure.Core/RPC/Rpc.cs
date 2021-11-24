@@ -18,6 +18,9 @@ namespace Brochure.Core.RPC
         {
             Ins = factory.CreateRpcProxy<T> (args);
         }
+        /// <summary>
+        /// Gets the ins.
+        /// </summary>
         public T Ins { get; }
     }
     public interface IRpcProxyFactory

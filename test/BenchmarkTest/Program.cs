@@ -22,15 +22,15 @@ namespace BenchmarkTest
         {
             var insert = new InsertTest();
             Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            await insert.Insert();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-            stopwatch.Stop();
+            //stopwatch.Start();
+            //await insert.Insert();
+            //Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            //stopwatch.Stop();
 
-            stopwatch.Restart();
-            await insert.InsertEf();
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-            stopwatch.Stop();
+            //stopwatch.Restart();
+            //await insert.InsertEf();
+            //Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            //stopwatch.Stop();
 
             stopwatch.Restart();
             await insert.InsertOr();

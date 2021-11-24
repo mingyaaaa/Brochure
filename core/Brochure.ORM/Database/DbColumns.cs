@@ -58,7 +58,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetColumsNameCountSql(Option.DatabaseName, tableName, columnName);
+            command.CommandText = _dbSql.GetColumsNameCountSql(Option.DatabaseName, tableName, columnName).SQL;
             var r = (int)command.ExecuteScalar();
             return r >= 1;
         }
@@ -105,7 +105,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetRenameColumnNameSql(tableName, columnName, newcolumnName, typeCode);
+            command.CommandText = _dbSql.GetRenameColumnNameSql(tableName, columnName, newcolumnName, typeCode).SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -122,7 +122,6 @@ namespace Brochure.ORM.Database
         {
             return Task.Run(() => UpdateColumn(tableName, columnName, typeCode, isNotNull));
         }
-
 
         /// <summary>
         /// Updates the column async.
@@ -152,7 +151,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetUpdateColumnSql(tableName, columnName, typeCode, isNotNull);
+            command.CommandText = _dbSql.GetUpdateColumnSql(tableName, columnName, typeCode, isNotNull).SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -190,7 +189,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetDeleteColumnSql(tableName, columnName);
+            command.CommandText = _dbSql.GetDeleteColumnSql(tableName, columnName).SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -206,7 +205,6 @@ namespace Brochure.ORM.Database
         {
             return Task.Run(() => AddColumns(tableName, columnName, typeCode, isNotNull));
         }
-
 
         /// <summary>
         /// Adds the columns async.
@@ -234,7 +232,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetAddllColumnSql(tableName, columnName, typeCode, isNotNull);
+            command.CommandText = _dbSql.GetAddllColumnSql(tableName, columnName, typeCode, isNotNull).SQL;
             return command.ExecuteNonQuery();
         }
     }

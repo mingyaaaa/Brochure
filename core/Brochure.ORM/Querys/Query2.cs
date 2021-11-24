@@ -18,6 +18,12 @@ namespace Brochure.ORM.Querys
             return Join(null, fun);
         }
 
+        /// <summary>
+        /// Joins the.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="fun">The fun.</param>
+        /// <returns>An IQuery.</returns>
         public IQuery<T1, T2, T3> Join<T3>(IQuery<T3> query, Expression<Func<T1, T2, T3, bool>> fun)
         {
             if (query == null)

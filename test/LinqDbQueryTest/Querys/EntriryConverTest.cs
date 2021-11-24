@@ -28,7 +28,13 @@ namespace LinqDbQueryTest.Querys
 
     public class Test : EntityBase
     {
+        /// <summary>
+        /// Gets or sets the int1.
+        /// </summary>
         public int Int1 { get; set; }
+        /// <summary>
+        /// Gets or sets the string2.
+        /// </summary>
         public string String2 { get; set; }
     }
 }

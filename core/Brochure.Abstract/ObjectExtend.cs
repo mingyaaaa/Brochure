@@ -51,6 +51,10 @@ namespace Brochure.Abstract.Extensions
         /// <returns></returns>
         public static object As(this object obj, Type type)
         {
+            if (type.IsAssignableFrom(obj.GetType()))
+            {
+                return obj;
+            }
             if (type.IsEnum)
             {
                 return Enum.Parse(type, obj.ToString());

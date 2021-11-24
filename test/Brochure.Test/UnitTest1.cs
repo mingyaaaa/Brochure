@@ -142,6 +142,9 @@ namespace Brochure.Test
         }
         public interface IA
         {
+            /// <summary>
+            /// Gets or sets the ap.
+            /// </summary>
             string Ap { get; set; }
             void h();
         }
@@ -151,6 +154,9 @@ namespace Brochure.Test
         }
         public class A : IA
         {
+            /// <summary>
+            /// Gets or sets the ap.
+            /// </summary>
             public string Ap { get; set; } = "1";
             public void h()
             {
@@ -160,6 +166,9 @@ namespace Brochure.Test
         }
         public class A1 : IA
         {
+            /// <summary>
+            /// Gets or sets the ap.
+            /// </summary>
             public string Ap { get; set; }
 
             public void h()

@@ -20,7 +20,11 @@ namespace BenchmarkTest.BenchmarkTest
 {
     public class InsertTest
     {
+        /// <summary>
+        /// Gets the fixture.
+        /// </summary>
         public Fixture Fixture { get; }
+
         public static int Count = 100;
 
         public InsertTest()
@@ -82,18 +86,19 @@ namespace BenchmarkTest.BenchmarkTest
                 var com = connect.CreateCommand();
 
                 com.Transaction = tr;
-                com.CommandText = $"insert user(id,age,createtime) values(@p0,@p1,@p2)";
+                com.CommandText = $"insert user(id,age,createtime) values(@p0,@p1,@p2);select * from user where id=@p0";
                 com.Parameters.Add(new MySqlParameter("@p0", id));
                 com.Parameters.Add(new MySqlParameter("@p1", 11));
                 com.Parameters.Add(new MySqlParameter("@p2", 111));
-                var a = com.ExecuteNonQuery();
+                //      com.Parameters.Add(new MySqlParameter("@p3", Guid.NewGuid().ToString()));
+                //    var a = com.ExecuteNonQuery();
                 //var com2 = connect.CreateCommand();
                 //com2.CommandText = $"select * from user where id=@p0";
                 //com2.Parameters.Add(new MySqlParameter("@p0", id));
-                //var r = com2.ExecuteReader();
-                //while (r.Read())
-                //{
-                //};
+                var r = com.ExecuteReader();
+                while (r.Read())
+                {
+                };
                 //r.Close();
             }
             tr.Commit();

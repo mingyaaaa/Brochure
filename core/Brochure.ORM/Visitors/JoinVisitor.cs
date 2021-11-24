@@ -28,6 +28,10 @@ namespace Brochure.ORM.Visitors
             joinTable = _dbPrivoder.FormatFieldName(TableUtlis.GetTableName(tableType));
         }
 
+        /// <summary>
+        /// Sets the table name.
+        /// </summary>
+        /// <param name="subQuery">The sub query.</param>
         public void SetTableName(string subQuery)
         {
             joinTable = subQuery;

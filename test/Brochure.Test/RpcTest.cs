@@ -82,6 +82,9 @@ namespace Brochure.Test
 
     public class AClient
     {
+        /// <summary>
+        /// Gets or sets the a.
+        /// </summary>
         public int A { get; set; }
         public virtual int GetAValue(int a)
         {

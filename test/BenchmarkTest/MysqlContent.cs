@@ -23,6 +23,9 @@ namespace BenchmarkTest
             optionsBuilder.UseMySQL("server=192.168.0.6;database=test;uid=test;pwd=123456");
         }
 
+        /// <summary>
+        /// Gets or sets the user entrities.
+        /// </summary>
         public virtual DbSet<UserEntrity> UserEntrities { get; set; }
     }
 }

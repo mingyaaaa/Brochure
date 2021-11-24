@@ -7,6 +7,9 @@ namespace Brochure.Abstract
 {
     public interface IPlugins
     {
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
         IPluginContext Context { get; }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Brochure.ORM.Querys;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -7,15 +8,27 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM
 {
-    public class ParmsSqlResult
+    /// <summary>
+    /// The parms sql result.
+    /// </summary>
+    public class ParmsSqlResult : ISql
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParmsSqlResult"/> class.
+        /// </summary>
         public ParmsSqlResult()
         {
             this.Parameters = new List<IDbDataParameter>();
         }
 
+        /// <summary>
+        /// Gets or sets the s q l.
+        /// </summary>
         public string SQL { get; set; }
 
-        public List<IDbDataParameter> Parameters;
+        /// <summary>
+        /// Gets the parameters.
+        /// </summary>
+        public List<IDbDataParameter> Parameters { get; }
     }
 }

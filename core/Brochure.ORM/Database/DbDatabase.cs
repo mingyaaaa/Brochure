@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+
 namespace Brochure.ORM.Database
 {
     /// <summary>
@@ -46,7 +47,6 @@ namespace Brochure.ORM.Database
             return -1;
         }
 
-
         /// <summary>
         /// Creates the database.
         /// </summary>
@@ -54,14 +54,12 @@ namespace Brochure.ORM.Database
         /// <returns>A long.</returns>
         public virtual long CreateDatabase(string databaseName)
         {
-            var sql = _dbSql.GetCreateDatabaseSql(databaseName);
+            var sql = _dbSql.GetCreateDatabaseSql(databaseName).SQL;
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
             command.CommandText = sql;
             return command.ExecuteNonQuery();
         }
-
-
 
         /// <summary>
         /// Deletes the database async.
@@ -86,7 +84,6 @@ namespace Brochure.ORM.Database
             return -1;
         }
 
-
         /// <summary>
         /// Deletes the database.
         /// </summary>
@@ -96,7 +93,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetDeleteDatabaseSql(databaseName);
+            command.CommandText = _dbSql.GetDeleteDatabaseSql(databaseName).SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -119,7 +116,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetDataBaseNameCountSql(databaseName);
+            command.CommandText = _dbSql.GetDataBaseNameCountSql(databaseName).SQL;
             var rr = (int)command.ExecuteScalar();
             return rr >= 1;
         }

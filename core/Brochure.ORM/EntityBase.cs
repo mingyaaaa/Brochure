@@ -33,18 +33,36 @@ namespace Brochure.ORM
         T Id { get; set; }
     }
 
+    /// <summary>
+    /// The entiry creator.
+    /// </summary>
     public interface IEntiryCreator
     {
+        /// <summary>
+        /// Gets or sets the creator.
+        /// </summary>
         string Creator { get; set; }
     }
 
+    /// <summary>
+    /// The entity updator.
+    /// </summary>
     public interface IEntityUpdator
     {
+        /// <summary>
+        /// Gets or sets the updator.
+        /// </summary>
         string Updator { get; set; }
     }
 
+    /// <summary>
+    /// The entity update time.
+    /// </summary>
     public interface IEntityUpdateTime
     {
+        /// <summary>
+        /// Gets or sets the update time.
+        /// </summary>
         long UpdateTime { get; set; }
     }
 }

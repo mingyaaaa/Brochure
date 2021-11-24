@@ -64,19 +64,37 @@ namespace Brochure.Test
         }
         public class TestA
         {
+            /// <summary>
+            /// Gets or sets the ap.
+            /// </summary>
             public string Ap { get; set; }
 
+            /// <summary>
+            /// Gets or sets the ab.
+            /// </summary>
             public int Ab { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nullable a.
+            /// </summary>
             public int? NullableA { get; set; }
         }
 
         public class TestB
         {
+            /// <summary>
+            /// Gets or sets the ap.
+            /// </summary>
             public string Ap { get; set; }
 
+            /// <summary>
+            /// Gets or sets the ab.
+            /// </summary>
             public int Ab { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nullable a.
+            /// </summary>
             public int NullableA { get; set; }
         }
     }

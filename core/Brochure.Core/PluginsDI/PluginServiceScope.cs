@@ -13,6 +13,9 @@ namespace Brochure.Core.PluginsDI
         {
             this.serviceProvider = serviceProvider.CreateScope ();
         }
+        /// <summary>
+        /// Gets the service provider.
+        /// </summary>
         public IServiceProvider ServiceProvider => this;
 
         public void Dispose ()

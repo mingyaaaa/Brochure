@@ -9,17 +9,17 @@ namespace Brochure.ORM
     /// <summary>
     /// The query.
     /// </summary>
-    public interface IQuery
+    public interface IQuery : ISql
     {
         /// <summary>
         /// Gets the take count.
         /// </summary>
-        public int TakeCount { get; }
+        int TakeCount { get; }
 
         /// <summary>
         /// Gets the skip count.
         /// </summary>
-        public int SkipCount { get; }
+        int SkipCount { get; }
 
         /// <summary>
         /// Gets a value indicating whether is distinct.
@@ -174,6 +174,9 @@ namespace Brochure.ORM
         IQuery<T1> Select();
     }
 
+    /// <summary>
+    /// The query.
+    /// </summary>
     public interface IQuery<T1, T2> : IQuery
     {
         /// <summary>
@@ -233,6 +236,9 @@ namespace Brochure.ORM
         IQuery<T1, T2> OrderByDesc(Expression<Func<T1, T2, object>> fun);
     }
 
+    /// <summary>
+    /// The query.
+    /// </summary>
     public interface IQuery<T1, T2, T3>
     {
         /// <summary>
@@ -292,6 +298,9 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3> OrderByDesc(Expression<Func<T1, T2, T3, object>> fun);
     }
 
+    /// <summary>
+    /// The query.
+    /// </summary>
     public interface IQuery<T1, T2, T3, T4> : IQuery
     {
         /// <summary>
@@ -351,6 +360,9 @@ namespace Brochure.ORM
         IQuery<T1, T2, T3, T4> OrderByDesc(Expression<Func<T1, T2, T3, T4, object>> fun);
     }
 
+    /// <summary>
+    /// The query.
+    /// </summary>
     public interface IQuery<T1, T2, T3, T4, T5> : IQuery
     {
         /// <summary>

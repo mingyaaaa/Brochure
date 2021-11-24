@@ -1,4 +1,5 @@
 using Brochure.ORM.Database;
+using Brochure.ORM.Extensions;
 using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
@@ -13,16 +14,16 @@ namespace Brochure.ORM
     public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase, new()
     {
         protected readonly DbContext context;
-        protected readonly DbData dbData;
+        protected readonly DbSql _dbSql;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public RepositoryBase(DbContext context)
+        public RepositoryBase(DbContext context, DbSql dbSql)
         {
             this.context = context;
-            dbData = context.Datas;
+            _dbSql = dbSql;
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<int> Delete(IWhereQuery query)
         {
-            var r = await Task.Run(() => dbData.Delete<T>(query)).ConfigureAwait(false);
+            var r = await Task.Run(() => context.Datas.Delete<T>(query)).ConfigureAwait(false);
             return r;
         }
 
@@ -44,7 +45,7 @@ namespace Brochure.ORM
         public async Task<T> Get(IWhereQuery<T> query)
         {
             var tQuery = Query.From<T>(query).Take(1);
-            var t = await Task.Run(() => dbData.Query<T>(tQuery)).ConfigureAwait(false);
+            var t = await Task.Run(() => context.Datas.Find<T>(tQuery)).ConfigureAwait(false);
             return t.FirstOrDefault();
         }
 
@@ -53,10 +54,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Insert(T entity)
+        public Task<int> Insert(T entity)
         {
-            var r = await Task.Run(() => dbData.Insert(entity)).ConfigureAwait(false);
-            return r;
+            return Insert(new List<T>() { entity });
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public async Task<int> Insert(IEnumerable<T> entity)
         {
-            var r = await Task.Run(() => dbData.InsertMany(entity)).ConfigureAwait(false);
+            var r = await Task.Run(() => context.Datas.InsertMany(entity)).ConfigureAwait(false);
             return r;
         }
 
@@ -78,7 +78,7 @@ namespace Brochure.ORM
         public async Task<IEnumerable<T>> List(IQuery<T> query)
         {
             query.Select<T>();
-            var t = await Task.Run(() => dbData.Query<T>(query)).ConfigureAwait(false);
+            var t = await Task.Run(() => context.Datas.Find<T>(query)).ConfigureAwait(false);
             return t;
         }
 
@@ -92,7 +92,7 @@ namespace Brochure.ORM
         {
             if (query == null)
                 throw new Exception("query不能为null");
-            var t = await Task.Run(() => dbData.Update<T>(entity, query)).ConfigureAwait(false);
+            var t = await Task.Run(() => context.Datas.Update<T>(entity, query)).ConfigureAwait(false);
             return t;
         }
     }
@@ -108,7 +108,7 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        protected RepositoryBase(DbContext context) : base(context)
+        protected RepositoryBase(DbContext context, DbSql dbSql) : base(context, dbSql)
         {
         }
 
@@ -164,12 +164,10 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="userEntrity">The user entrity.</param>
         /// <returns>A Task.</returns>
-        public async Task<T1> InsertAndGet(T1 userEntrity)
+        public Task<T1> InsertAndGet(T1 userEntrity)
         {
-            var a = await Insert(userEntrity);
-            if (a > 0)
-                return await base.Get(Query.Where<T1>(t => t.Id == userEntrity.Id));
-            return null;
+            var sql = _dbSql.GetInsertSql<T1>(userEntrity).Continue(Query.From<T1>().Where(t => t.Id == userEntrity.Id).Take(1));
+            return Task.Run(() => context.Datas.ExcuteQuery<T1>(sql).FirstOrDefault());
         }
 
         /// <summary>

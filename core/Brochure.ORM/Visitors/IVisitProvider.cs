@@ -4,8 +4,15 @@ using System.Linq;
 using System.Linq.Expressions;
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The visit provider.
+    /// </summary>
     public interface IVisitProvider
     {
+        /// <summary>
+        /// Builders the.
+        /// </summary>
+        /// <returns>A T.</returns>
         T Builder<T>() where T : ExpressionVisitor;
     }
 
@@ -13,11 +20,19 @@ namespace Brochure.ORM.Visitors
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisitProvider"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         public VisitProvider(
             IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
+        /// <summary>
+        /// Builders the.
+        /// </summary>
+        /// <returns>A T.</returns>
         public T Builder<T>() where T : ExpressionVisitor
         {
             var expressionVisitors = _serviceProvider.GetServices<ExpressionVisitor>();

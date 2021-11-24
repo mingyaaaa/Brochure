@@ -20,16 +20,37 @@ namespace Brochure.Core.Test
 
     public class A
     {
+        /// <summary>
+        /// Gets or sets the a str.
+        /// </summary>
         public string AStr { get; set; }
+        /// <summary>
+        /// Gets or sets the b object.
+        /// </summary>
         public B BObject { get; set; }
+        /// <summary>
+        /// Gets or sets the c.
+        /// </summary>
         public int C { get; set; }
+        /// <summary>
+        /// Gets or sets the date time.
+        /// </summary>
         public DateTime DateTime { get; set; }
     }
 
     public class B
     {
+        /// <summary>
+        /// Gets or sets the b str.
+        /// </summary>
         public string BStr { get; set; }
+        /// <summary>
+        /// Gets or sets the c.
+        /// </summary>
         public int C { get; set; }
+        /// <summary>
+        /// Gets or sets the date time.
+        /// </summary>
         public DateTime DateTime { get; set; }
     }
 

@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Brochure.ORMTest.Datas;
+using Brochure.ORM;
+using Brochure.ORM.Extensions;
 
 namespace LinqDbQueryTest.Querys
 {
@@ -16,10 +18,12 @@ namespace LinqDbQueryTest.Querys
     public class QuerySubTest : BaseTest
     {
         private readonly IQueryBuilder queryBuilder;
+        private readonly DbSql _dbSql;
 
         public QuerySubTest()
         {
             queryBuilder = base.Provider.GetService<IQueryBuilder>();
+            _dbSql = Provider.GetService<DbSql>();
         }
 
         [TestMethod]
@@ -77,6 +81,24 @@ namespace LinqDbQueryTest.Querys
             var q = Query.From(whereQuery).Take(1);
             var r = queryBuilder.Build(q);
             Assert.AreEqual("select * from `Students` where `Students`.`Id` = @p0 limit @p1", r.SQL);
+        }
+
+        [TestMethod]
+        public void TestOtherQuery()
+        {
+            var query = Query.From<Students>();
+            var q = Query.From<Classes>().Continue(query);
+            var sql = queryBuilder.Build(q);
+            Assert.AreEqual("select * from `Classes` ;select * from `Students`", sql.SQL);
+        }
+
+        [TestMethod]
+        public void TestInsertQuery()
+        {
+            var query = _dbSql.GetInsertSql<Students>(new Students());
+            var q = Query.From<Classes>().Continue(query);
+            var sql = queryBuilder.Build(q);
+            Assert.AreEqual("select * from `Classes` ;insert into `Students`(`ClassCount`,`No`) values(@p0,@p1)", sql.SQL);
         }
     }
 }

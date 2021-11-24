@@ -5,9 +5,23 @@ namespace Brochure.ORM.Visitors
 {
     public class OrderVisitor : ORMVisitor
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether is aes.
+        /// </summary>
         public bool IsAes { get; set; } = true;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrderVisitor"/> class.
+        /// </summary>
+        /// <param name="dbProvider">The db provider.</param>
+        /// <param name="dbOption">The db option.</param>
+        /// <param name="funcVisits">The func visits.</param>
         public OrderVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbProvider, dbOption, funcVisits) { }
+        /// <summary>
+        /// Visits the member init.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitMemberInit(MemberInitExpression node)
         {
             var list = new List<string>();
@@ -22,6 +36,11 @@ namespace Brochure.ORM.Visitors
             return node;
         }
 
+        /// <summary>
+        /// Visits the new.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitNew(NewExpression node)
         {
             var list = new List<string>();
@@ -34,6 +53,11 @@ namespace Brochure.ORM.Visitors
             return node;
         }
 
+        /// <summary>
+        /// Gets the sql.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>An object.</returns>
         public override object GetSql(Expression expression = null)
         {
             base.GetSql(expression);

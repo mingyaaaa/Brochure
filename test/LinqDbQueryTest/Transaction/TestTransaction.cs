@@ -65,8 +65,8 @@ namespace Brochure.ORMTest.Transaction
             aspectContextMock.Setup(t => t.ServiceProvider).Returns(services);
             factoryMock.SetupSequence(t => t.GetTransaction())
                 .Returns(new ORM.Database.Transaction(connectFactoryMock.Object))
-                .Returns(new InnerTransaction(dbOptionMock.Object))
-                .Returns(new InnerTransaction(dbOptionMock.Object));
+                .Returns(new InnerTransaction())
+                .Returns(new InnerTransaction());
 
             var tt = new TransactionAttribute
             {
@@ -144,9 +144,9 @@ namespace Brochure.ORMTest.Transaction
             {
                 IsDisable = false
             };
-            Assert.ThrowsException<Exception>(() =>
+            Assert.ThrowsExceptionAsync<Exception>(() =>
            {
-               tt1.Invoke(aspectContextMock.Object, t => { throw new Exception(); });
+               return tt1.Invoke(aspectContextMock.Object, t => { throw new Exception(); });
            });
             transactionMock.Verify(t => t.Rollback());
         }

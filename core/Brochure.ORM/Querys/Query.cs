@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Brochure.ORM.Querys
 {
+    /// <summary>
+    /// The query.
+    /// </summary>
     public class Query : IQuery, IWhereQuery
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Query"/> class.
+        /// </summary>
         public Query()
         {
             MainTables = new List<BaseSubQueryType>();
@@ -13,6 +20,7 @@ namespace Brochure.ORM.Querys
             JoinExpression = new List<(BaseSubQueryType, Expression)>();
             LeftJoinExpress = new List<(BaseSubQueryType, Expression)>();
             IsDistinct = false;
+            Parameters = new List<IDbDataParameter>();
         }
 
         /// <summary>
@@ -74,6 +82,16 @@ namespace Brochure.ORM.Querys
         /// Gets or sets the skip count.
         /// </summary>
         public int SkipCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the s q l.
+        /// </summary>
+        public string SQL { get; set; }
+
+        /// <summary>
+        /// Gets the parameters.
+        /// </summary>
+        public List<IDbDataParameter> Parameters { get; set; }
 
         /// <summary>
         /// Wheres the.
@@ -193,6 +211,7 @@ namespace Brochure.ORM.Querys
             des.SelectExpression = this.SelectExpression;
             des.WhereExpression = this.WhereExpression;
             des.WhereListExpression = this.WhereListExpression;
+            des.Parameters = this.Parameters;
         }
 
         /// <summary>

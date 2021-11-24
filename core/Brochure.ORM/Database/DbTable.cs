@@ -3,12 +3,21 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
 {
+    /// <summary>
+    /// The db table.
+    /// </summary>
     public abstract class DbTable
     {
         protected DbOption Option;
         private readonly DbSql dbSql;
         private readonly IConnectFactory connectFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTable"/> class.
+        /// </summary>
+        /// <param name="option">The option.</param>
+        /// <param name="dbSql">The db sql.</param>
+        /// <param name="connectFactory">The connect factory.</param>
         protected DbTable(DbOption option, DbSql dbSql, IConnectFactory connectFactory)
         {
             Option = option;
@@ -61,7 +70,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetCreateTableSql<T>();
+            command.CommandText = dbSql.GetCreateTableSql<T>().SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -94,7 +103,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateAndOpenConnection();
             var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetTableNameCountSql(tableName);
+            command.CommandText = dbSql.GetTableNameCountSql(tableName).SQL;
             var r = (long)(command.ExecuteScalar());
             return r >= 1;
         }
@@ -120,7 +129,6 @@ namespace Brochure.ORM.Database
             return Task.Run(() => DeleteTable(tableName));
         }
 
-
         /// <summary>
         /// Deletes the table async.
         /// </summary>
@@ -143,7 +151,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateAndOpenConnection();
             var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetDeleteTableSql(tableName);
+            command.CommandText = dbSql.GetDeleteTableSql(tableName).SQL;
             return command.ExecuteNonQuery();
         }
 
@@ -158,7 +166,6 @@ namespace Brochure.ORM.Database
         {
             return Task.Run(() => UpdateTableName(tableName, newTableName));
         }
-
 
         /// <summary>
         /// Updates the table name async.
@@ -186,7 +193,7 @@ namespace Brochure.ORM.Database
         {
             var connection = connectFactory.CreateConnection();
             var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetUpdateTableNameSql(tableName, newTableName);
+            command.CommandText = dbSql.GetUpdateTableNameSql(tableName, newTableName).SQL;
             return command.ExecuteNonQuery();
         }
     }

@@ -6,7 +6,13 @@ namespace Brochure.Core
 {
     public class Log
     {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
         internal static ILogger Logger { get; set; }
+        /// <summary>
+        /// Gets or sets the services.
+        /// </summary>
         internal static IServiceCollection Services { get; set; }
         private static ILoggerFactory factory;
         public Log()

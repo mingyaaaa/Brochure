@@ -162,7 +162,7 @@ namespace Brochure.ORMTest
             var sql = visitor.GetSql().ToString().Trim();
             var parmas = visitor.GetParameters();
             Assert.AreEqual(1, parmas.Count());
-            Assert.AreEqual("1", parmas.First().Value.Value);
+            Assert.AreEqual("1", parmas.First().Value);
             // Assert.AreEqual("`Peoples`.`Id` = @p0", sql);
         }
     }

@@ -11,6 +11,11 @@ namespace Brochure.ORM.Utils
 {
     public static class EntityUtil
     {
+        /// <summary>
+        /// As the table record.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An IDictionary.</returns>
         public static IDictionary<string, object> AsTableRecord<T>(T obj) where T : class
         {
             if (obj == null)

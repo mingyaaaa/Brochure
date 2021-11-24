@@ -10,6 +10,9 @@ namespace Brochure.Core.Models
             this.Plugin = plugins;
         }
 
+        /// <summary>
+        /// Gets the plugin.
+        /// </summary>
         public IPlugins Plugin { get; }
 
     }
