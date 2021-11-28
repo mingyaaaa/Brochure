@@ -19,7 +19,7 @@ namespace LinqDbQueryTest.Querys
             var mockContext = Fixture.Freeze<Mock<DbContext>>();
             mockContext.Setup(t => t.ExecuteScalarAsync(It.IsAny<ISql>())).ReturnsAsync(1);
             var tableContext = Fixture.Create<DbTable>();
-            var s = await tableContext.IsExistTableAsync<A>("test");
+            var s = await tableContext.IsExistTableAsync<A>();
             mockContext.Verify(t => t.ExecuteScalarAsync(It.IsAny<ISql>()));
         }
 

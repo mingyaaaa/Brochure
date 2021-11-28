@@ -16,7 +16,7 @@ namespace Brochure.ORM
         protected virtual ISqlResult BuildCountForDatabase(CountDatabaseSql countDatabaseSql)
         {
             var result = new ParmsSqlResult();
-            result.SQL = $"SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='{countDatabaseSql.DatabaseName}'";
+            result.SQL = $"SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='{countDatabaseSql.Database}'";
             return result;
         }
 
@@ -28,7 +28,7 @@ namespace Brochure.ORM
         protected virtual ISqlResult BuildDeleteDatabase(DeleteDatabaseSql deleteDatabaseSql)
         {
             var result = new ParmsSqlResult();
-            result.SQL = $"drop database {deleteDatabaseSql.DatabaseName}";
+            result.SQL = $"drop database {deleteDatabaseSql.Database}";
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace Brochure.ORM
         protected virtual ISqlResult BuildCreateDatabase(CreateDatabaseSql createDatabaseSql)
         {
             var result = new ParmsSqlResult();
-            result.SQL = $"create database {createDatabaseSql.DatabaseName}";
+            result.SQL = $"create database {createDatabaseSql.Database}";
             return result;
         }
 
@@ -64,7 +64,7 @@ namespace Brochure.ORM
         protected virtual ISqlResult BuildAllTableName(AllTableNamesSql allTableNamesSql)
         {
             var result = new ParmsSqlResult();
-            result.SQL = $"select table_name from information_schema.tables where table_schema='{allTableNamesSql.DatabaseName}'";
+            result.SQL = $"select table_name from information_schema.tables where table_schema='{allTableNamesSql.Database}'";
             return result;
         }
     }

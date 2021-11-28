@@ -12,18 +12,18 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>An ISql.</returns>
-        public static ISql CreateTable(Type type)
+        public static ISql CreateTable(Type type, string database = "")
         {
-            return new CreateTableSql(type);
+            return new CreateTableSql(type, database);
         }
 
         /// <summary>
         /// Creates the table.
         /// </summary>
         /// <returns>An ISql.</returns>
-        public static ISql CreateTable<T>()
+        public static ISql CreateTable<T>(string database = "")
         {
-            return CreateTable(typeof(T));
+            return CreateTable(typeof(T), database);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetCountTable(string tableName, string databaseName)
+        public static ISql GetCountTable(string tableName, string database = "")
         {
-            return new CountTableSql(tableName, databaseName);
+            return new CountTableSql(tableName, database);
         }
 
         /// <summary>
@@ -42,9 +42,9 @@ namespace Brochure.ORM
         /// <param name="oldName">The old name.</param>
         /// <param name="newName">The new name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql UpdateTableName(string oldName, string newName)
+        public static ISql UpdateTableName(string oldName, string newName, string database = "")
         {
-            return new UpdateTableNameSql(newName, oldName);
+            return new UpdateTableNameSql(newName, oldName, database);
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql DeleteTable(string tableName)
+        public static ISql DeleteTable(string tableName, string database = "")
         {
-            return new DeleteTableSql(tableName);
+            return new DeleteTableSql(tableName, database);
         }
     }
 
@@ -67,12 +67,15 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="CreateTableSql"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public CreateTableSql(Type type)
+        public CreateTableSql(Type type, string database)
         {
             TableType = type;
+            Database = database;
         }
 
         public Type TableType { get; }
+
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -82,7 +85,7 @@ namespace Brochure.ORM
     {
         public string TableName { get; }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CountTableSql"/> class.
@@ -107,13 +110,16 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="newName">The new name.</param>
         /// <param name="oldName">The old name.</param>
-        public UpdateTableNameSql(string newName, string oldName)
+        public UpdateTableNameSql(string newName, string oldName, string database)
         {
             NewName = newName;
             OldName = oldName;
+            Database = database;
         }
 
         public string NewName { get; }
+
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -127,9 +133,12 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="DeleteTableSql"/> class.
         /// </summary>
         /// <param name="tableName">The table name.</param>
-        public DeleteTableSql(string tableName)
+        public DeleteTableSql(string tableName, string database)
         {
             TableName = tableName;
+            Database = database;
         }
+
+        public string Database { get; set; }
     }
 }

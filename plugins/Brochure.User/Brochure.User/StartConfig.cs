@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Brochure.ORM;
 using Brochure.User.Entrities;
 using Microsoft.Extensions.Logging;
+using Brochure.ORM.Database;
 
 namespace Brochure.User
 {
@@ -34,10 +35,10 @@ namespace Brochure.User
             try
             {
                 using var scope = applicationBuilder.ApplicationServices.CreateScope();
-                var dbContext = scope.ServiceProvider.GetService<DbContext>();
-                var exist = await dbContext.Tables.IsExistTableAsync<UserEntrity>();
+                var dbTable = scope.ServiceProvider.GetService<DbTable>();
+                var exist = await dbTable.IsExistTableAsync<UserEntrity>();
                 if (!exist)
-                    await dbContext.Tables.CreateTableAsync<UserEntrity>();
+                    await dbTable.CreateTableAsync<UserEntrity>();
             }
             catch (Exception ex)
             {

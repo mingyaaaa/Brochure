@@ -37,21 +37,18 @@ namespace BenchmarkTest.BenchmarkTest
             }));
 
             service.AddDbContext<MysqlContent>(t => t.UseMySQL("server=192.168.0.6;database=test;uid=test;pwd=123456"));
-            //          using var dbcontext = new MySqlDbContext();
         }
 
         [Benchmark]
         public async Task Insert()
         {
-            //      using var dbcontext = new MySqlDbContext(true);
+            await using var dbContex = new MySqlDbContext(true);
             for (int i = 0; i < Count; i++)
             {
                 var a = new UserEntrity();
                 a.Age = 12;
                 a.CreateTime = 12;
-                //    dbcontext.Datas.Insert<UserEntrity>(a);
-                //var tQuery = Query.From<UserEntrity>(Query.Where<UserEntrity>(t => t.Id == a.Id)).Take(1);
-                //var tt = dbcontext.Datas.Query(tQuery);
+                await dbContex.Datas.InsertAsync<UserEntrity>(a);
             }
         }
 

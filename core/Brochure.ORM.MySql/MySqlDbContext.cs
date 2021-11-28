@@ -1,6 +1,7 @@
 ﻿using Brochure.Abstract;
 using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Brochure.ORM.MySql
         {
         }
 
-        public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder) : base(objectFactory, connectFactory, transactionManager, sqlBuilder)
+        public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScope serviceScope) : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope)
         {
         }
     }

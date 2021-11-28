@@ -14,8 +14,8 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8046" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8046" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8047" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8047" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3">

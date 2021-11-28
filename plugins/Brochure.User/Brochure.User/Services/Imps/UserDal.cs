@@ -1,4 +1,5 @@
 ﻿using Brochure.Abstract;
+using Brochure.ORM;
 using Brochure.ORM.Querys;
 using Brochure.User.Entrities;
 using Brochure.User.Repository;
@@ -15,7 +16,6 @@ namespace Brochure.User.Services.Imps
     public class UserDal : IUserDal
     {
         private readonly IUserRepository repository;
-        private readonly IQueryBuilder builder;
         private readonly IObjectFactory objectFactory;
 
         /// <summary>
@@ -24,10 +24,9 @@ namespace Brochure.User.Services.Imps
         /// <param name="repository">The repository.</param>
         /// <param name="builder">The builder.</param>
         /// <param name="objectFactory">The object factory.</param>
-        public UserDal(IUserRepository repository, IQueryBuilder builder, IObjectFactory objectFactory)
+        public UserDal(IUserRepository repository, IObjectFactory objectFactory)
         {
             this.repository = repository;
-            this.builder = builder;
             this.objectFactory = objectFactory;
         }
 
@@ -38,7 +37,7 @@ namespace Brochure.User.Services.Imps
         /// <returns>A ValueTask.</returns>
         public async ValueTask<IEnumerable<string>> DeleteUserReturnErrorIds(IEnumerable<string> ids)
         {
-            var userIds = await repository.DeleteManyReturnError(ids);
+            var userIds = await repository.DeleteManyReturnErrorAsync(ids);
             return userIds;
         }
 
@@ -49,7 +48,7 @@ namespace Brochure.User.Services.Imps
         /// <returns>A ValueTask.</returns>
         public async ValueTask<int> DeleteUsers(IEnumerable<string> ids)
         {
-            var r = await repository.DeleteMany(ids);
+            var r = await repository.DeleteManyAsync(ids);
             return r;
         }
 
@@ -64,7 +63,7 @@ namespace Brochure.User.Services.Imps
             var count = idsList.Count;
             if (count == 0)
                 return new List<UserEntrity>();
-            var entrity = await repository.List(ids);
+            var entrity = await repository.ListAsync(ids);
             return entrity;
         }
 
@@ -75,7 +74,7 @@ namespace Brochure.User.Services.Imps
         /// <returns>A ValueTask.</returns>
         public async ValueTask<UserEntrity> InsertAndGet(UserEntrity userEntrity)
         {
-            var r = await repository.InsertAndGet(userEntrity);
+            var r = await repository.InsertAndGetAsync(userEntrity);
             return r;
         }
 
@@ -86,7 +85,7 @@ namespace Brochure.User.Services.Imps
         /// <returns>A ValueTask.</returns>
         public async ValueTask<int> InsertUsers(IEnumerable<UserEntrity> users)
         {
-            var r = await repository.Insert(users);
+            var r = await repository.InsertAsync(users);
             return r;
         }
 
@@ -99,7 +98,7 @@ namespace Brochure.User.Services.Imps
         public async ValueTask<int> UpdateUser(string id, IRecord record)
         {
             var useEntiry = objectFactory.Create<UserEntrity>(record);
-            var r = await repository.Update(id, useEntiry);
+            var r = await repository.UpdateAsync(id, useEntiry);
             return r;
         }
     }

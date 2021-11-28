@@ -8,5 +8,9 @@ namespace Brochure.ORM.MySql
         public MySqlDbTable(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public MySqlDbTable(bool isBeginTransaction = false) : base(new MySqlDbContext(isBeginTransaction))
+        {
+        }
     }
 }

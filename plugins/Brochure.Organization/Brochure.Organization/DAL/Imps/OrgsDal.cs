@@ -23,22 +23,22 @@ namespace Brochure.Organization.DAL.Imps
 
         public async ValueTask<int> DeleteOrg(string id)
         {
-            return await _oraginzationRepository.Delete(id);
+            return await _oraginzationRepository.DeleteAsync(id);
         }
 
         public async ValueTask<IEnumerable<string>> DeleteOrgRtnErrorIds(IEnumerable<string> ids)
         {
-            return await _oraginzationRepository.DeleteManyReturnError(ids);
+            return await _oraginzationRepository.DeleteManyReturnErrorAsync(ids);
         }
 
         public async ValueTask<int> DeleteOrgs(IEnumerable<string> ids)
         {
-            return await _oraginzationRepository.DeleteMany(ids);
+            return await _oraginzationRepository.DeleteManyAsync(ids);
         }
 
         public async ValueTask<OrganizationModel> GetOrg(string id)
         {
-            var org = await _oraginzationRepository.Get(id);
+            var org = await _oraginzationRepository.GetAsync(id);
             if (org != null)
                 return _objectFactory.Create<OrganizationEntiry, OrganizationModel>(org);
             return null;
@@ -46,20 +46,20 @@ namespace Brochure.Organization.DAL.Imps
 
         public async ValueTask<IEnumerable<OrganizationModel>> GetOrgs(IEnumerable<string> ids)
         {
-            var orgs = await _oraginzationRepository.List(ids);
+            var orgs = await _oraginzationRepository.ListAsync(ids);
             return orgs.Select(t => _objectFactory.Create<OrganizationEntiry, OrganizationModel>(t)).ToList();
         }
 
         public async ValueTask<int> InsertOrgs(IEnumerable<ReqAddOrgModel> reqAddOrgModels)
         {
             var list = reqAddOrgModels.Select(t => _objectFactory.Create<ReqAddOrgModel, OrganizationEntiry>(t));
-            return await _oraginzationRepository.Insert(list);
+            return await _oraginzationRepository.InsertAsync(list);
         }
 
         public async ValueTask<int> UpdateOrg(string id, IRecord record)
         {
             var org = _objectFactory.Create<OrganizationEntiry>(record);
-            return await _oraginzationRepository.Update(id, org);
+            return await _oraginzationRepository.UpdateAsync(id, org);
         }
     }
 }

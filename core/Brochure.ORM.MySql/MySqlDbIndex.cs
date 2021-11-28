@@ -8,5 +8,9 @@ namespace Brochure.ORM.MySql
         public MySqlDbIndex(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public MySqlDbIndex(bool isBeginTransaction = false) : base(new MySqlDbContext(isBeginTransaction))
+        {
+        }
     }
 }

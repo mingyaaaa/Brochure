@@ -1,4 +1,6 @@
 using Brochure.ORM.Atrributes;
+using System;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
@@ -6,9 +8,11 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The db table.
     /// </summary>
-    public abstract class DbTable
+    public abstract class DbTable : IAsyncDisposable, ITransaction
     {
         private readonly DbContext _dbContext;
+
+        public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbTable"/> class.
@@ -26,10 +30,10 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <returns>A Task.</returns>
         [Transaction]
-        public async Task<long> TryCreateTableAsync<T>(string databaseName)
+        public async Task<long> TryCreateTableAsync<T>()
         {
             var tableName = TableUtlis.GetTableName<T>();
-            var isExist = await IsExistTableAsync(tableName, databaseName);
+            var isExist = await IsExistTableAsync(tableName);
             if (!isExist)
                 return await CreateTableAsync<T>();
             return -1;
@@ -63,9 +67,9 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>A bool.</returns>
-        protected virtual async Task<bool> IsExistTableAsync(string tableName, string databaseName)
+        protected virtual async Task<bool> IsExistTableAsync(string tableName)
         {
-            var sql = Sql.GetCountTable(tableName, databaseName);
+            var sql = Sql.GetCountTable(tableName);
             var rr = await _dbContext.ExecuteScalarAsync(sql);
             var r = (int)rr;
             return r >= 1;
@@ -75,10 +79,10 @@ namespace Brochure.ORM.Database
         /// Are the exist table.
         /// </summary>
         /// <returns>A bool.</returns>
-        public virtual Task<bool> IsExistTableAsync<T>(string databaseName)
+        public virtual Task<bool> IsExistTableAsync<T>()
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return IsExistTableAsync(tableName, databaseName);
+            return IsExistTableAsync(tableName);
         }
 
         /// <summary>
@@ -112,9 +116,9 @@ namespace Brochure.ORM.Database
         /// <param name="newTableName">The new table name.</param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public async Task<int> TryUpdateTableNameAsync(string tableName, string newTableName, string databaseName)
+        public async Task<int> TryUpdateTableNameAsync(string tableName, string newTableName)
         {
-            var isExist = await IsExistTableAsync(tableName, databaseName);
+            var isExist = await IsExistTableAsync(tableName);
             if (!isExist)
                 return -1;
             return await UpdateTableNameAsync(tableName, newTableName);
@@ -131,6 +135,21 @@ namespace Brochure.ORM.Database
         {
             var sql = Sql.UpdateTableName(tableName, newTableName);
             return _dbContext.ExcuteNoQueryAsync(sql);
+        }
+
+        public Task CommitAsync()
+        {
+            return _dbContext.CommitAsync();
+        }
+
+        public Task RollbackAsync()
+        {
+            return _dbContext.RollbackAsync();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _dbContext.DisposeAsync();
         }
     }
 }

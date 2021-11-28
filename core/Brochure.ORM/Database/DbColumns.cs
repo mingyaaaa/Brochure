@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using Brochure.ORM.Atrributes;
 
@@ -7,9 +8,11 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The db columns.
     /// </summary>
-    public abstract class DbColumns
+    public abstract class DbColumns : IAsyncDisposable, ITransaction
     {
         private readonly DbContext _dbContext;
+
+        public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbColumns"/> class.
@@ -158,6 +161,21 @@ namespace Brochure.ORM.Database
         {
             var sql = Sql.GetAddColumnSql(tableName, columnName, typeCode, isNotNull);
             return _dbContext.ExcuteNoQueryAsync(sql);
+        }
+
+        public Task CommitAsync()
+        {
+            return _dbContext.CommitAsync();
+        }
+
+        public Task RollbackAsync()
+        {
+            return _dbContext.RollbackAsync();
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _dbContext.DisposeAsync();
         }
     }
 }

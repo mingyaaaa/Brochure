@@ -7,6 +7,7 @@ using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Brochure.ORM.Visitors;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.ORMTest
 {
@@ -14,16 +15,16 @@ namespace Brochure.ORMTest
     {
         public class MySqlDbContext : DbContext
         {
-            public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder) : base(objectFactory, connectFactory, transactionManager, sqlBuilder)
+            public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScope serviceScope) : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope)
             {
             }
         }
 
         public class TestContext
         {
-            public TestContext(IConnectFactory connectFactory, ITransactionManager transactionManager, IObjectFactory objectFactory, ISqlBuilder sqlBuilder)
+            public TestContext(IConnectFactory connectFactory, ITransactionManager transactionManager, IObjectFactory objectFactory, ISqlBuilder sqlBuilder, IServiceScope serviceScope)
             {
-                var dbContext = new MySqlDbContext(objectFactory, connectFactory, transactionManager, sqlBuilder);
+                var dbContext = new MySqlDbContext(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope);
             }
         }
 

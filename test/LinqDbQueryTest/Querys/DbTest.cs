@@ -98,7 +98,8 @@ namespace Brochure.ORMTest.Querys
         [TestMethod]
         public void TestDbTable()
         {
-            var sql = Sql.GetCountTable("testTable", "testdb");
+            var sql = Sql.GetCountTable("testTable");
+            sql.Database = "testdb";
             var sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable' and TABLE_SCHEMA ='testdb'", sqlResult.SQL);
             sql = Sql.GetAllTableName("testdb");
@@ -129,10 +130,12 @@ namespace Brochure.ORMTest.Querys
             var sql = Sql.GetAddColumnSql("testTable", "testColumn", System.TypeCode.String, true, 200);
             var sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("alter table testTable add column testColumn nvarchar(200) not null", sqlResult.SQL);
-            sql = Sql.GetColumnsCount("testTable", "testColumn", "testdb");
+            sql = Sql.GetColumnsCount("testTable", "testColumn");
+            sql.Database = "testdb";
             sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("select COUNT(1) from information_schema.columns WHERE table_schema='testdb' and table_name = 'testTable' and column_name = 'testColumn'", sqlResult.SQL);
-            sql = Sql.GetColumsNames("testdb", "testTable");
+            sql = Sql.GetColumsNames("testTable");
+            sql.Database = "testdb";
             sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("select column_name from information_schema.columns where table_schema='testdb' and table_name='testTable'", sqlResult.SQL);
             sql = Sql.GetDeleteColumnSql("testTable", "testColumn");

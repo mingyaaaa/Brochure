@@ -11,9 +11,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="obj">The obj.</param>
         /// <returns>An ISql.</returns>
-        public static ISql InsertSql<T>(T obj)
+        public static ISql InsertSql<T>(T obj, string database = "")
         {
-            return new InsertSql(obj);
+            return new InsertSql(obj, database);
         }
 
         /// <summary>
@@ -21,9 +21,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="whereQuery">The where query.</param>
         /// <returns>An ISql.</returns>
-        public static ISql DeleteSql<T>(Expression<Func<T, bool>> expression)
+        public static ISql DeleteSql<T>(Expression<Func<T, bool>> expression, string database = "")
         {
-            return new DeleteSql(typeof(T), Query.Where(expression));
+            return new DeleteSql(typeof(T), Query.Where(expression), database);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="whereQuery">The where query.</param>
         /// <returns>An ISql.</returns>
-        public static ISql DeleteSql<T>(IWhereQuery whereQuery = null)
+        public static ISql DeleteSql<T>(IWhereQuery whereQuery = null, string database = "")
         {
-            return new DeleteSql(typeof(T), whereQuery);
+            return new DeleteSql(typeof(T), whereQuery, database);
         }
 
         /// <summary>
@@ -42,9 +42,9 @@ namespace Brochure.ORM
         /// <param name="obj">The obj.</param>
         /// <param name="whereQuery">The where query.</param>
         /// <returns>An ISql.</returns>
-        public static ISql UpdateSql<T>(object obj, Expression<Func<T, bool>> expression)
+        public static ISql UpdateSql<T>(object obj, Expression<Func<T, bool>> expression, string database = "")
         {
-            return UpdateSql(typeof(T), obj, Query.Where(expression));
+            return UpdateSql(typeof(T), obj, Query.Where(expression), database);
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace Brochure.ORM
         /// <param name="obj">The obj.</param>
         /// <param name="whereQuery">The where query.</param>
         /// <returns>An ISql.</returns>
-        public static ISql UpdateSql<T>(object obj, IWhereQuery whereQuery)
+        public static ISql UpdateSql<T>(object obj, IWhereQuery whereQuery, string database = "")
         {
-            return UpdateSql(typeof(T), obj, whereQuery);
+            return UpdateSql(typeof(T), obj, whereQuery, database);
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace Brochure.ORM
         /// <param name="obj">The obj.</param>
         /// <param name="whereQuery">The where query.</param>
         /// <returns>An ISql.</returns>
-        public static ISql UpdateSql(Type type, object obj, IWhereQuery whereQuery)
+        public static ISql UpdateSql(Type type, object obj, IWhereQuery whereQuery, string database = "")
         {
-            return new UpdateSql(type, obj, whereQuery);
+            return new UpdateSql(type, obj, whereQuery, database);
         }
     }
 
@@ -86,14 +86,20 @@ namespace Brochure.ORM
         public IWhereQuery WhereQuery { get; set; }
 
         /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
+        public string Database { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DeleteSql"/> class.
         /// </summary>
         /// <param name="table">The table.</param>
         /// <param name="whereQuery">The where query.</param>
-        public DeleteSql(Type table, IWhereQuery whereQuery)
+        public DeleteSql(Type table, IWhereQuery whereQuery, string database)
         {
             Table = table;
             WhereQuery = whereQuery;
+            Database = database;
         }
     }
 
@@ -106,15 +112,21 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="InsertSql"/> class.
         /// </summary>
         /// <param name="table">The table.</param>
-        public InsertSql(object table)
+        public InsertSql(object table, string database)
         {
             Table = table;
+            Database = database;
         }
 
         /// <summary>
         /// Gets or sets the table.
         /// </summary>
         public object Table { get; set; }
+
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -138,16 +150,22 @@ namespace Brochure.ORM
         public IWhereQuery WhereQuery { get; set; }
 
         /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
+        public string Database { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UpdateSql"/> class.
         /// </summary>
         /// <param name="table">The table.</param>
         /// <param name="updateObj">The update obj.</param>
         /// <param name="whereQuery">The where query.</param>
-        public UpdateSql(Type table, object updateObj, IWhereQuery whereQuery)
+        public UpdateSql(Type table, object updateObj, IWhereQuery whereQuery, string database)
         {
             Table = table;
             UpdateObj = updateObj;
             WhereQuery = whereQuery;
+            Database = database;
         }
     }
 }

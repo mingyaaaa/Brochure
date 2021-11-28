@@ -1,44 +1,15 @@
 using Brochure.Organization.Entrities;
 using Brochure.ORM;
+using Brochure.ORM.Database;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Brochure.Organization.Repository
 {
-    public class OrganizationRepository : RepositoryBase<OrganizationEntiry>, IOrganizationRepository
+    public class OrganizationRepository : RepositoryBase<OrganizationEntiry, string>, IOrganizationRepository
     {
-        public OrganizationRepository(DbContext context, DbSql dbSql) : base(context, dbSql)
+        public OrganizationRepository(DbData dbData, DbContext dbContext) : base(dbData, dbContext)
         {
-        }
-
-        public Task<int> Delete(string id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<int> DeleteMany(IEnumerable<string> ids)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IEnumerable<string>> DeleteManyReturnError(IEnumerable<string> ids)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<OrganizationEntiry> Get(string id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IList<OrganizationEntiry>> List(IEnumerable<string> ids)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<int> Update(string id, OrganizationEntiry org)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

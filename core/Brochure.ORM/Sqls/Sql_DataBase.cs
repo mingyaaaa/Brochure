@@ -66,13 +66,13 @@
         /// <param name="databaseName">The database name.</param>
         public CountDatabaseSql(string databaseName)
         {
-            DatabaseName = databaseName;
+            Database = databaseName;
         }
 
         /// <summary>
         /// Gets the database name.
         /// </summary>
-        public string DatabaseName { get; }
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -86,13 +86,13 @@
         /// <param name="databaseName">The database name.</param>
         public DeleteDatabaseSql(string databaseName)
         {
-            DatabaseName = databaseName;
+            Database = databaseName;
         }
 
         /// <summary>
         /// Gets the database name.
         /// </summary>
-        public string DatabaseName { get; }
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -106,13 +106,13 @@
         /// <param name="databaseName">The database name.</param>
         public AllTableNamesSql(string databaseName)
         {
-            DatabaseName = databaseName;
+            Database = databaseName;
         }
 
         /// <summary>
         /// Gets the database name.
         /// </summary>
-        public string DatabaseName { get; }
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -126,13 +126,13 @@
         /// <param name="databaseName">The database name.</param>
         public CreateDatabaseSql(string databaseName)
         {
-            DatabaseName = databaseName;
+            Database = databaseName;
         }
 
         /// <summary>
         /// Gets the database name.
         /// </summary>
-        public string DatabaseName { get; }
+        public string Database { get; set; }
     }
 
     /// <summary>
@@ -140,5 +140,6 @@
     /// </summary>
     public class AllDatabaseSql : ISql
     {
+        public string Database { get; set; }
     }
 }

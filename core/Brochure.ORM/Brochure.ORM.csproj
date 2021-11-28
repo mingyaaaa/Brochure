@@ -12,6 +12,7 @@
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
     <None Remove="Extensions\IQueryExtensions.cs~RF2645543.TMP" />
+    <None Remove="Sqls\ISql.cs~RF69f51a5.TMP" />
     <None Remove="Sqls\SqlBuilder_Database.cs~RF653e07.TMP" />
     <None Remove="Sqls\SqlBuilder_Index.cs~RFcbdefa.TMP" />
   </ItemGroup>

@@ -13,9 +13,9 @@ namespace Brochure.ORM
         /// <param name="databaseName">The database name.</param>
         /// <param name="tableName">The table name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetColumsNames(string databaseName, string tableName)
+        public static ISql GetColumsNames(string tableName, string database = "")
         {
-            return new ColumsNamesSql(tableName, databaseName);
+            return new ColumsNamesSql(tableName, database);
         }
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace Brochure.ORM
         /// <param name="columnName">The column name.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetColumnsCount(string tableName, string columnName, string databaseName = "")
+        public static ISql GetColumnsCount(string tableName, string columnName, string database = "")
         {
-            return new CountColumsSql(tableName, columnName, databaseName);
+            return new CountColumsSql(tableName, columnName, database);
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetRenameColumnNameSql(string tableName, string oldName, string newName, TypeCode typeCode, int length = 0, string databaseName = "")
+        public static ISql GetRenameColumnNameSql(string tableName, string oldName, string newName, TypeCode typeCode, int length = 0, string database = "")
         {
-            return new RenameColumnSql(tableName, oldName, newName, typeCode, length, databaseName);
+            return new RenameColumnSql(tableName, oldName, newName, typeCode, length, database);
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetUpdateColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string databaseName = "")
+        public static ISql GetUpdateColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string database = "")
         {
-            return new UpdateColumnsSql(tableName, columnName, typeCode, isNotNull, databaseName, length);
+            return new UpdateColumnsSql(tableName, columnName, typeCode, isNotNull, length, database);
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetAddColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string databaseName = "")
+        public static ISql GetAddColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string database = "")
         {
-            return new AddColumnsSql(tableName, columnName, typeCode, isNotNull, databaseName, length);
+            return new AddColumnsSql(tableName, columnName, typeCode, isNotNull, length, database);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace Brochure.ORM
         /// <param name="columnName">The column name.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetDeleteColumnSql(string tableName, string columnName, string databaseName = "")
+        public static ISql GetDeleteColumnSql(string tableName, string columnName, string database = "")
         {
-            return new DeleteColumsSql(tableName, columnName, databaseName);
+            return new DeleteColumsSql(tableName, columnName, database);
         }
     }
 
@@ -95,18 +95,18 @@ namespace Brochure.ORM
     {
         public string TableName { get; }
 
+        public string Database { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ColumsNamesSql"/> class.
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <param name="databaseName">The database name.</param>
-        public ColumsNamesSql(string tableName, string databaseName)
+        public ColumsNamesSql(string tableName, string database)
         {
             TableName = tableName;
-            DatabaseName = databaseName;
+            Database = database;
         }
-
-        public string DatabaseName { get; }
     }
 
     /// <summary>
@@ -120,14 +120,14 @@ namespace Brochure.ORM
         /// <param name="tableName">The table name.</param>
         /// <param name="columnsName">The colums name.</param>
         /// <param name="database">The database.</param>
-        public CountColumsSql(string tableName, string columnsName, string database = "")
+        public CountColumsSql(string tableName, string columnsName, string database)
         {
-            Database = database;
             TableName = tableName;
             ColumnsName = columnsName;
+            Database = database;
         }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         public string TableName { get; }
 
@@ -148,7 +148,7 @@ namespace Brochure.ORM
         /// <param name="typeCode">The type code.</param>
         /// <param name="lentgh">The lentgh.</param>
         /// <param name="database">The database.</param>
-        public RenameColumnSql(string tableName, string oldName, string newName, TypeCode typeCode, int lentgh = 0, string database = "")
+        public RenameColumnSql(string tableName, string oldName, string newName, TypeCode typeCode, int lentgh, string database)
         {
             Database = database;
             TableName = tableName;
@@ -158,7 +158,7 @@ namespace Brochure.ORM
             Lentgh = lentgh;
         }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         public string TableName { get; }
 
@@ -185,17 +185,17 @@ namespace Brochure.ORM
         /// <param name="isNotNull">If true, is not null.</param>
         /// <param name="database">The database.</param>
         /// <param name="lentgh">The lentgh.</param>
-        public UpdateColumnsSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, string database = "", int lentgh = 0)
+        public UpdateColumnsSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int lentgh, string database)
         {
-            Database = database;
             TableName = tableName;
             ColumnName = columnName;
             TypeCode = typeCode;
             Lentgh = lentgh;
+            Database = database;
             IsNotNull = isNotNull;
         }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         public string TableName { get; }
 
@@ -222,17 +222,17 @@ namespace Brochure.ORM
         /// <param name="isNotNull">If true, is not null.</param>
         /// <param name="database">The database.</param>
         /// <param name="lentgh">The lentgh.</param>
-        public AddColumnsSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, string database = "", int lentgh = 0)
+        public AddColumnsSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int lentgh, string database)
         {
-            Database = database;
             TableName = tableName;
             ColumnName = columnName;
             TypeCode = typeCode;
             Lentgh = lentgh;
+            Database = database;
             IsNotNull = isNotNull;
         }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         public string TableName { get; }
 
@@ -265,14 +265,14 @@ namespace Brochure.ORM
         /// <param name="tableName">The table name.</param>
         /// <param name="columsName">The colums name.</param>
         /// <param name="database">The database.</param>
-        public DeleteColumsSql(string tableName, string columsName, string database = "")
+        public DeleteColumsSql(string tableName, string columsName, string database)
         {
-            Database = database;
             TableName = tableName;
             ColumsName = columsName;
+            Database = database;
         }
 
-        public string Database { get; }
+        public string Database { get; set; }
 
         public string TableName { get; }
 

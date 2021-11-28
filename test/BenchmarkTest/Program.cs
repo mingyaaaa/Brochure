@@ -20,10 +20,10 @@ namespace BenchmarkTest
     {
         private async static Task Main(string[] args)
         {
-            //var insert = new InsertTest();
+            var insert = new InsertTest();
             //Stopwatch stopwatch = new Stopwatch();
             //stopwatch.Start();
-            //await insert.Insert();
+            await insert.Insert();
             //Console.WriteLine(stopwatch.ElapsedMilliseconds);
             //stopwatch.Stop();
 
@@ -38,7 +38,7 @@ namespace BenchmarkTest
             //stopwatch.Stop();
             //Console.ReadKey();
 
-            BenchmarkRunner.Run<ReflectorUtilTest>();
+            //     BenchmarkRunner.Run<ReflectorUtilTest>();
         }
     }
 }

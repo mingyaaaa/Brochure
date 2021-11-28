@@ -12,7 +12,7 @@ namespace Brochure.ORM
         protected virtual ISqlResult BuildColumnNames(ColumsNamesSql columsNamesSql)
         {
             var r = new ParmsSqlResult();
-            r.SQL = $"select column_name from information_schema.columns where table_schema='{columsNamesSql.DatabaseName}' and table_name='{columsNamesSql.TableName}'";
+            r.SQL = $"select column_name from information_schema.columns where table_schema='{columsNamesSql.Database}' and table_name='{columsNamesSql.TableName}'";
             return r;
         }
 

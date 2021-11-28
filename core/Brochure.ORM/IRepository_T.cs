@@ -93,7 +93,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        Task<IList<T1>> ListASync(IEnumerable<T2> ids);
+        Task<IList<T1>> ListAsync(IEnumerable<T2> ids);
 
         /// <summary>
         /// Updates the.

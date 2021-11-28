@@ -128,7 +128,7 @@ namespace Brochure.ORM.MySql
         protected override ISqlResult BuildTableCount(CountTableSql countTableSql)
         {
             var result = new ParmsSqlResult();
-            result.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{countTableSql.TableName}' and TABLE_SCHEMA ='{countTableSql.Database }'";
+            result.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{countTableSql.TableName}' and TABLE_SCHEMA ='{countTableSql.Database}'";
             return result;
         }
     }

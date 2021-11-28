@@ -1,3 +1,5 @@
+using System;
+using System.Data;
 using System.Threading.Tasks;
 using Brochure.ORM.Atrributes;
 
@@ -6,7 +8,7 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The db index.
     /// </summary>
-    public abstract class DbIndex
+    public abstract class DbIndex : IAsyncDisposable, ITransaction
     {
         private readonly DbContext _dbContext;
 
@@ -19,6 +21,13 @@ namespace Brochure.ORM.Database
         protected DbIndex(DbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
+
+        public Task CommitAsync()
+        {
+            return _dbContext.CommitAsync();
         }
 
         /// <summary>
@@ -47,6 +56,16 @@ namespace Brochure.ORM.Database
         {
             var sql = Sql.DeleteIndex(tableName, indexName);
             return _dbContext.ExcuteNoQueryAsync(sql);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _dbContext.DisposeAsync();
+        }
+
+        public Task RollbackAsync()
+        {
+            return _dbContext.RollbackAsync();
         }
     }
 }

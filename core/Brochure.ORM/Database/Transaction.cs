@@ -8,17 +8,12 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The transaction.
     /// </summary>
-    public interface ITransaction : IDisposable
+    public interface ITransaction
     {
         /// <summary>
         /// Gets the isolation level.
         /// </summary>
         IsolationLevel IsolationLevel { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether is complete.
-        /// </summary>
-        bool IsComplete { get; }
 
         /// <summary>
         /// Commits the.
@@ -29,20 +24,14 @@ namespace Brochure.ORM.Database
         /// Rollbacks the.
         /// </summary>
         Task RollbackAsync();
-
-        /// <summary>
-        /// Gets the db transaction.
-        /// </summary>
-        /// <returns>An IDbTransaction.</returns>
-        Task<DbTransaction> GetDbTransactionAsync();
     }
 
     /// <summary>
     /// The transaction.
     /// </summary>
-    public class Transaction : ITransaction
+    public class Transaction : ITransaction, IDisposable
     {
-        private readonly DbTransaction dbTransaction;
+        private DbTransaction dbTransaction;
         private readonly IConnectFactory _connectFactory;
 
         /// <summary>
@@ -53,11 +42,6 @@ namespace Brochure.ORM.Database
         {
             _connectFactory = connectFactory;
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is complete.
-        /// </summary>
-        public bool IsComplete { get; set; }
 
         /// <summary>
         /// Gets the isolation level.
@@ -79,8 +63,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         public void Dispose()
         {
-            //         _connectFactory.Dispose();
-            IsComplete = true;
+            dbTransaction?.Dispose();
         }
 
         /// <summary>
@@ -90,7 +73,9 @@ namespace Brochure.ORM.Database
         public async Task<DbTransaction> GetDbTransactionAsync()
         {
             var dbConnection = await _connectFactory.CreateAndOpenConnectionAsync();
-            return await dbConnection.BeginTransactionAsync().ConfigureAwait(false);
+            if (dbTransaction == null)
+                dbTransaction = await dbConnection.BeginTransactionAsync().ConfigureAwait(false);
+            return dbTransaction;
         }
 
         /// <summary>
@@ -106,7 +91,7 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The inner transaction.
     /// </summary>
-    public class InnerTransaction : ITransaction
+    public class InnerTransaction : ITransaction, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InnerTransaction"/> class.

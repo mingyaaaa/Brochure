@@ -15,5 +15,9 @@ namespace Brochure.ORM.MySql
         /// <param name="dbSql">The db sql.</param>
         /// <param name="connectFactory">The connect factory.</param>
         public MySqlDbDatabase(DbContext dbContext) : base(dbContext) { }
+
+        public MySqlDbDatabase(bool isBeginTransaction = false) : base(new MySqlDbContext(isBeginTransaction))
+        {
+        }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
@@ -5,9 +7,11 @@ namespace Brochure.ORM.Database
     /// <summary>
     /// The db database.
     /// </summary>
-    public abstract class DbDatabase
+    public abstract class DbDatabase : ITransaction, IAsyncDisposable
     {
         private readonly DbContext _dbContext;
+
+        public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbDatabase"/> class.
@@ -79,6 +83,21 @@ namespace Brochure.ORM.Database
             var r = await _dbContext.ExecuteScalarAsync(sql);
             var rr = (int)r;
             return rr >= 1;
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return _dbContext.DisposeAsync();
+        }
+
+        public Task CommitAsync()
+        {
+            return _dbContext.CommitAsync();
+        }
+
+        public Task RollbackAsync()
+        {
+            return _dbContext.RollbackAsync();
         }
     }
 }

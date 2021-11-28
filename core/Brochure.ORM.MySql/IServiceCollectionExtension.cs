@@ -40,6 +40,7 @@ namespace Brochure.ORM.MySql
             services.TryAddScoped<ISqlBuilder, MySqlSqlBuilder>();
             services.TryAddScoped<ITransactionManager, MySqlTransactionManager>();
             services.TryAddScoped<DbContext, MySqlDbContext>();
+            services.AddSingleton<TypeMap, MySqlTypeMap>();
             return services;
         }
     }
