@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
 using AspectCore.Extensions.DependencyInjection;
@@ -41,7 +42,7 @@ namespace Brochure.ORMTest.Transaction
         }
 
         [TestMethod]
-        public void TestTransactionDisableFalse()
+        public async Task TestTransactionDisableFalse()
         {
             var transactionManagerMock = new Mock<ITransactionManager>();
             var aspectContextMock = new Mock<AspectContext>();
@@ -51,16 +52,15 @@ namespace Brochure.ORMTest.Transaction
             var dbOptionMock = new Mock<DbOption>();
             var transactionMock = new Mock<ITransaction>();
             var connectFactoryMock = new Mock<IConnectFactory>();
-            var IdbConnectMock = new Mock<IDbConnection>();
-            var IdbTransactionMock = new Mock<IDbTransaction>();
+            var IdbConnectMock = new Mock<DbConnection>();
+            var IdbTransactionMock = new Mock<DbTransaction>();
             var services = Mock.Of<IServiceProvider>(sp =>
 
                sp.GetService(typeof(ITransactionManager)) == transactionManagerMock.Object &&
                sp.GetService(typeof(DbOption)) == dbOptionMock.Object &&
                sp.GetService(typeof(ITransactionFactory)) == factoryMock.Object
             );
-            IdbConnectMock.Setup(t => t.BeginTransaction()).Returns(IdbTransactionMock.Object);
-            connectFactoryMock.Setup(t => t.CreateAndOpenConnection()).Returns(IdbConnectMock.Object);
+            connectFactoryMock.Setup(t => t.CreateAndOpenConnectionAsync()).ReturnsAsync(IdbConnectMock.Object);
 
             aspectContextMock.Setup(t => t.ServiceProvider).Returns(services);
             factoryMock.SetupSequence(t => t.GetTransaction())
@@ -72,7 +72,7 @@ namespace Brochure.ORMTest.Transaction
             {
                 IsDisable = false
             };
-            tt.Invoke(aspectContextMock.Object, mockDelegateMock.Object);
+            await tt.Invoke(aspectContextMock.Object, mockDelegateMock.Object);
             transactionManagerMock.Verify(t => t.AddTransaction(It.IsAny<ORM.Database.Transaction>()));
             transactionManagerMock.Verify(t => t.RemoveTransaction(It.IsAny<ITransaction>()));
         }
@@ -87,7 +87,7 @@ namespace Brochure.ORMTest.Transaction
             var factoryMock = new Mock<ITransactionFactory>();
             var dbOptionMock = new Mock<DbOption>();
             var transactionMock = new Mock<ITransaction>();
-            var dbTransactionMock = new Mock<IDbTransaction>();
+            var dbTransactionMock = new Mock<DbTransaction>();
             var manager = new TransactionManager();
             var services = Mock.Of<IServiceProvider>(sp =>
                sp.GetService(typeof(ITransactionManager)) == manager &&
@@ -104,13 +104,13 @@ namespace Brochure.ORMTest.Transaction
                 IsDisable = false
             };
             tt.Invoke(aspectContextMock.Object, mockDelegateMock.Object);
-            transactionMock.Verify(t => t.Commit());
+            transactionMock.Verify(t => t.CommitAsync());
             var tt1 = new TransactionAttribute
             {
                 IsDisable = false
             };
             tt1.Invoke(aspectContextMock.Object, mockDelegateMock.Object);
-            transactionMock.Verify(t => t.Commit(), Times.AtLeast(2));
+            transactionMock.Verify(t => t.CommitAsync(), Times.AtLeast(2));
         }
 
         [TestMethod]
@@ -148,19 +148,13 @@ namespace Brochure.ORMTest.Transaction
            {
                return tt1.Invoke(aspectContextMock.Object, t => { throw new Exception(); });
            });
-            transactionMock.Verify(t => t.Rollback());
+            transactionMock.Verify(t => t.RollbackAsync());
         }
 
         [TestMethod]
         public void TestTransationExcute()
         {
             var connectFactoryMock = new Mock<IConnectFactory>();
-            var dbConnectMock = new Mock<IDbConnection>();
-            var dbTransMock = new Mock<IDbTransaction>();
-            connectFactoryMock.Setup(t => t.CreateAndOpenConnection()).Returns(dbConnectMock.Object);
-            connectFactoryMock.Setup(t => t.CreateConnection()).Returns(dbConnectMock.Object);
-            dbConnectMock.Setup(t => t.BeginTransaction()).Returns(dbTransMock.Object);
-
             var collection = new ServiceCollection();
             collection.AddDbCore(t => t.AddMySql());
             collection.AddScoped<IConnectFactory>(t => connectFactoryMock.Object);
@@ -171,20 +165,14 @@ namespace Brochure.ORMTest.Transaction
             var ins = provider.GetRequiredService<ISqlExcute>();
             ins.InserData();
             ins.DeleteData();
-            connectFactoryMock.Verify(t => t.CreateAndOpenConnection(), Times.Exactly(2));
-            dbConnectMock.Verify(t => t.BeginTransaction(), Times.Exactly(2));
+            connectFactoryMock.Verify(t => t.CreateConnection(), Times.Exactly(2));
         }
 
         [TestMethod]
         public void TestTransationSingletonExcute()
         {
             var connectFactoryMock = new Mock<IConnectFactory>();
-            var dbConnectMock = new Mock<IDbConnection>();
-            var dbTransMock = new Mock<IDbTransaction>();
-            connectFactoryMock.Setup(t => t.CreateAndOpenConnection()).Returns(dbConnectMock.Object);
-            connectFactoryMock.Setup(t => t.CreateConnection()).Returns(dbConnectMock.Object);
-            dbConnectMock.Setup(t => t.BeginTransaction()).Returns(dbTransMock.Object);
-
+            var dbTransMock = new Mock<DbTransaction>();
             var collection = new ServiceCollection();
             collection.AddDbCore(t => t.AddMySql());
             collection.AddScoped<IConnectFactory>(t => connectFactoryMock.Object);
@@ -195,8 +183,7 @@ namespace Brochure.ORMTest.Transaction
             var ins = provider.GetRequiredService<ISqlExcute>();
             ins.InserData();
             ins.DeleteData();
-            connectFactoryMock.Verify(t => t.CreateAndOpenConnection(), Times.Exactly(2));
-            dbConnectMock.Verify(t => t.BeginTransaction(), Times.Exactly(2));
+            connectFactoryMock.Verify(t => t.CreateConnection(), Times.Exactly(2));
         }
 
         #region TestData

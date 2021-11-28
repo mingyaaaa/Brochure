@@ -1,6 +1,5 @@
 using Brochure.ORM;
 using Brochure.ORM.Database;
-using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 using LinqDbQueryTest.Datas;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,14 +20,14 @@ namespace Brochure.ORMTest
         private DbOption option;
         private IDbProvider provider;
         private Mock<TransactionManager> transactionManager;
-        private IQueryBuilder _queryBuilder;
+        private ISqlBuilder _queryBuilder;
 
         public TestVisitor()
         {
             provider = base.Provider.GetService<IDbProvider>();
             transactionManager = new Mock<TransactionManager>();
             option = base.Provider.GetService<DbOption>();
-            _queryBuilder = Provider.GetService<IQueryBuilder>();
+            _queryBuilder = Provider.GetService<ISqlBuilder>();
         }
 
         [TestMethod]

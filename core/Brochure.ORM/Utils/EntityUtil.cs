@@ -43,5 +43,33 @@ namespace Brochure.ORM.Utils
             }
             return result;
         }
+
+        public static IDictionary<string, object> AsTableRecord(object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj), "参数为空");
+            if (obj is IDictionary<string, object> dictionary)
+                return dictionary;
+            var result = new Dictionary<string, object>();
+            if (obj is IDictionary<string, object>)
+            {
+                return (IDictionary<string, object>)obj;
+            }
+            var type = obj.GetType();
+            var typeInfo = type.GetTypeInfo();
+            var props = typeInfo.GetRuntimeProperties();
+            foreach (var item in props)
+            {
+                var attribute = item.GetCustomAttribute(typeof(IngoreAttribute), true);
+                if (attribute != null)
+                    continue;
+                attribute = item.GetCustomAttribute(typeof(SequenceAttribute), true);
+                if (attribute != null)
+                    continue;
+                var value = PropertyGetDelegateCache.TryGet(item, obj);
+                result.Add(item.Name, value);
+            }
+            return result;
+        }
     }
 }

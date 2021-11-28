@@ -14,6 +14,6 @@ namespace Brochure.ORM.MySql
         /// <param name="dbOption">The db option.</param>
         /// <param name="dbSql">The db sql.</param>
         /// <param name="connectFactory">The connect factory.</param>
-        public MySqlDbDatabase(DbOption dbOption, DbSql dbSql, IConnectFactory connectFactory) : base(dbOption, dbSql, connectFactory) { }
+        public MySqlDbDatabase(DbContext dbContext) : base(dbContext) { }
     }
 }

@@ -1,9 +1,11 @@
-using Brochure.Abstract.PluginDI;
+using Brochure.Abstract;
 using Brochure.ORM.Database;
-using Brochure.ORM.Visitors;
+using Brochure.ORM.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Data;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Brochure.ORM
@@ -11,39 +13,18 @@ namespace Brochure.ORM
     /// <summary>
     /// The db context.
     /// </summary>
-    public abstract class DbContext : IDisposable, IAsyncDisposable
+    public abstract class DbContext : IAsyncDisposable
     {
-        /// <summary>
-        /// Gets the database.
-        /// </summary>
-        public DbDatabase Database { get; }
-        /// <summary>
-        /// Gets the tables.
-        /// </summary>
-        public DbTable Tables { get; }
-        /// <summary>
-        /// Gets the columns.
-        /// </summary>
-        public DbColumns Columns { get; }
-        /// <summary>
-        /// Gets the indexs.
-        /// </summary>
-        public DbIndex Indexs { get; }
-        /// <summary>
-        /// Gets the datas.
-        /// </summary>
-        public DbData Datas { get; }
-
-        private IDbConnection _connection;
-
         /// <summary>
         /// Gets or sets the service provider.
         /// </summary>
         internal static IServiceProvider ServiceProvider { get; set; }
 
         private IServiceScope _serviceScope;
+        private readonly IObjectFactory _objectFactory;
         private readonly IConnectFactory _connectFactory;
         private readonly ITransactionManager _transactionManager;
+        private readonly ISqlBuilder _sqlBuilder;
         private readonly bool _isBeginTransaction;
         private ITransaction _transaction;
 
@@ -58,60 +39,38 @@ namespace Brochure.ORM
         /// <param name="dbOption">The db option.</param>
         /// <param name="dbProvider">The db provider.</param>
         /// <param name="visitProvider">The visit provider.</param>
-        public DbContext(DbDatabase dbDatabase,
-            DbTable dbTable, DbColumns dbColumns,
-            DbIndex dbIndex, DbData dbData,
+        protected DbContext(
+            IObjectFactory objectFactory,
             IConnectFactory connectFactory,
-            ITransactionManager transactionManager)
+            ITransactionManager transactionManager,
+            ISqlBuilder sqlBuilder)
         {
-            this.Datas = dbData;
+            _objectFactory = objectFactory;
             _connectFactory = connectFactory;
-            this.Indexs = dbIndex;
-            this.Columns = dbColumns;
-            this.Tables = dbTable;
-            this.Database = dbDatabase;
             _transactionManager = transactionManager;
-            _connection = connectFactory.CreateAndOpenConnection();
+            _sqlBuilder = sqlBuilder;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
         /// </summary>
         /// <param name="isBeginTransaction">If true, is begin transaction.</param>
-        public DbContext(bool isBeginTransaction = false)
+        protected DbContext(bool isBeginTransaction = false)
         {
-            _serviceScope = ServiceProvider.CreateScope();
-            this.Datas = _serviceScope.ServiceProvider.GetRequiredService<DbData>();
-            this.Indexs = _serviceScope.ServiceProvider.GetRequiredService<DbIndex>();
-            this.Columns = _serviceScope.ServiceProvider.GetRequiredService<DbColumns>();
-            this.Tables = _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
-            this.Database = _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
-            this._connectFactory = _serviceScope.ServiceProvider.GetRequiredService<IConnectFactory>();
-            _transactionManager = _serviceScope.ServiceProvider.GetRequiredService<ITransactionManager>();
-            _connection = _connectFactory.CreateAndOpenConnection();
+            _serviceScope = ServiceProvider?.CreateScope();
+            this._connectFactory = _serviceScope?.ServiceProvider.GetRequiredService<IConnectFactory>();
+            _transactionManager = _serviceScope?.ServiceProvider.GetRequiredService<ITransactionManager>();
             _isBeginTransaction = isBeginTransaction;
-            BenginTransaction();
         }
 
         /// <summary>
         /// Disposes the async.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
+            await _transaction?.CommitAsync();
             _serviceScope?.Dispose();
-            _connection?.Dispose();
-            return ValueTask.CompletedTask;
-        }
-
-        /// <summary>
-        /// Disposes the.
-        /// </summary>
-        public void Dispose()
-        {
-            _transaction?.Commit();
-            _serviceScope?.Dispose();
-            _connection?.Dispose();
             _transactionManager.RemoveTransaction(_transaction);
         }
 
@@ -137,19 +96,120 @@ namespace Brochure.ORM
         /// <summary>
         /// Commits the.
         /// </summary>
-        public void Commit()
+        public async Task CommitAsync()
         {
-            _transaction?.Commit();
-            Dispose();
+            await _transaction?.CommitAsync();
+            await DisposeAsync();
         }
 
         /// <summary>
         /// Rollbacks the.
         /// </summary>
-        public void Rollback()
+        public async Task Rollback()
         {
-            _transaction?.Rollback();
-            Dispose();
+            await _transaction?.RollbackAsync();
+            await DisposeAsync();
+        }
+
+        /// <summary>
+        /// Excutes the query.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>A list of TS.</returns>
+        public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(params ISql[] sqls) where T : class, new()
+        {
+            var sql = _sqlBuilder.Build(sqls);
+            var command = await CreateDbCommandAsync();
+            command.CommandText = sql.SQL;
+            command.Parameters.AddRange(sql.Parameters);
+            using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var list = new List<T>();
+            while (await reader.ReadAsync().ConfigureAwait(false))
+            {
+                var t = _objectFactory.Create<T>(new DataReaderGetValue(reader));
+                list.Add(t);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Excutes the query.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>A list of TS.</returns>
+        public virtual Task<IEnumerable<T>> ExcuteQueryAsync<T>(IEnumerable<ISql> sqls) where T : class, new()
+        {
+            return ExcuteQueryAsync<T>(sqls.ToArray());
+        }
+
+        /// <summary>
+        /// Excutes the no query.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>An int.</returns>
+        public virtual async Task<int> ExcuteNoQueryAsync(params ISql[] sqls)
+        {
+            var sql = _sqlBuilder.Build(sqls);
+            var command = await CreateDbCommandAsync();
+            command.CommandText = sql.SQL;
+            command.Parameters.AddRange(sql.Parameters);
+            return await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Excutes the no query.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>An int.</returns>
+        public virtual Task<int> ExcuteNoQueryAsync(IEnumerable<ISql> sqls)
+        {
+            return ExcuteNoQueryAsync(sqls.ToArray());
+        }
+
+        /// <summary>
+        /// Executes the scalar.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>An object.</returns>
+        public virtual async Task<object> ExecuteScalarAsync(params ISql[] sqls)
+        {
+            var sql = _sqlBuilder.Build(sqls);
+            var command = await CreateDbCommandAsync();
+            command.CommandText = sql.SQL;
+            command.Parameters.AddRange(sql.Parameters);
+            return command.ExecuteScalarAsync();
+        }
+
+        /// <summary>
+        /// Executes the scalar.
+        /// </summary>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>An object.</returns>
+        public virtual Task<object> ExecuteScalarAsync(IEnumerable<ISqlResult> sqls)
+        {
+            return ExecuteScalarAsync(sqls.ToArray());
+        }
+
+        /// <summary>
+        /// Creates the db command.
+        /// </summary>
+        /// <returns>An IDbCommand.</returns>
+        private async Task<DbCommand> CreateDbCommandAsync()
+        {
+            var connect = await _connectFactory.CreateAndOpenConnectionAsync();
+            var command = connect.CreateCommand();
+            command.Transaction = await _transactionManager.GetDbTransactionAsync();
+            return command;
+        }
+
+        /// <summary>
+        /// Changes the database.
+        /// </summary>
+        /// <param name="databaseName">The database name.</param>
+        public virtual void ChangeDatabase(string databaseName)
+        {
+            var connection = _connectFactory.CreateConnection();
+            connection.ChangeDatabase(databaseName);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<T> Get(IWhereQuery<T> query);
+        Task<T> GetAsync(IWhereQuery<T> query);
 
         /// <summary>
         /// Updates the.
@@ -23,35 +23,35 @@ namespace Brochure.ORM
         /// <param name="query">The query.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        Task<int> Update(IWhereQuery query, T entity);
+        Task<int> UpdateAsync(IWhereQuery query, T entity);
 
         /// <summary>
         /// Deletes the.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<int> Delete(IWhereQuery query);
+        Task<int> DeleteAsync(IWhereQuery query);
 
         /// <summary>
         /// Lists the.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        Task<IEnumerable<T>> List(IQuery<T> query);
+        Task<IEnumerable<T>> ListAsync(IQuery<T> query);
 
         /// <summary>
         /// Inserts the.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        Task<int> Insert(T entity);
+        Task<int> InsertAsync(T entity);
 
         /// <summary>
         /// Inserts the.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        Task<int> Insert(IEnumerable<T> entity);
+        Task<int> InsertAsync(IEnumerable<T> entity);
     }
 
     /// <summary>
@@ -65,35 +65,35 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>A Task.</returns>
-        Task<int> Delete(T2 id);
+        Task<int> DeleteAsync(T2 id);
 
         /// <summary>
         /// Deletes the many return error.
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        Task<IEnumerable<T2>> DeleteManyReturnError(IEnumerable<T2> ids);
+        Task<IEnumerable<T2>> DeleteManyReturnErrorAsync(IEnumerable<T2> ids);
 
         /// <summary>
         /// Deletes the many.
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        Task<int> DeleteMany(IEnumerable<T2> ids);
+        Task<int> DeleteManyAsync(IEnumerable<T2> ids);
 
         /// <summary>
         /// Gets the.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>A Task.</returns>
-        Task<T1> Get(T2 id);
+        Task<T1> GetAsync(T2 id);
 
         /// <summary>
         /// Lists the.
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        Task<IList<T1>> List(IEnumerable<T2> ids);
+        Task<IList<T1>> ListASync(IEnumerable<T2> ids);
 
         /// <summary>
         /// Updates the.
@@ -101,13 +101,13 @@ namespace Brochure.ORM
         /// <param name="id">The id.</param>
         /// <param name="org">The org.</param>
         /// <returns>A Task.</returns>
-        Task<int> Update(T2 id, T1 org);
+        Task<int> UpdateAsync(T2 id, T1 org);
 
         /// <summary>
         /// Insert And Get
         /// </summary>
         /// <param name="userEntrity"></param>
         /// <returns></returns>
-        Task<T1> InsertAndGet(T1 userEntrity);
+        Task<T1> InsertAndGetAsync(T1 userEntrity);
     }
 }

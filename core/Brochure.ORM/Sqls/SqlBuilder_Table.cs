@@ -1,32 +1,21 @@
+ï»¿using Brochure.ORM.Atrributes;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Brochure.Abstract;
-using Brochure.ORM.Atrributes;
-using Brochure.ORM.Visitors;
 
-namespace Brochure.ORM.MySql
+namespace Brochure.ORM
 {
-    /// <summary>
-    /// The my sql db sql.
-    /// </summary>
-    public class MySqlSqlBuilder : SqlBuilder
+    public partial class SqlBuilder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MySqlSqlBuilder"/> class.
+        /// Creates the table.
         /// </summary>
-        /// <param name="dbProvider">The db provider.</param>
-        /// <param name="dbOption">The db option.</param>
-        /// <param name="visitProvider">The visit provider.</param>
-        /// <param name="queryBuilder">The query builder.</param>
-        public MySqlSqlBuilder(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider, TypeMap typeMap) : base(visitProvider, dbProvider, dbOption, typeMap)
+        /// <param name="createTableSql">The create table sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult BuildCreateTable(CreateTableSql createTableSql)
         {
-        }
-
-        protected override ISqlResult BuildCreateTable(CreateTableSql createTableSql)
-        {
-            var r = new ParmsSqlResult();
             var type = createTableSql.TableType;
+            var r = new ParmsSqlResult();
             var typeInfo = type.GetTypeInfo();
             var props = typeInfo.GetRuntimeProperties();
             var columSqls = new List<string>();
@@ -44,12 +33,11 @@ namespace Brochure.ORM.MySql
 
                 var aType = _typeMap.GetSqlType(pType);
                 var columSql = $"{item.Name} {aType}";
-                if (item.Name == "SequenceId")
+                var isSequence = item.GetCustomAttribute(typeof(SequenceAttribute), true) != null;
+                if (isSequence)
                 {
                     columSql = $"SequenceId int AUTO_INCREMENT";
-                    var indexSql = "UNIQUE KEY(SequenceId)";
                     columSqls.Add(columSql);
-                    columSqls.Add(indexSql);
                     continue;
                 }
                 else if (item.Name == "Id")
@@ -71,8 +59,7 @@ namespace Brochure.ORM.MySql
                     }
                     else if (pType == nameof(TypeCode.DateTime) || pType == nameof(TypeCode.Byte))
                     {
-                        var length = columnAttribute.Length < 36 ? 0 : columnAttribute.Length;
-                        columSql = $"{columSql}({length})";
+                        columSql = $"{columSql}";
                     }
                     else if (pType == typeof(Guid).Name)
                     {
@@ -88,26 +75,25 @@ namespace Brochure.ORM.MySql
                 {
                     if (pType == nameof(TypeCode.Double) || pType == nameof(TypeCode.Single))
                         columSql = $"{columSql}(15,6)";
-                    else if (pType == nameof(TypeCode.DateTime) || pType == nameof(TypeCode.Byte) || pType == nameof(TypeCode.Int32) || pType == nameof(TypeCode.Int64)
-                        || pType == nameof(TypeCode.Decimal))
+                    else if (pType == nameof(TypeCode.DateTime) || pType == nameof(TypeCode.Byte) || pType == nameof(TypeCode.Int32))
                         columSql = $"{columSql}";
                     else if (pType == typeof(Guid).Name)
                         columSql = $"{columSql}(36)";
                     else
-                        columSql = $"{columSql}(255)";
+                        columSql = $"{columSql}({255})";
                 }
                 if (item.GetCustomAttribute(typeof(KeyAttribute), true) is KeyAttribute _)
                 {
                     keys.Add(item.Name);
                 }
                 var isNotNullAttribute = item.GetCustomAttribute(typeof(NotNullAttribute), true);
-                if (item.PropertyType == typeof(string) && isNotNullAttribute == null)
+                if (item.PropertyType == typeof(string) && isNotNullAttribute == null)//å¦‚æžœæ˜¯stringç±»åž‹é»˜è®¤æ˜¯å¯nullç±»åž‹
                 {
                     isNullType = true;
                 }
                 else if (isNotNullAttribute != null && isNullType)
                 {
-                    throw new NotSupportedException("¿É¿ÕÀàÐÍ²»ÄÜ±»NotNull±ê¼Ç");
+                    throw new NotSupportedException("å¯ç©ºç±»åž‹ä¸èƒ½è¢«NotNullæ ‡è®°");
                 }
                 else if (!isNullType)
                 {
@@ -117,19 +103,48 @@ namespace Brochure.ORM.MySql
             }
             if (keys.Count == 0) { columSqls.Add($"PRIMARY KEY ( Id )"); }
             else if (keys.Count == 1) { columSqls.Add($"PRIMARY KEY ( {keys[0]} )"); }
-            else { throw new NotSupportedException("ÔÝÊ±²»Ö§³ÖÁªºÏÖ÷¼ü£¬ÇëÊ¹ÓÃÁªºÏÎ¨Ò»Ë÷Òý´úÌæ"); }
+            else { throw new NotSupportedException("æš‚æ—¶ä¸æ”¯æŒè”åˆä¸»é”®ï¼Œè¯·ä½¿ç”¨è”åˆå”¯ä¸€ç´¢å¼•ä»£æ›¿"); }
             if (string.IsNullOrWhiteSpace(tableName))
-                throw new Exception("µ±Ç°TabelNameµÄÖµÎªnull ÎÞ·¨´´½¨±í");
+                throw new Exception("å½“å‰TabelNameçš„å€¼ä¸ºnull æ— æ³•åˆ›å»ºè¡¨");
             var sql = $@"create table {tableName}({string.Join(",", columSqls)})";
             r.SQL = sql;
             return r;
         }
 
-        protected override ISqlResult BuildTableCount(CountTableSql countTableSql)
+        /// <summary>
+        /// Gets the table count.
+        /// </summary>
+        /// <param name="countTableSql">The count table sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult BuildTableCount(CountTableSql countTableSql)
         {
-            var result = new ParmsSqlResult();
-            result.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{countTableSql.TableName}' and TABLE_SCHEMA ='{countTableSql.Database }'";
-            return result;
+            var r = new ParmsSqlResult();
+            r.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{countTableSql.TableName}'";
+            return r;
+        }
+
+        /// <summary>
+        /// Updates the table name.
+        /// </summary>
+        /// <param name="updateTableNameSql">The update table name sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult BuildUpdateTableName(UpdateTableNameSql updateTableNameSql)
+        {
+            var r = new ParmsSqlResult();
+            r.SQL = $"alter table {updateTableNameSql.OldName} rename {updateTableNameSql.NewName}";
+            return r;
+        }
+
+        /// <summary>
+        /// Deletes the table.
+        /// </summary>
+        /// <param name="deleteTableSql">The delete table sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult BuildDeleteTable(DeleteTableSql deleteTableSql)
+        {
+            var r = new ParmsSqlResult();
+            r.SQL = $"drop table {deleteTableSql.TableName}";
+            return r;
         }
     }
 }

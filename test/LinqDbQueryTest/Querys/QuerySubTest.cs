@@ -2,11 +2,6 @@
 using Brochure.ORMTest;
 using LinqDbQueryTest.Datas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Brochure.ORMTest.Datas;
 using Brochure.ORM;
@@ -17,13 +12,11 @@ namespace LinqDbQueryTest.Querys
     [TestClass]
     public class QuerySubTest : BaseTest
     {
-        private readonly IQueryBuilder queryBuilder;
-        private readonly DbSql _dbSql;
+        private readonly ISqlBuilder queryBuilder;
 
         public QuerySubTest()
         {
-            queryBuilder = base.Provider.GetService<IQueryBuilder>();
-            _dbSql = Provider.GetService<DbSql>();
+            queryBuilder = base.Provider.GetService<ISqlBuilder>();
         }
 
         [TestMethod]
@@ -95,7 +88,7 @@ namespace LinqDbQueryTest.Querys
         [TestMethod]
         public void TestInsertQuery()
         {
-            var query = _dbSql.GetInsertSql<Students>(new Students());
+            var query = Sql.InsertSql<Students>(new Students());
             var q = Query.From<Classes>().Continue(query);
             var sql = queryBuilder.Build(q);
             Assert.AreEqual("select * from `Classes` ;insert into `Students`(`ClassCount`,`No`) values(@p0,@p1)", sql.SQL);

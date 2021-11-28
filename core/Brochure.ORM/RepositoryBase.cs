@@ -13,17 +13,15 @@ namespace Brochure.ORM
     /// </summary>
     public abstract class RepositoryBase<T> : IRepository<T> where T : EntityBase, new()
     {
-        protected readonly DbContext context;
-        protected readonly DbSql _dbSql;
+        private readonly DbData _dbData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public RepositoryBase(DbContext context, DbSql dbSql)
+        public RepositoryBase(DbData dbData)
         {
-            this.context = context;
-            _dbSql = dbSql;
+            _dbData = dbData;
         }
 
         /// <summary>
@@ -31,10 +29,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Delete(IWhereQuery query)
+        public Task<int> DeleteAsync(IWhereQuery query)
         {
-            var r = await Task.Run(() => context.Datas.Delete<T>(query)).ConfigureAwait(false);
-            return r;
+            return _dbData.DeleteAsync<T>(query);
         }
 
         /// <summary>
@@ -42,10 +39,10 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<T> Get(IWhereQuery<T> query)
+        public async Task<T> GetAsync(IWhereQuery<T> query)
         {
             var tQuery = Query.From<T>(query).Take(1);
-            var t = await Task.Run(() => context.Datas.Find<T>(tQuery)).ConfigureAwait(false);
+            var t = await _dbData.FindAsync<T>((IQuery)tQuery).ConfigureAwait(false);
             return t.FirstOrDefault();
         }
 
@@ -54,9 +51,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public Task<int> Insert(T entity)
+        public Task<int> InsertAsync(T entity)
         {
-            return Insert(new List<T>() { entity });
+            return InsertAsync(new List<T>() { entity });
         }
 
         /// <summary>
@@ -64,10 +61,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Insert(IEnumerable<T> entity)
+        public Task<int> InsertAsync(IEnumerable<T> entity)
         {
-            var r = await Task.Run(() => context.Datas.InsertMany(entity)).ConfigureAwait(false);
-            return r;
+            return _dbData.InsertManyAsync(entity);
         }
 
         /// <summary>
@@ -75,11 +71,10 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
-        public async Task<IEnumerable<T>> List(IQuery<T> query)
+        public Task<IEnumerable<T>> ListAsync(IQuery<T> query)
         {
             query.Select<T>();
-            var t = await Task.Run(() => context.Datas.Find<T>(query)).ConfigureAwait(false);
-            return t;
+            return _dbData.FindAsync<T>((IQuery)query);
         }
 
         /// <summary>
@@ -88,12 +83,11 @@ namespace Brochure.ORM
         /// <param name="query">The query.</param>
         /// <param name="entity">The entity.</param>
         /// <returns>A Task.</returns>
-        public async Task<int> Update(IWhereQuery query, T entity)
+        public Task<int> UpdateAsync(IWhereQuery query, T entity)
         {
             if (query == null)
                 throw new Exception("query不能为null");
-            var t = await Task.Run(() => context.Datas.Update<T>(entity, query)).ConfigureAwait(false);
-            return t;
+            return _dbData.UpdateAsync<T>(entity, query);
         }
     }
 
@@ -104,12 +98,15 @@ namespace Brochure.ORM
         where T1 : EntityBase, IEntityKey<T2>, new()
         where T2 : class, IComparable<T2>
     {
+        private readonly DbContext _dbContext;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        protected RepositoryBase(DbContext context, DbSql dbSql) : base(context, dbSql)
+        protected RepositoryBase(DbData dbData, DbContext dbContext) : base(dbData)
         {
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -117,9 +114,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>A Task.</returns>
-        public Task<int> Delete(T2 id)
+        public Task<int> DeleteAsync(T2 id)
         {
-            return base.Delete(Query.Where<T1>(t => t.Id == id));
+            return base.DeleteAsync(Query.Where<T1>(t => t.Id == id));
         }
 
         /// <summary>
@@ -127,9 +124,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        public Task<int> DeleteMany(IEnumerable<T2> ids)
+        public Task<int> DeleteManyAsync(IEnumerable<T2> ids)
         {
-            return base.Delete(Query.Where<T1>(t => ids.Contains(t.Id)));
+            return base.DeleteAsync(Query.Where<T1>(t => ids.Contains(t.Id)));
         }
 
         /// <summary>
@@ -137,12 +134,12 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        public async Task<IEnumerable<T2>> DeleteManyReturnError(IEnumerable<T2> ids)
+        public async Task<IEnumerable<T2>> DeleteManyReturnErrorAsync(IEnumerable<T2> ids)
         {
             var list = new List<T2>();
             foreach (var item in ids)
             {
-                var r = await Delete(Query.Where<T1>(t => t.Id == item));
+                var r = await DeleteAsync(Query.Where<T1>(t => t.Id == item));
                 if (r < 0)
                     list.Add(item);
             }
@@ -154,9 +151,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>A Task.</returns>
-        public Task<T1> Get(T2 id)
+        public Task<T1> GetAsync(T2 id)
         {
-            return base.Get(Query.Where<T1>(t => t.Id == id));
+            return base.GetAsync(Query.Where<T1>(t => t.Id == id));
         }
 
         /// <summary>
@@ -164,10 +161,11 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="userEntrity">The user entrity.</param>
         /// <returns>A Task.</returns>
-        public Task<T1> InsertAndGet(T1 userEntrity)
+        public async Task<T1> InsertAndGetAsync(T1 userEntrity)
         {
-            var sql = _dbSql.GetInsertSql<T1>(userEntrity).Continue(Query.From<T1>().Where(t => t.Id == userEntrity.Id).Take(1));
-            return Task.Run(() => context.Datas.ExcuteQuery<T1>(sql).FirstOrDefault());
+            var sql = Sql.InsertSql<T1>(userEntrity).Continue(Query.From<T1>().Where(t => t.Id == userEntrity.Id).Take(1));
+            var list = await _dbContext.ExcuteQueryAsync<T1>(sql.ToArray());
+            return list.FirstOrDefault();
         }
 
         /// <summary>
@@ -175,9 +173,9 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="ids">The ids.</param>
         /// <returns>A Task.</returns>
-        public async Task<IList<T1>> List(IEnumerable<T2> ids)
+        public async Task<IList<T1>> ListASync(IEnumerable<T2> ids)
         {
-            var list = await base.List(Query.Where<T1>(t => ids.Contains(t.Id)));
+            var list = await base.ListAsync(Query.Where<T1>(t => ids.Contains(t.Id)));
             return list.ToList();
         }
 
@@ -187,9 +185,9 @@ namespace Brochure.ORM
         /// <param name="id">The id.</param>
         /// <param name="obj">The obj.</param>
         /// <returns>A Task.</returns>
-        public Task<int> Update(T2 id, T1 obj)
+        public Task<int> UpdateAsync(T2 id, T1 obj)
         {
-            return base.Update(Query.Where<T1>(t => t.Id == id), obj);
+            return base.UpdateAsync(Query.Where<T1>(t => t.Id == id), obj);
         }
     }
 }

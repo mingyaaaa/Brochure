@@ -7,9 +7,7 @@ namespace Brochure.ORM.Database
     /// </summary>
     public abstract class DbDatabase
     {
-        protected DbOption Option;
-        private readonly DbSql _dbSql;
-        private readonly IConnectFactory connectFactory;
+        private readonly DbContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbDatabase"/> class.
@@ -17,21 +15,9 @@ namespace Brochure.ORM.Database
         /// <param name="option">The option.</param>
         /// <param name="dbSql">The db sql.</param>
         /// <param name="connectFactory">The connect factory.</param>
-        protected DbDatabase(DbOption option, DbSql dbSql, IConnectFactory connectFactory)
+        protected DbDatabase(DbContext dbContext)
         {
-            Option = option;
-            this._dbSql = dbSql;
-            this.connectFactory = connectFactory;
-        }
-
-        /// <summary>
-        /// Creates the database async.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>A Task.</returns>
-        public Task<long> CreateDatabaseAsync(string databaseName)
-        {
-            return Task.Run<long>(() => CreateDatabase(databaseName));
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -39,7 +25,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         /// <returns>A Task.</returns>
-        public async Task<long> TryCreateDatabaseAsync(string databaseName)
+        public async Task<int> TryCreateDatabaseAsync(string databaseName)
         {
             var exist = await IsExistDataBaseAsync(databaseName);
             if (!exist)
@@ -52,23 +38,10 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         /// <returns>A long.</returns>
-        public virtual long CreateDatabase(string databaseName)
+        public virtual Task<int> CreateDatabaseAsync(string databaseName)
         {
-            var sql = _dbSql.GetCreateDatabaseSql(databaseName).SQL;
-            var connection = connectFactory.CreateConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = sql;
-            return command.ExecuteNonQuery();
-        }
-
-        /// <summary>
-        /// Deletes the database async.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>A Task.</returns>
-        public Task<long> DeleteDatabaseAsync(string databaseName)
-        {
-            return Task.Run<long>(() => DeleteDatabase(databaseName));
+            var sql = Sql.CreateDatabase(databaseName);
+            return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
@@ -76,7 +49,7 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         /// <returns>A Task.</returns>
-        public async Task<long> TryDeleteDatabaseAsync(string databaseName)
+        public async Task<int> TryDeleteDatabaseAsync(string databaseName)
         {
             var exist = await IsExistDataBaseAsync(databaseName);
             if (exist)
@@ -89,22 +62,10 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         /// <returns>A long.</returns>
-        public virtual long DeleteDatabase(string databaseName)
+        public virtual Task<int> DeleteDatabaseAsync(string databaseName)
         {
-            var connection = connectFactory.CreateConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetDeleteDatabaseSql(databaseName).SQL;
-            return command.ExecuteNonQuery();
-        }
-
-        /// <summary>
-        /// Are the exist data base async.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>A Task.</returns>
-        public Task<bool> IsExistDataBaseAsync(string databaseName)
-        {
-            return Task.Run(() => IsExistDataBase(databaseName));
+            var sql = Sql.DeleteDatabase(databaseName);
+            return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
@@ -112,23 +73,12 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         /// <returns>A bool.</returns>
-        public virtual bool IsExistDataBase(string databaseName)
+        public virtual async Task<bool> IsExistDataBaseAsync(string databaseName)
         {
-            var connection = connectFactory.CreateConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = _dbSql.GetDataBaseNameCountSql(databaseName).SQL;
-            var rr = (int)command.ExecuteScalar();
+            var sql = Sql.DatabaseCount(databaseName);
+            var r = await _dbContext.ExecuteScalarAsync(sql);
+            var rr = (int)r;
             return rr >= 1;
-        }
-
-        /// <summary>
-        /// Changes the database.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        public virtual void ChangeDatabase(string databaseName)
-        {
-            var connection = connectFactory.CreateConnection();
-            connection.ChangeDatabase(databaseName);
         }
     }
 }

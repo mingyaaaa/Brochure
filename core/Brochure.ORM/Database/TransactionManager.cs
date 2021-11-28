@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Brochure.ORM.Database
@@ -33,7 +35,7 @@ namespace Brochure.ORM.Database
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
-        IDbTransaction GetDbTransaction();
+        Task<DbTransaction> GetDbTransactionAsync();
     }
 
     public class TransactionManager : ITransactionManager
@@ -82,12 +84,12 @@ namespace Brochure.ORM.Database
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
-        public IDbTransaction GetDbTransaction()
+        public async Task<DbTransaction> GetDbTransactionAsync()
         {
-            IDbTransaction dbTransaction = null;
+            DbTransaction dbTransaction = null;
             foreach (var item in transactions.OfType<Transaction>())
             {
-                dbTransaction = item.GetDbTransaction();
+                dbTransaction = await item.GetDbTransactionAsync();
                 if (dbTransaction != null)
                     break;
             }

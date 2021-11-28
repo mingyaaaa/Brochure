@@ -21,9 +21,9 @@ namespace Brochure.ORMTest.Querys
         /// Gets the provider.
         /// </summary>
         public IDbProvider provider { get; }
-        private readonly DbOption option;
 
-        private readonly DbSql dbSql;
+        private readonly DbOption option;
+        private ISqlBuilder _sqlBuilder;
         private Mock<TransactionManager> transactionManager;
 
         public DbTest()
@@ -31,9 +31,9 @@ namespace Brochure.ORMTest.Querys
             transactionManager = new Mock<TransactionManager>();
             provider = base.Provider.GetService<IDbProvider>();
             option = base.Provider.GetService<DbOption>();
+            _sqlBuilder = Provider.GetService<ISqlBuilder>();
             option.IsUseParamers = false;
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
-            dbSql = base.Provider.GetService<DbSql>();
         }
 
         [TestMethod]
@@ -45,15 +45,18 @@ namespace Brochure.ORMTest.Querys
                 ClassId = "11",
                 School = "dd",
             };
-            var sql = dbSql.GetInsertSql(obj);
-            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values('dd','11',1,0)", sql.SQL);
-            sql = dbSql.GetDeleteSql<Students>(t => t.ClassId == "1" && t.ClassCount == 2);
-            Assert.AreEqual("delete from `Students` where `Students`.`ClassId` = '1' and `Students`.`ClassCount` = 2", sql.SQL);
-            sql = dbSql.GetUpdateSql<Students>(new
+            var sql = Sql.InsertSql(obj);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values('dd','11',1,0)", sqlResult.SQL);
+            sql = Sql.DeleteSql<Students>(t => t.ClassId == "1" && t.ClassCount == 2);
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("delete from `Students` where `Students`.`ClassId` = '1' and `Students`.`ClassCount` = 2", sqlResult.SQL);
+            sql = Sql.UpdateSql<Students>(new
             {
                 ClassId = "2"
             }, t => t.Id == "aa");
-            Trace.TraceInformation(sql.SQL);
+            sqlResult = _sqlBuilder.Build(sql);
+            Trace.TraceInformation(sqlResult.SQL);
         }
 
         [TestMethod]
@@ -66,79 +69,92 @@ namespace Brochure.ORMTest.Querys
                 School = "dd",
             };
             option.IsUseParamers = true;
-            var sql = dbSql.GetInsertSql(obj);
-            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values(@School,@ClassId,@ClassCount,@No)", sql.SQL);
+            var sql = Sql.InsertSql(obj);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("insert into `Students`(`School`,`ClassId`,`ClassCount`,`No`) values(@p0,@p1,@p2,@p3)", sqlResult.SQL);
 
-            Assert.AreEqual(sql.Parameters.FirstOrDefault(t => t.ParameterName == "@School").Value, "dd");
-            Assert.AreEqual(sql.Parameters.FirstOrDefault(t => t.ParameterName == "@ClassId").Value, "11");
-            Assert.AreEqual(sql.Parameters.FirstOrDefault(t => t.ParameterName == "@ClassCount").Value, 1);
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p0").Value, "dd");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p1").Value, "11");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p2").Value, 1);
         }
 
         [TestMethod]
         public void TestDbDatabase()
         {
-            var sql = dbSql.GetCreateDatabaseSql("testdb").SQL;
-            Assert.AreEqual("create database testdb", sql);
-            sql = dbSql.GetDeleteDatabaseSql("testdb").SQL;
-            Assert.AreEqual("drop database testdb", sql);
-            sql = dbSql.GetAllDatabaseNameSql().SQL;
-            Assert.AreEqual("select schema_name from information_schema.schemata", sql);
-            sql = dbSql.GetDataBaseNameCountSql("testdb").SQL;
-            Assert.AreEqual("SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='testdb'", sql);
-            Trace.TraceInformation(sql);
+            var sql = Sql.CreateDatabase("testdb");
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("create database testdb", sqlResult.SQL);
+            sql = Sql.DeleteDatabase("testdb");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("drop database testdb", sqlResult.SQL);
+            sql = Sql.GetAllDatabase();
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("select schema_name from information_schema.schemata", sqlResult.SQL);
+            sql = Sql.DatabaseCount("testdb");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='testdb'", sqlResult.SQL);
         }
 
         [TestMethod]
         public void TestDbTable()
         {
-            option.DatabaseName = "testdb";
-            var sql = dbSql.GetTableNameCountSql("testTable").SQL;
-            Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable' and TABLE_SCHEMA ='testdb'", sql);
-            sql = dbSql.GetAllTableName("testdb").SQL;
-            Assert.AreEqual("select table_name from information_schema.tables where table_schema='testdb'", sql);
-            sql = dbSql.GetCreateTableSql<Students>().SQL;
-            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))", sql);
-            sql = dbSql.GetDeleteTableSql("testTable").SQL;
-            Assert.AreEqual("drop table testTable", sql);
-            sql = dbSql.GetUpdateTableNameSql("testTable", "newTable").SQL;
-            Assert.AreEqual("alter table testTable rename newTable", sql);
-            Trace.TraceInformation(sql);
+            var sql = Sql.GetCountTable("testTable", "testdb");
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable' and TABLE_SCHEMA ='testdb'", sqlResult.SQL);
+            sql = Sql.GetAllTableName("testdb");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("select table_name from information_schema.tables where table_schema='testdb'", sqlResult.SQL);
+            sql = Sql.CreateTable<Students>();
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))", sqlResult.SQL);
+            sql = Sql.DeleteTable("testTable");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("drop table testTable", sqlResult.SQL);
+            sql = Sql.UpdateTableName("testTable", "newTable");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("alter table testTable rename newTable", sqlResult.SQL);
         }
 
         [TestMethod("测试创建MySql表类型数据")]
         public void TestMySqlDbTypeTable()
         {
-            var sql = dbSql.GetCreateTableSql<DbTypeEntiry>().SQL;
-            Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255),DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sql);
-            Trace.TraceInformation(sql);
+            var sql = Sql.CreateTable<DbTypeEntiry>();
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255),DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sqlResult.SQL);
         }
 
         [TestMethod]
         public void TestDbColumn()
         {
-            var sql = dbSql.GetAddllColumnSql("testTable", "testColumn", System.TypeCode.String, true, 200).SQL;
-            Assert.AreEqual("alter table testTable add column testColumn nvarchar(200) not null", sql);
-            sql = dbSql.GetColumsNameCountSql("testdb", "testTable", "testColumn").SQL;
-            Assert.AreEqual("select COUNT(1) from information_schema.columns WHERE table_schema='testdb' and table_name = 'testTable' and column_name = 'testColumn'", sql);
-            sql = dbSql.GetColumsSql("testdb", "testTable").SQL;
-            Assert.AreEqual("select column_name from information_schema.columns where table_schema='testdb' and table_name='testTable'", sql);
-            sql = dbSql.GetDeleteColumnSql("testTable", "testColumn").SQL;
-            Assert.AreEqual("alter table testTable drop column testColumn", sql);
-            sql = dbSql.GetRenameColumnNameSql("testTable", "testColumn", "newColumn", TypeCode.Boolean).SQL;
-            Assert.AreEqual("alter table testTable change column testColumn newColumn tinyint", sql);
-            sql = dbSql.GetUpdateColumnSql("testTable", "testColumn", TypeCode.String, true, 200).SQL;
-            Assert.AreEqual("alter table testTable modify testColumn nvarchar(200) not null", sql);
-            Trace.TraceInformation(sql);
+            var sql = Sql.GetAddColumnSql("testTable", "testColumn", System.TypeCode.String, true, 200);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("alter table testTable add column testColumn nvarchar(200) not null", sqlResult.SQL);
+            sql = Sql.GetColumnsCount("testTable", "testColumn", "testdb");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("select COUNT(1) from information_schema.columns WHERE table_schema='testdb' and table_name = 'testTable' and column_name = 'testColumn'", sqlResult.SQL);
+            sql = Sql.GetColumsNames("testdb", "testTable");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("select column_name from information_schema.columns where table_schema='testdb' and table_name='testTable'", sqlResult.SQL);
+            sql = Sql.GetDeleteColumnSql("testTable", "testColumn");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("alter table testTable drop column testColumn", sqlResult.SQL);
+            sql = Sql.GetRenameColumnNameSql("testTable", "testColumn", "newColumn", TypeCode.Boolean);
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("alter table testTable change column testColumn newColumn tinyint", sqlResult.SQL);
+            sql = Sql.GetUpdateColumnSql("testTable", "testColumn", TypeCode.String, true, 200);
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("alter table testTable modify testColumn nvarchar(200) not null", sqlResult.SQL);
         }
 
         [TestMethod]
         public void TestDbIndex()
         {
-            var sql = dbSql.GetCreateIndexSql("test", new string[] { "column1", "column2" }, "column1_column2", "index").SQL;
-            Assert.AreEqual("create index column1_column2 on test(column1,column2)", sql);
-            sql = dbSql.GetDeleteIndexSql("test", "column1_column2").SQL;
-            Assert.AreEqual("drop index column1_column2 on test", sql);
-            Trace.TraceInformation(sql);
+            var sql = Sql.CreateIndex("test", new string[] { "column1", "column2" }, "column1_column2", "index");
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("create index column1_column2 on test(column1,column2)", sqlResult.SQL);
+            sql = Sql.DeleteIndex("test", "column1_column2");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("drop index column1_column2 on test", sqlResult.SQL);
         }
     }
 }

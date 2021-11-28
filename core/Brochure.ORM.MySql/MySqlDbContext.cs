@@ -1,4 +1,5 @@
-﻿using Brochure.ORM.Database;
+﻿using Brochure.Abstract;
+using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
 using System;
 using System.Collections.Generic;
@@ -16,23 +17,11 @@ namespace Brochure.ORM.MySql
         /// <summary>
         /// Initializes a new instance of the <see cref="MySqlDbContext"/> class.
         /// </summary>
-        /// <param name="dbDatabase">The db database.</param>
-        /// <param name="dbTable">The db table.</param>
-        /// <param name="dbColumns">The db columns.</param>
-        /// <param name="dbIndex">The db index.</param>
-        /// <param name="dbData">The db data.</param>
-        /// <param name="dbOption">The db option.</param>
-        /// <param name="dbProvider">The db provider.</param>
-        /// <param name="visitProvider">The visit provider.</param>
-        public MySqlDbContext(DbDatabase dbDatabase, DbTable dbTable,
-                DbColumns dbColumns, DbIndex dbIndex, DbData dbData, IConnectFactory connectFactory, ITransactionManager transactionManager) :
-            base(dbDatabase, dbTable, dbColumns, dbIndex, dbData, connectFactory, transactionManager)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MySqlDbContext"/> class.
-        /// </summary>
         public MySqlDbContext(bool isBeginTransaction = false) : base(isBeginTransaction)
+        {
+        }
+
+        public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder) : base(objectFactory, connectFactory, transactionManager, sqlBuilder)
         {
         }
     }

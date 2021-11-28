@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq.Expressions;
 using Brochure.ORM;
 using Brochure.ORM.Visitors;
@@ -36,8 +37,8 @@ namespace Brochure.ORM.MySql
         /// <summary>
         /// Gets the db connection.
         /// </summary>
-        /// <returns>An IDbConnection.</returns>
-        public IDbConnection GetDbConnection()
+        /// <returns>An DbConnection.</returns>
+        public DbConnection GetDbConnection()
         {
             return new MySqlConnection();
         }

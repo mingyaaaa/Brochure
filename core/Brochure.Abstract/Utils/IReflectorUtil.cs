@@ -16,6 +16,7 @@ namespace Brochure.Abstract.Utils
         /// <param name="type">创建的类型</param>
         /// <returns></returns>
         IEnumerable<object> GetObjectOfBase(Assembly assembly, Type type);
+
         /// <summary>
         /// 根据接口创建创建指定的对象
         /// </summary>
@@ -23,6 +24,7 @@ namespace Brochure.Abstract.Utils
         /// <param name="assembly">程序集</param>
         /// <returns></returns>
         IEnumerable<T> GetObjectOfBase<T>(Assembly assembly);
+
         /// <summary>
         /// 根据接口获取指定类型
         /// </summary>
@@ -46,6 +48,7 @@ namespace Brochure.Abstract.Utils
         /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<object> GetObjectOfAbsoluteBase(Assembly assembly, Type type);
+
         /// <summary>
         /// 获取直接继承父类
         /// </summary>
@@ -61,6 +64,7 @@ namespace Brochure.Abstract.Utils
         /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<Type> GetTypeOfAbsoluteBase(Assembly assembly, Type type);
+
         /// <summary>
         /// 获取直接继承父类类型
         /// </summary>
@@ -115,10 +119,17 @@ namespace Brochure.Abstract.Utils
         /// <summary>
         /// 获取属性值方法
         /// </summary>
-        /// <param name="classType"></param> 
+        /// <param name="classType"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
         Func<T1, object> GetPropertyValueFun<T1>(string propertyName);
 
+        /// <summary>
+        /// Gets the property value fun.
+        /// </summary>
+        /// <param name="classType">The class type.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>A Func.</returns>
+        public Func<object, object> GetPropertyValueFun(Type classType, string propertyName);
     }
 }

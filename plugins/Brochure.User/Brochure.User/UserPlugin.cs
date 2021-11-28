@@ -24,7 +24,6 @@ namespace Brochure.User
         /// <summary>
         /// Initializes a new instance of the <see cref="UserPlugin"/> class.
         /// </summary>
-        /// <param name="service">The service.</param>
         public UserPlugin()
         {
         }

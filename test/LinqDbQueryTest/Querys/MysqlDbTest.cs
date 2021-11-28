@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 
@@ -7,13 +8,13 @@ namespace Brochure.ORMTest.Querys
     [TestClass]
     public class MysqlDbTest
     {
-        private IDbConnection dbConnection;
-        private IDbTransaction transaction;
+        private DbConnection dbConnection;
+        private DbTransaction transaction;
 
         public MysqlDbTest()
         {
             var builder = new MySqlConnectionStringBuilder();
-            builder.Server = "192.168.0.6";
+            builder.Server = "192.168.0.1";
             builder.UserID = "test";
             builder.Password = "123456";
             builder.Database = "test";

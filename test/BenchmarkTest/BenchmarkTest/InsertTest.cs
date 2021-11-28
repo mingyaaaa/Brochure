@@ -2,18 +2,12 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkTest.Models;
 using Brochure.Core.Server;
-using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
-using Brochure.ORM.Querys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BenchmarkTest.BenchmarkTest
@@ -43,19 +37,19 @@ namespace BenchmarkTest.BenchmarkTest
             }));
 
             service.AddDbContext<MysqlContent>(t => t.UseMySQL("server=192.168.0.6;database=test;uid=test;pwd=123456"));
-            using var dbcontext = new MySqlDbContext();
+            //          using var dbcontext = new MySqlDbContext();
         }
 
         [Benchmark]
         public async Task Insert()
         {
-            using var dbcontext = new MySqlDbContext(true);
+            //      using var dbcontext = new MySqlDbContext(true);
             for (int i = 0; i < Count; i++)
             {
                 var a = new UserEntrity();
                 a.Age = 12;
                 a.CreateTime = 12;
-                dbcontext.Datas.Insert<UserEntrity>(a);
+                //    dbcontext.Datas.Insert<UserEntrity>(a);
                 //var tQuery = Query.From<UserEntrity>(Query.Where<UserEntrity>(t => t.Id == a.Id)).Take(1);
                 //var tt = dbcontext.Datas.Query(tQuery);
             }

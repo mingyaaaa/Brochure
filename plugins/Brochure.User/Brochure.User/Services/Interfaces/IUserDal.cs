@@ -46,6 +46,11 @@ namespace Brochure.User.Services.Interfaces
         /// <returns>A ValueTask.</returns>
         ValueTask<int> InsertUsers(IEnumerable<UserEntrity> users);
 
+        /// <summary>
+        /// Inserts the and get.
+        /// </summary>
+        /// <param name="userEntrity">The user entrity.</param>
+        /// <returns>A ValueTask.</returns>
         ValueTask<UserEntrity> InsertAndGet(UserEntrity userEntrity);
     }
 }

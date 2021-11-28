@@ -1,4 +1,5 @@
 ﻿using Brochure.Core.Extenstions;
+using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 using System;
 using System.Collections.Generic;
@@ -6,116 +7,23 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Brochure.ORM.Querys
+namespace Brochure.ORM
 {
-    /// <summary>
-    /// The query builder.
-    /// </summary>
-    public interface IQueryBuilder
+    public partial class SqlBuilder
     {
-        /// <summary>
-        /// Builds the.
-        /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
-        /// <returns>A ParmsSqlResult.</returns>
-        ISql Build(params ISql[] sqls);
-
-        /// <summary>
-        /// Builds the.
-        /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
-        /// <returns>A ParmsSqlResult.</returns>
-        ISql Build(IEnumerable<ISql> sqls);
-
-        /// <summary>
-        /// Renames the parameter.
-        /// </summary>
-        /// <param name="sql">The sql.</param>
-        /// <param name="parDic">The par dic.</param>
-        /// <returns>An array of IDbDataParameters.</returns>
-        IDbDataParameter[] RenameParameter(StringBuilder sql, IEnumerable<IDbDataParameter> parDic);
-
-        /// <summary>
-        /// Renames the table type.
-        /// </summary>
-        /// <param name="str">The str.</param>
-        /// <param name="tableType">The table type.</param>
-        /// <param name="tempTable">The temp table.</param>
-        /// <param name="groupDic">The group dic.</param>
-        void RenameTableType(StringBuilder str, IDictionary<int, Type> tableType, IEnumerable<int> tempTable = null, IDictionary<string, string> groupDic = null);
-
-        /// <summary>
-        /// Renames the temp table type.
-        /// </summary>
-        /// <param name="str">The str.</param>
-        /// <param name="tempType">The temp type.</param>
-        void RenameTempTableType(StringBuilder str, IEnumerable<int> tempType);
-    }
-
-    /// <summary>
-    /// The query builder.
-    /// </summary>
-    internal class QueryBuilder : IQueryBuilder
-    {
-        private readonly IVisitProvider _visitProvider;
-        private readonly IDbProvider _dbProvider;
-        private readonly DbOption _dbOption;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
-        /// </summary>
-        /// <param name="visitProvider">The visit provider.</param>
-        /// <param name="dbProvider">The db provider.</param>
-        public QueryBuilder(IVisitProvider visitProvider, IDbProvider dbProvider, DbOption dbOption)
-        {
-            this._visitProvider = visitProvider;
-            this._dbProvider = dbProvider;
-            _dbOption = dbOption;
-        }
-
-        /// <summary>
-        /// Builds the.
-        /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
-        /// <returns>A ParmsSqlResult.</returns>
-        public ISql Build(params ISql[] sqls)
+        protected virtual ISqlResult BuildQuery(IQuery query)
         {
             var result = new ParmsSqlResult();
-            var sqlList = new List<string>();
-            var sqlParam = new SqlParam();
-            foreach (var item in sqls)
-            {
-                if (item is IQuery query)
-                {
-                    var t_sqlParam = BuildSub(query);
-                    sqlParam.GroupDic.AddRange(t_sqlParam.GroupDic);
-                    sqlParam.TableTypeDic.AddRange(t_sqlParam.TableTypeDic);
-                    sqlParam.TempTable.AddRange(t_sqlParam.TempTable);
-                    sqlParam.Params.AddRange(t_sqlParam.Params);
-                    sqlParam.GroupDic.AddRange(t_sqlParam.GroupDic);
-                    sqlList.Add(t_sqlParam.SQL);
-                }
-                else
-                {
-                    sqlList.Add(item.SQL);
-                    result.Parameters.AddRange(item.Parameters);
-                }
-            }
-            result.SQL = string.Join(';', sqlList);
-            result.Parameters.AddRange(sqlParam.Params);
-            var t_sql = new StringBuilder(result.SQL);
+            var sql = BuildSubQuery(query);
+            var strBuild = new StringBuilder(sql.SQL);
+            RenameTableType(strBuild, sql.TableTypeDic, sql.TempTable, sql.GroupDic);
+            RenameTempTableType(strBuild, sql.TempTable);
 
-            RenameParameter(t_sql, result.Parameters);
-            RenameTableType(t_sql, sqlParam.TableTypeDic, sqlParam.TempTable, sqlParam.GroupDic);
-            RenameTempTableType(t_sql, sqlParam.TempTable);
-            result.SQL = t_sql.ToString().Trim();
+            result.SQL = strBuild.ToString();
+            result.Parameters.AddRange(sql.Params);
             return result;
-        }
-
-        public ISql Build(IEnumerable<ISql> sqls)
-        {
-            return Build(sqls.ToArray());
         }
 
         /// <summary>
@@ -123,7 +31,7 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="queryExpression">The query expression.</param>
         /// <returns>A SqlParam.</returns>
-        private SqlParam BuildSub(IQuery queryExpression)
+        protected virtual SqlParam BuildSubQuery(IQuery queryExpression)
         {
             Type type;
             var parm = new List<IDbDataParameter>();
@@ -181,7 +89,7 @@ namespace Brochure.ORM.Querys
         /// <param name="take">The take.</param>
         /// <param name="skip">The skip.</param>
         /// <returns>A SqlParam.</returns>
-        private SqlParam BuildTakeAndSkip(int take, int skip)
+        protected virtual SqlParam BuildTakeAndSkip(int take, int skip)
         {
             if (take == 0 && skip == 0)
                 return SqlParam.Empty;
@@ -208,7 +116,7 @@ namespace Brochure.ORM.Querys
         /// <param name="hasSelectExpression">If true, has select expression.</param>
         /// <param name="tables">The tables.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildFrom(bool hasSelectExpression, IEnumerable<BaseSubQueryType> subQueryTypes)
+        protected virtual SqlParam BuildFrom(bool hasSelectExpression, IEnumerable<BaseSubQueryType> subQueryTypes)
         {
             var r = new SqlParam();
             var stringBuilder = new StringBuilder();
@@ -227,7 +135,7 @@ namespace Brochure.ORM.Querys
             var queryList = typeObjList.OfType<IQuery>();
             foreach (var item in queryList)
             {
-                var t_r = BuildSub(item);//处理子查询
+                var t_r = BuildSubQuery(item);//处理子查询
                 r.Type = t_r.Type;
                 r.GroupDic.AddRange(t_r.GroupDic);
                 r.TableTypeDic.AddRange(t_r.TableTypeDic);
@@ -258,11 +166,11 @@ namespace Brochure.ORM.Querys
         /// <param name="expression">The expression.</param>
         /// <param name="groupSql">The group sql.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildSelect(Expression expression, string groupSql)
+        protected virtual SqlParam BuildSelect(Expression expression, string groupSql)
         {
             if (expression == null)
                 return new SqlParam();
-            var visitor = this._visitProvider.Builder<SelectVisitor>();
+            var visitor = _visitProvider.Builder<SelectVisitor>();
             var r = Build(visitor, expression);
             //由于Group的存在 会限制select 的查询内容
             //if (r.SQL.ContainsReg($@"{_dbProvider.FormatFieldName(@"<>f__AnonymousType[0-9]`[0-9]")}") && !string.IsNullOrWhiteSpace(groupSql))
@@ -291,12 +199,12 @@ namespace Brochure.ORM.Querys
         /// <param name="expression">The expression.</param>
         /// <param name="whereList">The where list.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildWhere(Expression expression, IEnumerable<(string, Expression)> whereList)
+        protected virtual SqlParam BuildWhere(Expression expression, IEnumerable<(string, Expression)> whereList)
         {
             var result = new SqlParam();
             if (expression == null && whereList.Count() == 0)
                 return result;
-            var visitor = this._visitProvider.Builder<WhereVisitor>();
+            var visitor = _visitProvider.Builder<WhereVisitor>();
             var r = Build(visitor, expression);
             var whereSqlResult = BuildWhereList(visitor, whereList, r.SQL);
             result.SQL = $"where {r.SQL}{whereSqlResult.SQL}";
@@ -312,7 +220,7 @@ namespace Brochure.ORM.Querys
         /// <param name="expression">The expression.</param>
         /// <param name="whereSql">The where sql.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildWhereList(WhereVisitor whereVisitor, IEnumerable<(string, Expression)> expression, string whereSql)
+        protected virtual SqlParam BuildWhereList(WhereVisitor whereVisitor, IEnumerable<(string, Expression)> expression, string whereSql)
         {
             var result = new SqlParam();
             var visitor = whereVisitor;//此处里面有参数 确保 参数话查询 不会有重复的符号
@@ -334,9 +242,9 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private (SqlParam, Dictionary<string, string>) BuildGroup(Expression expression)
+        protected virtual (SqlParam, Dictionary<string, string>) BuildGroup(Expression expression)
         {
-            var visitor = this._visitProvider.Builder<GroupVisitor>();
+            var visitor = _visitProvider.Builder<GroupVisitor>();
             return (Build(visitor, expression), visitor.GroupDic);
         }
 
@@ -346,9 +254,9 @@ namespace Brochure.ORM.Querys
         /// <param name="expression">The expression.</param>
         /// <param name="isAes">If true, is aes.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildOrder(Expression expression, bool isAes)
+        protected virtual SqlParam BuildOrder(Expression expression, bool isAes)
         {
-            var visitor = this._visitProvider.Builder<OrderVisitor>();
+            var visitor = _visitProvider.Builder<OrderVisitor>();
             visitor.IsAes = isAes;
             return Build(visitor, expression);
         }
@@ -358,10 +266,10 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam BuildJoin(IEnumerable<(BaseSubQueryType, Expression)> expression)
+        protected virtual SqlParam BuildJoin(IEnumerable<(BaseSubQueryType, Expression)> expression)
         {
             var result = new SqlParam();
-            var visitor = this._visitProvider.Builder<JoinVisitor>();
+            var visitor = _visitProvider.Builder<JoinVisitor>();
             foreach (var item in expression)
             {
                 (var subQueryType, var joinExpression) = item;
@@ -372,7 +280,7 @@ namespace Brochure.ORM.Querys
                 }
                 else if (joinType is IQuery subQuery)
                 {
-                    var t_r = BuildSub(subQuery);
+                    var t_r = BuildSubQuery(subQuery);
                     var tableKey = t_r.Type.GetHashCode();
                     var joinTable = $"({t_r.SQL}) {tableKey}";
                     result.TempTable.Add(tableKey);
@@ -392,9 +300,9 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>A ParmsSqlResult.</returns>
-        public SqlParam BuildHaving(Expression expression)
+        protected virtual SqlParam BuildHaving(Expression expression)
         {
-            var visitor = this._visitProvider.Builder<HavingVisitor>();
+            var visitor = _visitProvider.Builder<HavingVisitor>();
             return Build(visitor, expression);
         }
 
@@ -403,13 +311,13 @@ namespace Brochure.ORM.Querys
         /// </summary>
         /// <param name="queries">The queries.</param>
         /// <returns>A SqlParam.</returns>
-        public SqlParam BuildOtherQuery(IList<IQuery> queries)
+        protected virtual SqlParam BuildOtherQuery(IList<IQuery> queries)
         {
             var result = new SqlParam();
             var str = new StringBuilder();
             foreach (var item in queries)
             {
-                var r = BuildSub(item);
+                var r = BuildSubQuery(item);
                 str.Append($";{r.SQL}");
                 result.TableTypeDic.AddRange(r.TableTypeDic);
                 result.Params.AddRange(r.Params);
@@ -418,53 +326,6 @@ namespace Brochure.ORM.Querys
             }
             result.SQL = str.ToString();
             return result;
-        }
-
-        /// <summary>
-        /// Builds the.
-        /// </summary>
-        /// <param name="visitor">The visitor.</param>
-        /// <param name="expression">The expression.</param>
-        /// <returns>A ParmsSqlResult.</returns>
-        private SqlParam Build(ORMVisitor visitor, Expression expression)
-        {
-            if (expression == null)
-                return SqlParam.Empty;
-            var sql = visitor.GetSql(expression).ToString();
-            var parList = visitor.GetParameters();
-            return new SqlParam(AddWhiteSpace(sql), parList, visitor.GetTableDic());
-        }
-
-        /// <summary>
-        /// Adds the white space.
-        /// </summary>
-        /// <param name="str">The str.</param>
-        /// <returns>A string.</returns>
-        private string AddWhiteSpace(string str)
-        {
-            if (!string.IsNullOrWhiteSpace(str))
-                return str + " ";
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Renames the parameter.
-        /// </summary>
-        /// <param name="stringBuilder">The string builder.</param>
-        /// <param name="parameters">The par dic.</param>
-        /// <returns>An array of IDbDataParameters.</returns>
-        public IDbDataParameter[] RenameParameter(StringBuilder stringBuilder, IEnumerable<IDbDataParameter> parameters)
-        {
-            var name = string.Empty;
-            var count = 0;
-            foreach (var item in parameters)
-            {
-                name = $"{_dbProvider.GetParamsSymbol()}p{count}";
-                stringBuilder.Replace(item.ParameterName, name);
-                item.ParameterName = name;
-                count++;
-            }
-            return parameters.ToArray();
         }
 
         /// <summary>
@@ -510,70 +371,85 @@ namespace Brochure.ORM.Querys
         }
 
         /// <summary>
-        /// The sql param.
+        /// Builds the.
         /// </summary>
-        internal class SqlParam
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="expression">The expression.</param>
+        /// <returns>A ParmsSqlResult.</returns>
+        private SqlParam Build(ORMVisitor visitor, Expression expression)
         {
-            /// <summary>
-            /// Gets the empty.
-            /// </summary>
-            internal static SqlParam Empty => new SqlParam();
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="SqlParam"/> class.
-            /// </summary>
-            public SqlParam() : this("", new List<IDbDataParameter>(), new Dictionary<int, Type>())
-            {
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="SqlParam"/> class.
-            /// </summary>
-            /// <param name="sql">The sql.</param>
-            /// <param name="pp">The pp.</param>
-            /// <param name="tableType">The table type.</param>
-            /// <param name="tempTableDic">The temp table dic.</param>
-            /// <param name="groupDic">The group dic.</param>
-            /// <param name="type">The type.</param>
-            public SqlParam(string sql, List<IDbDataParameter> pp, IDictionary<int, Type> tableType, HashSet<int> tempTableDic = null, IDictionary<string, string> groupDic = null, Type type = null)
-            {
-                SQL = sql;
-                Params = pp;
-                TableTypeDic = tableType;
-                GroupDic = groupDic ?? new Dictionary<string, string>();
-                TempTable = tempTableDic ?? new HashSet<int>();
-                Type = type;
-            }
-
-            /// <summary>
-            /// Gets or sets the type.
-            /// </summary>
-            public Type Type { get; set; }
-
-            /// <summary>
-            /// Gets or sets the s q l.
-            /// </summary>
-            internal string SQL { get; set; }
-
-            /// <summary>
-            /// Gets the params.
-            /// </summary>
-            internal List<IDbDataParameter> Params { get; }
-
-            /// <summary>
-            /// Gets the table type dic.
-            /// </summary>
-            internal IDictionary<int, Type> TableTypeDic { get; }
-
-            /// <summary>
-            /// Gets or sets the group dic.
-            /// </summary>
-            internal IDictionary<string, string> GroupDic { get; set; }
-
-            /// <summary>
-            /// Gets the temp table.
-            /// </summary>
-            internal HashSet<int> TempTable { get; }
+            if (expression == null)
+                return SqlParam.Empty;
+            var sql = visitor.GetSql(expression).ToString();
+            var parList = visitor.GetParameters();
+            return new SqlParam(AddWhiteSpace(sql), parList, visitor.GetTableDic());
         }
+    }
+
+    /// <summary>
+    /// The sql param.
+    /// </summary>
+    public class SqlParam
+    {
+        /// <summary>
+        /// Gets the empty.
+        /// </summary>
+        internal static SqlParam Empty => new SqlParam();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlParam"/> class.
+        /// </summary>
+        public SqlParam() : this("", new List<IDbDataParameter>(), new Dictionary<int, Type>())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlParam"/> class.
+        /// </summary>
+        /// <param name="sql">The sql.</param>
+        /// <param name="pp">The pp.</param>
+        /// <param name="tableType">The table type.</param>
+        /// <param name="tempTableDic">The temp table dic.</param>
+        /// <param name="groupDic">The group dic.</param>
+        /// <param name="type">The type.</param>
+        public SqlParam(string sql, List<IDbDataParameter> pp, IDictionary<int, Type> tableType, HashSet<int> tempTableDic = null, IDictionary<string, string> groupDic = null, Type type = null)
+        {
+            SQL = sql;
+            Params = pp;
+            TableTypeDic = tableType;
+            GroupDic = groupDic ?? new Dictionary<string, string>();
+            TempTable = tempTableDic ?? new HashSet<int>();
+            Type = type;
+        }
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        public Type Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the s q l.
+        /// </summary>
+        internal string SQL { get; set; }
+
+        /// <summary>
+        /// Gets the params.
+        /// </summary>
+        internal List<IDbDataParameter> Params { get; }
+
+        /// <summary>
+        /// Gets the table type dic.
+        /// </summary>
+        internal IDictionary<int, Type> TableTypeDic { get; }
+
+        /// <summary>
+        /// Gets or sets the group dic.
+        /// </summary>
+        internal IDictionary<string, string> GroupDic { get; set; }
+
+        /// <summary>
+        /// Gets the temp table.
+        /// </summary>
+        internal HashSet<int> TempTable { get; }
     }
 }

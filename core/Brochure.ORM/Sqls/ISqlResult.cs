@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace Brochure.ORM.Querys
+namespace Brochure.ORM
 {
     /// <summary>
     /// The sql.
     /// </summary>
-    public interface ISql
+    public interface ISqlResult
     {
         /// <summary>
         /// Gets the s q l.

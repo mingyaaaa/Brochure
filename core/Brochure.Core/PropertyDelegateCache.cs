@@ -64,6 +64,58 @@ namespace Brochure.Core
         }
     }
 
+    public static class PropertyGetDelegateCache
+    {
+        private static readonly ConcurrentDictionary<string, Func<object, object>> getPropertyFunCache = new ConcurrentDictionary<string, Func<object, object>>();
+
+        /// <summary>
+        /// Gets the get action.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>A Func.</returns>
+        public static bool TryGetGetAction(string key, out Func<object, object> func)
+        {
+            func = null;
+            if (getPropertyFunCache.ContainsKey(key))
+            {
+                func = getPropertyFunCache[key];
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the get action.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="func">The func.</param>
+        public static void AddGetAction(string key, Func<object, object> func)
+        {
+            getPropertyFunCache.TryAdd(key, func);
+        }
+
+        /// <summary>
+        /// Tries the invoke.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An object? .</returns>
+        public static object TryGet(PropertyInfo propertyInfo, object obj)
+        {
+            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name;
+            if (TryGetGetAction(key, out Func<object, object> func))
+            {
+                return func.Invoke(obj);
+            }
+            else
+            {
+                var t_func = ReflectorUtil.Instance.GetPropertyValueFun(obj.GetType(), propertyInfo.Name);
+                AddGetAction(key, t_func);
+                return t_func(obj);
+            }
+        }
+    }
+
     /// <summary>
     /// The property set delegate cache.
     /// </summary>

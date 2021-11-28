@@ -7,7 +7,9 @@ namespace Brochure.Organization.Repository
 {
     public class OrganizationRepository : RepositoryBase<OrganizationEntiry>, IOrganizationRepository
     {
-        public OrganizationRepository(DbContext context) : base(context) { }
+        public OrganizationRepository(DbContext context, DbSql dbSql) : base(context, dbSql)
+        {
+        }
 
         public Task<int> Delete(string id)
         {

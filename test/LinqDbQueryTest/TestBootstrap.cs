@@ -1,5 +1,6 @@
 using System;
 using AspectCore.DependencyInjection;
+using Brochure.Abstract;
 using Brochure.ORM;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Database;
@@ -13,47 +14,16 @@ namespace Brochure.ORMTest
     {
         public class MySqlDbContext : DbContext
         {
-            public MySqlDbContext(DbDatabase dbDatabase, DbTable dbTable,
-                    DbColumns dbColumns, DbIndex dbIndex, DbData dbData, IConnectFactory connectFactory, ITransactionManager transactionManager) :
-                base(dbDatabase, dbTable, dbColumns, dbIndex, dbData, connectFactory, transactionManager)
-            { }
+            public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder) : base(objectFactory, connectFactory, transactionManager, sqlBuilder)
+            {
+            }
         }
 
         public class TestContext
         {
-            private DbContext dbContext;
-
-            public TestContext(DbDatabase dbDatabase,
-                DbTable dbTable,
-                DbColumns dbColumns,
-                DbIndex dbIndex,
-                DbData dbData, IConnectFactory connectFactory, ITransactionManager transactionManager)
+            public TestContext(IConnectFactory connectFactory, ITransactionManager transactionManager, IObjectFactory objectFactory, ISqlBuilder sqlBuilder)
             {
-                dbContext = new MySqlDbContext(dbDatabase, dbTable, dbColumns, dbIndex, dbData, connectFactory, transactionManager);
-            }
-
-            [Transaction]
-            public void TestCreate()
-            {
-                var students = new Students()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ClassCount = 1,
-                };
-
-                dbContext.Insert(students);
-            }
-
-            [Transaction]
-            public void TestDelete()
-            {
-                var students = new Students()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ClassCount = 1,
-                };
-
-                dbContext.Delete<Students>(t => t.Id == "1");
+                var dbContext = new MySqlDbContext(objectFactory, connectFactory, transactionManager, sqlBuilder);
             }
         }
 
@@ -67,7 +37,7 @@ namespace Brochure.ORMTest
             container.AddType<DbColumns, MySqlDbColumns>(Lifetime.Scoped);
             container.AddType<IDbProvider, MySqlDbProvider>(Lifetime.Scoped);
             container.AddType<DbOption, MySqlOption>(Lifetime.Scoped);
-            container.AddType<DbSql, MySqlDbSql>(Lifetime.Scoped);
+            container.AddType<ISqlBuilder, MySqlSqlBuilder>(Lifetime.Scoped);
             container.AddType<TransactionManager, MySqlTransactionManager>(Lifetime.Scoped);
             container.AddType<DbContext, MySqlDbContext>();
             return container;

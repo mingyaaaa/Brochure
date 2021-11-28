@@ -11,7 +11,7 @@ namespace Brochure.ORM
     /// <summary>
     /// The parms sql result.
     /// </summary>
-    public class ParmsSqlResult : ISql
+    public class ParmsSqlResult : ISqlResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ParmsSqlResult"/> class.

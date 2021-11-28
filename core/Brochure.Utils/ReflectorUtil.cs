@@ -165,10 +165,11 @@ namespace Brochure.Utils
         public Func<object, object> GetPropertyValueFun(Type classType, string propertyName)
         {
             var propertyInfo = classType.GetProperty(propertyName);
-            var instance = Expression.Parameter(classType, "t");
-            var valueProperty = Expression.Property(instance, propertyInfo);
+            var parameter = Expression.Parameter(typeof(object), "t");
+            var converExpress = Expression.Convert(parameter, classType);
+            var valueProperty = Expression.Property(converExpress, propertyInfo);
             var typeAsExpress = Expression.TypeAs(valueProperty, typeof(object));
-            var lambdaExpression = Expression.Lambda<Func<object, object>>(typeAsExpress, instance);
+            var lambdaExpression = Expression.Lambda<Func<object, object>>(typeAsExpress, parameter);
             return lambdaExpression.Compile();
         }
     }

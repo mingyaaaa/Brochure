@@ -17,13 +17,13 @@ namespace Brochure.ORMTest.Querys
         private readonly IDbProvider provider;
         private DbOption option;
         private Mock<TransactionManager> transactionManager;
-        private IQueryBuilder queryBuilder;
+        private ISqlBuilder queryBuilder;
 
         public QueryTest()
         {
             provider = base.Provider.GetService<IDbProvider>();
             transactionManager = new Mock<TransactionManager>();
-            queryBuilder = base.Provider.GetService<IQueryBuilder>();
+            queryBuilder = base.Provider.GetService<ISqlBuilder>();
         }
 
         [TestMethod]
@@ -227,9 +227,9 @@ namespace Brochure.ORMTest.Querys
 
         private class QueryGeneric<T> where T : IEntityKey<string>
         {
-            private readonly IQueryBuilder _queryBuilder;
+            private readonly ISqlBuilder _queryBuilder;
 
-            public QueryGeneric(IQueryBuilder queryBuilder)
+            public QueryGeneric(ISqlBuilder queryBuilder)
             {
                 _queryBuilder = queryBuilder;
             }

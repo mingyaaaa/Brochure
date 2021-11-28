@@ -1,8 +1,4 @@
-using System;
-using Brochure.Abstract;
-using Brochure.ORM;
 using Brochure.ORM.Database;
-using Brochure.ORM.Querys;
 
 namespace Brochure.ORM.MySql
 {
@@ -19,10 +15,6 @@ namespace Brochure.ORM.MySql
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="connectFactory">The connect factory.</param>
         /// <param name="objectFactory">The object factory.</param>
-        public MySqlDbData(DbSql dbSql,
-            DbOption dbOption,
-            ITransactionManager transactionManager,
-            IConnectFactory connectFactory,
-            IObjectFactory objectFactory, IQueryBuilder queryBuilder) : base(dbOption, dbSql, transactionManager, connectFactory, objectFactory, queryBuilder) { }
+        public MySqlDbData(DbContext dbContext) : base(dbContext) { }
     }
 }

@@ -12,7 +12,8 @@ namespace Brochure.User.Repository
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public UserRepository(DbContext context) : base(context)
+        /// <param name="dbSql"></param>
+        public UserRepository(DbContext context, DbSql dbSql) : base(context, dbSql)
         {
         }
     }

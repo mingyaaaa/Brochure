@@ -1,5 +1,7 @@
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
 {
@@ -12,13 +14,13 @@ namespace Brochure.ORM.Database
         /// Creates the connection.
         /// </summary>
         /// <returns>An IDbConnection.</returns>
-        IDbConnection CreateConnection();
+        DbConnection CreateConnection();
 
         /// <summary>
         /// Creates the and open connection.
         /// </summary>
         /// <returns>An IDbConnection.</returns>
-        IDbConnection CreateAndOpenConnection();
+        Task<DbConnection> CreateAndOpenConnectionAsync();
     }
 
     /// <summary>
@@ -27,7 +29,7 @@ namespace Brochure.ORM.Database
     public class ConnectFactory : IConnectFactory
     {
         private readonly IDbProvider provider;
-        private IDbConnection dbConnection;
+        private DbConnection dbConnection;
         private readonly DbOption dbOption;
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace Brochure.ORM.Database
         /// Creates the connection.
         /// </summary>
         /// <returns>An IDbConnection.</returns>
-        public IDbConnection CreateConnection()
+        public DbConnection CreateConnection()
         {
             if (dbConnection != null)
                 return dbConnection;
@@ -61,11 +63,11 @@ namespace Brochure.ORM.Database
         /// Creates the and open connection.
         /// </summary>
         /// <returns>An IDbConnection.</returns>
-        public IDbConnection CreateAndOpenConnection()
+        public async Task<DbConnection> CreateAndOpenConnectionAsync()
         {
             var connect = CreateConnection();
             if (connect.State == ConnectionState.Closed)
-                connect.Open();
+                await connect.OpenAsync().ConfigureAwait(false);
             return connect;
         }
 

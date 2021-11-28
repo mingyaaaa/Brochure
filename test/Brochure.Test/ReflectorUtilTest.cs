@@ -3,6 +3,7 @@ using AutoFixture;
 using Brochure.Extensions;
 using Brochure.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Brochure.Test
 {
     [TestClass]
@@ -11,7 +12,6 @@ namespace Brochure.Test
         [TestMethod]
         public void GetSetPropertyValueFunTest()
         {
-
             var obj = new TestA();
             var fun = ReflectorUtil.Instance.GetSetPropertyValueFun<TestA, string>("Ap");
             fun.Invoke(obj, "a");
@@ -24,22 +24,17 @@ namespace Brochure.Test
             var fun2 = ReflectorUtil.Instance.GetSetPropertyValueFun<TestA>(typeof(int), "Ab");
             fun2.Invoke(obj, 1);
             Assert.AreEqual(obj.Ab, 1);
-
         }
 
         [TestMethod("≤‚ ‘Nullable")]
         public void NullableTest()
         {
-
             var a = new TestA();
             var b = Fixture.Create<TestB>();
             var fun = ReflectorUtil.Instance.GetSetPropertyValueFun<TestA>(typeof(int?), "NullableA");
             fun.Invoke(a, b.NullableA);
             Assert.AreEqual(a.NullableA, b.NullableA);
-
-
         }
-
 
         [TestMethod]
         public void GetPropertyValueFunTest()
@@ -62,6 +57,30 @@ namespace Brochure.Test
             var value2 = fun2.Invoke(obj);
             Assert.AreEqual(value2, 1);
         }
+
+        [TestMethod]
+        public void GetPropertyValueFunTest1()
+        {
+            var obj = new TestA()
+            {
+                Ap = "a",
+                Ab = 1,
+            };
+            var fun = ReflectorUtil.Instance.GetPropertyValueFun(obj.GetType(), "Ap");
+            var value = fun.Invoke(obj);
+            Assert.AreEqual(value, "a");
+
+            var fun1 = ReflectorUtil.Instance.GetPropertyValueFun(obj.GetType(), "Ap");
+            Assert.IsNotNull(fun1);
+            var value1 = fun1.Invoke(obj);
+            Assert.AreEqual(value1, "a");
+
+            var fun2 = ReflectorUtil.Instance.GetPropertyValueFun(obj.GetType(), "Ab");
+            Assert.IsNotNull(fun2);
+            var value2 = fun2.Invoke(obj);
+            Assert.AreEqual(value2, 1);
+        }
+
         public class TestA
         {
             /// <summary>
@@ -98,5 +117,4 @@ namespace Brochure.Test
             public int NullableA { get; set; }
         }
     }
-
 }

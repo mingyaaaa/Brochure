@@ -68,6 +68,11 @@ namespace Brochure.User.Services.Imps
             return entrity;
         }
 
+        /// <summary>
+        /// Inserts the and get.
+        /// </summary>
+        /// <param name="userEntrity">The user entrity.</param>
+        /// <returns>A ValueTask.</returns>
         public async ValueTask<UserEntrity> InsertAndGet(UserEntrity userEntrity)
         {
             var r = await repository.InsertAndGet(userEntrity);

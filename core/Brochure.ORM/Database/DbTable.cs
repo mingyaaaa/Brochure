@@ -8,9 +8,7 @@ namespace Brochure.ORM.Database
     /// </summary>
     public abstract class DbTable
     {
-        protected DbOption Option;
-        private readonly DbSql dbSql;
-        private readonly IConnectFactory connectFactory;
+        private readonly DbContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbTable"/> class.
@@ -18,21 +16,9 @@ namespace Brochure.ORM.Database
         /// <param name="option">The option.</param>
         /// <param name="dbSql">The db sql.</param>
         /// <param name="connectFactory">The connect factory.</param>
-        protected DbTable(DbOption option, DbSql dbSql, IConnectFactory connectFactory)
+        protected DbTable(DbContext dbContext)
         {
-            Option = option;
-            this.dbSql = dbSql;
-            this.connectFactory = connectFactory;
-        }
-
-        /// <summary>
-        /// Creates the table async.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        [Transaction]
-        public Task<long> CreateTableAsync<T>()
-        {
-            return Task.Run(() => CreateTable<T>());
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -40,10 +26,10 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <returns>A Task.</returns>
         [Transaction]
-        public async Task<long> TryCreateTableAsync<T>()
+        public async Task<long> TryCreateTableAsync<T>(string databaseName)
         {
             var tableName = TableUtlis.GetTableName<T>();
-            var isExist = await IsExistTableAsync(tableName);
+            var isExist = await IsExistTableAsync(tableName, databaseName);
             if (!isExist)
                 return await CreateTableAsync<T>();
             return -1;
@@ -66,32 +52,10 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <returns>A long.</returns>
         [Transaction]
-        public virtual long CreateTable<T>()
+        public virtual Task<int> CreateTableAsync<T>()
         {
-            var connection = connectFactory.CreateConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetCreateTableSql<T>().SQL;
-            return command.ExecuteNonQuery();
-        }
-
-        /// <summary>
-        /// Are the exist table async.
-        /// </summary>
-        /// <param name="tableName">The table name.</param>
-        /// <returns>A Task.</returns>
-        public Task<bool> IsExistTableAsync(string tableName)
-        {
-            return Task.Run(() => IsExistTable(tableName));
-        }
-
-        /// <summary>
-        /// Are the exist table async.
-        /// </summary>
-        /// <param name="tableName">The table name.</param>
-        /// <returns>A Task.</returns>
-        public Task<bool> IsExistTableAsync<T>()
-        {
-            return Task.Run(() => IsExistTable<T>());
+            var sql = Sql.CreateTable<T>();
+            return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
@@ -99,12 +63,11 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <returns>A bool.</returns>
-        protected virtual bool IsExistTable(string tableName)
+        protected virtual async Task<bool> IsExistTableAsync(string tableName, string databaseName)
         {
-            var connection = connectFactory.CreateAndOpenConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetTableNameCountSql(tableName).SQL;
-            var r = (long)(command.ExecuteScalar());
+            var sql = Sql.GetCountTable(tableName, databaseName);
+            var rr = await _dbContext.ExecuteScalarAsync(sql);
+            var r = (int)rr;
             return r >= 1;
         }
 
@@ -112,10 +75,10 @@ namespace Brochure.ORM.Database
         /// Are the exist table.
         /// </summary>
         /// <returns>A bool.</returns>
-        public virtual bool IsExistTable<T>()
+        public virtual Task<bool> IsExistTableAsync<T>(string databaseName)
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return IsExistTable(tableName);
+            return IsExistTableAsync(tableName, databaseName);
         }
 
         /// <summary>
@@ -124,21 +87,10 @@ namespace Brochure.ORM.Database
         /// <param name="tableName">The table name.</param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public Task<long> DeleteTableAsync(string tableName)
-        {
-            return Task.Run(() => DeleteTable(tableName));
-        }
-
-        /// <summary>
-        /// Deletes the table async.
-        /// </summary>
-        /// <param name="tableName">The table name.</param>
-        /// <returns>A Task.</returns>
-        [Transaction]
-        public Task<long> DeleteTableAsync<T>()
+        public Task<int> DeleteTableAsync<T>()
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return Task.Run(() => DeleteTable(tableName));
+            return DeleteTableAsync(tableName);
         }
 
         /// <summary>
@@ -147,12 +99,10 @@ namespace Brochure.ORM.Database
         /// <param name="tableName">The table name.</param>
         /// <returns>A long.</returns>
         [Transaction]
-        public virtual long DeleteTable(string tableName)
+        public virtual Task<int> DeleteTableAsync(string tableName)
         {
-            var connection = connectFactory.CreateAndOpenConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetDeleteTableSql(tableName).SQL;
-            return command.ExecuteNonQuery();
+            var sql = Sql.DeleteTable(tableName);
+            return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
@@ -162,24 +112,12 @@ namespace Brochure.ORM.Database
         /// <param name="newTableName">The new table name.</param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public Task<long> UpdateTableNameAsync(string tableName, string newTableName)
+        public async Task<int> TryUpdateTableNameAsync(string tableName, string newTableName, string databaseName)
         {
-            return Task.Run(() => UpdateTableName(tableName, newTableName));
-        }
-
-        /// <summary>
-        /// Updates the table name async.
-        /// </summary>
-        /// <param name="tableName">The table name.</param>
-        /// <param name="newTableName">The new table name.</param>
-        /// <returns>A Task.</returns>
-        [Transaction]
-        public async Task<long> TryUpdateTableNameAsync(string tableName, string newTableName)
-        {
-            var isExist = await IsExistTableAsync(tableName);
+            var isExist = await IsExistTableAsync(tableName, databaseName);
             if (!isExist)
                 return -1;
-            return await Task.Run(() => UpdateTableName(tableName, newTableName));
+            return await UpdateTableNameAsync(tableName, newTableName);
         }
 
         /// <summary>
@@ -189,12 +127,10 @@ namespace Brochure.ORM.Database
         /// <param name="newTableName">The new table name.</param>
         /// <returns>A long.</returns>
         [Transaction]
-        public virtual long UpdateTableName(string tableName, string newTableName)
+        public virtual Task<int> UpdateTableNameAsync(string tableName, string newTableName)
         {
-            var connection = connectFactory.CreateConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = dbSql.GetUpdateTableNameSql(tableName, newTableName).SQL;
-            return command.ExecuteNonQuery();
+            var sql = Sql.UpdateTableName(tableName, newTableName);
+            return _dbContext.ExcuteNoQueryAsync(sql);
         }
     }
 }

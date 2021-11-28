@@ -1,5 +1,7 @@
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Brochure.ORM.Database
 {
@@ -21,18 +23,18 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Commits the.
         /// </summary>
-        void Commit();
+        Task CommitAsync();
 
         /// <summary>
         /// Rollbacks the.
         /// </summary>
-        void Rollback();
+        Task RollbackAsync();
 
         /// <summary>
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
-        IDbTransaction GetDbTransaction();
+        Task<DbTransaction> GetDbTransactionAsync();
     }
 
     /// <summary>
@@ -40,7 +42,8 @@ namespace Brochure.ORM.Database
     /// </summary>
     public class Transaction : ITransaction
     {
-        private readonly IDbTransaction dbTransaction;
+        private readonly DbTransaction dbTransaction;
+        private readonly IConnectFactory _connectFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
@@ -48,8 +51,7 @@ namespace Brochure.ORM.Database
         /// <param name="connectFactory">The connect factory.</param>
         public Transaction(IConnectFactory connectFactory)
         {
-            var dbConnection = connectFactory.CreateAndOpenConnection();
-            this.dbTransaction = dbConnection.BeginTransaction();
+            _connectFactory = connectFactory;
         }
 
         /// <summary>
@@ -65,9 +67,10 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Commits the.
         /// </summary>
-        public void Commit()
+        public async Task CommitAsync()
         {
-            dbTransaction?.Commit();
+            if (dbTransaction != null)
+                await dbTransaction.CommitAsync();
             Dispose();
         }
 
@@ -84,17 +87,18 @@ namespace Brochure.ORM.Database
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
-        public IDbTransaction GetDbTransaction()
+        public async Task<DbTransaction> GetDbTransactionAsync()
         {
-            return dbTransaction;
+            var dbConnection = await _connectFactory.CreateAndOpenConnectionAsync();
+            return await dbConnection.BeginTransactionAsync().ConfigureAwait(false);
         }
 
         /// <summary>
         /// Rollbacks the.
         /// </summary>
-        public void Rollback()
+        public async Task RollbackAsync()
         {
-            dbTransaction?.Rollback();
+            await dbTransaction?.RollbackAsync();
             Dispose();
         }
     }
@@ -125,9 +129,10 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Commits the.
         /// </summary>
-        public void Commit()
+        public Task CommitAsync()
         {
             Dispose();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -142,7 +147,7 @@ namespace Brochure.ORM.Database
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
-        public IDbTransaction GetDbTransaction()
+        public async Task<DbTransaction> GetDbTransactionAsync()
         {
             return null;
         }
@@ -150,9 +155,10 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Rollbacks the.
         /// </summary>
-        public void Rollback()
+        public Task RollbackAsync()
         {
             Dispose();
+            return Task.CompletedTask;
         }
     }
 }

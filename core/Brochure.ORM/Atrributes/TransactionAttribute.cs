@@ -48,10 +48,10 @@ namespace Brochure.ORM.Atrributes
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     throw;
                 }
-                transaction.Commit();
+                await transaction.CommitAsync();
                 transactionManager.RemoveTransaction(transaction);
             }
         }
