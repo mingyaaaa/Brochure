@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Core.PluginsDI;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets or sets the service provider.
         /// </summary>
-        internal static IServiceProvider ServiceProvider { get; set; }
+        internal static IServiceProvider ServiceProvider => AccessServiceProvider.Service;
 
         public IsolationLevel IsolationLevel => _transaction == null ? IsolationLevel.Unspecified : _transaction.IsolationLevel;
         private bool _isRollbackOrCommit = false;
@@ -57,6 +58,8 @@ namespace Brochure.ORM
         public DbDatabase Databases => _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
         public DbColumn Columns => _serviceScope.ServiceProvider.GetRequiredService<DbColumn>();
         public DbIndex Indexs => _serviceScope.ServiceProvider.GetRequiredService<DbIndex>();
+
+        public string DatabaseName => _connectFactory.GetDatabase();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
@@ -123,7 +126,7 @@ namespace Brochure.ORM
         {
             if (_transaction != null)
             {
-                await _transaction?.RollbackAsync();
+                await _transaction.RollbackAsync();
                 _isRollbackOrCommit = true;
             }
             throw new Exception("事务没有开启");
@@ -136,7 +139,8 @@ namespace Brochure.ORM
         /// <returns>A list of TS.</returns>
         public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(params ISql[] sqls) where T : class, new()
         {
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => t.Key == null ? "" : t.Key, t => t.ToArray());
+            var defaultDatabase = _connectFactory.GetDatabase();
+            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
             var list = new List<T>();
             var taskList = new List<Task<IEnumerable<T>>>();
             foreach (var item in group)
@@ -189,7 +193,8 @@ namespace Brochure.ORM
         /// <returns>An int.</returns>
         public virtual async Task<int> ExcuteNoQueryAsync(params ISql[] sqls)
         {
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => t.Key == null ? "" : t.Key, t => t.ToArray());
+            var defaultDatabase = _connectFactory.GetDatabase();
+            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
             var r = 0;
             var taskList = new List<Task<int>>();
             foreach (var item in group)
@@ -235,22 +240,15 @@ namespace Brochure.ORM
         /// <returns>An object.</returns>
         public virtual async Task<object> ExecuteScalarAsync(params ISql[] sqls)
         {
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => t.Key == null ? "" : t.Key, t => t.ToArray());
-            var r = 0;
+            var defaultDatabase = _connectFactory.GetDatabase();
+            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
             var taskList = new List<Task<object>>();
             foreach (var item in group)
             {
                 taskList.Add(ExecuteScalarAsync(item.Key, item.Value));
             }
             var rList = await Task.WhenAll(taskList);
-            foreach (var item in rList)
-            {
-                if (item is int rr)
-                {
-                    r += rr;
-                }
-            }
-            return r;
+            return rList.LastOrDefault();
         }
 
         /// <summary>
@@ -264,7 +262,7 @@ namespace Brochure.ORM
             var command = await CreateDbCommandAsync(database);
             command.CommandText = sql.SQL;
             command.Parameters.AddRange(sql.Parameters);
-            return command.ExecuteScalarAsync();
+            return await command.ExecuteScalarAsync();
         }
 
         /// <summary>

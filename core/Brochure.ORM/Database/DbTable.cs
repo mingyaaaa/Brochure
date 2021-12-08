@@ -58,7 +58,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual Task<int> CreateTableAsync<T>()
         {
-            var sql = Sql.CreateTable<T>();
+            var sql = Sql.CreateTable<T>(_dbContext.DatabaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
@@ -69,9 +69,9 @@ namespace Brochure.ORM.Database
         /// <returns>A bool.</returns>
         protected virtual async Task<bool> IsExistTableAsync(string tableName)
         {
-            var sql = Sql.GetCountTable(tableName);
+            var sql = Sql.GetCountTable(tableName, _dbContext.DatabaseName);
             var rr = await _dbContext.ExecuteScalarAsync(sql);
-            var r = (int)rr;
+            var r = (long)rr;
             return r >= 1;
         }
 
@@ -105,7 +105,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual Task<int> DeleteTableAsync(string tableName)
         {
-            var sql = Sql.DeleteTable(tableName);
+            var sql = Sql.DeleteTable(tableName, _dbContext.DatabaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
@@ -133,7 +133,7 @@ namespace Brochure.ORM.Database
         [Transaction]
         public virtual Task<int> UpdateTableNameAsync(string tableName, string newTableName)
         {
-            var sql = Sql.UpdateTableName(tableName, newTableName);
+            var sql = Sql.UpdateTableName(tableName, newTableName, _dbContext.DatabaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 

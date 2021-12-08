@@ -46,7 +46,7 @@ namespace Brochure.ORM.Database
         {
             var sql = Sql.GetColumnsCount(tableName, columnName);
             var r = await _dbContext.ExecuteScalarAsync(sql);
-            var rr = (int)r;
+            var rr = (long)r;
             return rr >= 1;
         }
 

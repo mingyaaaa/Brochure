@@ -21,6 +21,8 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <returns>An IDbConnection.</returns>
         Task<DbConnection> CreateAndOpenConnectionAsync();
+
+        string GetDatabase();
     }
 
     /// <summary>
@@ -82,6 +84,12 @@ namespace Brochure.ORM.Database
                 this.dbConnection.Close();
             this.dbConnection.Dispose();
             this.dbConnection = null;
+        }
+
+        public string GetDatabase()
+        {
+            var connect = CreateConnection();
+            return connect.Database ?? "";
         }
     }
 }

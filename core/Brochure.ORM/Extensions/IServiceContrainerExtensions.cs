@@ -39,9 +39,9 @@ namespace Brochure.ORM.Extensions
         /// <returns>An IServiceCollection.</returns>
         public static IServiceCollection AddDbCore(this IServiceCollection services, Action<IDbBuilder> builderAction)
         {
+            services.AddVisit();
             var builder = new DbBuilder(services);
             builderAction.Invoke(builder);
-            DbContext.ServiceProvider = services.BuildPluginServiceProvider();
             return services;
         }
     }

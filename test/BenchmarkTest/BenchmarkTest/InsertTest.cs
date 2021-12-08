@@ -21,6 +21,8 @@ namespace BenchmarkTest.BenchmarkTest
 
         public static int Count = 100;
 
+        private IServiceProvider Provider;
+
         public InsertTest()
         {
             Fixture = new Fixture();
@@ -37,6 +39,7 @@ namespace BenchmarkTest.BenchmarkTest
             }));
 
             service.AddDbContext<MysqlContent>(t => t.UseMySQL("server=192.168.0.6;database=test;uid=test;pwd=123456"));
+            Provider = service.BuildServiceProvider();
         }
 
         [Benchmark]

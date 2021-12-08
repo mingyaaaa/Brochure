@@ -83,7 +83,8 @@ namespace Brochure.ORM.Database
         /// </summary>
         public async Task RollbackAsync()
         {
-            await dbTransaction?.RollbackAsync();
+            if (dbTransaction != null)
+                await dbTransaction.RollbackAsync();
             Dispose();
         }
     }

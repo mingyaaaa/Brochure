@@ -24,7 +24,6 @@ namespace Brochure.ORM.MySql
         public static IServiceCollection AddMySql(this IDbBuilder builder, Action<MySqlOption> action = null)
         {
             var services = builder.Service;
-            services.AddVisit();
             services.TryAddScoped<DbDatabase, MySqlDbDatabase>();
             services.TryAddScoped<DbData, MySqlDbData>();
             services.TryAddScoped<DbTable, MySqlDbTable>();

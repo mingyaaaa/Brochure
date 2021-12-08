@@ -27,7 +27,8 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceProvider.</returns>
         public IServiceProvider CreateServiceProvider(IServiceCollection containerBuilder)
         {
-            return containerBuilder.BuildPluginServiceProvider();
+            AccessServiceProvider.Service = containerBuilder.BuildPluginServiceProvider();
+            return AccessServiceProvider.Service;
         }
     }
 }
