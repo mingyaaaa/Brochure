@@ -24,7 +24,6 @@ namespace Brochure.Core
         /// </summary>
         public Plugins() : this(new PluginContext())
         {
-
         }
 
         /// <summary>
@@ -37,31 +36,36 @@ namespace Brochure.Core
             Context = pluginContexts;
         }
 
-
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
         public Guid Key { get; set; }
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
         public string Version { get; set; }
+
         /// <summary>
         /// Gets or sets the author.
         /// </summary>
         public string Author { get; set; }
+
         /// <summary>
         /// Gets or sets the assembly name.
         /// </summary>
         public string AssemblyName { get; set; }
+
         /// <summary>
         /// Gets or sets the dependences key.
         /// </summary>
         public List<Guid> DependencesKey { get; set; }
+
         /// <summary>
         /// Gets or sets the assembly.
         /// </summary>
@@ -95,16 +99,18 @@ namespace Brochure.Core
             return Task.CompletedTask;
         }
 
-        public virtual Task<bool> StartingAsync(out string errorMsg)
+        public virtual Task<bool> StartingAsync()
         {
-            errorMsg = string.Empty;
             return Task.FromResult(true);
         }
 
-        public virtual Task<bool> ExitingAsync(out string errorMsg)
+        public virtual Task<bool> ExitingAsync()
         {
-            errorMsg = string.Empty;
             return Task.FromResult(true);
+        }
+
+        public virtual void ConfigureService(IServiceCollection services)
+        {
         }
     }
 }

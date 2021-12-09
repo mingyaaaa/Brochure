@@ -67,13 +67,14 @@ namespace Brochure.Core
             _applicationOption = applicationOption;
             _hostEnvironment = hostEnvironment;
         }
+
         /// <summary>
         /// Loads the plugin.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
+        private ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
         {
             IPluginsLoadContext locadContext = null;
             try
@@ -107,24 +108,11 @@ namespace Brochure.Core
         /// Loads the plugin.
         /// </summary>
         /// <param name="service">The service.</param>
-        /// <param name="pluginConfigPath">The plugin config path.</param>
-        /// <returns>A ValueTask.</returns>
-        public ValueTask<IPlugins> LoadPlugin(IServiceCollection service, string pluginConfigPath)
-        {
-            var serviceProvider = service.BuildPluginServiceProvider();
-            return LoadPlugin(serviceProvider, pluginConfigPath);
-        }
-
-        /// <summary>
-        /// Loads the plugin.
-        /// </summary>
-        /// <param name="service">The service.</param>
         /// <returns>A ValueTask.</returns>
         public async ValueTask LoadPlugin(IServiceProvider service)
         {
             await ResolverPlugins(service);
         }
-
 
         /// <summary>
         /// 加载插件
@@ -138,10 +126,10 @@ namespace Brochure.Core
             //加载程序集
             foreach (var pluginConfigPath in allPluginPath)
             {
-                Guid pluginKey = Guid.Empty;
                 try
                 {
                     var p = await LoadPlugin(provider, pluginConfigPath);
+                    p.ConfigureService(p.Context.Services);
                     if (p != null)
                     {
                         listPlugins.Add(p);
@@ -170,9 +158,9 @@ namespace Brochure.Core
                     if (plugin.Key != Guid.Empty)
                         await UnLoad(plugin.Key);
                 }
-
             }
         }
+
         private void NotifyUnload(Guid key)
         {
             foreach (var item in _unLoadActions)
@@ -186,6 +174,7 @@ namespace Brochure.Core
             foreach (var item in _loadActions)
                 item.Invoke(key);
         }
+
         /// <summary>
         /// Starts the plugin.
         /// </summary>
@@ -193,11 +182,11 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         private async Task<bool> StartPlugin(IPlugins plugin)
         {
-            //处理插件          
+            //处理插件
             var result = false;
             try
             {
-                result = await plugin.StartingAsync(out string errorMsg);
+                result = await plugin.StartingAsync();
             }
             catch (Exception e)
             {
@@ -290,21 +279,6 @@ namespace Brochure.Core
             }
             return builder.Build();
         }
-
-
-
-
-        //private IConfiguration BuildConfiguration(string path)
-        //{
-        //    if (!File.Exists(path))
-        //        return null;
-        //    if (Path.GetExtension(path) != ".json")
-        //        throw new Exception("插件配置文件错误,请使用Json文件");
-        //    var build = new ConfigurationBuilder();
-        //    build.AddJsonFile(path);
-        //    return build.Build();
-        //}
-
 
         private string GetPluginSettingFile()
         {

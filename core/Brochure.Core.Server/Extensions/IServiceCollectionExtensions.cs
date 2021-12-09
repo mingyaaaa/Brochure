@@ -23,11 +23,10 @@ namespace Brochure.Core.Server
         /// <returns>A Task.</returns>
         internal static async Task AddPluginController(this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvcCore();
+            var mvcBuilder = services.AddMvc();
+            services.TryAddSingleton<IMvcBuilder>(mvcBuilder);
             var provider = services.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
-            var application = provider.GetService<IBApplication>() as BApplication;
-            application.ApplicationPartManager = mvcBuilder.PartManager;
             var pluginList = manager.GetPlugins();
             foreach (var item in pluginList)
             {
@@ -57,7 +56,6 @@ namespace Brochure.Core.Server
             services.AddBrochureCore(option =>
            {
                option.AddLog();
-               option.Services.AddSingleton<IBApplication>(new BApplication());
                option.Services.TryAddSingleton<IMiddleManager>(new MiddleManager());
                option.Services.AddTransient<IPluginUnLoadAction, PluginMiddleUnLoadAction>();
                services.AddSingleton<IActionDescriptorChangeProvider>(PluginActionDescriptorChangeProvider.Instance);

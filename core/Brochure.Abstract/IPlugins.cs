@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -53,30 +54,35 @@ namespace Brochure.Abstract
         List<Guid> DependencesKey { get; }
 
         /// <summary>
+        /// Configures the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        void ConfigureService(IServiceCollection services);
+
+        /// <summary>
         /// 启动插件
         /// </summary>
         /// <returns></returns>
-        Task StartAsync ();
+        Task StartAsync();
 
         /// <summary>
         /// 退出卸载插件
         /// </summary>
         /// <returns></returns>
-        Task ExitAsync ();
+        Task ExitAsync();
 
         /// <summary>
         /// 插件加载前执行
         /// </summary>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        Task<bool> StartingAsync (out string errorMsg);
+        Task<bool> StartingAsync();
 
         /// <summary>
         /// 退出插件前执行
         /// </summary>
         /// <param name="errorMsg"></param>
         /// <returns></returns>
-        Task<bool> ExitingAsync (out string errorMsg);
+        Task<bool> ExitingAsync();
     }
-
 }

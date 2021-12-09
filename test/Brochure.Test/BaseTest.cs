@@ -15,7 +15,6 @@ using Moq;
 
 namespace Brochure.Test
 {
-
     public class BaseTest
     {
         public BaseTest()
@@ -27,11 +26,14 @@ namespace Brochure.Test
             Fixture.Customize(new AutoMoqCustomization());
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
         }
+
         /// <summary>
         /// Gets the service.
         /// </summary>
         protected IServiceCollection Service { get; }
+
         protected IFixture Fixture;
+
         /// <summary>
         /// Gets the mock service.
         /// </summary>
@@ -54,28 +56,27 @@ namespace Brochure.Test
             SetMockService(new Mock<IObjectFactory>());
             SetMockService(new Mock<IPluginManagers>());
             SetMockService(new Mock<ILoggerFactory>());
-            SetMockService(new Mock<IBApplication>());
             Log.Setup(t => t.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(),
                this, It.IsAny<Exception>(), It.IsAny<Func<BaseTest, Exception, string>>()
            ));
         }
+
         private void SetMockService<T>(IMock<T> mockService) where T : class
         {
             Service.TryAddSingleton<T>(mockService.Object);
             MockService.Add(typeof(T), mockService);
         }
+
         public Mock<T> GetMockService<T>() where T : class
         {
             var type = typeof(T);
             if (!MockService.ContainsKey(type))
                 throw new Exception("Mock服务没有注册");
             return (Mock<T>)MockService[type];
-
         }
     }
 
     /// <summary>
     /// The test plugin.
     /// </summary>
-
 }
