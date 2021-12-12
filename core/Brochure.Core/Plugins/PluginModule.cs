@@ -17,7 +17,6 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public Task ConfigModule(IServiceCollection services)
         {
-
             return Task.CompletedTask;
         }
 
@@ -29,7 +28,7 @@ namespace Brochure.Core
         public Task Initialization(IServiceProvider provider)
         {
             var pluginLoader = provider.GetService<IPluginLoader>();
-            return pluginLoader.LoadPlugin(provider).AsTask();
+            return pluginLoader.LoadPlugin().AsTask();
         }
     }
 }

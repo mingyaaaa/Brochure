@@ -4,11 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <Import Project="../../build/copy_main.targets" />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>latest</LangVersion>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\net5.0\Brochure.Server.Main.xml</DocumentationFile>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -19,8 +14,11 @@
     <None Remove="plugins\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8067" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8068" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Brochure.Core.Server\Brochure.Core.Server.csproj" />
   </ItemGroup>
 </Project>

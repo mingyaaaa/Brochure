@@ -14,7 +14,7 @@
      </Protobuf>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.8067" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.8070" />
     <PackageReference Include="Google.Protobuf" Version="3.19.1" />
     <PackageReference Include="Grpc.Core" Version="2.42.0" />
     <PackageReference Include="Grpc.Tools" Version="2.42.0">

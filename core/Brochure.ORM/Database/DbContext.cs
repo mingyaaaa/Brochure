@@ -96,12 +96,12 @@ namespace Brochure.ORM
             if (_isBeginTransaction)
             {
                 _transaction = new Transaction(_connectFactory);
-                _transactionManager.AddTransaction(_transaction);
+                _transactionManager?.AddTransaction(_transaction);
             }
             else
             {
                 _transaction = new InnerTransaction();
-                _transactionManager.AddTransaction(_transaction);
+                _transactionManager?.AddTransaction(_transaction);
             }
             return _transaction;
         }

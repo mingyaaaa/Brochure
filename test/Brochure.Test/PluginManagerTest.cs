@@ -27,6 +27,7 @@ namespace Brochure.Test
         {
         }
     }
+
     [TestClass]
     public class PluginManagerTest : BaseTest
     {
@@ -44,8 +45,6 @@ namespace Brochure.Test
             loadPluginContext = new Mock<IPluginsLoadContext>();
             serviceProviderMock = new Mock<IServiceProvider>();
         }
-
-
 
         [TestMethod]
         public async Task TestLoadAction()
@@ -70,9 +69,9 @@ namespace Brochure.Test
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>(), It.IsAny<object>())).Returns(loadPluginContext.Object);
+            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>())).Returns(loadPluginContext.Object);
 
-            await ins.LoadPlugin(serviceProviderMock.Object);
+            await ins.LoadPlugin();
 
             autoMock.GetMock<IReflectorUtil>().Verify(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)), Times.Exactly(1));
 
@@ -118,11 +117,12 @@ namespace Brochure.Test
             await ins.Remove(pluginMock.Object);
             unLoaderActionMock.Verify(t => t.Invoke(It.IsAny<Guid>()), Times.Never);
         }
-
     }
 
     public class PA : Plugins
     {
-        public PA(IServiceProvider service) : base(new PluginContext()) { }
+        public PA(IServiceProvider service) : base(new PluginContext())
+        {
+        }
     }
 }

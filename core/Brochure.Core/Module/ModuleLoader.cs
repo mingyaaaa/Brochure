@@ -4,6 +4,7 @@ using System.Reflection;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core.Extenstions;
+using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -15,27 +16,29 @@ namespace Brochure.Core.Module
     public class ModuleLoader : IModuleLoader
     {
         private readonly ILogger<ModuleLoader> logger;
+        private readonly IReflectorUtil reflectorUtil;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public ModuleLoader(ILogger<ModuleLoader> logger)
+        public ModuleLoader(ILogger<ModuleLoader> logger, IReflectorUtil reflectorUtil)
         {
             this.logger = logger;
+            this.reflectorUtil = reflectorUtil;
         }
+
         /// <summary>
         /// Loads the module.
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="services">The services.</param>
         /// <param name="assembly">The assembly.</param>
-        public void LoadModule(IServiceProvider provider, IServiceCollection services, Assembly assembly)
+        public void LoadModule(IServiceCollection services, Assembly assembly)
         {
             try
             {
-                var refUtils = provider.GetService<IReflectorUtil>();
-                var modules = refUtils.GetObjectOfBase<IModule>(assembly);
+                var modules = reflectorUtil.GetObjectOfBase<IModule>(assembly);
                 if (!modules.Any())
                     return;
                 foreach (var item in modules)
@@ -44,7 +47,7 @@ namespace Brochure.Core.Module
                 }
                 foreach (var item in modules)
                 {
-                    item.Initialization(services.BuildPluginServiceProvider());
+                    item.Initialization(AccessServiceProvider.Service ?? services.BuildServiceProvider());
                 }
             }
             catch (System.Exception e)
@@ -52,7 +55,6 @@ namespace Brochure.Core.Module
                 logger.LogError(e, e.Message);
                 throw;
             }
-
         }
     }
 }

@@ -1,15 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <None Remove="MySqlDbDatabase.cs~RF23e77b8.TMP" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.27" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" />
+	  <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" >
+	  </ProjectReference>
   </ItemGroup>
 
   <PropertyGroup>

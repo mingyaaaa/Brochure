@@ -42,7 +42,6 @@ namespace Brochure.Server.Main
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
@@ -57,19 +56,18 @@ namespace Brochure.Server.Main
             services.Configure<SwaggerUIOptions>(t =>
             {
                 t.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
-            
             });
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        // 
+        //
         /// <summary>
         ///This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">The app.</param>
         /// <param name="env">The env.</param>
         /// <param name="application">The application.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBApplication application)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -78,11 +76,6 @@ namespace Brochure.Server.Main
             var log = app.ApplicationServices.GetService<ILogger<Startup>>();
             var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>>();
             routeOption.Value.SuppressCheckForUnhandledSecurityMetadata = true;
-            if (application is BApplication t)
-            {
-                t.ServiceProvider = app.ApplicationServices;
-                t.Builder = app;
-            }
             var bb = app.ApplicationServices.GetServices<IConfigureOptions<SwaggerUIOptions>>();
             var a = app.ApplicationServices.GetService<IOptionsSnapshot<SwaggerUIOptions>>().Value;
             // 添加Swagger有关中间件

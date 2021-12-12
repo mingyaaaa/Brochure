@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -7,6 +8,7 @@ using AspectCore.DynamicProxy.Parameters;
 using Brochure.Abstract;
 using Brochure.Abstract.PluginDI;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace Brochure.Core
 {
     /// <summary>
@@ -14,20 +16,15 @@ namespace Brochure.Core
     /// </summary>
     public class PluginsLoadContext : AssemblyLoadContext, IPluginsLoadContext
     {
-        /// <summary>
-        /// Gets the service.
-        /// </summary>
-        public IPluginServiceProvider Service { get; }
         private readonly IAssemblyDependencyResolverProxy _resolver;
-        private readonly HashSet<string> _sysAssemblyNameList;
-        private static HashSet<string> MainAssemblies;
+        private static IEnumerable<string> loadedAssemblies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
         /// </summary>
         static PluginsLoadContext()
         {
-            MainAssemblies = new HashSet<string>(Default.Assemblies.Select(t => t.GetName().Name));
+            loadedAssemblies = Default.Assemblies.Select(t => t.GetName().Name);
         }
 
         /// <summary>
@@ -35,13 +32,14 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="resolverProxy">The resolver proxy.</param>
-        public PluginsLoadContext(IServiceProvider services, IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: true)
+        public PluginsLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: false)
         {
-            this.Service = services as IPluginServiceProvider;
-            if (this.Service == null)
-                throw new Exception("请传入IPluginServiceProvider类型");
             _resolver = resolverProxy;
-            _sysAssemblyNameList = new HashSet<string>();
+            this.Unloading += PluginsLoadContext_Unloading;
+        }
+
+        private void PluginsLoadContext_Unloading(AssemblyLoadContext obj)
+        {
         }
 
         /// <summary>
@@ -52,11 +50,17 @@ namespace Brochure.Core
         protected override Assembly Load(AssemblyName assemblyName)
         {
             string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            if (assemblyPath != null && !ContainAssembly(assemblyName.Name))
+            if (!string.IsNullOrWhiteSpace(assemblyPath) && !loadedAssemblies.Contains(assemblyName.Name))
             {
-                var ass = LoadFromAssemblyPath(assemblyPath);
-                _sysAssemblyNameList.Add(assemblyName.Name);
-                return ass;
+                try
+                {
+                    var ass = LoadFromAssemblyPath(assemblyPath);
+                    //   var ass = LoadFromStream(new FileStream(assemblyPath, FileMode.Open, FileAccess.Read));
+                    return ass;
+                }
+                catch (Exception e)
+                {
+                }
             }
             return null;
         }
@@ -93,17 +97,5 @@ namespace Brochure.Core
         {
             Unload();
         }
-        /// <summary>
-        /// Contains the assembly.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>A bool.</returns>
-        private bool ContainAssembly(string name)
-        {
-            if (MainAssemblies.Contains(name) || _sysAssemblyNameList.Contains(name))
-                return true;
-            return false;
-        }
-
     }
 }

@@ -28,26 +28,21 @@ namespace Brochure.User
         {
         }
 
-        /// <summary>
-        /// Startings the async.
-        /// </summary>
-        /// <param name="errorMsg">The error msg.</param>
-        /// <returns>A Task.</returns>
-        public override Task<bool> StartingAsync(out string errorMsg)
+        public override void ConfigureService(IServiceCollection services)
         {
-            Context.Services.AddScoped<IUserDal, UserDal>();
-            Context.Services.AddScoped<IUserRepository, UserRepository>();
-            Context.Services.AddDbCore(p => p.AddMySql(t =>
-              {
-                  var mysqlBuilder = new MySqlConnectionStringBuilder();
-                  var dbSection = PluginConfiguration.GetSection("db");
-                  mysqlBuilder.Database = dbSection.GetValue<string>("database");
-                  mysqlBuilder.UserID = dbSection.GetValue<string>("user");
-                  mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
-                  mysqlBuilder.Server = dbSection.GetValue<string>("server");
-                  t.ConnectionString = mysqlBuilder.ToString();
-              }));
-            Context.Services.ConfigureSwaggerGen(t =>
+            services.AddScoped<IUserDal, UserDal>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDbCore(p => p.AddMySql(t =>
+            {
+                var mysqlBuilder = new MySqlConnectionStringBuilder();
+                var dbSection = PluginConfiguration.GetSection("db");
+                mysqlBuilder.Database = dbSection.GetValue<string>("database");
+                mysqlBuilder.UserID = dbSection.GetValue<string>("user");
+                mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
+                mysqlBuilder.Server = dbSection.GetValue<string>("server");
+                t.ConnectionString = mysqlBuilder.ToString();
+            }));
+            services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
                 var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
@@ -58,11 +53,10 @@ namespace Brochure.User
                 // Ìí¼Ó¿ØÖÆÆ÷²ã×¢ÊÍ£¬true±íÊ¾ÏÔÊ¾¿ØÖÆÆ÷×¢ÊÍ
                 t.IncludeXmlComments(xmlPath, true);
             });
-            Context.Services.Configure<SwaggerUIOptions>(t =>
+            services.Configure<SwaggerUIOptions>(t =>
             {
                 t.SwaggerEndpoint("/swagger/user_v1/swagger.json", "User");
             });
-            return base.StartingAsync(out errorMsg);
         }
     }
 }

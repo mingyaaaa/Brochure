@@ -105,7 +105,7 @@ namespace Brochure.Core
             var assemablys = new List<Assembly>() { typeof(PluginModule).Assembly, Assembly.GetEntryAssembly() };
             foreach (var item in assemablys)
             {
-                modelLoader.LoadModule(provider, service, item);
+                modelLoader.LoadModule(service, item);
             }
 
             return service;

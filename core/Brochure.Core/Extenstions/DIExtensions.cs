@@ -18,21 +18,9 @@ namespace Brochure.Core.Extenstions
         /// <returns>An IServiceProvider.</returns>
         public static IServiceProvider BuildPluginServiceProvider(this IServiceCollection services)
         {
-            return new PluginsServiceProvider(services);
+            var servicePorvider = services.BuildServiceProvider();
+            var pluginManagers = servicePorvider.GetRequiredService<IPluginManagers>();
+            return new PluginsServiceProvider(services, pluginManagers);
         }
-
-
-        //public static IServiceResolver BuildPlugnScopeProvider(this IServiceCollection services, PluginsServiceProvider serviceProvider)
-        //{
-        //    var provider = services.BuildServiceContextProvider(t =>
-        //   {
-        //       var serviceDefinition = t.FirstOrDefault(t => t.ServiceType == typeof(IServiceScopeFactory));
-        //       t.Remove(serviceDefinition);
-        //       t.AddInstance<IServiceScopeFactory>(serviceProvider);
-        //       t.AddInstance<IPluginServiceProvider>(serviceProvider);
-        //   });
-        //    return provider as IServiceResolver;
-        //}
-
     }
 }

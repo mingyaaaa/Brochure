@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,6 +6,7 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" />
+	  <ProjectReference Include="..\Brochure.Abstract\Brochure.Abstract.csproj" >
+	  </ProjectReference>
   </ItemGroup>
 </Project>

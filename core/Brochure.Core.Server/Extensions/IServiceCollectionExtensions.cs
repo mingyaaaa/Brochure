@@ -25,7 +25,7 @@ namespace Brochure.Core.Server
         {
             var mvcBuilder = services.AddMvc();
             services.TryAddSingleton<IMvcBuilder>(mvcBuilder);
-            var provider = services.BuildPluginServiceProvider();
+            var provider = services.BuildServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
             var pluginList = manager.GetPlugins();
             foreach (var item in pluginList)

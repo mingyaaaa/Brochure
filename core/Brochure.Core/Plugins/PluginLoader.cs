@@ -18,9 +18,9 @@ namespace Brochure.Core
     /// <summary>
     /// The plugin loader.
     /// </summary>
-    public class PluginLoader : IPluginLoader
+    public class PluginLoader : IPluginLoader, IDisposable
     {
-        private readonly ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
+        private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
 
         private readonly ISysDirectory directory;
         private readonly IJsonUtil jsonUtil;
@@ -57,7 +57,7 @@ namespace Brochure.Core
             this.directory = directory;
             this.jsonUtil = jsonUtil;
             this.log = log;
-            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
+            pluginContextDic = new ConcurrentDictionary<Guid, PluginsLoadContext>();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
             _pluginManagers = pluginManagers;
@@ -74,22 +74,22 @@ namespace Brochure.Core
         /// <param name="provider">The provider.</param>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        private ValueTask<IPlugins> LoadPlugin(IServiceProvider provider, string pluginConfigPath)
+        public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
         {
-            IPluginsLoadContext locadContext = null;
+            PluginsLoadContext locadContext = null;
             try
             {
                 var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
                 var pluginDir = Path.GetDirectoryName(pluginConfigPath);
                 var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
-                var assemblyDependencyResolverProxy = objectFactory.Create<IAssemblyDependencyResolverProxy, AssemblyDependencyResolverProxy>(pluginPath);
-                locadContext = objectFactory.Create<IPluginsLoadContext, PluginsLoadContext>(provider, assemblyDependencyResolverProxy);
+                var assemblyDependencyResolverProxy = new AssemblyDependencyResolverProxy(pluginPath);
+                locadContext = new PluginsLoadContext(assemblyDependencyResolverProxy);
                 var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
                 var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
                 if (allPluginTypes.Count == 0)
                     throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
                 if (allPluginTypes.Count == 2)
-                    throw new Exception("${ pluginConfig .AssemblyName}存在多个Plugins实现类");
+                    throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
                 var plugin = (Plugins)objectFactory.Create(pluginType);
                 SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
@@ -109,16 +109,16 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="service">The service.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin(IServiceProvider service)
+        public async ValueTask LoadPlugin()
         {
-            await ResolverPlugins(service);
+            await ResolverPlugins();
         }
 
         /// <summary>
         /// 加载插件
         /// </summary>
         /// <param name="serviceDescriptors"></param>
-        private async Task ResolverPlugins(IServiceProvider provider)
+        private async Task ResolverPlugins()
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
@@ -128,7 +128,7 @@ namespace Brochure.Core
             {
                 try
                 {
-                    var p = await LoadPlugin(provider, pluginConfigPath);
+                    var p = await LoadPlugin(pluginConfigPath);
                     p.ConfigureService(p.Context.Services);
                     if (p != null)
                     {
@@ -145,7 +145,7 @@ namespace Brochure.Core
             {
                 try
                 {
-                    _moduleLoader.LoadModule(provider, plugin.Context.Services, plugin.Assembly);
+                    _moduleLoader.LoadModule(plugin.Context.Services, plugin.Assembly);
                     if (await StartPlugin(plugin))
                     {
                         _pluginManagers.Regist(plugin);
@@ -283,6 +283,10 @@ namespace Brochure.Core
         private string GetPluginSettingFile()
         {
             return $"plugin{_hostEnvironment.EnvironmentName}.json";
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

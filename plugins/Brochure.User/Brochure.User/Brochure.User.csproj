@@ -2,20 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Program</StartAction>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\net5.0\Brochure.User.xml</DocumentationFile>
-  </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8067" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8067" />
+	  <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8070" />
+	  <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8070" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3">
@@ -23,12 +18,6 @@
       <PrivateAssets>none</PrivateAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="plugin.config" />
-    <None Remove="pluginSetting.json" />
-    <None Remove="Repository\IUserRepository.cs~RF33da279.TMP" />
-    <None Remove="Repository\UserRepository.cs~RF169b85c6.TMP" />
   </ItemGroup>
   <ItemGroup>
     <None Update="plugin.config">
