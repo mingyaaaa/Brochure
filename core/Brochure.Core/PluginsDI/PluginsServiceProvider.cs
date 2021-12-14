@@ -19,7 +19,6 @@ namespace Brochure.Core.PluginsDI
         private readonly IServiceCollection _services;
         private readonly IPluginManagers pluginManagers;
         private IServiceProvider rootProvider;
-        private ConcurrentDictionary<Type, IServiceProvider> serviceCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsServiceProvider"/> class.
@@ -29,7 +28,6 @@ namespace Brochure.Core.PluginsDI
         {
             this._services = services;
             this.pluginManagers = pluginManagers;
-            serviceCache = new ConcurrentDictionary<Type, IServiceProvider>();
         }
 
         /// <summary>
@@ -51,15 +49,7 @@ namespace Brochure.Core.PluginsDI
                 pluginCount = plugins.Count;
                 rootProvider = PopuPluginService();
             }
-            var obj = rootProvider.GetService(serviceType);
-            if (obj == null)
-            {
-                if (serviceCache.TryGetValue(serviceType, out var provider))
-                {
-                    obj = provider.GetService(serviceType);
-                }
-            }
-            return obj;
+            return rootProvider.GetService(serviceType);
         }
 
         /// <summary>
@@ -158,7 +148,6 @@ namespace Brochure.Core.PluginsDI
             foreach (var item in serviceDescriptors)
             {
                 _services.Add(item);
-                serviceCache.TryAdd(item.ServiceType, provider);
             }
         }
     }

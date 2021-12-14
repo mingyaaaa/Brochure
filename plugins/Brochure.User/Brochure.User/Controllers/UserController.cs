@@ -41,7 +41,6 @@ namespace Brochure.User.Controllers
         /// <param name="user">The user.</param>
         /// <returns>A Task.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(Result<UserEntrity>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddUser([FromBody] ReqAddUserModel user)
         {
             var entiry = objectFactory.Create<ReqAddUserModel, UserEntrity>(user);

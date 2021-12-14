@@ -15,7 +15,7 @@ namespace Brochure.ORM
     /// <summary>
     /// The db context.
     /// </summary>
-    public abstract class DbContext : IAsyncDisposable, ITransaction
+    public abstract class DbContext : IAsyncDisposable, ITransaction, IDisposable
     {
         /// <summary>
         /// Gets or sets the service provider.
@@ -71,6 +71,7 @@ namespace Brochure.ORM
             _connectFactory = _serviceScope?.ServiceProvider.GetRequiredService<IConnectFactory>();
             _transactionManager = _serviceScope?.ServiceProvider.GetRequiredService<ITransactionManager>();
             _sqlBuilder = _serviceScope?.ServiceProvider.GetRequiredService<ISqlBuilder>();
+            _objectFactory = _serviceScope.ServiceProvider.GetRequiredService<IObjectFactory>();
             _isBeginTransaction = isBeginTransaction;
             BenginTransaction();
         }
@@ -140,7 +141,7 @@ namespace Brochure.ORM
         public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(params ISql[] sqls) where T : class, new()
         {
             var defaultDatabase = _connectFactory.GetDatabase();
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
+            var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
             var list = new List<T>();
             var taskList = new List<Task<IEnumerable<T>>>();
             foreach (var item in group)
@@ -194,7 +195,7 @@ namespace Brochure.ORM
         public virtual async Task<int> ExcuteNoQueryAsync(params ISql[] sqls)
         {
             var defaultDatabase = _connectFactory.GetDatabase();
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
+            var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
             var r = 0;
             var taskList = new List<Task<int>>();
             foreach (var item in group)
@@ -241,7 +242,7 @@ namespace Brochure.ORM
         public virtual async Task<object> ExecuteScalarAsync(params ISql[] sqls)
         {
             var defaultDatabase = _connectFactory.GetDatabase();
-            var group = sqls.GroupBy(t => t.Database).ToDictionary(t => string.IsNullOrWhiteSpace(t.Key) ? defaultDatabase : t.Key, t => t.ToArray());
+            var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
             var taskList = new List<Task<object>>();
             foreach (var item in group)
             {
@@ -289,6 +290,11 @@ namespace Brochure.ORM
             var command = connect.CreateCommand();
             command.Transaction = await _transactionManager.GetDbTransactionAsync();
             return command;
+        }
+
+        public async void Dispose()
+        {
+            await DisposeAsync();
         }
     }
 }
