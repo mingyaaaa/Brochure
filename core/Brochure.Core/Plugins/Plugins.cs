@@ -34,6 +34,7 @@ namespace Brochure.Core
         {
             Order = int.MaxValue;
             Context = pluginContexts;
+            AuthKey = new List<Guid>();
         }
 
         /// <summary>
@@ -85,6 +86,8 @@ namespace Brochure.Core
         /// Gets or sets the plugin configuration.
         /// </summary>
         public IConfiguration PluginConfiguration { get; internal set; }
+
+        public List<Guid> AuthKey { get; set; }
 
         /// <summary>
         /// 配置服务

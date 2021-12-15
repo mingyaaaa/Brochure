@@ -54,6 +54,11 @@ namespace Brochure.Abstract
         List<Guid> DependencesKey { get; }
 
         /// <summary>
+        /// 授权的插件
+        /// </summary>
+        List<Guid> AuthKey { get; }
+
+        /// <summary>
         /// Configures the service.
         /// </summary>
         /// <param name="services">The services.</param>

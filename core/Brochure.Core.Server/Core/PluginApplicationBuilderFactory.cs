@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace Brochure.Core.Server
 {
     /// <summary>
@@ -22,11 +23,12 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="provider">The provider.</param>
         /// <param name="pluginManagers">The plugin managers.</param>
-        public PluginApplicationBuilderFactory(IPluginServiceProvider provider, IPluginManagers pluginManagers)
+        public PluginApplicationBuilderFactory(IServiceProvider provider, IPluginManagers pluginManagers)
         {
             this.provider = provider;
             this.pluginManagers = pluginManagers;
         }
+
         /// <summary>
         /// Creates the builder.
         /// </summary>

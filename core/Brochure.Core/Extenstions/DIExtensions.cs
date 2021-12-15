@@ -18,9 +18,11 @@ namespace Brochure.Core.Extenstions
         /// <returns>An IServiceProvider.</returns>
         public static IServiceProvider BuildPluginServiceProvider(this IServiceCollection services)
         {
+            services.AddSingleton<PluginSerivceTypeCache>();
             var servicePorvider = services.BuildServiceProvider();
             var pluginManagers = servicePorvider.GetRequiredService<IPluginManagers>();
-            return new PluginsServiceProvider(services, pluginManagers);
+            var cache = servicePorvider.GetRequiredService<PluginSerivceTypeCache>();
+            return new PluginsServiceProvider(services, pluginManagers, cache);
         }
     }
 }

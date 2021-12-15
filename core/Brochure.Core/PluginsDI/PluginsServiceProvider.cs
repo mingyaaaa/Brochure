@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
@@ -13,21 +14,25 @@ namespace Brochure.Core.PluginsDI
     /// <summary>
     /// The plugins service provider.
     /// </summary>
-    public class PluginsServiceProvider : IPluginServiceProvider, IServiceScopeFactory, IServiceResolver
+    internal class PluginsServiceProvider : IPluginServiceProvider, IServiceScopeFactory, IServiceResolver
     {
         private int pluginCount = -1;
         private readonly IServiceCollection _services;
         private readonly IPluginManagers pluginManagers;
+        private readonly PluginSerivceTypeCache pluginServiceTypeCache;
         private IServiceProvider rootProvider;
+        private AspectConfiguration aspectConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsServiceProvider"/> class.
         /// </summary>
         /// <param name="services">The services.</param>
-        public PluginsServiceProvider(IServiceCollection services, IPluginManagers pluginManagers)
+        public PluginsServiceProvider(IServiceCollection services, IPluginManagers pluginManagers, PluginSerivceTypeCache pluginServiceTypeCache)
         {
             this._services = services;
             this.pluginManagers = pluginManagers;
+            this.pluginServiceTypeCache = pluginServiceTypeCache;
+            aspectConfiguration = new AspectConfiguration();
         }
 
         /// <summary>
@@ -47,52 +52,22 @@ namespace Brochure.Core.PluginsDI
             if (plugins.Count != pluginCount)
             {
                 pluginCount = plugins.Count;
+                pluginServiceTypeCache.InitCache();
                 rootProvider = PopuPluginService();
             }
-            return rootProvider.GetService(serviceType);
-        }
+            var plugin = pluginServiceTypeCache.GetTypeOfPlugin(serviceType);
+            if (plugin == null)
+                return rootProvider.GetService(serviceType);
 
-        /// <summary>
-        /// Popus the plugin.
-        /// </summary>
-        /// <returns>An IServiceProvider.</returns>
-        //private IServiceProvider PopuPlugin()
-        //{
-        //    var plugins = this.pluginManagers.GetPlugins().OfType<Plugins>().ToList();
-        //    IServiceCollection t_service = new ServiceCollection();
-        //    Action<ServiceDescriptor, IServiceProvider> action = (item, provider) =>
-        //    {
-        //        if (item.Lifetime == ServiceLifetime.Singleton && !item.ServiceType.IsGenericType)
-        //        {
-        //            try
-        //            {
-        //                var a = provider.GetService(item.ServiceType);
-        //                if (a != null)
-        //                    t_service.AddSingleton(item.ServiceType, a);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //            }
-        //        }
-        //        else
-        //        {
-        //            t_service.Add(item);
-        //        }
-        //    };
-        //    var t_provider = originalProvider ?? BuildServiceResolver(_services);
-        //    foreach (var item in _services)
-        //        action(item, t_provider);
-        //    foreach (var item in plugins)
-        //    {
-        //        var pluginsServiceCollection = item.Context.Services;
-        //        t_provider = BuildServiceResolver(MergerCollection(_services, pluginsServiceCollection));
-        //        foreach (var serviceDescriptor in pluginsServiceCollection)
-        //        {
-        //            action(serviceDescriptor, t_provider);
-        //        }
-        //    }
-        //    return BuildServiceResolver(t_service);
-        //}
+            var process = new ResolveProcess(plugin, pluginServiceTypeCache);
+            lock (GlobLock.LockObj)
+            {
+                aspectConfiguration.ResolveCall = process.ResolveType;
+                var obj = rootProvider.GetService(serviceType);
+                aspectConfiguration.ResolveCall = null;
+                return obj;
+            }
+        }
 
         /// <summary>
         /// Popus the plugin service.
@@ -114,7 +89,7 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceScope.</returns>
         public IServiceScope CreateScope()
         {
-            return new PluginServiceScope(this);
+            return new PluginServiceScope(this, pluginServiceTypeCache, aspectConfiguration);
         }
 
         /// <summary>
@@ -123,13 +98,13 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceProvider.</returns>
         private IServiceProvider BuildServiceResolver(IServiceCollection services)
         {
-            return services.BuildServiceContextProvider(t =>
-             {
-                 var serviceDefinition = t.FirstOrDefault(t => t.ServiceType == typeof(IServiceScopeFactory));
-                 t.Remove(serviceDefinition);
-                 t.AddInstance<IServiceScopeFactory>(this);
-                 t.AddInstance<IPluginServiceProvider>(this);
-             });
+            return services.BuildServiceContextProvider(aspectConfiguration, t =>
+              {
+                  var serviceDefinition = t.FirstOrDefault(t => t.ServiceType == typeof(IServiceScopeFactory));
+                  t.Remove(serviceDefinition);
+                  t.AddInstance<IServiceScopeFactory>(this);
+                  t.AddInstance<IServiceProvider>(this);
+              });
         }
 
         /// <summary>
@@ -144,7 +119,6 @@ namespace Brochure.Core.PluginsDI
 
         private void MergerCollection(IServiceCollection serviceDescriptors)
         {
-            var provider = serviceDescriptors.BuildServiceContextProvider();
             foreach (var item in serviceDescriptors)
             {
                 _services.Add(item);
