@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-    <PackageReference Include="AspectCore.Extensions.Reflection" Version="2.3.0-dv-156358001" />
+    <PackageReference Include="AspectCore.Extensions.Reflection" Version="2.3.0-dv-156615261" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />

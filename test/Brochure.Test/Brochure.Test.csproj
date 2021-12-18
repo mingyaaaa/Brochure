@@ -4,8 +4,8 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AspectCore.Core" Version="2.3.0-dv-156358001" />
-    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.3.0-dv-156358001" />
+    <PackageReference Include="AspectCore.Core" Version="2.3.0-dv-156615261" />
+    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.3.0-dv-156615261" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />

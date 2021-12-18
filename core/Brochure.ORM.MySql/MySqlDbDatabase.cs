@@ -1,3 +1,4 @@
+using AspectCore.Abstractions.DependencyInjection;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 
@@ -14,6 +15,7 @@ namespace Brochure.ORM.MySql
         /// <param name="dbOption">The db option.</param>
         /// <param name="dbSql">The db sql.</param>
         /// <param name="connectFactory">The connect factory.</param>
+        [InjectConstructor]
         public MySqlDbDatabase(DbContext dbContext) : base(dbContext) { }
 
         public MySqlDbDatabase(bool isBeginTransaction = false) : base(new MySqlDbContext(isBeginTransaction))

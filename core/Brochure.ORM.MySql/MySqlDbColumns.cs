@@ -1,3 +1,4 @@
+using AspectCore.Abstractions.DependencyInjection;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 
@@ -5,6 +6,7 @@ namespace Brochure.ORM.MySql
 {
     public class MySqlDbColumns : DbColumns
     {
+        [InjectConstructor]
         public MySqlDbColumns(DbContext dbContext) : base(dbContext)
         {
         }
