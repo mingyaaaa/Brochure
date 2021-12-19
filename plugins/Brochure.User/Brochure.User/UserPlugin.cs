@@ -1,18 +1,19 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Brochure.Core;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
+using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
-using Swashbuckle.AspNetCore.SwaggerUI;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Brochure.User
 {
@@ -45,17 +46,31 @@ namespace Brochure.User
             services.ConfigureSwaggerGen(t =>
             {
                 t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
+                t.AddServer(new OpenApiServer()
+                {
+                    Url = "",
+                    Description = "User"
+                });
+                t.CustomOperationIds(apiDesc =>
+                {
+                    var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
+                    return controllerAction.ControllerName + "-" + controllerAction.ActionName;
+                });
+
                 var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
                 // 获取xml文件名
                 var xmlFile = $"{fileName}.xml";
                 // 获取xml文件路径
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName, xmlFile);
-                // 添加控制器层注释，true表示显示控制器注释
-                t.IncludeXmlComments(xmlPath, true);
+                if (File.Exists(xmlPath))
+                {
+                    // 添加控制器层注释，true表示显示控制器注释
+                    t.IncludeXmlComments(xmlPath, true);
+                }
             });
-            services.Configure<SwaggerUIOptions>(t =>
+            services.Configure<Knife4UIOptions>(t =>
             {
-                t.SwaggerEndpoint("/swagger/user_v1/swagger.json", "User");
+                t.SwaggerEndpoint("/user_v1/api-docs", "User");
             });
         }
     }

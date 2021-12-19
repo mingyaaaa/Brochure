@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Brochure.Abstract;
 using Microsoft.AspNetCore.Http;
+
 namespace Brochure.Core.Server
 {
     /// <summary>
@@ -17,6 +18,7 @@ namespace Brochure.Core.Server
         {
             middleCollection = new List<RequestDelegateProxy>();
         }
+
         private readonly List<RequestDelegateProxy> middleCollection;
 
         /// <summary>
@@ -73,6 +75,7 @@ namespace Brochure.Core.Server
         {
             middleCollection.Clear();
         }
+
         /// <summary>
         /// Adds the range.
         /// </summary>
@@ -94,7 +97,7 @@ namespace Brochure.Core.Server
             if (string.IsNullOrWhiteSpace(middleName))
                 throw new Exception("中间件名称为null");
             if (middleCollection.Any(t => t.MiddleName == middleName))
-                throw new Exception($"{middleName}中间件已存在");
+                return;
             var orderMiddle = middleCollection.Find(t => t.Order == index);
             if (orderMiddle != null)
             {
@@ -102,6 +105,7 @@ namespace Brochure.Core.Server
             }
             middleCollection.Add(new RequestDelegateProxy(middleName, id, index, middleFun));
         }
+
         /// <summary>
         /// Adds the middle index.
         /// </summary>
@@ -139,6 +143,7 @@ namespace Brochure.Core.Server
         {
             this.middleManager = middleManager;
         }
+
         /// <summary>
         /// Invokes the.
         /// </summary>

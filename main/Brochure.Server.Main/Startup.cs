@@ -1,10 +1,11 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Brochure.Core;
 using Brochure.Core.Server;
+using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Brochure.Server.Main
 {
@@ -46,17 +45,30 @@ namespace Brochure.Server.Main
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
-
+                c.AddServer(new OpenApiServer()
+                {
+                    Url = "",
+                    Description = "Main"
+                });
+                c.CustomOperationIds(apiDesc =>
+                {
+                    var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
+                    return controllerAction.ControllerName + "-" + controllerAction.ActionName;
+                });
                 // 获取xml文件名
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 // 获取xml文件路径
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                // 添加控制器层注释，true表示显示控制器注释
-                c.IncludeXmlComments(xmlPath, true);
+                if (File.Exists(xmlPath))
+                {
+                    // 添加控制器层注释，true表示显示控制器注释
+                    c.IncludeXmlComments(xmlPath, true);
+                }
             });
-            services.Configure<SwaggerUIOptions>(t =>
+            services.Configure<Knife4UIOptions>(c =>
             {
-                t.SwaggerEndpoint("/swagger/main_v1/swagger.json", "Main");
+                c.RoutePrefix = ""; // serve the UI at root
+                c.SwaggerEndpoint("/main_v1/api-docs", "Main");
             });
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
         }
@@ -77,15 +89,16 @@ namespace Brochure.Server.Main
             var log = app.ApplicationServices.GetService<ILogger<Startup>>();
             var routeOption = app.ApplicationServices.GetService<IOptions<RouteOptions>>();
             routeOption.Value.SuppressCheckForUnhandledSecurityMetadata = true;
-            var bb = app.ApplicationServices.GetServices<IConfigureOptions<SwaggerUIOptions>>();
-            var a = app.ApplicationServices.GetService<IOptionsSnapshot<SwaggerUIOptions>>().Value;
             // 添加Swagger有关中间件
             app.IntertMiddle("swagger", Guid.Empty, 7, () => app.UseSwagger());
-            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseSwaggerUI());
+            app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseKnife4UI());
             app.IntertMiddle("main-routing", Guid.Empty, 10, () => app.UseRouting());
-            app.ConfigPlugin();
 
-            app.IntertMiddle("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints(endpoints => endpoints.MapControllers()));
+            app.IntertMiddle("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapSwagger("{documentName}/api-docs");
+            }));
         }
     }
 }
