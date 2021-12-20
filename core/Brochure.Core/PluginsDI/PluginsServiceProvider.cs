@@ -75,12 +75,14 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceProvider.</returns>
         private IServiceProvider PopuPluginService()
         {
+            var service = new ServiceCollection();
             var plugins = this.pluginManagers.GetPlugins().OfType<Plugins>().ToList();
             foreach (var item in plugins)
             {
-                MergerCollection(item.Context.Services);
+                MergerCollection(service, item.Context.Services);
             }
-            return BuildServiceResolver(_services);
+            MergerCollection(service, _services);
+            return BuildServiceResolver(service);
         }
 
         /// <summary>
@@ -117,11 +119,11 @@ namespace Brochure.Core.PluginsDI
             return GetService(serviceType);
         }
 
-        private void MergerCollection(IServiceCollection serviceDescriptors)
+        private void MergerCollection(IServiceCollection services, IServiceCollection serviceDescriptors)
         {
             foreach (var item in serviceDescriptors)
             {
-                _services.Add(item);
+                services.Add(item);
             }
         }
     }

@@ -19,14 +19,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
-
     [TestClass]
     public class TestPluginServiceCollection : BaseTest
     {
-
         public TestPluginServiceCollection()
         {
-
             Service.TryAddSingleton<IPluginManagers>(new PluginManagers());
             Service.AddSingleton<IModuleLoader, ModuleLoader>();
             Service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
@@ -36,7 +33,6 @@ namespace Brochure.Test
             base.InitBaseService();
             var objectFactoryMock = GetMockService<IObjectFactory>();
             objectFactoryMock.Setup(t => t.Create<ConcurrentDictionary<Guid, IPlugins>>()).Returns(new ConcurrentDictionary<Guid, IPlugins>());
-
         }
 
         [TestMethod]
@@ -89,7 +85,6 @@ namespace Brochure.Test
             var a1 = mProvider.GetService<ITest1>();
             var a2 = mProvider.GetService<ITest1>();
             Assert.AreNotSame(a1, a2);
-
         }
 
         [TestMethod]
@@ -128,7 +123,6 @@ namespace Brochure.Test
         [TestMethod]
         public void TestCollection()
         {
-
             Service.AddSingleton<ITest1, ImpTest1>();
             var provider = Service.BuildPluginServiceProvider();
             var managers = provider.GetService<IPluginManagers>();
@@ -168,7 +162,6 @@ namespace Brochure.Test
             manager.Regist(p1);
             manager = provider.GetService<IPluginManagers>();
         }
-
 
         [TestMethod("测试主服务工厂方法")]
         public void TestBuilderPluginServiceFacroty()
@@ -223,7 +216,6 @@ namespace Brochure.Test
             var a2 = mProvider.GetService<ITest1>();
             Assert.AreEqual(a, 3);
 
-
             using var scope = mProvider.CreateScope();
             var a11 = scope.ServiceProvider.GetService<ITest2>();
             var a22 = scope.ServiceProvider.GetService<ITest2>();
@@ -262,7 +254,6 @@ namespace Brochure.Test
         [TestMethod("泛型类的实例依赖注入")]
         public void MyTestMethod()
         {
-
             var fix = new Fixture();
             var a = fix.Create<string>();
             var count = 0;
@@ -283,6 +274,19 @@ namespace Brochure.Test
             Assert.AreEqual(1, count);
         }
 
+        [TestMethod("插件单例服务释放的问题")]
+        public void TestSingletonService()
+        {
+            Service.AddSingleton<ImpTest3>();
+            var provider = Service.BuildPluginServiceProvider();
+            var managers = provider.GetService<IPluginManagers>();
+            var plugin = new P3();
+            plugin.ConfigureService(plugin.Context.Services);
+            managers.Regist(plugin);
+            var t3 = provider.GetService<ImpTest3>();
+            managers.Remove(plugin.Key);
+            Assert.ThrowsException<InvalidOperationException>(() => t3 = provider.GetService<ImpTest3>());
+        }
     }
 
     public class TestOption
@@ -291,16 +295,15 @@ namespace Brochure.Test
         /// Gets or sets the p1.
         /// </summary>
         public int P1 { get; set; } = 1;
+
         /// <summary>
         /// Gets or sets the p2.
         /// </summary>
         public int P2 { get; set; } = 1;
     }
 
-
     public interface ITestInterceptor : IDisposable
     {
-
     }
 
     public class ImpTestInterceptor : ITestInterceptor
@@ -310,6 +313,7 @@ namespace Brochure.Test
             Trace.TraceInformation("ImpTest");
         }
     }
+
     public interface ITest1 : IDisposable
     {
         /// <summary>
@@ -340,14 +344,12 @@ namespace Brochure.Test
 
         public void Dispose()
         {
-
             Trace.TraceInformation("ImpTest11");
         }
     }
 
     public interface ITest2 : IDisposable
     {
-
     }
 
     public class ImpTest2 : ITest2
@@ -357,13 +359,18 @@ namespace Brochure.Test
             Trace.TraceInformation("ImpTest2");
         }
     }
+
     public class ImpTest3
     {
         public class Option
         {
         }
-        public ImpTest3(ImpTest2 impTest2)
+
+        public ITest2 impTest2;
+
+        public ImpTest3(ITest2 impTest2)
         {
+            this.impTest2 = impTest2;
         }
     }
 
@@ -385,6 +392,7 @@ namespace Brochure.Test
         {
             _action = action;
         }
+
         /// <summary>
         /// Gets or sets the op.
         /// </summary>
@@ -398,21 +406,32 @@ namespace Brochure.Test
 
     public class P1 : Plugins
     {
-        public P1() : base(new PluginContext()) { }
+        public P1() : base(new PluginContext())
+        {
+        }
     }
 
     public class P2 : Plugins
     {
-        public P2() : base(new PluginContext()) { }
+        public P2() : base(new PluginContext())
+        {
+        }
     }
 
+    public class P3 : Plugins
+    {
+        public override void ConfigureService(IServiceCollection services)
+        {
+            services.AddScoped<ITest1, ImpTest1>();
+            services.AddSingleton<ITest2, ImpTest2>();
+            base.ConfigureService(services);
+        }
+    }
 
     public class ConfigureRouteOptions : IConfigureOptions<RouteOptions>
     {
-
         public ConfigureRouteOptions()
         {
-
         }
 
         public void Configure(RouteOptions options)
