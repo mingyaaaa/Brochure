@@ -56,16 +56,15 @@ namespace Brochure.User
                     var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
                     return controllerAction.ControllerName + "-" + controllerAction.ActionName;
                 });
-
                 var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
-                // 获取xml文件名
-                var xmlFile = $"{fileName}.xml";
+                //// 获取xml文件名
                 // 获取xml文件路径
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName, xmlFile);
-                if (File.Exists(xmlPath))
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
+                var xmlFiles = Directory.GetFiles(xmlPath, "*.xml");
+                foreach (var item in xmlFiles)
                 {
                     // 添加控制器层注释，true表示显示控制器注释
-                    t.IncludeXmlComments(xmlPath, true);
+                    t.IncludeXmlComments(item, true);
                 }
             });
             services.Configure<Knife4UIOptions>(t =>

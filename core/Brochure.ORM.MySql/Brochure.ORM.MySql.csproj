@@ -5,13 +5,14 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj" >
+	  <ProjectReference Include="..\Brochure.ORM\Brochure.ORM.csproj">
 	  </ProjectReference>
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
 </Project>

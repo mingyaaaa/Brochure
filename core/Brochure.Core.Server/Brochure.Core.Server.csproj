@@ -2,10 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-	  <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj" >
+	  <ProjectReference Include="..\Brochure.Core\Brochure.Core.csproj">
 	  </ProjectReference>
   </ItemGroup>
 </Project>

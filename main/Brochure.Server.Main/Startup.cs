@@ -55,14 +55,13 @@ namespace Brochure.Server.Main
                     var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
                     return controllerAction.ControllerName + "-" + controllerAction.ActionName;
                 });
-                // 获取xml文件名
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 // 获取xml文件路径
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                if (File.Exists(xmlPath))
+                var xmlPath = AppContext.BaseDirectory;
+                var xmlFiles = Directory.GetFiles(xmlPath, "*.xml");
+                foreach (var item in xmlFiles)
                 {
                     // 添加控制器层注释，true表示显示控制器注释
-                    c.IncludeXmlComments(xmlPath, true);
+                    c.IncludeXmlComments(item, true);
                 }
             });
             services.Configure<Knife4UIOptions>(c =>
