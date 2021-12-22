@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Brochure.Core;
+using Brochure.Core.Server;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Brochure.User.Repository;
@@ -43,34 +44,11 @@ namespace Brochure.User
                 mysqlBuilder.Server = dbSection.GetValue<string>("server");
                 t.ConnectionString = mysqlBuilder.ToString();
             }));
-            services.ConfigureSwaggerGen(t =>
-            {
-                t.SwaggerDoc("user_v1", new OpenApiInfo { Title = "User", Version = "user_v1" });
-                t.AddServer(new OpenApiServer()
-                {
-                    Url = "",
-                    Description = "User"
-                });
-                t.CustomOperationIds(apiDesc =>
-                {
-                    var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
-                    return controllerAction.ControllerName + "-" + controllerAction.ActionName;
-                });
-                var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
-                //// 获取xml文件名
-                // 获取xml文件路径
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
-                var xmlFiles = Directory.GetFiles(xmlPath, "*.xml");
-                foreach (var item in xmlFiles)
-                {
-                    // 添加控制器层注释，true表示显示控制器注释
-                    t.IncludeXmlComments(item, true);
-                }
-            });
-            services.Configure<Knife4UIOptions>(t =>
-            {
-                t.SwaggerEndpoint("/user_v1/api-docs", "User");
-            });
+            var fileName = Path.GetFileNameWithoutExtension(this.AssemblyName);
+            //// 获取xml文件名
+            // 获取xml文件路径
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
+            services.ConfigurePluginSwaggerGen("User", "user_v1", xmlPath);
         }
     }
 }

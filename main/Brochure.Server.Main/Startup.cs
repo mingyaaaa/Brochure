@@ -42,33 +42,7 @@ namespace Brochure.Server.Main
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("main_v1", new OpenApiInfo { Title = "Main", Version = "main_v1" });
-                c.AddServer(new OpenApiServer()
-                {
-                    Url = "",
-                    Description = "Main"
-                });
-                c.CustomOperationIds(apiDesc =>
-                {
-                    var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
-                    return controllerAction.ControllerName + "-" + controllerAction.ActionName;
-                });
-                // 获取xml文件路径
-                var xmlPath = AppContext.BaseDirectory;
-                var xmlFiles = Directory.GetFiles(xmlPath, "*.xml");
-                foreach (var item in xmlFiles)
-                {
-                    // 添加控制器层注释，true表示显示控制器注释
-                    c.IncludeXmlComments(item, true);
-                }
-            });
-            services.Configure<Knife4UIOptions>(c =>
-            {
-                c.RoutePrefix = ""; // serve the UI at root
-                c.SwaggerEndpoint("/main_v1/api-docs", "Main");
-            });
+            services.AddPluginSwaggerGen("Main", "main_v1", AppContext.BaseDirectory);
             services.AddBrochureServer().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
