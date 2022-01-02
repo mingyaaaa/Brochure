@@ -35,8 +35,8 @@ namespace Brochure.Core
                 {
                     continue;
                 }
-                var value = PropertyGetDelegateCache<T1>.TryGet(item, model);
-                PropertySetDelegateCache<T2>.TrySet(item, t2, value);
+                var value = PropertyGetDelegateCache.TryGet<T1>(item, model);
+                PropertySetDelegateCache.TrySet<T2>(item, t2, value);
             }
             return t2;
         }
@@ -73,7 +73,7 @@ namespace Brochure.Core
                 {
                     continue;
                 }
-                PropertySetDelegateCache<T1>.TrySet(item, t1, value);
+                PropertySetDelegateCache.TrySet(item, t1, value);
             }
             return t1;
         }
@@ -105,7 +105,7 @@ namespace Brochure.Core
             var record = new Record();
             foreach (var item in properties)
             {
-                var value = PropertyGetDelegateCache<T1>.TryGet(item, obj);
+                var value = PropertyGetDelegateCache.TryGet(item, obj);
                 record[item.Name] = value;
             }
             return record;

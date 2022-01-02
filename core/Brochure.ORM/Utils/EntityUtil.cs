@@ -38,7 +38,7 @@ namespace Brochure.ORM.Utils
                 attribute = item.GetCustomAttribute(typeof(SequenceAttribute), true);
                 if (attribute != null)
                     continue;
-                var value = PropertyGetDelegateCache<T>.TryGet(item, obj);
+                var value = PropertyGetDelegateCache.TryGet(item, obj);
                 result.Add(item.Name, value);
             }
             return result;

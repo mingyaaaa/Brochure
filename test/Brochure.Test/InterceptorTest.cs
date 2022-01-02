@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.DynamicProxy;
+using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
@@ -53,12 +54,11 @@ namespace Brochure.Test
             var provider = Service.BuildPluginServiceProvider();
             var test = provider.GetService<ITestA>();
             var count = provider.GetService<ICount>();
-            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变 
+            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变
             Assert.AreEqual(2, count.GetCount());
             test.Test();
             Assert.AreEqual(4, count.GetCount());
         }
-
 
         [TestMethod]
         public void TestInterceptorTest()
@@ -71,12 +71,11 @@ namespace Brochure.Test
             var provider = service.BuildPluginServiceProvider();
             var test = provider.GetService<ITestA>();
             var count = provider.GetService<ICount>();
-            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变 
+            test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变
             Assert.AreEqual(2, count.GetCount());
             test.Test();
             Assert.AreEqual(4, count.GetCount());
         }
-
 
         [TestMethod]
         public void TestInterceptorContextSingletonAndScopeTest()
@@ -117,7 +116,6 @@ namespace Brochure.Test
                 test.Test();
                 mock.Verify(t => t.Count(), Times.Exactly(6));
             }
-
         }
 
         [TestMethod]
@@ -150,14 +148,11 @@ namespace Brochure.Test
                 test.Test();
                 mock.Verify(t => t.Count(), Times.Exactly(5));
             }
-
         }
-
-
     }
+
     public interface ITestA
     {
-
         void Test();
     }
 
@@ -169,31 +164,33 @@ namespace Brochure.Test
         {
             _iCount = ICount;
         }
+
         [TestAttInterceptor]
-        public void Test() { _iCount.Count(); }
+        public void Test()
+        { _iCount.Count(); }
     }
 
     public interface ITestB
     {
-
         void Test();
     }
 
     public class ImpTestB : ITestB
     {
         [TestAttInterceptor]
-        public void Test() { }
+        public void Test()
+        { }
     }
 
     public class TestInterceptor : AbstractInterceptor
     {
-
         private readonly ICount count;
 
         public TestInterceptor(ICount count)
         {
             this.count = count;
         }
+
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             count.Count();
@@ -204,7 +201,6 @@ namespace Brochure.Test
 
     public class TestAttInterceptorAttribute : AbstractInterceptorAttribute
     {
-
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var count = context.ServiceProvider.GetService<ICount>();
@@ -213,6 +209,7 @@ namespace Brochure.Test
             return Task.CompletedTask;
         }
     }
+
     public interface ICount
     {
         [NonAspect]
@@ -224,6 +221,7 @@ namespace Brochure.Test
     public class ImpCount : ICount
     {
         private int count = 0;
+
         public void Count()
         {
             count++;
