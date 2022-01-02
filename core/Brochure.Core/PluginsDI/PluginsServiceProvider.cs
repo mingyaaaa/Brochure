@@ -105,7 +105,7 @@ namespace Brochure.Core.PluginsDI
                   var serviceDefinition = t.FirstOrDefault(t => t.ServiceType == typeof(IServiceScopeFactory));
                   t.Remove(serviceDefinition);
                   t.AddInstance<IServiceScopeFactory>(this);
-                  t.AddInstance<IServiceProvider>(this);
+                  t.AddInstance<IPluginServiceProvider>(this);
               });
         }
 
