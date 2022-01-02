@@ -7,9 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
-using Brochure.Core.Extenstions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -20,9 +18,10 @@ namespace Brochure.Core
     /// </summary>
     public class PluginLoader : IPluginLoader, IDisposable
     {
-        private readonly ConcurrentDictionary<Guid, PluginsLoadContext> pluginContextDic;
+        private readonly ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
 
         private readonly ISysDirectory directory;
+        private readonly IPluginLoadContextProvider pluginLoadContextProvider;
         private readonly IJsonUtil jsonUtil;
         private readonly ILogger<PluginLoader> log;
         private readonly IReflectorUtil reflectorUtil;
@@ -44,6 +43,7 @@ namespace Brochure.Core
         /// <param name="objectFactory">The object factory.</param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
+            IPluginLoadContextProvider pluginLoadContextProvider,
             ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
@@ -56,8 +56,9 @@ namespace Brochure.Core
         {
             this.directory = directory;
             this.jsonUtil = jsonUtil;
+            this.pluginLoadContextProvider = pluginLoadContextProvider;
             this.log = log;
-            pluginContextDic = new ConcurrentDictionary<Guid, PluginsLoadContext>();
+            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
             _pluginManagers = pluginManagers;
@@ -76,14 +77,13 @@ namespace Brochure.Core
         /// <returns>A ValueTask.</returns>
         public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
         {
-            PluginsLoadContext locadContext = null;
+            IPluginsLoadContext locadContext = null;
             try
             {
                 var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
                 var pluginDir = Path.GetDirectoryName(pluginConfigPath);
                 var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
-                var assemblyDependencyResolverProxy = new AssemblyDependencyResolverProxy(pluginPath);
-                locadContext = new PluginsLoadContext(assemblyDependencyResolverProxy);
+                locadContext = pluginLoadContextProvider.CreateLoadContext(pluginPath);
                 var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
                 var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
                 if (allPluginTypes.Count == 0)

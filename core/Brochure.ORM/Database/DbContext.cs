@@ -39,18 +39,20 @@ namespace Brochure.ORM
         /// <param name="connectFactory">The connect factory.</param>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="sqlBuilder">The sql builder.</param>
+        /// <param name="serviceScope"></param>
         protected DbContext(
             IObjectFactory objectFactory,
             IConnectFactory connectFactory,
             ITransactionManager transactionManager,
-            ISqlBuilder sqlBuilder, IServiceScope serviceScope)
+            ISqlBuilder sqlBuilder,
+            IServiceScopeFactory serviceScope)
         {
             _objectFactory = objectFactory;
             _connectFactory = connectFactory;
             _transactionManager = transactionManager;
             _sqlBuilder = sqlBuilder;
             _isBeginTransaction = false;
-            _serviceScope = serviceScope;
+            _serviceScope = serviceScope.CreateScope();
         }
 
         public DbData Datas => _serviceScope.ServiceProvider.GetRequiredService<DbData>();

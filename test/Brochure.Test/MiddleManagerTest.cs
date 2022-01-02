@@ -9,59 +9,60 @@ namespace Brochure.Test
     public class MiddleManagerTest
     {
         [TestMethod]
-        public void TestAddSameMiddle ()
+        public void TestAddSameMiddle()
         {
-            var middle = new MiddleManager ();
-            middle.AddMiddle ("a", Guid.NewGuid (), t => t);
-            Assert.ThrowsException<Exception> (() => middle.AddMiddle ("a", Guid.NewGuid (), t => t));
+            var middle = new MiddleManager();
+            middle.AddMiddle("a", Guid.NewGuid(), t => t);
+            middle.AddMiddle("a", Guid.NewGuid(), t => t);
+            var count = middle.GetMiddlesList().Count();
+            Assert.AreEqual(1, count);
         }
 
         [TestMethod]
-        public void TestAddIndexMiddle ()
+        public void TestAddIndexMiddle()
         {
-            var middle = new MiddleManager ();
-            middle.AddMiddle ("a", Guid.NewGuid (), t => t);
-            var list = middle.GetMiddlesList ();
-            var first = list.FirstOrDefault ();
-            Assert.IsNotNull (first);
-            Assert.AreEqual (1, first.Order);
-            middle.AddMiddle ("b", Guid.NewGuid (), t => t);
-            first = list.FirstOrDefault (t => t.MiddleName == "b");
-            Assert.IsNotNull (first);
-            Assert.AreEqual (2, first.Order);
+            var middle = new MiddleManager();
+            middle.AddMiddle("a", Guid.NewGuid(), t => t);
+            var list = middle.GetMiddlesList();
+            var first = list.FirstOrDefault();
+            Assert.IsNotNull(first);
+            Assert.AreEqual(1, first.Order);
+            middle.AddMiddle("b", Guid.NewGuid(), t => t);
+            first = list.FirstOrDefault(t => t.MiddleName == "b");
+            Assert.IsNotNull(first);
+            Assert.AreEqual(2, first.Order);
         }
 
         [TestMethod]
-        public void TestIndexMiddle ()
+        public void TestIndexMiddle()
         {
-            var middle = new MiddleManager ();
-            middle.AddMiddle ("a", Guid.NewGuid (), t => t);
-            middle.IntertMiddle ("b", Guid.NewGuid (), 1, t => t);
-            var list = middle.GetMiddlesList ();
-            var first = list.FirstOrDefault (t => t.MiddleName == "b");
-            Assert.AreEqual (1, first.Order);
-            first = list.FirstOrDefault (t => t.MiddleName == "a");
-            Assert.AreEqual (2, first.Order);
+            var middle = new MiddleManager();
+            middle.AddMiddle("a", Guid.NewGuid(), t => t);
+            middle.IntertMiddle("b", Guid.NewGuid(), 1, t => t);
+            var list = middle.GetMiddlesList();
+            var first = list.FirstOrDefault(t => t.MiddleName == "b");
+            Assert.AreEqual(1, first.Order);
+            first = list.FirstOrDefault(t => t.MiddleName == "a");
+            Assert.AreEqual(2, first.Order);
         }
 
         [TestMethod]
-        public void TestIndexMaxIntOrder ()
+        public void TestIndexMaxIntOrder()
         {
-            var middle = new MiddleManager ();
-            middle.AddMiddle ("a", Guid.NewGuid (), t => t);
-            middle.IntertMiddle ("b", Guid.NewGuid (), int.MaxValue, t => t);
-            middle.IntertMiddle ("c", Guid.NewGuid (), int.MaxValue, t => t);
-            var list = middle.GetMiddlesList ();
-            var first = list.FirstOrDefault (t => t.MiddleName == "c");
-            Assert.AreEqual (int.MaxValue, first.Order);
-            first = list.FirstOrDefault (t => t.MiddleName == "b");
-            Assert.AreEqual (int.MaxValue - 1, first.Order);
+            var middle = new MiddleManager();
+            middle.AddMiddle("a", Guid.NewGuid(), t => t);
+            middle.IntertMiddle("b", Guid.NewGuid(), int.MaxValue, t => t);
+            middle.IntertMiddle("c", Guid.NewGuid(), int.MaxValue, t => t);
+            var list = middle.GetMiddlesList();
+            var first = list.FirstOrDefault(t => t.MiddleName == "c");
+            Assert.AreEqual(int.MaxValue, first.Order);
+            first = list.FirstOrDefault(t => t.MiddleName == "b");
+            Assert.AreEqual(int.MaxValue - 1, first.Order);
 
-            middle.IntertMiddle ("d", Guid.NewGuid (), int.MaxValue - 1, t => t);
-            list = middle.GetMiddlesList ();
-            first = list.FirstOrDefault (t => t.MiddleName == "b");
-            Assert.AreEqual (int.MaxValue - 2, first.Order);
+            middle.IntertMiddle("d", Guid.NewGuid(), int.MaxValue - 1, t => t);
+            list = middle.GetMiddlesList();
+            first = list.FirstOrDefault(t => t.MiddleName == "b");
+            Assert.AreEqual(int.MaxValue - 2, first.Order);
         }
-
     }
 }

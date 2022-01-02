@@ -1,4 +1,5 @@
-﻿using Brochure.Abstract;
+﻿using AspectCore.Abstractions.DependencyInjection;
+using Brochure.Abstract;
 using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,17 @@ namespace Brochure.ORM.MySql
         {
         }
 
-        public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScope serviceScope) : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlDbContext"/> class.
+        /// </summary>
+        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="connectFactory">The connect factory.</param>
+        /// <param name="transactionManager">The transaction manager.</param>
+        /// <param name="sqlBuilder">The sql builder.</param>
+        /// <param name="serviceScope">The service scope.</param>
+        [InjectConstructor]
+        public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScopeFactory serviceScopeFactory)
+            : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScopeFactory)
         {
         }
     }

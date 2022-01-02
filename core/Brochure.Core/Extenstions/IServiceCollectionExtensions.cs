@@ -49,6 +49,7 @@ namespace Brochure.Core
             service.TryAddSingleton<IAspectConfiguration, AspectConfiguration>();
             service.AddSingleton<IPluginLoadAction, DefaultLoadAction>();
             service.AddSingleton<IPluginLoader, PluginLoader>();
+            service.AddSingleton<IPluginLoadContextProvider, PluginLoadContextProvider>();
             service.AddSingleton<IPluginUnLoadAction, DefaultUnLoadAction>();
             var option = new ApplicationOption(service, configuration);
             appAction?.Invoke(option);

@@ -95,6 +95,7 @@ namespace Brochure.Test
             var reflector = Fixture.Freeze<Mock<IReflectorUtil>>();
             var moduleLoader = Fixture.Freeze<Mock<IModuleLoader>>();
             var objectFactory = Fixture.Freeze<Mock<IObjectFactory>>();
+            var loadProvider = Fixture.Freeze<Mock<IPluginLoadContextProvider>>();
             var basePath = "/a/basePath";
             dir.Setup(t => t.GetFiles(It.IsAny<string>(), "plugin.config", SearchOption.AllDirectories)).Returns(new string[] { basePath });
 
@@ -104,6 +105,7 @@ namespace Brochure.Test
             reflector.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new Type[] { pluginsType });
             objectFactory.Setup(t => t.Create(pluginsType)).Returns(plugin);
             jsonUtil.Setup(t => t.Get<PluginConfig>(basePath)).Returns(pluginConfig);
+            loadProvider.Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
             var load = Fixture.Create<PluginLoader>();
 
             await load.LoadPlugin();
@@ -134,7 +136,7 @@ namespace Brochure.Test
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>())).Returns(loadContextMock.Object);
+            autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
 
             await ins.LoadPlugin();
             var manager = autoMock.CreateInstance<PluginLoader>();
@@ -169,7 +171,7 @@ namespace Brochure.Test
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<IPluginsLoadContext, PluginsLoadContext>(It.IsAny<object>())).Returns(loadContextMock.Object);
+            autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
 
             await ins.LoadPlugin();
             var manager = autoMock.CreateInstance<PluginLoader>();

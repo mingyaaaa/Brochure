@@ -14,7 +14,7 @@ namespace Brochure.Core
     /// <summary>
     /// The plugins load context.
     /// </summary>
-    public class PluginsLoadContext : AssemblyLoadContext, IPluginsLoadContext
+    public class PluginsLoadContext : AssemblyLoadContext
     {
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private static IEnumerable<string> loadedAssemblies;
@@ -32,7 +32,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="resolverProxy">The resolver proxy.</param>
-        public PluginsLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: false)
+        public PluginsLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: true)
         {
             _resolver = resolverProxy;
             this.Unloading += PluginsLoadContext_Unloading;
@@ -96,6 +96,41 @@ namespace Brochure.Core
         public void UnLoad()
         {
             Unload();
+        }
+    }
+
+    /// <summary>
+    /// The plugin load context proxy.
+    /// </summary>
+    public class PluginLoadContextProxy : IPluginsLoadContext
+    {
+        private readonly PluginsLoadContext pluginsLoadContext;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginLoadContextProxy"/> class.
+        /// </summary>
+        /// <param name="pluginsLoadContext">The plugins load context.</param>
+        public PluginLoadContextProxy(PluginsLoadContext pluginsLoadContext)
+        {
+            this.pluginsLoadContext = pluginsLoadContext;
+        }
+
+        /// <summary>
+        /// Loads the assembly.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name.</param>
+        /// <returns>An Assembly.</returns>
+        public Assembly LoadAssembly(AssemblyName assemblyName)
+        {
+            return pluginsLoadContext.LoadAssembly(assemblyName);
+        }
+
+        /// <summary>
+        /// Uns the load.
+        /// </summary>
+        public void UnLoad()
+        {
+            pluginsLoadContext.UnLoad();
         }
     }
 }

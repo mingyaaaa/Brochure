@@ -47,7 +47,7 @@ namespace Brochure.Core
         /// <returns>An object? .</returns>
         public static object TryGet<T>(PropertyInfo propertyInfo, T obj) where T : class
         {
-            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name;
+            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name + obj.GetType().FullName + "T";
             if (TryGetGetAction(key, out Func<T, object> func))
             {
                 return func.Invoke(obj);
@@ -55,6 +55,21 @@ namespace Brochure.Core
             else
             {
                 var t_func = ReflectorUtil.Instance.GetPropertyValueFun<T>(propertyInfo.Name);
+                AddGetAction(key, t_func);
+                return t_func(obj);
+            }
+        }
+
+        public static object TryGet(PropertyInfo propertyInfo, object obj)
+        {
+            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name + obj.GetType().FullName + "object";
+            if (TryGetGetAction(key, out Func<object, object> func))
+            {
+                return func.Invoke(obj);
+            }
+            else
+            {
+                var t_func = ReflectorUtil.Instance.GetPropertyValueFun(obj.GetType(), propertyInfo.Name);
                 AddGetAction(key, t_func);
                 return t_func(obj);
             }
@@ -148,7 +163,7 @@ namespace Brochure.Core
 
         public static void TrySet<T>(PropertyInfo propertyInfo, T obj, object value) where T : class
         {
-            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name;
+            var key = propertyInfo.PropertyType.FullName + propertyInfo.Name + obj.GetType().FullName + "T";
             if (TryGetSetAction<T>(key, out var action))
             {
                 action?.Invoke(obj, value);

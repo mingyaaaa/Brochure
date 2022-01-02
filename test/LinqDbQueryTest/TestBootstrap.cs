@@ -15,14 +15,14 @@ namespace Brochure.ORMTest
     {
         public class MySqlDbContext : DbContext
         {
-            public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScope serviceScope) : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope)
+            public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScopeFactory serviceScope) : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope)
             {
             }
         }
 
         public class TestContext
         {
-            public TestContext(IConnectFactory connectFactory, ITransactionManager transactionManager, IObjectFactory objectFactory, ISqlBuilder sqlBuilder, IServiceScope serviceScope)
+            public TestContext(IConnectFactory connectFactory, ITransactionManager transactionManager, IObjectFactory objectFactory, ISqlBuilder sqlBuilder, IServiceScopeFactory serviceScope)
             {
                 var dbContext = new MySqlDbContext(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScope);
             }

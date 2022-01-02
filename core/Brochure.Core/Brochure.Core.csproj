@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="Application\" />
-    <Folder Include="Plugins\" />
     <Folder Include="RPC\" />
     <Folder Include="Interceptor\" />
   </ItemGroup>

@@ -21,6 +21,15 @@ namespace Brochure.Test
             var b = policy.ConverTo<Pa, Pb>(a);
             Assert.AreEqual(b.A, "aa");
             Assert.AreEqual(b.B, 1);
+
+            var policy1 = new GetValueConverPolicy();
+            var record = new Record()
+            {
+                [nameof(Pa.A)] = "aa",
+                [nameof(Pa.B)] = 1,
+                [nameof(Pa.C)] = (decimal)22
+            };
+            var bb = policy1.ConverTo<IRecord, Pa>(record);
         }
 
         [TestMethod]
@@ -59,10 +68,12 @@ namespace Brochure.Test
         /// Gets or sets the a.
         /// </summary>
         public string A { get; set; }
+
         /// <summary>
         /// Gets or sets the b.
         /// </summary>
         public int B { get; set; }
+
         /// <summary>
         /// Gets or sets the c.
         /// </summary>
@@ -75,6 +86,7 @@ namespace Brochure.Test
         /// Gets or sets the a.
         /// </summary>
         public string A { get; set; }
+
         /// <summary>
         /// Gets or sets the b.
         /// </summary>

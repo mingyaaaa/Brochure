@@ -35,8 +35,8 @@ namespace Brochure.Core
                 {
                     continue;
                 }
-                var value = PropertyGetDelegateCache.TryGet<T1>(item, model);
-                PropertySetDelegateCache.TrySet<T2>(item, t2, value);
+                var value = PropertyGetDelegateCache.TryGet(item, model);
+                PropertySetDelegateCache.TrySet(item, t2, value);
             }
             return t2;
         }
