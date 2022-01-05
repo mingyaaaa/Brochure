@@ -285,7 +285,30 @@ namespace Brochure.Test
             managers.Regist(plugin);
             var t3 = provider.GetService<ImpTest3>();
             managers.Remove(plugin.Key);
-            Assert.ThrowsException<InvalidOperationException>(() => t3 = provider.GetService<ImpTest3>());
+            Assert.IsNull(provider.GetService<ITest2>());
+        }
+
+        [TestMethod("作用域中插件变更")]
+        public void TestScopePlugin()
+        {
+            Service.AddSingleton<ImpTest3>();
+            var provider = Service.BuildPluginServiceProvider();
+            var managers = provider.GetService<IPluginManagers>();
+            var plugin = new P3();
+            plugin.ConfigureService(plugin.Context.Services);
+            managers.Regist(plugin);
+            var st2 = provider.GetService<ITest2>();
+            using (var scope = provider.CreateScope())
+            {
+                var t3 = scope.ServiceProvider.GetService<ImpTest3>();
+                var t2 = scope.ServiceProvider.GetService<ITest2>();
+                Assert.AreSame(st2, t2);
+                managers.Remove(plugin.Key);
+                t2 = scope.ServiceProvider.GetService<ITest2>();
+                Assert.IsNotNull(t2);
+                Assert.AreSame(st2, t2);
+            }
+            Assert.IsNotNull(provider.GetService<ITest2>());
         }
     }
 

@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
@@ -8,6 +10,7 @@ using Brochure.Abstract;
 using Brochure.Abstract.PluginDI;
 using Brochure.Core.Extenstions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Brochure.Core.PluginsDI
 {
@@ -22,6 +25,7 @@ namespace Brochure.Core.PluginsDI
         private readonly PluginSerivceTypeCache pluginServiceTypeCache;
         private IServiceProvider rootProvider;
         private AspectConfiguration aspectConfiguration;
+        private readonly ConcurrentDictionary<Type, ServiceDescriptor> singleCache = new ConcurrentDictionary<Type, ServiceDescriptor>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsServiceProvider"/> class.
@@ -57,15 +61,28 @@ namespace Brochure.Core.PluginsDI
             }
             var plugin = pluginServiceTypeCache.GetTypeOfPlugin(serviceType);
             if (plugin == null)
-                return rootProvider.GetService(serviceType);
+            {
+                var obj = rootProvider.GetService(serviceType);
+                ReplaceSingleImp(serviceType, obj);
+                return obj;
+            }
 
             var process = new ResolveProcess(plugin, pluginServiceTypeCache);
             lock (GlobLock.LockObj)
             {
                 aspectConfiguration.ResolveCall = process.ResolveType;
                 var obj = rootProvider.GetService(serviceType);
+                ReplaceSingleImp(serviceType, obj);
                 aspectConfiguration.ResolveCall = null;
                 return obj;
+            }
+        }
+
+        private void ReplaceSingleImp(Type type, object obj)
+        {
+            if (singleCache.TryGetValue(type, out var des) && des.ImplementationInstance == null)
+            {
+                _services.Replace(ServiceDescriptor.Singleton(type, obj));
             }
         }
 
@@ -75,6 +92,7 @@ namespace Brochure.Core.PluginsDI
         /// <returns>An IServiceProvider.</returns>
         private IServiceProvider PopuPluginService()
         {
+            singleCache.Clear();
             var service = new ServiceCollection();
             var plugins = this.pluginManagers.GetPlugins().OfType<Plugins>().ToList();
             foreach (var item in plugins)
@@ -123,6 +141,10 @@ namespace Brochure.Core.PluginsDI
         {
             foreach (var item in serviceDescriptors)
             {
+                if (item.Lifetime == ServiceLifetime.Singleton && item.ImplementationType != null)
+                {
+                    singleCache.TryAdd(item.ServiceType, item);
+                }
                 services.Add(item);
             }
         }

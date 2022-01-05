@@ -22,6 +22,7 @@ namespace Brochure.Core.PluginsDI
 
         internal void InitCache()
         {
+            cache.Clear();
             var plugins = this.pluginManagers.GetPlugins().OfType<Plugins>();
             foreach (var item in plugins)
             {
