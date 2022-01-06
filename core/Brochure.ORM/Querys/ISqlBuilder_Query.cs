@@ -172,23 +172,6 @@ namespace Brochure.ORM
                 return new SqlParam();
             var visitor = _visitProvider.Builder<SelectVisitor>();
             var r = Build(visitor, expression);
-            //由于Group的存在 会限制select 的查询内容
-            //if (r.SQL.ContainsReg($@"{_dbProvider.FormatFieldName(@"<>f__AnonymousType[0-9]`[0-9]")}") && !string.IsNullOrWhiteSpace(groupSql))
-            //{
-            //    var groupField = groupSql.Replace("group by", "").Trim();
-            //    var groupFields = groupField.Split(',');
-            //    foreach (var item in groupFields)
-            //    {
-            //        var filed = item.Split('.')[1];
-            //        r.SQL = r.SQL.ReplaceReg($@"{_dbProvider.FormatFieldName(@"<>f__AnonymousType[0-9]`[0-9]")}.{filed}", item);
-            //    }
-            //}
-            //if (r.SQL.ContainsReg($@"{_dbProvider.FormatFieldName(@"IGrouping`[0-9]")}.{_dbProvider.FormatFieldName(@"Key")}") && !string.IsNullOrWhiteSpace(groupSql))
-            //{
-            //    var groupField = groupSql.Replace("group by", "").Trim();
-
-            //    r.SQL = r.SQL.ReplaceReg($@"{_dbProvider.FormatFieldName(@"IGrouping`[0-9]")}.{_dbProvider.FormatFieldName(@"Key")}", groupField);
-            //}
             r.Type = visitor.SelectType;
             return r;
         }

@@ -11,7 +11,8 @@ namespace Brochure.ORM.Visitors
     /// <summary>
     /// The no sql visitor.
     /// </summary>
-    public abstract class NoSqlVisitor : ExpressionVisitor { }
+    public abstract class NoSqlVisitor : ExpressionVisitor
+    { }
 
     /// <summary>
     /// The o r m visitor.
@@ -71,7 +72,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        private object GetConstantExpressValue(MemberExpression expression = null)
+        protected object GetConstantExpressValue(MemberExpression expression = null)
         {
             if (expression == null)
                 return null;

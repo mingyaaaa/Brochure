@@ -43,6 +43,9 @@ namespace Brochure.ORMTest.Querys
 
             var query3 = queryBuilder.Build(Query.From<Peoples, Students, Teachers>().Select((p, s, t) => new { p.Id, s.ClassId, s.School, t.Job }));
             Assert.AreEqual("select `Peoples`.`Id` as Id,`Students`.`ClassId` as ClassId,`Students`.`School` as School,`Teachers`.`Job` as Job from `Peoples`,`Students`,`Teachers`", query3.SQL);
+
+            var query4 = queryBuilder.Build(Query.From<Peoples>().Select((p) => new[] { nameof(Peoples.Age), nameof(Peoples.Id) }));
+            Assert.AreEqual("select `Age`,`Id` from `Peoples`", query4.SQL);
         }
 
         [TestMethod]

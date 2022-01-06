@@ -5,13 +5,21 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
+    internal enum SelectObjType
+    {
+        New,
+        ArrayField,
+        Member,
+    }
+
     public class SelectVisitor : ORMVisitor
     {
         /// <summary>
         /// Gets or sets the select type.
         /// </summary>
         internal Type SelectType { get; set; }
-        private bool isSetNew = false;
+
+        private SelectObjType _selectObjType = SelectObjType.Member;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectVisitor"/> class.
@@ -23,6 +31,34 @@ namespace Brochure.ORM.Visitors
         {
         }
 
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return base.VisitParameter(node);
+        }
+
+        protected override Expression VisitConstant(ConstantExpression node)
+        {
+            sql = _dbPrivoder.FormatFieldName(node.Value?.ToString());
+            return node;
+        }
+
+        protected override Expression VisitNewArray(NewArrayExpression node)
+        {
+            _selectObjType = SelectObjType.ArrayField;
+            var list = new List<string>();
+            foreach (var item in node.Expressions)
+            {
+                var obj = base.GetSql(item);
+                if (obj is not string)
+                {
+                    throw new Exception("Select 表达式参数类型不正确，需要传入列名");
+                }
+                list.Add(obj.ToString());
+            }
+            sql = $"{string.Join(",", list)}";
+            return node;
+        }
+
         /// <summary>
         /// Visits the new.
         /// </summary>
@@ -30,7 +66,7 @@ namespace Brochure.ORM.Visitors
         /// <returns>An Expression.</returns>
         protected override Expression VisitNew(NewExpression node)
         {
-            isSetNew = true;
+            _selectObjType = SelectObjType.New;
             var list = new List<string>();
             var parms = node.Arguments;
             var members = node.Members;
@@ -85,7 +121,7 @@ namespace Brochure.ORM.Visitors
         /// <returns>An Expression.</returns>
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (!isSetNew)
+            if (_selectObjType == SelectObjType.Member)
                 SelectType = node.Member.DeclaringType;
             sql = GetParentExpressValue(node);
             return node;
