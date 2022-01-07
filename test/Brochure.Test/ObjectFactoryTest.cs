@@ -93,6 +93,17 @@ namespace Brochure.Test
             Assert.AreEqual(1, a.A);
         }
 
+        [TestMethod]
+        public void TestCreateIRecord()
+        {
+            IObjectFactory factory = new ObjectFactory();
+            var a = factory.Create<IRecord>(new GetValueC(new Dictionary<string, object>()
+            {
+                [nameof(TestB.A)] = 1
+            }));
+            Assert.AreEqual(1, a[nameof(TestB.A)]);
+        }
+
         public interface ITestA
         {
         }
@@ -163,6 +174,8 @@ namespace Brochure.Test
             {
                 _dic = dic;
             }
+
+            public IEnumerable<string> Properties => _dic.Keys;
 
             public T GetValue<T>(string propertyName)
             {

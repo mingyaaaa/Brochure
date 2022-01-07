@@ -1,9 +1,11 @@
+using Brochure.Abstract;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Brochure.ORM
@@ -18,7 +20,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="dbData"></param>
         public RepositoryBase(DbData dbData)
         {
             _dbData = dbData;
@@ -78,6 +80,22 @@ namespace Brochure.ORM
         }
 
         /// <summary>
+        /// Lists the async.
+        /// </summary>
+        /// <param name="queryParams">The query params.</param>
+        /// <returns>A Task.</returns>
+        public Task<IEnumerable<IRecord>> ListAsync(QueryParams<T> queryParams)
+        {
+            Expression<Func<T, bool>> funExp = queryParams.Where == null ? t => true : t => queryParams.Where.Invoke(t);
+            var query = Query.Where(funExp).Select(t => queryParams.FilterField);
+            if (queryParams.Skip > 0)
+                query.Skip(queryParams.Skip);
+            if (queryParams.Take > 0)
+                query.Take(queryParams.Take);
+            return _dbData.FindAsync(query);
+        }
+
+        /// <summary>
         /// Updates the.
         /// </summary>
         /// <param name="query">The query.</param>
@@ -103,7 +121,8 @@ namespace Brochure.ORM
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="dbData"></param>
+        /// <param name="dbContext"></param>
         protected RepositoryBase(DbData dbData, DbContext dbContext) : base(dbData)
         {
             _dbContext = dbContext;

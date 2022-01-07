@@ -1,3 +1,4 @@
+using Brochure.Abstract;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Querys;
 using System;
@@ -148,6 +149,16 @@ namespace Brochure.ORM.Database
         public virtual Task<IEnumerable<T>> FindAsync<T>(IQuery<T> query) where T : class, new()
         {
             return _dbContext.ExcuteQueryAsync<T>(query);
+        }
+
+        /// <summary>
+        /// Queries the.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>A list of TS.</returns>
+        public virtual Task<IEnumerable<IRecord>> FindAsync(IQuery query)
+        {
+            return _dbContext.ExcuteQueryAsync(query);
         }
 
         /// <summary>

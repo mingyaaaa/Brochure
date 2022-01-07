@@ -68,6 +68,17 @@ namespace Brochure.User.Services.Imps
         }
 
         /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="queryParams">The query params.</param>
+        /// <returns>A ValueTask.</returns>
+        public async ValueTask<IEnumerable<IRecord>> GetUsers(QueryParams<UserEntrity> queryParams)
+        {
+            var entrity = await repository.ListAsync(queryParams);
+            return entrity;
+        }
+
+        /// <summary>
         /// Inserts the and get.
         /// </summary>
         /// <param name="userEntrity">The user entrity.</param>

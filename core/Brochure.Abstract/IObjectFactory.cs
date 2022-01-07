@@ -1,4 +1,5 @@
 using System;
+
 namespace Brochure.Abstract
 {
     public interface IObjectFactory
@@ -16,7 +17,7 @@ namespace Brochure.Abstract
         /// <typeparam name="T"></typeparam>
         /// <param name="objs">对象参数</param>
         /// <returns></returns>
-        T Create<T>(params object[] objs);
+        T Create<T>(params object[] objs) where T : class;
 
         /// <summary>
         /// 创建对象 并返回其基类对象
@@ -33,7 +34,7 @@ namespace Brochure.Abstract
         /// <typeparam name="T2"></typeparam>
         /// <param name="objs"></param>
         /// <returns></returns>
-        T1 Create<T1, T2>(params object[] objs) where T2 : T1;
+        T1 Create<T1, T2>(params object[] objs) where T2 : class, T1;
 
         /// <summary>
         /// 创建对象
@@ -76,13 +77,11 @@ namespace Brochure.Abstract
         /// <returns>An IRecord.</returns>
         IRecord Create<T1>(T1 obj) where T1 : class;
 
-
         /// <summary>
         /// Creates the.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <returns>A T.</returns>
         T Create<T>(IGetValue reader) where T : class, new();
-
     }
 }

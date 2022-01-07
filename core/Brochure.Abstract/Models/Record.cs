@@ -12,6 +12,7 @@ namespace Brochure.Abstract.Models
     public class Record : IRecord
     {
         private readonly IDictionary<string, object> _dic;
+        private readonly IGetValue _getValue;
 
         /// <summary>
         /// 添加时执行
@@ -41,25 +42,44 @@ namespace Brochure.Abstract.Models
             _dic = new Dictionary<string, object>();
         }
 
+        public Record(IGetValue getValue) : this()
+        {
+            var property = getValue.Properties;
+            foreach (var item in property)
+            {
+                _dic.Add(item, getValue.GetValue(item));
+            }
+        }
+
         /// <summary>
         /// 获取Key的集合
         /// </summary>
         /// <returns></returns>
         [IgnoreDataMember]
-        public IEnumerable<string> Keys { get { return _dic.Keys; } }
+        public IEnumerable<string> Keys
+        { get { return _dic.Keys; } }
 
         /// <summary>
         /// 获取Value的集合
         /// </summary>
         /// <returns></returns>
         [IgnoreDataMember]
-        public IEnumerable<object> Values { get { return _dic.Values; } }
+        public IEnumerable<object> Values
+        { get { return _dic.Values; } }
 
         /// <summary>
         /// Gets or sets the current.
         /// </summary>
         [IgnoreDataMember]
         public object Current { get; set; }
+
+        public IEnumerable<string> Properties
+        {
+            get
+            {
+                return _dic.Keys;
+            }
+        }
 
         /// <summary>
         /// 获取或设置值
@@ -90,7 +110,7 @@ namespace Brochure.Abstract.Models
         /// 添加值
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="obj"></param> 
+        /// <param name="obj"></param>
         public void Add(string key, object obj)
         {
             _dic.Add(key, obj);
@@ -170,5 +190,4 @@ namespace Brochure.Abstract.Models
             return this[propertyName];
         }
     }
-
 }

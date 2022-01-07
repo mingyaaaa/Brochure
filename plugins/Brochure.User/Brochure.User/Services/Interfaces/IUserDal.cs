@@ -19,6 +19,13 @@ namespace Brochure.User.Services.Interfaces
         ValueTask<IEnumerable<UserEntrity>> GetUsers(IEnumerable<string> ids);
 
         /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="queryParams">The query params.</param>
+        /// <returns>A ValueTask.</returns>
+        ValueTask<IEnumerable<IRecord>> GetUsers(QueryParams<UserEntrity> queryParams);
+
+        /// <summary>
         /// Updates the user.
         /// </summary>
         /// <param name="id">The id.</param>

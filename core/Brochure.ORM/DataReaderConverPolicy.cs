@@ -24,6 +24,8 @@ namespace Brochure.ORM
             _reader = reader;
         }
 
+        public IEnumerable<string> Properties => throw new NotSupportedException();
+
         /// <summary>
         /// Gets the value.
         /// </summary>
@@ -43,6 +45,5 @@ namespace Brochure.ORM
         {
             return _reader[propertyName];
         }
-
     }
 }

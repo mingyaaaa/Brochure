@@ -7,7 +7,6 @@ using Brochure.Utils;
 
 namespace Brochure.Core
 {
-
     /// <summary>
     /// The default conver policy.
     /// </summary>
@@ -32,6 +31,11 @@ namespace Brochure.Core
     /// </summary>
     public class GetValueConverPolicy : IConverPolicy
     {
+        /// <summary>
+        /// Convers the to.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>A T2.</returns>
         public T2 ConverTo<T1, T2>(T1 model)
         where T1 : class
         where T2 : class, new()
@@ -48,12 +52,10 @@ namespace Brochure.Core
     /// </summary>
     public class ObjectToRecordConverPolicy<T1> : IConverPolicy<T1, Record> where T1 : class
     {
-
         public Record ConverTo(T1 model)
         {
             var policy = new ObjectToRecordDelegate<T1>();
             return (Record)policy.ConverTo(model);
         }
     }
-
 }

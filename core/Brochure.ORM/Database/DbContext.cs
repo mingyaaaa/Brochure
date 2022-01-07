@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Abstract.Models;
 using Brochure.Core.PluginsDI;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
@@ -140,7 +141,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="sqls">The sqls.</param>
         /// <returns>A list of TS.</returns>
-        public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(params ISql[] sqls) where T : class, new()
+        public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(IEnumerable<ISql> sqls) where T : class
         {
             var defaultDatabase = _connectFactory.GetDatabase();
             var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
@@ -161,9 +162,10 @@ namespace Brochure.ORM
         /// <summary>
         /// Excutes the query.
         /// </summary>
+        /// <param name="database"></param>
         /// <param name="sqls">The sqls.</param>
         /// <returns>A list of TS.</returns>
-        public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(string database, params ISql[] sqls) where T : class, new()
+        public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(string database, IEnumerable<ISql> sqls) where T : class
         {
             var sql = _sqlBuilder.Build(sqls);
             var command = await CreateDbCommandAsync(database);
@@ -171,9 +173,12 @@ namespace Brochure.ORM
             command.Parameters.AddRange(sql.Parameters);
             using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
             var list = new List<T>();
+            Func<IGetValue, T> fun = t => _objectFactory.Create<T>(t);
+            if (typeof(T).IsAssignableFrom(typeof(IRecord)))
+                fun = t => new Record(t) as T;
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                var t = _objectFactory.Create<T>(new DataReaderGetValue(reader));
+                var t = fun(new DataReaderGetValue(reader));
                 list.Add(t);
             }
             return list;
@@ -182,11 +187,21 @@ namespace Brochure.ORM
         /// <summary>
         /// Excutes the query.
         /// </summary>
-        /// <param name="sqls">The sqls.</param>
+        /// <param name="sql"></param>
         /// <returns>A list of TS.</returns>
-        public virtual Task<IEnumerable<T>> ExcuteQueryAsync<T>(IEnumerable<ISql> sqls) where T : class, new()
+        public virtual Task<IEnumerable<T>> ExcuteQueryAsync<T>(ISql sql) where T : class, new()
         {
-            return ExcuteQueryAsync<T>(sqls.ToArray());
+            return ExcuteQueryAsync<T>(new[] { sql });
+        }
+
+        /// <summary>
+        /// Excutes the query async.
+        /// </summary>
+        /// <param name="sql">The sql.</param>
+        /// <returns>A Task.</returns>
+        public virtual Task<IEnumerable<IRecord>> ExcuteQueryAsync(ISql sql)
+        {
+            return ExcuteQueryAsync<IRecord>(new[] { sql });
         }
 
         /// <summary>
@@ -194,7 +209,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="sqls">The sqls.</param>
         /// <returns>An int.</returns>
-        public virtual async Task<int> ExcuteNoQueryAsync(params ISql[] sqls)
+        public virtual async Task<int> ExcuteNoQueryAsync(IEnumerable<ISql> sqls)
         {
             var defaultDatabase = _connectFactory.GetDatabase();
             var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
@@ -215,9 +230,10 @@ namespace Brochure.ORM
         /// <summary>
         /// Excutes the no query.
         /// </summary>
+        /// <param name="database"></param>
         /// <param name="sqls">The sqls.</param>
         /// <returns>An int.</returns>
-        public virtual async Task<int> ExcuteNoQueryAsync(string database, params ISql[] sqls)
+        public virtual async Task<int> ExcuteNoQueryAsync(string database, IEnumerable<ISql> sqls)
         {
             var sql = _sqlBuilder.Build(sqls);
             var command = await CreateDbCommandAsync(database);
@@ -229,11 +245,11 @@ namespace Brochure.ORM
         /// <summary>
         /// Excutes the no query.
         /// </summary>
-        /// <param name="sqls">The sqls.</param>
+        /// <param name="sql">The sqls.</param>
         /// <returns>An int.</returns>
-        public virtual Task<int> ExcuteNoQueryAsync(IEnumerable<ISql> sqls)
+        public virtual Task<int> ExcuteNoQueryAsync(ISql sql)
         {
-            return ExcuteNoQueryAsync(sqls.ToArray());
+            return ExcuteNoQueryAsync(new[] { sql });
         }
 
         /// <summary>
@@ -241,7 +257,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="sqls">The sqls.</param>
         /// <returns>An object.</returns>
-        public virtual async Task<object> ExecuteScalarAsync(params ISql[] sqls)
+        public virtual async Task<object> ExecuteScalarAsync(IEnumerable<ISql> sqls)
         {
             var defaultDatabase = _connectFactory.GetDatabase();
             var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
@@ -257,9 +273,10 @@ namespace Brochure.ORM
         /// <summary>
         /// Executes the scalar.
         /// </summary>
+        /// <param name="database"></param>
         /// <param name="sqls">The sqls.</param>
         /// <returns>An object.</returns>
-        public virtual async Task<object> ExecuteScalarAsync(string database, params ISql[] sqls)
+        public virtual async Task<object> ExecuteScalarAsync(string database, IEnumerable<ISql> sqls)
         {
             var sql = _sqlBuilder.Build(sqls);
             var command = await CreateDbCommandAsync(database);
@@ -271,11 +288,11 @@ namespace Brochure.ORM
         /// <summary>
         /// Executes the scalar.
         /// </summary>
-        /// <param name="sqls">The sqls.</param>
+        /// <param name="sql">The sqls.</param>
         /// <returns>An object.</returns>
-        public virtual Task<object> ExecuteScalarAsync(IEnumerable<ISqlResult> sqls)
+        public virtual Task<object> ExecuteScalarAsync(ISql sql)
         {
-            return ExecuteScalarAsync(sqls.ToArray());
+            return ExecuteScalarAsync(new[] { sql });
         }
 
         /// <summary>

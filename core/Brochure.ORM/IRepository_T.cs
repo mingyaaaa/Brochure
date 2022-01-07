@@ -1,3 +1,4 @@
+using Brochure.Abstract;
 using Brochure.ORM.Querys;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,13 @@ namespace Brochure.ORM
         /// <param name="query">The query.</param>
         /// <returns>A Task.</returns>
         Task<IEnumerable<T>> ListAsync(IQuery<T> query);
+
+        /// <summary>
+        /// Lists the async.
+        /// </summary>
+        /// <param name="queryParams">The query params.</param>
+        /// <returns>A Task.</returns>
+        Task<IEnumerable<IRecord>> ListAsync(QueryParams<T> queryParams);
 
         /// <summary>
         /// Inserts the.

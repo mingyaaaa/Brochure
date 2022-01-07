@@ -12,11 +12,17 @@ namespace Brochure.Abstract
     public interface IGetValue
     {
         /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        IEnumerable<string> Properties { get; }
+
+        /// <summary>
         /// Gets the value.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>A T.</returns>
         T GetValue<T>(string propertyName);
+
         /// <summary>
         /// Gets the value.
         /// </summary>

@@ -25,10 +25,20 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="objs">The objs.</param>
         /// <returns>A T.</returns>
-        public T Create<T>(params object[] objs)
+        public T Create<T>(params object[] objs) where T : class
         {
+            if (typeof(T).IsAssignableFrom(typeof(IRecord)))
+            {
+                if (objs.Length == 0)
+                    throw new ArgumentException("²ÎÊý´íÎó");
+                if (objs[0] is IGetValue getValue)
+                    return new Record(getValue) as T;
+                if (objs[0] is object)
+                    return (T)Create(objs[0]);
+            }
             return (T)Create(typeof(T), objs);
         }
+
         /// <summary>
         /// Creates the.
         /// </summary>
@@ -54,12 +64,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="objs">The objs.</param>
         /// <returns>A T1.</returns>
-        public T1 Create<T1, T2>(params object[] objs) where T2 : T1
+        public T1 Create<T1, T2>(params object[] objs) where T2 : class, T1
         {
             return Create<T2>(objs);
         }
-
-
     }
 
     /// <summary>
@@ -76,6 +84,7 @@ namespace Brochure.Core
         {
             policy = new DefaultConverPolicy();
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectFactory"/> class.
         /// </summary>
@@ -140,13 +149,12 @@ namespace Brochure.Core
         /// <summary>
         /// Creates the.
         /// </summary>
-        /// <param name="reader">The reader.</param>
+        /// <param name="data"></param>
         /// <returns>A T.</returns>
         public T Create<T>(IGetValue data) where T : class, new()
         {
             var policy = new GetValueConverPolicy();
             return Create<IGetValue, T>(data, policy);
         }
-
     }
 }
