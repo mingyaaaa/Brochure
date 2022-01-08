@@ -11,14 +11,13 @@ namespace Brochure.Abstract
         /// <summary>
         /// Loads the plugin.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <returns>A ValueTask.</returns>
         ValueTask LoadPlugin();
 
         /// <summary>
         /// Loads the plugin.
         /// </summary>
-        /// <param name="service">The service.</param>
+        /// <param name="path"></param>
         /// <returns>A ValueTask.</returns>
         ValueTask<IPlugins> LoadPlugin(string path);
 

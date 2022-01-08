@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The plugin managers.
+    /// </summary>
     public interface IPluginManagers
     {
         /// <summary>
@@ -17,12 +20,14 @@ namespace Brochure.Abstract
         /// 移除插件
         /// </summary>
         /// <param name="plugin"></param>
-        Task Remove(IPlugins plugin);
+        ValueTask Remove(IPlugins plugin);
+
         /// <summary>
         /// 移除插件
         /// </summary>
-        /// <param name="plugin"></param>
-        Task Remove(Guid key);
+        /// <param name="key"></param>
+        ValueTask Remove(Guid key);
+
         /// <summary>
         /// 获取插件详情
         /// </summary>
@@ -51,9 +56,8 @@ namespace Brochure.Abstract
         /// <summary>
         /// 获取当前插件版本
         /// </summary>
-        /// <param name="version"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         long GetPluginVersion(Guid key);
-
     }
 }

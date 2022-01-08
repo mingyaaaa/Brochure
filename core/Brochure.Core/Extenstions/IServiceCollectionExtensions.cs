@@ -32,6 +32,8 @@ namespace Brochure.Core
         /// 添加服务
         /// </summary>
         /// <param name="service"></param>
+        /// <param name="appAction"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
         public static IServiceCollection AddBrochureCore(this IServiceCollection service, Action<ApplicationOption> appAction = null, IConfiguration configuration = null)
         {
@@ -71,12 +73,24 @@ namespace Brochure.Core
             return services;
         }
 
+        /// <summary>
+        /// Adds the grpc service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="configureOptions">The configure options.</param>
+        /// <returns>An IServiceCollection.</returns>
         public static IServiceCollection AddGrpcService(this IServiceCollection services, Action<GrpcServiceOptions> configureOptions = null)
         {
             services.AddGrpc(configureOptions);
             return services;
         }
 
+        /// <summary>
+        /// Adds the grpc client.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="config">The config.</param>
+        /// <returns>An IServiceCollection.</returns>
         public static IServiceCollection AddGrpcClient<T>(this IServiceCollection services, Action<PollyOption> config = null) where T : class
         {
             var type = typeof(T);
@@ -96,6 +110,11 @@ namespace Brochure.Core
             return services;
         }
 
+        /// <summary>
+        /// Inits the application core.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <returns>An IServiceCollection.</returns>
         internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
         {
             //注入插件模块
@@ -155,12 +174,23 @@ namespace Brochure.Core
             return (T)instance;
         }
 
+        /// <summary>
+        /// Gets the service inistace type.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>A Type.</returns>
         public static Type GetServiceInistaceType<T>(this IServiceCollection services)
         {
             var type = typeof(T);
             return GetServiceInistaceType(services, type);
         }
 
+        /// <summary>
+        /// Gets the service inistace type.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>A Type.</returns>
         public static Type GetServiceInistaceType(this IServiceCollection services, Type type)
         {
             var instance = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
@@ -242,6 +272,11 @@ namespace Brochure.Core
             }
         }
 
+        /// <summary>
+        /// Gets the base type or interface.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of Types.</returns>
         private static IEnumerable<Type> GetBaseTypeOrInterface(Type type)
         {
             var result = new List<Type>();
@@ -262,6 +297,13 @@ namespace Brochure.Core
             return result;
         }
 
+        /// <summary>
+        /// Adds the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="impType">The imp type.</param>
+        /// <param name="serviceLifetime">The service lifetime.</param>
         private static void AddService(IServiceCollection services, Type baseType, Type impType, ServiceLifetime serviceLifetime)
         {
             if (serviceLifetime == ServiceLifetime.Singleton)
@@ -278,6 +320,13 @@ namespace Brochure.Core
             }
         }
 
+        /// <summary>
+        /// Adds the muti service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="impType">The imp type.</param>
+        /// <param name="serviceLifetime">The service lifetime.</param>
         private static void AddMutiService(IServiceCollection services, Type baseType, Type impType, ServiceLifetime serviceLifetime)
         {
             if (serviceLifetime == ServiceLifetime.Singleton)

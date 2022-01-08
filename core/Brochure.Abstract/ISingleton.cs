@@ -7,6 +7,9 @@ namespace Brochure.Abstract
     {
     }
 
+    /// <summary>
+    /// The muti singleton.
+    /// </summary>
     public interface IMutiSingleton
     {
 

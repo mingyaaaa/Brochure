@@ -11,6 +11,7 @@ namespace Brochure.ORM
         /// Creates the table.
         /// </summary>
         /// <param name="type">The type.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql CreateTable(Type type, string database = "")
         {
@@ -30,6 +31,7 @@ namespace Brochure.ORM
         /// Gets the count table.
         /// </summary>
         /// <param name="tableName">The table name.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql GetCountTable(string tableName, string database = "")
         {
@@ -41,6 +43,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="oldName">The old name.</param>
         /// <param name="newName">The new name.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql UpdateTableName(string oldName, string newName, string database = "")
         {
@@ -51,6 +54,7 @@ namespace Brochure.ORM
         /// Deletes the table.
         /// </summary>
         /// <param name="tableName">The table name.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql DeleteTable(string tableName, string database = "")
         {
@@ -67,14 +71,21 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="CreateTableSql"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
+        /// <param name="database"></param>
         public CreateTableSql(Type type, string database)
         {
             TableType = type;
             Database = database;
         }
 
+        /// <summary>
+        /// Gets the table type.
+        /// </summary>
         public Type TableType { get; }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
     }
 
@@ -83,14 +94,21 @@ namespace Brochure.ORM
     /// </summary>
     public class CountTableSql : ISql
     {
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CountTableSql"/> class.
         /// </summary>
         /// <param name="tableName">The table name.</param>
+        /// <param name="database"></param>
         public CountTableSql(string tableName, string database)
         {
             TableName = tableName;
@@ -103,6 +121,9 @@ namespace Brochure.ORM
     /// </summary>
     public class UpdateTableNameSql : ISql
     {
+        /// <summary>
+        /// Gets the old name.
+        /// </summary>
         public string OldName { get; }
 
         /// <summary>
@@ -110,6 +131,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="newName">The new name.</param>
         /// <param name="oldName">The old name.</param>
+        /// <param name="database"></param>
         public UpdateTableNameSql(string newName, string oldName, string database)
         {
             NewName = newName;
@@ -117,8 +139,14 @@ namespace Brochure.ORM
             Database = database;
         }
 
+        /// <summary>
+        /// Gets the new name.
+        /// </summary>
         public string NewName { get; }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
     }
 
@@ -127,18 +155,25 @@ namespace Brochure.ORM
     /// </summary>
     public class DeleteTableSql : ISql
     {
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteTableSql"/> class.
         /// </summary>
         /// <param name="tableName">The table name.</param>
+        /// <param name="database"></param>
         public DeleteTableSql(string tableName, string database)
         {
             TableName = tableName;
             Database = database;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
     }
 }

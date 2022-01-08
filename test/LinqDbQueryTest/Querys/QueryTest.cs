@@ -11,14 +11,19 @@ using System.Linq;
 
 namespace Brochure.ORMTest.Querys
 {
+    /// <summary>
+    /// The query test.
+    /// </summary>
     [TestClass]
     public class QueryTest : BaseTest
     {
         private readonly IDbProvider provider;
-        private DbOption option;
         private Mock<TransactionManager> transactionManager;
         private ISqlBuilder queryBuilder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryTest"/> class.
+        /// </summary>
         public QueryTest()
         {
             provider = base.Provider.GetService<IDbProvider>();
@@ -26,6 +31,9 @@ namespace Brochure.ORMTest.Querys
             queryBuilder = base.Provider.GetService<ISqlBuilder>();
         }
 
+        /// <summary>
+        /// Queries the select.
+        /// </summary>
         [TestMethod]
         public void QuerySelect()
         {
@@ -48,6 +56,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("select `Age`,`Id` from `Peoples`", query4.SQL);
         }
 
+        /// <summary>
+        /// Queries the join.
+        /// </summary>
         [TestMethod]
         public void QueryJoin()
         {
@@ -66,6 +77,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("select `Classes`.`ClassName` as ClassName from `Students`,`Peoples` join `Classes` on `Students`.`ClassId` = `Classes`.`Id`", result.SQL);
         }
 
+        /// <summary>
+        /// Queries the group.
+        /// </summary>
         [TestMethod]
         public void QueryGroup()
         {
@@ -84,6 +98,9 @@ namespace Brochure.ORMTest.Querys
             //Trace.TraceInformation (sql);
         }
 
+        /// <summary>
+        /// Queries the order.
+        /// </summary>
         [TestMethod]
         public void QueryOrder()
         {
@@ -100,6 +117,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("select * from `Students`,`Peoples` order by `Students`.`ClassCount`,`Peoples`.`Age`", sql.SQL);
         }
 
+        /// <summary>
+        /// Queries the order desc.
+        /// </summary>
         [TestMethod]
         public void QueryOrderDesc()
         {
@@ -116,6 +136,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("select * from `Students`,`Peoples` order by `Students`.`ClassCount`,`Peoples`.`Age` desc", sql.SQL);
         }
 
+        /// <summary>
+        /// Queries the where and.
+        /// </summary>
         [TestMethod]
         public void QueryWhereAnd()
         {
@@ -139,6 +162,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(3, sql.Parameters.Count);
         }
 
+        /// <summary>
+        /// Queries the where or.
+        /// </summary>
         [TestMethod]
         public void QueryWhereOr()
         {
@@ -162,6 +188,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(3, sql.Parameters.Count);
         }
 
+        /// <summary>
+        /// Queries the where and or.
+        /// </summary>
         [TestMethod]
         public void QueryWhereAndOr()
         {
@@ -172,6 +201,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(3, r.Parameters.Count);
         }
 
+        /// <summary>
+        /// Queries the where.
+        /// </summary>
         [TestMethod]
         public void QueryWhere()
         {
@@ -187,6 +219,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(1, r.Parameters.Count);
         }
 
+        /// <summary>
+        /// Queries the with i entity key.
+        /// </summary>
         [TestMethod]
         public void QueryWithIEntityKey()
         {
@@ -210,6 +245,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("where `Teachers`.`Id` = @p0", r.SQL);
         }
 
+        /// <summary>
+        /// Queries the take and skip.
+        /// </summary>
         [TestMethod]
         public void QueryTakeAndSkip()
         {
@@ -219,6 +257,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(1, r.Parameters.Count);
         }
 
+        /// <summary>
+        /// Queries the generic type.
+        /// </summary>
         [TestMethod]
         public void QueryGenericType()
         {
@@ -228,15 +269,27 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("where `Teachers`.`Id` = @p0", sql);
         }
 
+        /// <summary>
+        /// The query generic.
+        /// </summary>
         private class QueryGeneric<T> where T : IEntityKey<string>
         {
             private readonly ISqlBuilder _queryBuilder;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="QueryGeneric"/> class.
+            /// </summary>
+            /// <param name="queryBuilder">The query builder.</param>
             public QueryGeneric(ISqlBuilder queryBuilder)
             {
                 _queryBuilder = queryBuilder;
             }
 
+            /// <summary>
+            /// Gets the generic sql.
+            /// </summary>
+            /// <param name="id">The id.</param>
+            /// <returns>A string.</returns>
             public string GetGenericSql(string id)
             {
                 return _queryBuilder.Build(Query.Where<T>((T t) => t.Id == id)).SQL;

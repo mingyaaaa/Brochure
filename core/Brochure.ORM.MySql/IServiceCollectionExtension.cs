@@ -18,7 +18,7 @@ namespace Brochure.ORM.MySql
         /// <summary>
         /// Adds the my sql.
         /// </summary>
-        /// <param name="services">The services.</param>
+        /// <param name="builder"></param>
         /// <param name="action">The action.</param>
         /// <returns>An IServiceCollection.</returns>
         public static IServiceCollection AddMySql(this IDbBuilder builder, Action<MySqlOption> action = null)

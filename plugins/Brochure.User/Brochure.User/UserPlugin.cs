@@ -30,6 +30,10 @@ namespace Brochure.User
         {
         }
 
+        /// <summary>
+        /// Configures the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public override void ConfigureService(IServiceCollection services)
         {
             services.AddScoped<IUserDal, UserDal>();

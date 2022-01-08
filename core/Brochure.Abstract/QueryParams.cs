@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The query params.
+    /// </summary>
     public class QueryParams<T>
     {
         /// <summary>

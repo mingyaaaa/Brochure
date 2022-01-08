@@ -30,7 +30,7 @@ namespace Brochure.ORM.MySql
         /// <param name="connectFactory">The connect factory.</param>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="sqlBuilder">The sql builder.</param>
-        /// <param name="serviceScope">The service scope.</param>
+        /// <param name="serviceScopeFactory"></param>
         [InjectConstructor]
         public MySqlDbContext(IObjectFactory objectFactory, IConnectFactory connectFactory, ITransactionManager transactionManager, ISqlBuilder sqlBuilder, IServiceScopeFactory serviceScopeFactory)
             : base(objectFactory, connectFactory, transactionManager, sqlBuilder, serviceScopeFactory)

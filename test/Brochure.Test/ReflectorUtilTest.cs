@@ -6,9 +6,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The reflector util test.
+    /// </summary>
     [TestClass]
     public class ReflectorUtilTest : BaseTest
     {
+        /// <summary>
+        /// Gets the set property value fun test.
+        /// </summary>
         [TestMethod]
         public void GetSetPropertyValueFunTest()
         {
@@ -26,6 +32,9 @@ namespace Brochure.Test
             Assert.AreEqual(obj.Ab, 1);
         }
 
+        /// <summary>
+        /// Nullables the test.
+        /// </summary>
         [TestMethod("≤‚ ‘Nullable")]
         public void NullableTest()
         {
@@ -36,6 +45,9 @@ namespace Brochure.Test
             Assert.AreEqual(a.NullableA, b.NullableA);
         }
 
+        /// <summary>
+        /// Gets the property value fun test.
+        /// </summary>
         [TestMethod]
         public void GetPropertyValueFunTest()
         {
@@ -58,6 +70,9 @@ namespace Brochure.Test
             Assert.AreEqual(value2, 1);
         }
 
+        /// <summary>
+        /// Gets the property value fun test1.
+        /// </summary>
         [TestMethod]
         public void GetPropertyValueFunTest1()
         {
@@ -81,6 +96,9 @@ namespace Brochure.Test
             Assert.AreEqual(value2, 1);
         }
 
+        /// <summary>
+        /// The test a.
+        /// </summary>
         public class TestA
         {
             /// <summary>
@@ -99,6 +117,9 @@ namespace Brochure.Test
             public int? NullableA { get; set; }
         }
 
+        /// <summary>
+        /// The test b.
+        /// </summary>
         public class TestB
         {
             /// <summary>

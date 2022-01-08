@@ -8,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.ORM.Atrributes
 {
+    /// <summary>
+    /// The transaction attribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public class TransactionAttribute : AspectCore.DynamicProxy.AbstractInterceptorAttribute
     {

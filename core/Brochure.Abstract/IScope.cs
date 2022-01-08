@@ -7,6 +7,9 @@ namespace Brochure.Abstract
     {
 
     }
+    /// <summary>
+    /// The muti scope.
+    /// </summary>
     public interface IMutiScope
     {
     }

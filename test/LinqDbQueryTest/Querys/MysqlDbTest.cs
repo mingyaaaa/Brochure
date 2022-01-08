@@ -5,12 +5,18 @@ using MySql.Data.MySqlClient;
 
 namespace Brochure.ORMTest.Querys
 {
+    /// <summary>
+    /// The mysql db test.
+    /// </summary>
     [TestClass]
     public class MysqlDbTest
     {
         private DbConnection dbConnection;
         private DbTransaction transaction;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MysqlDbTest"/> class.
+        /// </summary>
         public MysqlDbTest()
         {
             var builder = new MySqlConnectionStringBuilder();
@@ -22,10 +28,12 @@ namespace Brochure.ORMTest.Querys
             dbConnection = new MySqlConnection(builder.ToString());
         }
 
-        [TestMethod]
+        /// <summary>
+        /// Tests the connnect.
+        /// </summary>
+       // [TestMethod]
         public void TestConnnect()
         {
-            return;
             try
             {
                 dbConnection.Open();
@@ -52,6 +60,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(1, r);
         }
 
+        /// <summary>
+        /// Tests the connnect transction.
+        /// </summary>
         [TestMethod]
         public void TestConnnectTransction()
         {
@@ -87,6 +98,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(1, r);
         }
 
+        /// <summary>
+        /// Tests the connect query.
+        /// </summary>
         [TestMethod]
         public void TestConnectQuery()
         {

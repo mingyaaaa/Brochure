@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Brochure.Utils
 {
+    /// <summary>
+    /// The json util.
+    /// </summary>
     public class JsonUtil : IJsonUtil
     {
         /// <summary>

@@ -5,6 +5,9 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The group visitor.
+    /// </summary>
     public class GroupVisitor : ORMVisitor
     {
         /// <summary>

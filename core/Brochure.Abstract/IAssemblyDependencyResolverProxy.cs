@@ -15,7 +15,11 @@ namespace Brochure.Abstract
         /// <returns></returns>
         string ResolveAssemblyToPath(AssemblyName assemblyName);
 
-
+        /// <summary>
+        /// Resolves the unmanaged dll to path.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A string.</returns>
         string ResolveUnmanagedDllToPath(string name);
     }
 }

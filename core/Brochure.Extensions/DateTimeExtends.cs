@@ -2,8 +2,16 @@ using System;
 
 namespace Brochure.Extensions
 {
+    /// <summary>
+    /// The date time extends.
+    /// </summary>
     public static class DateTimeExtends
     {
+        /// <summary>
+        /// Tos the unix timestamp by milliseconds.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>A long.</returns>
         public static long ToUnixTimestampByMilliseconds (this DateTime date)
         {
             DateTimeOffset dto = new DateTimeOffset (date);

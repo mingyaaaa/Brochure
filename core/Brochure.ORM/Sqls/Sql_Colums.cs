@@ -10,12 +10,12 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets the colums names.
         /// </summary>
-        /// <param name="databaseName">The database name.</param>
         /// <param name="tableName">The table name.</param>
+        /// <param name="databaseName"></param>
         /// <returns>An ISql.</returns>
-        public static ISql GetColumsNames(string tableName, string database = "")
+        public static ISql GetColumsNames(string tableName, string databaseName = "")
         {
-            return new ColumsNamesSql(tableName, database);
+            return new ColumsNamesSql(tableName, databaseName);
         }
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace Brochure.ORM
         /// <param name="columnName">The column name.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetColumnsCount(string tableName, string columnName, string database = "")
+        public static ISql GetColumnsCount(string tableName, string columnName, string databaseName = "")
         {
-            return new CountColumsSql(tableName, columnName, database);
+            return new CountColumsSql(tableName, columnName, databaseName);
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetRenameColumnNameSql(string tableName, string oldName, string newName, TypeCode typeCode, int length = 0, string database = "")
+        public static ISql GetRenameColumnNameSql(string tableName, string oldName, string newName, TypeCode typeCode, int length = 0, string databaseName = "")
         {
-            return new RenameColumnSql(tableName, oldName, newName, typeCode, length, database);
+            return new RenameColumnSql(tableName, oldName, newName, typeCode, length, databaseName);
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetUpdateColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string database = "")
+        public static ISql GetUpdateColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string databaseName = "")
         {
-            return new UpdateColumnsSql(tableName, columnName, typeCode, isNotNull, length, database);
+            return new UpdateColumnsSql(tableName, columnName, typeCode, isNotNull, length, databaseName);
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace Brochure.ORM
         /// <param name="length">The length.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetAddColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string database = "")
+        public static ISql GetAddColumnSql(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length = 0, string databaseName = "")
         {
-            return new AddColumnsSql(tableName, columnName, typeCode, isNotNull, length, database);
+            return new AddColumnsSql(tableName, columnName, typeCode, isNotNull, length, databaseName);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace Brochure.ORM
         /// <param name="columnName">The column name.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetDeleteColumnSql(string tableName, string columnName, string database = "")
+        public static ISql GetDeleteColumnSql(string tableName, string columnName, string databaseName = "")
         {
-            return new DeleteColumsSql(tableName, columnName, database);
+            return new DeleteColumsSql(tableName, columnName, databaseName);
         }
     }
 
@@ -93,8 +93,14 @@ namespace Brochure.ORM
     /// </summary>
     public class ColumsNamesSql : ISql
     {
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
         /// <summary>
@@ -102,10 +108,10 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <param name="databaseName">The database name.</param>
-        public ColumsNamesSql(string tableName, string database)
+        public ColumsNamesSql(string tableName, string databaseName)
         {
             TableName = tableName;
-            Database = database;
+            Database = databaseName;
         }
     }
 
@@ -127,10 +133,19 @@ namespace Brochure.ORM
             Database = database;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets the columns name.
+        /// </summary>
         public string ColumnsName { get; }
     }
 
@@ -158,16 +173,34 @@ namespace Brochure.ORM
             Lentgh = lentgh;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets the old name.
+        /// </summary>
         public string OldName { get; }
 
+        /// <summary>
+        /// Gets the new name.
+        /// </summary>
         public string NewName { get; }
 
+        /// <summary>
+        /// Gets the type code.
+        /// </summary>
         public TypeCode TypeCode { get; }
 
+        /// <summary>
+        /// Gets the lentgh.
+        /// </summary>
         public int Lentgh { get; }
     }
 
@@ -195,16 +228,34 @@ namespace Brochure.ORM
             IsNotNull = isNotNull;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets the column name.
+        /// </summary>
         public string ColumnName { get; }
 
+        /// <summary>
+        /// Gets the type code.
+        /// </summary>
         public TypeCode TypeCode { get; }
 
+        /// <summary>
+        /// Gets the lentgh.
+        /// </summary>
         public int Lentgh { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether not is null.
+        /// </summary>
         public bool IsNotNull { get; }
     }
 
@@ -232,18 +283,39 @@ namespace Brochure.ORM
             IsNotNull = isNotNull;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets the column name.
+        /// </summary>
         public string ColumnName { get; }
 
+        /// <summary>
+        /// Gets the new name.
+        /// </summary>
         public string NewName { get; }
 
+        /// <summary>
+        /// Gets the type code.
+        /// </summary>
         public TypeCode TypeCode { get; }
 
+        /// <summary>
+        /// Gets the lentgh.
+        /// </summary>
         public int Lentgh { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether not is null.
+        /// </summary>
         public bool IsNotNull { get; }
     }
 
@@ -272,10 +344,19 @@ namespace Brochure.ORM
             Database = database;
         }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
+        /// <summary>
+        /// Gets the table name.
+        /// </summary>
         public string TableName { get; }
 
+        /// <summary>
+        /// Gets the colums name.
+        /// </summary>
         public string ColumsName { get; }
     }
 }

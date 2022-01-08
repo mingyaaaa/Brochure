@@ -5,28 +5,45 @@ using System.Diagnostics;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The rpc test.
+    /// </summary>
     [TestClass]
     public class RpcTest
     {
 
+        /// <summary>
+        /// Creates the proxy.
+        /// </summary>
+        /// <returns>An AClient.</returns>
         public AClient CreateProxy()
         {
             var factory = new RpcPollyProxyFactory(new PollyOption() { RetryCount = 2 });
             return new Rpc<AClient>(factory).Ins;
         }
 
+        /// <summary>
+        /// Creates the memory proxy.
+        /// </summary>
+        /// <returns>An AClient.</returns>
         public AClient CreateMemoryProxy()
         {
             var factory = new RpcMemoryProxyFactory(new AService());
             return new Rpc<AClient>(factory).Ins;
         }
 
+        /// <summary>
+        /// Creates the proxy test.
+        /// </summary>
         [TestMethod]
         public void CreateProxyTest()
         {
             CreateProxy();
         }
 
+        /// <summary>
+        /// Proxies the test.
+        /// </summary>
         [TestMethod]
         public void ProxyTest()
         {
@@ -37,6 +54,9 @@ namespace Brochure.Test
             Assert.AreEqual(initData, r);
         }
 
+        /// <summary>
+        /// Proxies the exception.
+        /// </summary>
         [TestMethod]
         public void ProxyException()
         {
@@ -46,6 +66,9 @@ namespace Brochure.Test
             Assert.ThrowsException<Exception>(() => alient.GetAValue(initData - 1));
         }
 
+        /// <summary>
+        /// Proxies the retry count.
+        /// </summary>
         [TestMethod]
         public void ProxyRetryCount()
         {
@@ -64,12 +87,18 @@ namespace Brochure.Test
             Assert.AreEqual(initData + 3, alient.A);
         }
 
+        /// <summary>
+        /// Creates the memory proxy test.
+        /// </summary>
         [TestMethod]
         public void CreateMemoryProxyTest()
         {
             CreateMemoryProxy();
         }
 
+        /// <summary>
+        /// Memories the proxy excute test.
+        /// </summary>
         [TestMethod]
         public void MemoryProxyExcuteTest()
         {
@@ -80,12 +109,20 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The a client.
+    /// </summary>
     public class AClient
     {
         /// <summary>
         /// Gets or sets the a.
         /// </summary>
         public int A { get; set; }
+        /// <summary>
+        /// Gets the a value.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <returns>An int.</returns>
         public virtual int GetAValue(int a)
         {
             if (A != a)
@@ -96,15 +133,31 @@ namespace Brochure.Test
             return a;
         }
     }
+    /// <summary>
+    /// The a base.
+    /// </summary>
     public abstract class ABase
     {
+        /// <summary>
+        /// Gets the a value.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <returns>An int.</returns>
         public virtual int GetAValue(int a)
         {
             throw new Exception();
         }
     }
+    /// <summary>
+    /// The a service.
+    /// </summary>
     public class AService : ABase
     {
+        /// <summary>
+        /// Gets the a value.
+        /// </summary>
+        /// <param name="a">The a.</param>
+        /// <returns>An int.</returns>
         public override int GetAValue(int a)
         {
             return 1 + a;

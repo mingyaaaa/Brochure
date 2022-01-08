@@ -2,6 +2,9 @@ using System;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The object factory.
+    /// </summary>
     public interface IObjectFactory
     {
         /// <summary>
@@ -57,6 +60,7 @@ namespace Brochure.Abstract
         /// 将T1类型转化为T2类型 属性名称相同 并且能赋值的可以转换
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="converPolicy"></param>
         /// <typeparam name="T1"></typeparam>
         /// <typeparam name="T2"></typeparam>
         /// <returns></returns>

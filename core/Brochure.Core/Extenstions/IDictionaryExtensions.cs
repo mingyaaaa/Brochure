@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Core.Extenstions
 {
+    /// <summary>
+    /// The i dictionary extensions.
+    /// </summary>
     public static class IDictionaryExtensions
     {
         /// <summary>
@@ -23,6 +26,12 @@ namespace Brochure.Core.Extenstions
             return dic;
         }
 
+        /// <summary>
+        /// Adds the range.
+        /// </summary>
+        /// <param name="hashSet">The hash set.</param>
+        /// <param name="list">The list.</param>
+        /// <returns>A HashSet.</returns>
         public static HashSet<T> AddRange<T>(this HashSet<T> hashSet, IEnumerable<T> list)
         {
             foreach (var item in list)

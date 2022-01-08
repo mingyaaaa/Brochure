@@ -97,7 +97,6 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Initializes a new instance of the <see cref="InnerTransaction"/> class.
         /// </summary>
-        /// <param name="dbOption">The db option.</param>
         public InnerTransaction()
         {
         }
@@ -133,7 +132,10 @@ namespace Brochure.ORM.Database
         /// Gets the db transaction.
         /// </summary>
         /// <returns>An IDbTransaction.</returns>
+#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+
         public async Task<DbTransaction> GetDbTransactionAsync()
+#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         {
             return null;
         }

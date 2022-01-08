@@ -3,8 +3,14 @@ using Brochure.ORM;
 
 namespace Brochure.ORM.MySql
 {
+    /// <summary>
+    /// The my sql type map.
+    /// </summary>
     public class MySqlTypeMap : TypeMap
     {
+        /// <summary>
+        /// Inits the map.
+        /// </summary>
         public override void InitMap()
         {
             MapDic.Add(typeof(int).Name, "decimal");

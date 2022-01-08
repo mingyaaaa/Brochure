@@ -6,9 +6,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The default conver policy test.
+    /// </summary>
     [TestClass]
     public class DefaultConverPolicyTest
     {
+        /// <summary>
+        /// Tests the default conver policy.
+        /// </summary>
         [TestMethod]
         public void TestDefaultConverPolicy()
         {
@@ -32,6 +38,9 @@ namespace Brochure.Test
             var bb = policy1.ConverTo<IRecord, Pa>(record);
         }
 
+        /// <summary>
+        /// Tests the record conver policy.
+        /// </summary>
         [TestMethod]
         public void TestRecordConverPolicy()
         {
@@ -47,6 +56,9 @@ namespace Brochure.Test
             Assert.AreEqual(b.B, 1);
         }
 
+        /// <summary>
+        /// Tests the object to record conver policy.
+        /// </summary>
         [TestMethod]
         public void TestObjectToRecordConverPolicy()
         {
@@ -62,6 +74,9 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The pa.
+    /// </summary>
     public class Pa
     {
         /// <summary>
@@ -80,6 +95,9 @@ namespace Brochure.Test
         public long C { get; set; }
     }
 
+    /// <summary>
+    /// The pb.
+    /// </summary>
     public class Pb
     {
         /// <summary>

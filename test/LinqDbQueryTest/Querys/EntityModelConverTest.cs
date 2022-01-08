@@ -5,9 +5,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LinqDbQueryTest.Querys
 {
+    /// <summary>
+    /// The entity model conver test.
+    /// </summary>
     [TestClass]
     public class EntityModelConverTest
     {
+        /// <summary>
+        /// Entities the to model conver test.
+        /// </summary>
         [TestMethod]
         public void EntityToModelConverTest ()
         {

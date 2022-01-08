@@ -24,6 +24,9 @@ namespace Brochure.ORM
             _reader = reader;
         }
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
         public IEnumerable<string> Properties => throw new NotSupportedException();
 
         /// <summary>

@@ -8,6 +8,9 @@ using System.Reflection;
 
 namespace Brochure.Utils
 {
+    /// <summary>
+    /// The reflector util.
+    /// </summary>
     public class ReflectorUtil : IReflectorUtil
     {
         /// <summary>
@@ -15,6 +18,12 @@ namespace Brochure.Utils
         /// </summary>
         public static IReflectorUtil Instance => new ReflectorUtil();
 
+        /// <summary>
+        /// Gets the object of base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of object.</returns>
         public IEnumerable<object> GetObjectOfBase(Assembly assembly, Type type)
         {
             var types = assembly.GetTypes();
@@ -27,6 +36,11 @@ namespace Brochure.Utils
             return listobject;
         }
 
+        /// <summary>
+        /// Gets the object of base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>A list of TS.</returns>
         public IEnumerable<T> GetObjectOfBase<T>(Assembly assembly)
         {
             var type = typeof(T);
@@ -34,6 +48,12 @@ namespace Brochure.Utils
             return objs.OfType<T>();
         }
 
+        /// <summary>
+        /// Gets the type of base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of Types.</returns>
         public IEnumerable<Type> GetTypeOfBase(Assembly assembly, Type type)
         {
             var types = assembly.GetTypes();
@@ -48,18 +68,34 @@ namespace Brochure.Utils
             return list;
         }
 
+        /// <summary>
+        /// Gets the type of base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>A list of Types.</returns>
         public IEnumerable<Type> GetTypeOfBase<T>(Assembly assembly)
         {
             var type = typeof(T);
             return GetTypeOfBase(assembly, type);
         }
 
+        /// <summary>
+        /// Creates the instance.
+        /// </summary>
+        /// <param name="parms">The parms.</param>
+        /// <returns>A T.</returns>
         public T CreateInstance<T>(params object[] parms) where T : class
         {
             var type = typeof(T);
             return (T)CreateInstance(type, parms);
         }
 
+        /// <summary>
+        /// Creates the instance.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="parms">The parms.</param>
+        /// <returns>An object.</returns>
         public object CreateInstance(Type type, params object[] parms)
         {
             var typeinfo = type.GetTypeInfo();
@@ -72,6 +108,12 @@ namespace Brochure.Utils
             return constructor?.Invoke(parms);
         }
 
+        /// <summary>
+        /// Gets the object of absolute base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of object.</returns>
         public IEnumerable<object> GetObjectOfAbsoluteBase(Assembly assembly, Type type)
         {
             var types = assembly.GetTypes();
@@ -86,6 +128,11 @@ namespace Brochure.Utils
             return listobject;
         }
 
+        /// <summary>
+        /// Gets the object of absolute base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>A list of TS.</returns>
         public IEnumerable<T> GetObjectOfAbsoluteBase<T>(Assembly assembly)
         {
             var type = typeof(T);
@@ -93,6 +140,12 @@ namespace Brochure.Utils
             return listobject.OfType<T>();
         }
 
+        /// <summary>
+        /// Gets the type of absolute base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of Types.</returns>
         public IEnumerable<Type> GetTypeOfAbsoluteBase(Assembly assembly, Type type)
         {
             var types = assembly.GetTypes();
@@ -107,17 +160,32 @@ namespace Brochure.Utils
             return listobject;
         }
 
+        /// <summary>
+        /// Gets the type of absolute base.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>A list of Types.</returns>
         public IEnumerable<Type> GetTypeOfAbsoluteBase<T>(Assembly assembly)
         {
             var type = typeof(T);
             return GetTypeOfAbsoluteBase(assembly, type);
         }
 
+        /// <summary>
+        /// Gets the set property value fun.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>An Action.</returns>
         public Action<T1, T2> GetSetPropertyValueFun<T1, T2>(string propertyName)
         {
             return GetSetPropertyValueFun<T1>(typeof(T2), propertyName) as Action<T1, T2>;
         }
 
+        /// <summary>
+        /// Gets the property value fun.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>A Func.</returns>
         public Func<T1, T2> GetPropertyValueFun<T1, T2>(string propertyName)
         {
             // return GetPropertyValueFun<T1> (propertyName) as Func<T1, T2>;
@@ -129,6 +197,11 @@ namespace Brochure.Utils
             return lambdaExpression.Compile();
         }
 
+        /// <summary>
+        /// Gets the property value fun.
+        /// </summary>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>A Func.</returns>
         public Func<T1, object> GetPropertyValueFun<T1>(string propertyName)
         {
             // return GetPropertyValueFun (typeof (T1), propertyName) as Func<T1, object>;
@@ -141,6 +214,12 @@ namespace Brochure.Utils
             return lambdaExpression.Compile();
         }
 
+        /// <summary>
+        /// Gets the set property value fun.
+        /// </summary>
+        /// <param name="valueClass">The value class.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>An Action.</returns>
         public Action<T1, object> GetSetPropertyValueFun<T1>(Type valueClass, string propertyName)
         {
             var classType = typeof(T1);

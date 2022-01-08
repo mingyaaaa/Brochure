@@ -11,30 +11,17 @@ namespace Brochure.ORM.Database
     {
         private readonly DbContext _dbContext;
 
+        /// <summary>
+        /// Gets the isolation level.
+        /// </summary>
         public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbDatabase"/> class.
         /// </summary>
-        /// <param name="option">The option.</param>
-        /// <param name="dbSql">The db sql.</param>
-        /// <param name="connectFactory">The connect factory.</param>
         protected DbDatabase(DbContext dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        /// <summary>
-        /// Tries the create database async.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>A Task.</returns>
-        public async Task<int> TryCreateDatabaseAsync(string databaseName)
-        {
-            var exist = await IsExistDataBaseAsync(databaseName);
-            if (!exist)
-                return await CreateDatabaseAsync(databaseName);
-            return -1;
         }
 
         /// <summary>
@@ -46,19 +33,6 @@ namespace Brochure.ORM.Database
         {
             var sql = Sql.CreateDatabase(databaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
-        }
-
-        /// <summary>
-        /// Tries the delete database async.
-        /// </summary>
-        /// <param name="databaseName">The database name.</param>
-        /// <returns>A Task.</returns>
-        public async Task<int> TryDeleteDatabaseAsync(string databaseName)
-        {
-            var exist = await IsExistDataBaseAsync(databaseName);
-            if (exist)
-                return await DeleteDatabaseAsync(databaseName);
-            return -1;
         }
 
         /// <summary>
@@ -85,16 +59,28 @@ namespace Brochure.ORM.Database
             return rr >= 1;
         }
 
+        /// <summary>
+        /// Disposes the async.
+        /// </summary>
+        /// <returns>A ValueTask.</returns>
         public ValueTask DisposeAsync()
         {
             return _dbContext.DisposeAsync();
         }
 
+        /// <summary>
+        /// Commits the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public Task CommitAsync()
         {
             return _dbContext.CommitAsync();
         }
 
+        /// <summary>
+        /// Rollbacks the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public Task RollbackAsync()
         {
             return _dbContext.RollbackAsync();

@@ -14,6 +14,9 @@ using Moq;
 
 namespace Brochure.ORMTest.Querys
 {
+    /// <summary>
+    /// The db test.
+    /// </summary>
     [TestClass]
     public class DbTest : BaseTest
     {
@@ -26,6 +29,9 @@ namespace Brochure.ORMTest.Querys
         private ISqlBuilder _sqlBuilder;
         private Mock<TransactionManager> transactionManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTest"/> class.
+        /// </summary>
         public DbTest()
         {
             transactionManager = new Mock<TransactionManager>();
@@ -36,6 +42,9 @@ namespace Brochure.ORMTest.Querys
             ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
         }
 
+        /// <summary>
+        /// Tests the db data.
+        /// </summary>
         [TestMethod]
         public void TestDbData()
         {
@@ -59,6 +68,9 @@ namespace Brochure.ORMTest.Querys
             Trace.TraceInformation(sqlResult.SQL);
         }
 
+        /// <summary>
+        /// Tests the insert.
+        /// </summary>
         [TestMethod]
         public void TestInsert()
         {
@@ -78,6 +90,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p2").Value, 1);
         }
 
+        /// <summary>
+        /// Tests the db database.
+        /// </summary>
         [TestMethod]
         public void TestDbDatabase()
         {
@@ -95,6 +110,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("SELECT count(1) FROM information_schema.SCHEMATA where SCHEMA_NAME='testdb'", sqlResult.SQL);
         }
 
+        /// <summary>
+        /// Tests the db table.
+        /// </summary>
         [TestMethod]
         public void TestDbTable()
         {
@@ -116,6 +134,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("alter table testTable rename newTable", sqlResult.SQL);
         }
 
+        /// <summary>
+        /// Tests the my sql db type table.
+        /// </summary>
         [TestMethod("测试创建MySql表类型数据")]
         public void TestMySqlDbTypeTable()
         {
@@ -124,6 +145,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("create table DbTypeEntiry(Id nvarchar(36),DInt decimal not null,DDouble decimal(15,6) not null,DFloat decimal(15,6) not null,DDateTime datetime not null,DString nvarchar(255),DGuid nvarchar(36) not null,DByte tinyint not null,DNInt decimal,DNDouble decimal(15,6),DNFloat decimal(15,6),DNDateTime datetime,DNString nvarchar(255) not null,DNGuid nvarchar(36),DNByte tinyint,PRIMARY KEY ( Id ))", sqlResult.SQL);
         }
 
+        /// <summary>
+        /// Tests the db column.
+        /// </summary>
         [TestMethod]
         public void TestDbColumn()
         {
@@ -149,6 +173,9 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual("alter table testTable modify testColumn nvarchar(200) not null", sqlResult.SQL);
         }
 
+        /// <summary>
+        /// Tests the db index.
+        /// </summary>
         [TestMethod]
         public void TestDbIndex()
         {
@@ -158,6 +185,14 @@ namespace Brochure.ORMTest.Querys
             sql = Sql.DeleteIndex("test", "column1_column2");
             sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("drop index column1_column2 on test", sqlResult.SQL);
+
+            sql = Sql.CountIndex("test", "index1", "testDb");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("select COUNT(1) from information_schema.columns WHERE table_schema='testDb' and table_name = 'test' and index_name = 'index1'", sqlResult.SQL);
+
+            sql = Sql.RenameIndex("test", "index1", "newIndex");
+            sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("ALTER TABLE test RENAME INDEX index1 TO newIndex", sqlResult.SQL);
         }
     }
 }

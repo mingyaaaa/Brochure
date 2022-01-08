@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The sql builder.
+    /// </summary>
     public partial class SqlBuilder
     {
         /// <summary>
@@ -29,6 +32,30 @@ namespace Brochure.ORM
         {
             var r = new ParmsSqlResult();
             r.SQL = $"drop index {deleteIndexSql.IndexName} on {deleteIndexSql.TableName}";
+            return r;
+        }
+
+        /// <summary>
+        /// Renames the index sql.
+        /// </summary>
+        /// <param name="renameIndexSql">The rename index sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult RenameIndexSql(RenameIndexSql renameIndexSql)
+        {
+            var r = new ParmsSqlResult();
+            r.SQL = $"ALTER TABLE {renameIndexSql.TableName} RENAME INDEX {renameIndexSql.OldIndexName} TO {renameIndexSql.NewIndexName}";
+            return r;
+        }
+
+        /// <summary>
+        /// Builds the index count.
+        /// </summary>
+        /// <param name="countIndexSql">The count index sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected virtual ISqlResult BuildIndexCount(CountIndexSql countIndexSql)
+        {
+            var r = new ParmsSqlResult();
+            r.SQL = $"select COUNT(1) from information_schema.columns WHERE table_schema='{countIndexSql.Database}' and table_name = '{countIndexSql.TableName}' and index_name = '{countIndexSql.IndexName}'";
             return r;
         }
     }

@@ -19,11 +19,7 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Initializes a new instance of the <see cref="DbData"/> class.
         /// </summary>
-        /// <param name="dbOption">The db option.</param>
-        /// <param name="dbSql">The db sql.</param>
-        /// <param name="transactionManager">The transaction manager.</param>
-        /// <param name="connectFactory">The connect factory.</param>
-        /// <param name="objectFactory">The object factory.</param>
+        /// <param name="dbContext"></param>
         protected DbData(DbContext dbContext)
         {
             _dbContext = dbContext;
@@ -31,6 +27,9 @@ namespace Brochure.ORM.Database
 
         private readonly DbContext _dbContext;
 
+        /// <summary>
+        /// Gets the isolation level.
+        /// </summary>
         public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>

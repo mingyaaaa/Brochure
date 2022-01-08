@@ -4,10 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The proxy test.
+    /// </summary>
     [TestClass]
     public class ProxyTest
     {
 
+        /// <summary>
+        /// Tests the proxy.
+        /// </summary>
         [TestMethod]
         public void TestProxy ()
         {
@@ -21,28 +27,53 @@ namespace Brochure.Test
     }
 
     //需要被生成代理实例的接口
+    /// <summary>
+    /// The target interface.
+    /// </summary>
     public interface targetInterface
     {
         //这个方法会被代理类实现
+        /// <summary>
+        /// Writes the.
+        /// </summary>
+        /// <param name="writesomeshing">The writesomeshing.</param>
         void Write (string writesomeshing);
 
+        /// <summary>
+        /// Write2S the.
+        /// </summary>
+        /// <param name="a">The a.</param>
         void Write2 (int a);
     }
 
     //需要被生成代理实例的接口
+    /// <summary>
+    /// The imp interface.
+    /// </summary>
     public class ImpInterface : targetInterface
     {
+        /// <summary>
+        /// Writes the.
+        /// </summary>
+        /// <param name="writesomeshing">The writesomeshing.</param>
         public virtual void Write (string writesomeshing)
         {
             Console.WriteLine (writesomeshing);
         }
 
+        /// <summary>
+        /// Write2S the.
+        /// </summary>
+        /// <param name="a">The a.</param>
         public void Write2 (int a)
         {
             throw new NotImplementedException ();
         }
     }
 
+    /// <summary>
+    /// The sample proxy.
+    /// </summary>
     public class SampleProxy : DispatchProxy
     {
         /// <summary>

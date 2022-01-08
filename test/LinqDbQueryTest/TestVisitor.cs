@@ -13,6 +13,9 @@ using System.Text;
 
 namespace Brochure.ORMTest
 {
+    /// <summary>
+    /// The test visitor.
+    /// </summary>
     [TestClass]
     public class TestVisitor : BaseTest
     {
@@ -22,6 +25,9 @@ namespace Brochure.ORMTest
         private Mock<TransactionManager> transactionManager;
         private ISqlBuilder _queryBuilder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestVisitor"/> class.
+        /// </summary>
         public TestVisitor()
         {
             provider = base.Provider.GetService<IDbProvider>();
@@ -30,6 +36,9 @@ namespace Brochure.ORMTest
             _queryBuilder = Provider.GetService<ISqlBuilder>();
         }
 
+        /// <summary>
+        /// Tests the where visitor.
+        /// </summary>
         [TestMethod]
         public void TestWhereVisitor()
         {
@@ -100,6 +109,9 @@ namespace Brochure.ORMTest
             Assert.AreEqual("`Peoples`.`Age` = 1 and `Peoples`.`Name` = '1'", sql.ToString());
         }
 
+        /// <summary>
+        /// Tests the select visitor.
+        /// </summary>
         [TestMethod]
         public void TestSelectVisitor()
         {
@@ -122,6 +134,9 @@ namespace Brochure.ORMTest
             Assert.AreEqual("select `Peoples`.`Name` as NewName,`Peoples`.`Age` as NewAge,`Students`.`ClassId` as ClassId from", sql.ToString());
         }
 
+        /// <summary>
+        /// Tests the join visitor.
+        /// </summary>
         [TestMethod]
         public void TestJoinVisitor()
         {
@@ -134,6 +149,9 @@ namespace Brochure.ORMTest
             Assert.AreEqual("join `Students` on `Students`.`PeopleId` = `Peoples`.`Id`", sql.ToString());
         }
 
+        /// <summary>
+        /// Tests the group visitor.
+        /// </summary>
         [TestMethod]
         public void TestGroupVisitor()
         {
@@ -152,6 +170,9 @@ namespace Brochure.ORMTest
             Assert.AreEqual("group by `Peoples`.`Age`", sql.ToString());
         }
 
+        /// <summary>
+        /// Tests the paramers.
+        /// </summary>
         [TestMethod]
         public void TestParamers()
         {

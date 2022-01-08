@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The plugin config.
+    /// </summary>
     public class PluginConfig
     {
         /// <summary>

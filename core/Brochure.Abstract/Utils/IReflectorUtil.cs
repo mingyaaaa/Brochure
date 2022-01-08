@@ -37,7 +37,6 @@ namespace Brochure.Abstract.Utils
         /// 根据接口获取指定类型
         /// </summary>
         /// <param name="assembly"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<Type> GetTypeOfBase<T>(Assembly assembly);
 
@@ -53,7 +52,6 @@ namespace Brochure.Abstract.Utils
         /// 获取直接继承父类
         /// </summary>
         /// <param name="assembly"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<T> GetObjectOfAbsoluteBase<T>(Assembly assembly);
 
@@ -69,7 +67,6 @@ namespace Brochure.Abstract.Utils
         /// 获取直接继承父类类型
         /// </summary>
         /// <param name="assembly"></param>
-        /// <param name="type"></param>
         /// <returns></returns>
         IEnumerable<Type> GetTypeOfAbsoluteBase<T>(Assembly assembly);
 
@@ -84,7 +81,7 @@ namespace Brochure.Abstract.Utils
         /// <summary>
         /// 创建实例
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
         /// <param name="parms"></param>
         /// <returns></returns>
         object CreateInstance(Type type, params object[] parms);
@@ -101,9 +98,9 @@ namespace Brochure.Abstract.Utils
         /// <summary>
         /// 获取属性设置方法
         /// </summary>
+        /// <param name="valueClass"></param>
         /// <param name="propertyName"></param>
         /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
         /// <returns></returns>
         Action<T1, object> GetSetPropertyValueFun<T1>(Type valueClass, string propertyName);
 
@@ -119,7 +116,6 @@ namespace Brochure.Abstract.Utils
         /// <summary>
         /// 获取属性值方法
         /// </summary>
-        /// <param name="classType"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
         Func<T1, object> GetPropertyValueFun<T1>(string propertyName);

@@ -4,6 +4,9 @@ using System.Data;
 using System.Linq;
 namespace Brochure.ORM.Extensions
 {
+    /// <summary>
+    /// The i data parameter collection extenstions.
+    /// </summary>
     public static class IDataParameterCollectionExtenstions
     {
         /// <summary>

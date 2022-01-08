@@ -3,6 +3,9 @@ using System;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The entity base.
+    /// </summary>
     public abstract class EntityBase
     {
         /// <summary>

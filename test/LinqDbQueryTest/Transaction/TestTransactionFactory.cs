@@ -7,6 +7,9 @@ using Moq;
 
 namespace Brochure.ORMTest.Transaction
 {
+    /// <summary>
+    /// The test transaction factory.
+    /// </summary>
     [TestClass]
     public class TestTransactionFactory
     {
@@ -14,6 +17,9 @@ namespace Brochure.ORMTest.Transaction
         private readonly Mock<DbOption> dbOptionMock;
         private readonly Mock<IConnectFactory> connectFactoryMock;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestTransactionFactory"/> class.
+        /// </summary>
         public TestTransactionFactory()
         {
             managerMock = new Mock<ITransactionManager>();
@@ -21,6 +27,9 @@ namespace Brochure.ORMTest.Transaction
             connectFactoryMock = new Mock<IConnectFactory>();
         }
 
+        /// <summary>
+        /// Tests the create transaction.
+        /// </summary>
         [TestMethod]
         public void TestCreateTransaction()
         {
@@ -30,6 +39,9 @@ namespace Brochure.ORMTest.Transaction
             Assert.IsInstanceOfType(r, typeof(ORM.Database.Transaction));
         }
 
+        /// <summary>
+        /// Tests the create inner transaction.
+        /// </summary>
         [TestMethod]
         public void TestCreateInnerTransaction()
         {

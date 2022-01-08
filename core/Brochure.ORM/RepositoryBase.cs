@@ -18,7 +18,7 @@ namespace Brochure.ORM
         private readonly DbData _dbData;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="dbData"></param>
         public RepositoryBase(DbData dbData)
@@ -119,7 +119,7 @@ namespace Brochure.ORM
         private readonly DbContext _dbContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RepositoryBase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="dbData"></param>
         /// <param name="dbContext"></param>

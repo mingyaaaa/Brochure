@@ -10,6 +10,9 @@ namespace LinqDbQueryTest.Querys
     [TestClass]
     public class TableUtilsTest
     {
+        /// <summary>
+        /// Tests the get table name by class.
+        /// </summary>
         [TestMethod]
         public void TestGetTableNameByClass()
         {
@@ -17,6 +20,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("A", name);
         }
 
+        /// <summary>
+        /// Tests the get table name by table attribute.
+        /// </summary>
         [TestMethod]
         public void TestGetTableNameByTableAttribute()
         {
@@ -24,6 +30,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("aaa", name);
         }
 
+        /// <summary>
+        /// Tests the get table name by type.
+        /// </summary>
         [TestMethod]
         public void TestGetTableNameByType()
         {
@@ -32,11 +41,17 @@ namespace LinqDbQueryTest.Querys
         }
 
 
+        /// <summary>
+        /// The a.
+        /// </summary>
         private class A
         {
 
 
         }
+        /// <summary>
+        /// The b.
+        /// </summary>
         [Table("aaa")]
         public class B
         {

@@ -18,14 +18,14 @@ namespace Brochure.ORM
         /// <summary>
         /// Builds the.
         /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
+        /// <param name="sqls"></param>
         /// <returns>A ParmsSqlResult.</returns>
         ISqlResult Build(params ISql[] sqls);
 
         /// <summary>
         /// Builds the.
         /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
+        /// <param name="sqls"></param>
         /// <returns>A ParmsSqlResult.</returns>
         ISqlResult Build(IEnumerable<ISql> sqls);
 
@@ -59,9 +59,24 @@ namespace Brochure.ORM
     /// </summary>
     public partial class SqlBuilder : ISqlBuilder
     {
+        /// <summary>
+        ///
+        /// </summary>
         protected readonly IVisitProvider _visitProvider;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected readonly IDbProvider _dbProvider;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected readonly DbOption _dbOption;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected readonly TypeMap _typeMap;
 
         /// <summary>
@@ -69,6 +84,8 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="visitProvider">The visit provider.</param>
         /// <param name="dbProvider">The db provider.</param>
+        /// <param name="dbOption"></param>
+        /// <param name="typeMap"></param>
         public SqlBuilder(IVisitProvider visitProvider, IDbProvider dbProvider,
             DbOption dbOption,
             TypeMap typeMap)
@@ -82,7 +99,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Builds the.
         /// </summary>
-        /// <param name="queryExpression">The query expression.</param>
+        /// <param name="sqls"></param>
         /// <returns>A ParmsSqlResult.</returns>
         public ISqlResult Build(params ISql[] sqls)
         {
@@ -114,6 +131,11 @@ namespace Brochure.ORM
             return Build(sqls.ToArray());
         }
 
+        /// <summary>
+        /// Builds the sql result.
+        /// </summary>
+        /// <param name="sql">The sql.</param>
+        /// <returns>An ISqlResult.</returns>
         public ISqlResult BuildSqlResult(ISql sql)
         {
             return sql switch
@@ -136,9 +158,12 @@ namespace Brochure.ORM
                 DeleteColumsSql deleteColumsSql => BuildDeleteColumn(deleteColumsSql),
                 CreateIndexSql createIndexSql => BuildCreateIndex(createIndexSql),
                 DeleteIndexSql deleteIndexSql => BuildDeleteIndex(deleteIndexSql),
+                CountIndexSql countIndexSql => BuildIndexCount(countIndexSql),
+                RenameIndexSql renameIndexSql => RenameIndexSql(renameIndexSql),
                 DeleteSql deleteSql => BuildDeleteSql(deleteSql),
                 InsertSql insertSql => BuildInsertSql(insertSql),
                 UpdateSql updateSql => BuildUpdateSql(updateSql),
+                _ => new ParmsSqlResult()
             };
         }
 

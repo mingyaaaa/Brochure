@@ -7,9 +7,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The unit test1.
+    /// </summary>
     [TestClass]
     public class UnitTest1
     {
+        /// <summary>
+        /// Tests the method1.
+        /// </summary>
         [TestMethod]
         public void TestMethod1()
         {
@@ -23,6 +29,9 @@ namespace Brochure.Test
             a.h();
         }
 
+        /// <summary>
+        /// Mies the test method.
+        /// </summary>
         [TestMethod("测试工厂方法会重建数据")]
         public void MyTestMethod()
         {
@@ -40,6 +49,9 @@ namespace Brochure.Test
             Assert.AreEqual("1", aaa.Ap);
         }
 
+        /// <summary>
+        /// Test1S the.
+        /// </summary>
         [TestMethod("测试类型注入会重建数据")]
         public void Test1()
         {
@@ -56,6 +68,9 @@ namespace Brochure.Test
             var aaa = provider1.GetService<IA>();
             Assert.AreEqual("1", aaa.Ap);
         }
+        /// <summary>
+        /// Test3S the.
+        /// </summary>
         [TestMethod("测试实例注入不会重建数据")]
         public void Test3()
         {
@@ -72,6 +87,9 @@ namespace Brochure.Test
             var aaa = provider1.GetService<IA>();
             Assert.AreEqual("2", aaa.Ap);
         }
+        /// <summary>
+        /// Tests the express.
+        /// </summary>
         [TestMethod]
         public void TestExpress()
         {
@@ -106,6 +124,9 @@ namespace Brochure.Test
             a.Stop();
         }
 
+        /// <summary>
+        /// Tests the express2.
+        /// </summary>
         [TestMethod]
         public void TestExpress2()
         {
@@ -140,30 +161,51 @@ namespace Brochure.Test
             Trace.TraceInformation(a.ElapsedMilliseconds.ToString());
             a.Stop();
         }
+        /// <summary>
+        /// The a.
+        /// </summary>
         public interface IA
         {
             /// <summary>
             /// Gets or sets the ap.
             /// </summary>
             string Ap { get; set; }
+            /// <summary>
+            /// hs the.
+            /// </summary>
             void h();
         }
+        /// <summary>
+        /// The b.
+        /// </summary>
         public interface IB
         {
+            /// <summary>
+            /// ks the.
+            /// </summary>
             void k();
         }
+        /// <summary>
+        /// The a.
+        /// </summary>
         public class A : IA
         {
             /// <summary>
             /// Gets or sets the ap.
             /// </summary>
             public string Ap { get; set; } = "1";
+            /// <summary>
+            /// hs the.
+            /// </summary>
             public void h()
             {
                 Trace.TraceInformation("A");
             }
 
         }
+        /// <summary>
+        /// The a1.
+        /// </summary>
         public class A1 : IA
         {
             /// <summary>
@@ -171,31 +213,55 @@ namespace Brochure.Test
             /// </summary>
             public string Ap { get; set; }
 
+            /// <summary>
+            /// hs the.
+            /// </summary>
             public void h()
             {
                 Trace.TraceInformation("A1");
             }
         }
+        /// <summary>
+        /// The b.
+        /// </summary>
         public class B : IB
         {
+            /// <summary>
+            /// ks the.
+            /// </summary>
             public void k()
             {
                 Trace.TraceInformation("B");
             }
         }
 
+        /// <summary>
+        /// The my scope prvider facory.
+        /// </summary>
         public class MyScopePrviderFacory : IServiceScopeFactory
         {
             private readonly IServiceCollection services;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MyScopePrviderFacory"/> class.
+            /// </summary>
+            /// <param name="services">The services.</param>
             public MyScopePrviderFacory(IServiceCollection services)
             {
                 this.services = services;
             }
+            /// <summary>
+            /// Creates the scope.
+            /// </summary>
+            /// <returns>An IServiceScope.</returns>
             public IServiceScope CreateScope()
             {
                 return services.BuildServiceProvider().CreateScope();
             }
+            /// <summary>
+            /// Mergers the service.
+            /// </summary>
+            /// <param name="services">The services.</param>
             public void MergerService(IServiceCollection services)
             {
                 this.services.Concat(services);

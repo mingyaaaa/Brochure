@@ -8,11 +8,9 @@ namespace Brochure.Abstract.Models
     /// <summary>
     /// 文档类型
     /// </summary>
-    /// <typeparam name="BDocument"></typeparam>
     public class Record : IRecord
     {
         private readonly IDictionary<string, object> _dic;
-        private readonly IGetValue _getValue;
 
         /// <summary>
         /// 添加时执行
@@ -32,16 +30,27 @@ namespace Brochure.Abstract.Models
         [IgnoreDataMember]
         public Action RemoveHander;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Record"/> class.
+        /// </summary>
+        /// <param name="dictionary">The dictionary.</param>
         public Record(IDictionary<string, object> dictionary)
         {
             _dic = dictionary;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Record"/> class.
+        /// </summary>
         public Record()
         {
             _dic = new Dictionary<string, object>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Record"/> class.
+        /// </summary>
+        /// <param name="getValue">The get value.</param>
         public Record(IGetValue getValue) : this()
         {
             var property = getValue.Properties;
@@ -73,6 +82,9 @@ namespace Brochure.Abstract.Models
         [IgnoreDataMember]
         public object Current { get; set; }
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
         public IEnumerable<string> Properties
         {
             get
@@ -117,6 +129,10 @@ namespace Brochure.Abstract.Models
             AddHander?.Invoke();
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>An IEnumerator.</returns>
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             return _dic.GetEnumerator();
@@ -148,21 +164,37 @@ namespace Brochure.Abstract.Models
             RemoveHander?.Invoke();
         }
 
+        /// <summary>
+        /// Moves the next.
+        /// </summary>
+        /// <returns>A bool.</returns>
         public bool MoveNext()
         {
             return _dic.GetEnumerator().MoveNext();
         }
 
+        /// <summary>
+        /// Resets the.
+        /// </summary>
         public void Reset()
         {
             _dic.GetEnumerator().Reset();
         }
 
+        /// <summary>
+        /// Contains the key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
         public bool ContainsKey(string key)
         {
             return _dic.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Tos the string.
+        /// </summary>
+        /// <returns>A string.</returns>
         public override string ToString()
         {
             if (_dic == null)

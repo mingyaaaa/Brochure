@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The sql builder.
+    /// </summary>
     public partial class SqlBuilder
     {
         /// <summary>

@@ -30,7 +30,6 @@ namespace Brochure.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
         /// </summary>
-        /// <param name="services">The services.</param>
         /// <param name="resolverProxy">The resolver proxy.</param>
         public PluginsLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: true)
         {
@@ -38,6 +37,10 @@ namespace Brochure.Core
             this.Unloading += PluginsLoadContext_Unloading;
         }
 
+        /// <summary>
+        /// Plugins the load context_ unloading.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
         private void PluginsLoadContext_Unloading(AssemblyLoadContext obj)
         {
         }
@@ -58,7 +61,7 @@ namespace Brochure.Core
                     //   var ass = LoadFromStream(new FileStream(assemblyPath, FileMode.Open, FileAccess.Read));
                     return ass;
                 }
-                catch (Exception e)
+                catch
                 {
                 }
             }

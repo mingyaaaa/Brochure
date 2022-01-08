@@ -16,6 +16,9 @@ namespace Brochure.ORM.Visitors
         T Builder<T>() where T : ExpressionVisitor;
     }
 
+    /// <summary>
+    /// The visit provider.
+    /// </summary>
     public class VisitProvider : IVisitProvider
     {
         private readonly IServiceProvider _serviceProvider;

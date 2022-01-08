@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Server.Main.Controllers
 {
+    /// <summary>
+    /// The test v2 controller.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "main_v2")]

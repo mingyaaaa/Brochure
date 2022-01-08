@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brochure.Organization.Abstract.ResponesModel
+namespace Brochure.ORM.Extensions
 {
     /// <summary>
-    /// The rsp org model.
+    /// The db index extension.
     /// </summary>
-    public   class RspOrgModel
+    public static class DbIndexExtension
     {
     }
 }

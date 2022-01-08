@@ -43,6 +43,10 @@ namespace Brochure.ORM.MySql
             return new MySqlConnection();
         }
 
+        /// <summary>
+        /// Gets the db data parameter.
+        /// </summary>
+        /// <returns>An IDbDataParameter.</returns>
         public IDbDataParameter GetDbDataParameter()
         {
             return new MySqlParameter();

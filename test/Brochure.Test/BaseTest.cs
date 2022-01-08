@@ -15,8 +15,14 @@ using Moq;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The base test.
+    /// </summary>
     public class BaseTest
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseTest"/> class.
+        /// </summary>
         public BaseTest()
         {
             Service = new ServiceCollection();
@@ -44,6 +50,9 @@ namespace Brochure.Test
         /// </summary>
         protected Mock<ILogger<BaseTest>> Log { get; }
 
+        /// <summary>
+        /// Inits the base service.
+        /// </summary>
         public void InitBaseService()
         {
             var json = new Mock<IJsonUtil>();
@@ -61,12 +70,20 @@ namespace Brochure.Test
            ));
         }
 
+        /// <summary>
+        /// Sets the mock service.
+        /// </summary>
+        /// <param name="mockService">The mock service.</param>
         private void SetMockService<T>(IMock<T> mockService) where T : class
         {
             Service.TryAddSingleton<T>(mockService.Object);
             MockService.Add(typeof(T), mockService);
         }
 
+        /// <summary>
+        /// Gets the mock service.
+        /// </summary>
+        /// <returns>A Mock.</returns>
         public Mock<T> GetMockService<T>() where T : class
         {
             var type = typeof(T);

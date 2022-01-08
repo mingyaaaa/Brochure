@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Brochure.Organization.Controllers
 {
+    /// <summary>
+    /// The organization controller.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [Produces("application/json")]
     [ApiController]
@@ -17,12 +20,22 @@ namespace Brochure.Organization.Controllers
         private readonly IOrgsDal _orgsDal;
         private readonly IObjectFactory _objectFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrganizationController"/> class.
+        /// </summary>
+        /// <param name="orgsDal">The orgs dal.</param>
+        /// <param name="objectFactory">The object factory.</param>
         public OrganizationController(IOrgsDal orgsDal, IObjectFactory objectFactory)
         {
             _orgsDal = orgsDal;
             _objectFactory = objectFactory;
         }
 
+        /// <summary>
+        /// Adds the oraginzation.
+        /// </summary>
+        /// <param name="oraginzation">The oraginzation.</param>
+        /// <returns>A Task.</returns>
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddOraginzation([FromQuery] ReqAddOrgModel oraginzation)
@@ -33,6 +46,11 @@ namespace Brochure.Organization.Controllers
             return this.JsonData(r);
         }
 
+        /// <summary>
+        /// Deletes the oraginzation.
+        /// </summary>
+        /// <param name="oraginzationIds">The oraginzation ids.</param>
+        /// <returns>A Task.</returns>
         [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteOraginzation([FromQuery] string[] oraginzationIds)
@@ -41,6 +59,12 @@ namespace Brochure.Organization.Controllers
             return this.JsonData(r);
         }
 
+        /// <summary>
+        /// Updates the oraginzation.
+        /// </summary>
+        /// <param name="oraginzationId">The oraginzation id.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>A Task.</returns>
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateOraginzation([FromQuery] string oraginzationId, [FromBody] ReqUpdateOrgModel model)

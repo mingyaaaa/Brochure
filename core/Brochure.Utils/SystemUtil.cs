@@ -4,8 +4,15 @@ using System.Net.NetworkInformation;
 
 namespace Brochure.Utils
 {
+    /// <summary>
+    /// The system util.
+    /// </summary>
     public class SystemUtil : ISystemUtil
     {
+        /// <summary>
+        /// Gets the usefull port.
+        /// </summary>
+        /// <returns>An int.</returns>
         public int GetUsefullPort ()
         {
             Random random = new Random ();
@@ -15,6 +22,11 @@ namespace Brochure.Utils
             return port;
         }
 
+        /// <summary>
+        /// Are the use port.
+        /// </summary>
+        /// <param name="port">The port.</param>
+        /// <returns>A bool.</returns>
         public bool IsUsePort (int port)
         {
             bool inUse = false;

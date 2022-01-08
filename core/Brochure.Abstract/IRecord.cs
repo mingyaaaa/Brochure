@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The record.
+    /// </summary>
     public interface IRecord : IEnumerator, IGetValue
     {
         /// <summary>

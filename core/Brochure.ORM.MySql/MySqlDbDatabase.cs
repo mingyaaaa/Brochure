@@ -12,12 +12,14 @@ namespace Brochure.ORM.MySql
         /// <summary>
         /// Initializes a new instance of the <see cref="MySqlDbDatabase"/> class.
         /// </summary>
-        /// <param name="dbOption">The db option.</param>
-        /// <param name="dbSql">The db sql.</param>
-        /// <param name="connectFactory">The connect factory.</param>
+        /// <param name="dbContext"></param>
         [InjectConstructor]
         public MySqlDbDatabase(DbContext dbContext) : base(dbContext) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MySqlDbDatabase"/> class.
+        /// </summary>
+        /// <param name="isBeginTransaction">If true, is begin transaction.</param>
         public MySqlDbDatabase(bool isBeginTransaction = false) : base(new MySqlDbContext(isBeginTransaction))
         {
         }

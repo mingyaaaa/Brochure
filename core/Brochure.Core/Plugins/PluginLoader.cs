@@ -38,9 +38,16 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="directory">The directory.</param>
         /// <param name="jsonUtil">The json util.</param>
+        /// <param name="pluginLoadContextProvider"></param>
         /// <param name="log">The log.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="objectFactory">The object factory.</param>
+        /// <param name="pluginManagers"></param>
+        /// <param name="moduleLoader"></param>
+        /// <param name="loadActions"></param>
+        /// <param name="unLoadActions"></param>
+        /// <param name="applicationOption"></param>
+        /// <param name="hostEnvironment"></param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             IPluginLoadContextProvider pluginLoadContextProvider,
@@ -72,7 +79,6 @@ namespace Brochure.Core
         /// <summary>
         /// Loads the plugin.
         /// </summary>
-        /// <param name="provider">The provider.</param>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
         public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
@@ -107,7 +113,6 @@ namespace Brochure.Core
         /// <summary>
         /// Loads the plugin.
         /// </summary>
-        /// <param name="service">The service.</param>
         /// <returns>A ValueTask.</returns>
         public async ValueTask LoadPlugin()
         {
@@ -117,7 +122,6 @@ namespace Brochure.Core
         /// <summary>
         /// 加载插件
         /// </summary>
-        /// <param name="serviceDescriptors"></param>
         private async Task ResolverPlugins()
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
@@ -161,6 +165,10 @@ namespace Brochure.Core
             }
         }
 
+        /// <summary>
+        /// Notifies the unload.
+        /// </summary>
+        /// <param name="key">The key.</param>
         private void NotifyUnload(Guid key)
         {
             foreach (var item in _unLoadActions)
@@ -169,6 +177,10 @@ namespace Brochure.Core
             };
         }
 
+        /// <summary>
+        /// Notifies the load.
+        /// </summary>
+        /// <param name="key">The key.</param>
         private void NotifyLoad(Guid key)
         {
             foreach (var item in _loadActions)
@@ -228,6 +240,7 @@ namespace Brochure.Core
         /// <summary>
         /// Sets the plugin values.
         /// </summary>
+        /// <param name="pluginDir"></param>
         /// <param name="config">The config.</param>
         /// <param name="assembly">The assembly.</param>
         /// <param name="plugin">The plugin.</param>
@@ -251,6 +264,7 @@ namespace Brochure.Core
         /// Gets the plugin config section.
         /// </summary>
         /// <param name="pluginConfig">The plugin config.</param>
+        /// <param name="pluginDir"></param>
         /// <returns>An IConfiguration.</returns>
         private IConfiguration GetPluginConfigSection(PluginConfig pluginConfig, string pluginDir)
         {
@@ -280,11 +294,18 @@ namespace Brochure.Core
             return builder.Build();
         }
 
+        /// <summary>
+        /// Gets the plugin setting file.
+        /// </summary>
+        /// <returns>A string.</returns>
         private string GetPluginSettingFile()
         {
             return $"plugin{_hostEnvironment.EnvironmentName}.json";
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
         }

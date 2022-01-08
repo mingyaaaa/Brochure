@@ -9,16 +9,25 @@ using Brochure.ORM.Extensions;
 
 namespace LinqDbQueryTest.Querys
 {
+    /// <summary>
+    /// The query sub test.
+    /// </summary>
     [TestClass]
     public class QuerySubTest : BaseTest
     {
         private readonly ISqlBuilder queryBuilder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuerySubTest"/> class.
+        /// </summary>
         public QuerySubTest()
         {
             queryBuilder = base.Provider.GetService<ISqlBuilder>();
         }
 
+        /// <summary>
+        /// Tests the from sub query.
+        /// </summary>
         [TestMethod]
         public void TestFromSubQuery()
         {
@@ -29,6 +38,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select TEMP0.`Id` as Id,TEMP0.`No` as No from (select * from `Students` ) TEMP0", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the from sub query2.
+        /// </summary>
         [TestMethod("匿名对象")]
         public void TestFromSubQuery2()
         {
@@ -39,6 +51,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select TEMP0.`ClassId` from (select `Students`.`ClassCount` as ClassCount,`Students`.`ClassId` as ClassId from `Students` ) TEMP0", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the join sub query.
+        /// </summary>
         [TestMethod]
         public void TestJoinSubQuery()
         {
@@ -49,6 +64,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select * from `Students` join (select * from `Classes` ) TEMP0 on `Students`.`ClassId` = TEMP0.`Id`", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the where sub query.
+        /// </summary>
         [TestMethod]
         public void TestWhereSubQuery()
         {
@@ -58,6 +76,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select * from `Students` where `Students`.`Id` = @p0", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the where sub query1.
+        /// </summary>
         [TestMethod]
         public void TestWhereSubQuery1()
         {
@@ -67,6 +88,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select `Students`.`ClassId` from `Students` where `Students`.`Id` = @p0", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the where sub query2.
+        /// </summary>
         [TestMethod]
         public void TestWhereSubQuery2()
         {
@@ -76,6 +100,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select * from `Students` where `Students`.`Id` = @p0 limit @p1", r.SQL);
         }
 
+        /// <summary>
+        /// Tests the other query.
+        /// </summary>
         [TestMethod]
         public void TestOtherQuery()
         {
@@ -85,6 +112,9 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("select * from `Classes` ;select * from `Students`", sql.SQL);
         }
 
+        /// <summary>
+        /// Tests the insert query.
+        /// </summary>
         [TestMethod]
         public void TestInsertQuery()
         {

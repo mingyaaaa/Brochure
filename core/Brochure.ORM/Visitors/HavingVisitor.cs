@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The having visitor.
+    /// </summary>
     public class HavingVisitor : ORMVisitor
     {
         /// <summary>

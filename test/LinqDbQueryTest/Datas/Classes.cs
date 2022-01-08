@@ -1,5 +1,8 @@
 namespace Brochure.ORMTest.Datas
 {
+    /// <summary>
+    /// The classes.
+    /// </summary>
     public class Classes
     {
         /// <summary>

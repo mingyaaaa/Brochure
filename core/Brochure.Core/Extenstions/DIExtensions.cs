@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.Extenstions
 {
+    /// <summary>
+    /// The d i extensions.
+    /// </summary>
     public static class DIExtensions
     {
         /// <summary>

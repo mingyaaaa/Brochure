@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The plugin option.
+    /// </summary>
     public interface IPluginOption
     {
         /// <summary>

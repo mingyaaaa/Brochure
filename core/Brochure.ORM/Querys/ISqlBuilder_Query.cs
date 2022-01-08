@@ -11,8 +11,16 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The sql builder.
+    /// </summary>
     public partial class SqlBuilder
     {
+        /// <summary>
+        /// Builds the query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>An ISqlResult.</returns>
         protected virtual ISqlResult BuildQuery(IQuery query)
         {
             var result = new ParmsSqlResult();
@@ -114,7 +122,7 @@ namespace Brochure.ORM
         /// Builds the from.
         /// </summary>
         /// <param name="hasSelectExpression">If true, has select expression.</param>
-        /// <param name="tables">The tables.</param>
+        /// <param name="subQueryTypes"></param>
         /// <returns>A ParmsSqlResult.</returns>
         protected virtual SqlParam BuildFrom(bool hasSelectExpression, IEnumerable<BaseSubQueryType> subQueryTypes)
         {

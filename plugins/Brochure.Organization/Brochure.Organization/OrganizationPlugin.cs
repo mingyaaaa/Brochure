@@ -6,8 +6,14 @@ using System.IO;
 
 namespace Brochure.Organization
 {
+    /// <summary>
+    /// The organization plugin.
+    /// </summary>
     public class OrganizationPlugin : Plugins
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrganizationPlugin"/> class.
+        /// </summary>
         public OrganizationPlugin()
         {
         }

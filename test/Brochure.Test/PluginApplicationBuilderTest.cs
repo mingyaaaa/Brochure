@@ -22,14 +22,23 @@ using AutoFixture.AutoMoq;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The plugin application builder test.
+    /// </summary>
     [TestClass]
     public class PluginApplicationBuilderTest : BaseTest
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginApplicationBuilderTest"/> class.
+        /// </summary>
         public PluginApplicationBuilderTest()
         {
-
         }
 
+        /// <summary>
+        /// Tests the use routing.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestUseRouting()
         {
@@ -50,6 +59,10 @@ namespace Brochure.Test
             Assert.AreEqual(1, count);
         }
 
+        /// <summary>
+        /// Tests the use config.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestUseConfig()
         {
@@ -74,7 +87,7 @@ namespace Brochure.Test
         /// </summary>
         /// <returns>A Task.</returns>
         [TestMethod]
-        public async Task TestConfigPlugin()
+        public void TestConfigPlugin()
         {
             var autoMock = new AutoMocker();
             var fix = new Fixture();
@@ -98,10 +111,17 @@ namespace Brochure.Test
             ins.ConfigPlugin();
             reflectUtilMock.Verify(t => t.GetObjectOfBase<IStarupConfigure>(plugin.Assembly));
             startConfigMock.Verify(t => t.Configure(plugin.Key, ins));
-
         }
+
+        /// <summary>
+        /// The test plugins.
+        /// </summary>
         public class TestPlugins : Plugins
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TestPlugins"/> class.
+            /// </summary>
+            /// <param name="service">The service.</param>
             public TestPlugins(IServiceProvider service) : base(new PluginContext())
             {
             }

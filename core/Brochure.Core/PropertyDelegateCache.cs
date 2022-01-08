@@ -60,6 +60,12 @@ namespace Brochure.Core
             }
         }
 
+        /// <summary>
+        /// Tries the get.
+        /// </summary>
+        /// <param name="propertyInfo">The property info.</param>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An object.</returns>
         public static object TryGet(PropertyInfo propertyInfo, object obj)
         {
             var key = propertyInfo.PropertyType.FullName + propertyInfo.Name + obj.GetType().FullName + "object";
@@ -149,6 +155,7 @@ namespace Brochure.Core
         /// Gets the set action.
         /// </summary>
         /// <param name="key">The property name.</param>
+        /// <param name="action"></param>
         /// <returns>An Action.</returns>
         public static bool TryGetSetAction<T>(string key, out Action<T, object> action) where T : class
         {
@@ -161,6 +168,12 @@ namespace Brochure.Core
             return false;
         }
 
+        /// <summary>
+        /// Tries the set.
+        /// </summary>
+        /// <param name="propertyInfo">The property info.</param>
+        /// <param name="obj">The obj.</param>
+        /// <param name="value">The value.</param>
         public static void TrySet<T>(PropertyInfo propertyInfo, T obj, object value) where T : class
         {
             var key = propertyInfo.PropertyType.FullName + propertyInfo.Name + obj.GetType().FullName + "T";

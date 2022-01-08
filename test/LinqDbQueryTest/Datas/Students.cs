@@ -1,5 +1,8 @@
 namespace Brochure.ORMTest
 {
+    /// <summary>
+    /// The students.
+    /// </summary>
     public class Students
     {
         /// <summary>

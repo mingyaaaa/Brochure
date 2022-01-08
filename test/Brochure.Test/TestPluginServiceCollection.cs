@@ -19,9 +19,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The test plugin service collection.
+    /// </summary>
     [TestClass]
     public class TestPluginServiceCollection : BaseTest
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestPluginServiceCollection"/> class.
+        /// </summary>
         public TestPluginServiceCollection()
         {
             Service.TryAddSingleton<IPluginManagers>(new PluginManagers());
@@ -35,6 +41,9 @@ namespace Brochure.Test
             objectFactoryMock.Setup(t => t.Create<ConcurrentDictionary<Guid, IPlugins>>()).Returns(new ConcurrentDictionary<Guid, IPlugins>());
         }
 
+        /// <summary>
+        /// Tests the build service.
+        /// </summary>
         [TestMethod]
         public void TestBuildService()
         {
@@ -48,6 +57,9 @@ namespace Brochure.Test
             Assert.IsNotNull(a);
         }
 
+        /// <summary>
+        /// Tests the service scope.
+        /// </summary>
         [TestMethod]
         public void TestServiceScope()
         {
@@ -72,6 +84,9 @@ namespace Brochure.Test
             }
         }
 
+        /// <summary>
+        /// Tests the service transient.
+        /// </summary>
         [TestMethod]
         public void TestServiceTransient()
         {
@@ -87,6 +102,9 @@ namespace Brochure.Test
             Assert.AreNotSame(a1, a2);
         }
 
+        /// <summary>
+        /// Tests the singleton same.
+        /// </summary>
         [TestMethod]
         public void TestSingletonSame()
         {
@@ -102,6 +120,9 @@ namespace Brochure.Test
             Assert.AreSame(test1, test2);
         }
 
+        /// <summary>
+        /// Tests the gerni same.
+        /// </summary>
         [TestMethod]
         public void TestGerniSame()
         {
@@ -120,6 +141,9 @@ namespace Brochure.Test
             var test2 = provider.GetService<IOptions<RouteOptions>>();
         }
 
+        /// <summary>
+        /// Tests the collection.
+        /// </summary>
         [TestMethod]
         public void TestCollection()
         {
@@ -137,8 +161,12 @@ namespace Brochure.Test
             Assert.AreEqual(2, collection.Count());
         }
 
+        /// <summary>
+        /// Tests the builder plugin service.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod("保证IPluginManager在所有容器中的实例一致")]
-        public async Task TestBuilderPluginService()
+        public void TestBuilderPluginService()
         {
             var provider = Service.BuildPluginServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
@@ -150,6 +178,9 @@ namespace Brochure.Test
             Assert.AreSame(manager, manager1);
         }
 
+        /// <summary>
+        /// Test1S the.
+        /// </summary>
         [TestMethod("测试插件中使用主程序的依赖服务")]
         public void Test1()
         {
@@ -163,6 +194,9 @@ namespace Brochure.Test
             manager = provider.GetService<IPluginManagers>();
         }
 
+        /// <summary>
+        /// Tests the builder plugin service facroty.
+        /// </summary>
         [TestMethod("测试主服务工厂方法")]
         public void TestBuilderPluginServiceFacroty()
         {
@@ -192,6 +226,9 @@ namespace Brochure.Test
             Assert.AreSame(a11, a22);
         }
 
+        /// <summary>
+        /// Tests the builder plugin service facroty1.
+        /// </summary>
         [TestMethod("测试插件工厂方法")]
         public void TestBuilderPluginServiceFacroty1()
         {
@@ -223,6 +260,9 @@ namespace Brochure.Test
             Assert.AreEqual(4, a);
         }
 
+        /// <summary>
+        /// Tests the builder plugin service facroty option.
+        /// </summary>
         [TestMethod("测试插件Options处理")]
         public void TestBuilderPluginServiceFacrotyOption()
         {
@@ -251,6 +291,9 @@ namespace Brochure.Test
             Assert.AreEqual(2, a22.P1);
         }
 
+        /// <summary>
+        /// Mies the test method.
+        /// </summary>
         [TestMethod("泛型类的实例依赖注入")]
         public void MyTestMethod()
         {
@@ -274,6 +317,9 @@ namespace Brochure.Test
             Assert.AreEqual(1, count);
         }
 
+        /// <summary>
+        /// Tests the singleton service.
+        /// </summary>
         [TestMethod("插件单例服务释放的问题")]
         public void TestSingletonService()
         {
@@ -288,6 +334,9 @@ namespace Brochure.Test
             Assert.IsNull(provider.GetService<ITest2>());
         }
 
+        /// <summary>
+        /// Tests the scope plugin.
+        /// </summary>
         [TestMethod("作用域中插件变更")]
         public void TestScopePlugin()
         {
@@ -312,6 +361,9 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The test option.
+    /// </summary>
     public class TestOption
     {
         /// <summary>
@@ -325,18 +377,30 @@ namespace Brochure.Test
         public int P2 { get; set; } = 1;
     }
 
+    /// <summary>
+    /// The test interceptor.
+    /// </summary>
     public interface ITestInterceptor : IDisposable
     {
     }
 
+    /// <summary>
+    /// The imp test interceptor.
+    /// </summary>
     public class ImpTestInterceptor : ITestInterceptor
     {
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             Trace.TraceInformation("ImpTest");
         }
     }
 
+    /// <summary>
+    /// The test1.
+    /// </summary>
     public interface ITest1 : IDisposable
     {
         /// <summary>
@@ -345,6 +409,9 @@ namespace Brochure.Test
         int PTest1 { get; set; }
     }
 
+    /// <summary>
+    /// The imp test1.
+    /// </summary>
     public class ImpTest1 : ITest1
     {
         /// <summary>
@@ -352,12 +419,18 @@ namespace Brochure.Test
         /// </summary>
         public int PTest1 { get; set; }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             Trace.TraceInformation("ImpTest1");
         }
     }
 
+    /// <summary>
+    /// The imp test11.
+    /// </summary>
     public class ImpTest11 : ITest1
     {
         /// <summary>
@@ -365,38 +438,63 @@ namespace Brochure.Test
         /// </summary>
         public int PTest1 { get; set; }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             Trace.TraceInformation("ImpTest11");
         }
     }
 
+    /// <summary>
+    /// The test2.
+    /// </summary>
     public interface ITest2 : IDisposable
     {
     }
 
+    /// <summary>
+    /// The imp test2.
+    /// </summary>
     public class ImpTest2 : ITest2
     {
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             Trace.TraceInformation("ImpTest2");
         }
     }
 
+    /// <summary>
+    /// The imp test3.
+    /// </summary>
     public class ImpTest3
     {
+        /// <summary>
+        /// The option.
+        /// </summary>
         public class Option
         {
         }
 
         public ITest2 impTest2;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImpTest3"/> class.
+        /// </summary>
+        /// <param name="impTest2">The imp test2.</param>
         public ImpTest3(ITest2 impTest2)
         {
             this.impTest2 = impTest2;
         }
     }
 
+    /// <summary>
+    /// The option.
+    /// </summary>
     public interface IOption<T>
     {
         /// <summary>
@@ -404,13 +502,23 @@ namespace Brochure.Test
         /// </summary>
         string Op { get; set; }
 
+        /// <summary>
+        /// Invokes the.
+        /// </summary>
         void Invoke();
     }
 
+    /// <summary>
+    /// The imp option.
+    /// </summary>
     public class ImpOption<T> : IOption<T>
     {
         private readonly Action<T> _action;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImpOption"/> class.
+        /// </summary>
+        /// <param name="action">The action.</param>
         public ImpOption(Action<T> action)
         {
             _action = action;
@@ -421,28 +529,50 @@ namespace Brochure.Test
         /// </summary>
         public string Op { get; set; }
 
+        /// <summary>
+        /// Invokes the.
+        /// </summary>
         public void Invoke()
         {
             _action.Invoke((T)(object)null);
         }
     }
 
+    /// <summary>
+    /// The p1.
+    /// </summary>
     public class P1 : Plugins
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="P1"/> class.
+        /// </summary>
         public P1() : base(new PluginContext())
         {
         }
     }
 
+    /// <summary>
+    /// The p2.
+    /// </summary>
     public class P2 : Plugins
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="P2"/> class.
+        /// </summary>
         public P2() : base(new PluginContext())
         {
         }
     }
 
+    /// <summary>
+    /// The p3.
+    /// </summary>
     public class P3 : Plugins
     {
+        /// <summary>
+        /// Configures the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public override void ConfigureService(IServiceCollection services)
         {
             services.AddScoped<ITest1, ImpTest1>();
@@ -451,12 +581,22 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The configure route options.
+    /// </summary>
     public class ConfigureRouteOptions : IConfigureOptions<RouteOptions>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigureRouteOptions"/> class.
+        /// </summary>
         public ConfigureRouteOptions()
         {
         }
 
+        /// <summary>
+        /// Configures the.
+        /// </summary>
+        /// <param name="options">The options.</param>
         public void Configure(RouteOptions options)
         {
             if (options == null)

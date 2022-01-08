@@ -18,6 +18,9 @@ namespace Brochure.Core.Test
         b = 2
     }
 
+    /// <summary>
+    /// The a.
+    /// </summary>
     public class A
     {
         /// <summary>
@@ -38,6 +41,9 @@ namespace Brochure.Core.Test
         public DateTime DateTime { get; set; }
     }
 
+    /// <summary>
+    /// The b.
+    /// </summary>
     public class B
     {
         /// <summary>
@@ -54,11 +60,20 @@ namespace Brochure.Core.Test
         public DateTime DateTime { get; set; }
     }
 
+    /// <summary>
+    /// The c.
+    /// </summary>
     public class C { }
 
+    /// <summary>
+    /// The as test.
+    /// </summary>
     [TestClass]
     public class AsTest
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsTest"/> class.
+        /// </summary>
         public AsTest()
         {
             var service = new ServiceCollection();
@@ -70,6 +85,9 @@ namespace Brochure.Core.Test
             });
         }
 
+        /// <summary>
+        /// Strings the to.
+        /// </summary>
         [TestMethod]
         public void StringTo()
         {
@@ -103,6 +121,9 @@ namespace Brochure.Core.Test
             }
         }
 
+        /// <summary>
+        /// Enums the to.
+        /// </summary>
         [TestMethod]
         public void EnumTo()
         {
@@ -123,6 +144,9 @@ namespace Brochure.Core.Test
             }
         }
 
+        /// <summary>
+        /// Ints the to.
+        /// </summary>
         [TestMethod]
         public void IntTo()
         {
@@ -132,6 +156,9 @@ namespace Brochure.Core.Test
             Assert.AreEqual("1", i.As<string>());
         }
 
+        /// <summary>
+        /// Doubles the to.
+        /// </summary>
         [TestMethod]
         public void DoubleTo()
         {
@@ -152,6 +179,9 @@ namespace Brochure.Core.Test
             Assert.AreEqual("1.3", d.As<string>());
         }
 
+        /// <summary>
+        /// Dates the time to.
+        /// </summary>
         [TestMethod]
         public void DateTimeTo()
         {
@@ -172,6 +202,9 @@ namespace Brochure.Core.Test
             //Then
         }
 
+        /// <summary>
+        /// Records the to.
+        /// </summary>
         [TestMethod]
         public void RecordTo()
         {
@@ -199,6 +232,9 @@ namespace Brochure.Core.Test
             Assert.AreEqual(b.DateTime, br[nameof(b.DateTime)]);
         }
 
+        /// <summary>
+        /// IS the b conver to.
+        /// </summary>
         [TestMethod]
         public void IBConverTo()
         {

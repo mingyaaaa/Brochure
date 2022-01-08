@@ -22,7 +22,6 @@ namespace Brochure.User.Services.Imps
         /// Initializes a new instance of the <see cref="UserDal"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        /// <param name="builder">The builder.</param>
         /// <param name="objectFactory">The object factory.</param>
         public UserDal(IUserRepository repository, IObjectFactory objectFactory)
         {

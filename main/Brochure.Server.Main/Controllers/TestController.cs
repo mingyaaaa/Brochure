@@ -33,9 +33,10 @@ namespace Brochure.Server.Main.Controllers
         /// Initializes a new instance of the <see cref="TestController"/> class.
         /// </summary>
         /// <param name="pluginLoader">The plugin loader.</param>
-        /// <param name="application">The application.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="pluginManagers">The plugin managers.</param>
+        /// <param name="mvcBuilder"></param>
+        /// <param name="applicationBuilder"></param>
         public TestController(
             IPluginLoader pluginLoader,
             IReflectorUtil reflectorUtil,

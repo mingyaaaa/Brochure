@@ -50,7 +50,7 @@ namespace Brochure.ORM.Visitors
         /// <summary>
         /// 添加括号
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="obj"></param>
         /// <returns></returns>
         private object AddBrackets(object obj)
         {

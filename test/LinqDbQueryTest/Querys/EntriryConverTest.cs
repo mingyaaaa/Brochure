@@ -6,9 +6,15 @@ using Moq;
 
 namespace LinqDbQueryTest.Querys
 {
+    /// <summary>
+    /// The entriry conver test.
+    /// </summary>
     [TestClass]
     public class EntriryConverTest
     {
+        /// <summary>
+        /// Tests the conver i data reader.
+        /// </summary>
         [TestMethod]
         public void TestConverIDataReader()
         {
@@ -26,6 +32,9 @@ namespace LinqDbQueryTest.Querys
         }
     }
 
+    /// <summary>
+    /// The test.
+    /// </summary>
     public class Test : EntityBase
     {
         /// <summary>

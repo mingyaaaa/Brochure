@@ -196,6 +196,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Joins the.
         /// </summary>
+        /// <param name="query"></param>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T1, T2, T3> Join<T3>(IQuery<T3> query, Expression<Func<T1, T2, T3, bool>> fun);
@@ -258,6 +259,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Joins the.
         /// </summary>
+        /// <param name="query"></param>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T1, T2, T3, T4> Join<T4>(IQuery<T4> query, Expression<Func<T1, T2, T3, T4, bool>> fun);
@@ -320,6 +322,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Joins the.
         /// </summary>
+        /// <param name="query"></param>
         /// <param name="fun">The fun.</param>
         /// <returns>An IQuery.</returns>
         IQuery<T1, T2, T3, T4, T5> Join<T5>(IQuery<T5> query, Expression<Func<T1, T2, T3, T4, T5, bool>> fun);

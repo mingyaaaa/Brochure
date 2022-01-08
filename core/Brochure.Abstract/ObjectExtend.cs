@@ -6,6 +6,9 @@ using Brochure.Abstract;
 
 namespace Brochure.Abstract.Extensions
 {
+    /// <summary>
+    /// The object extend.
+    /// </summary>
     public static class ObjectExtend
     {
         /// <summary>
@@ -13,7 +16,7 @@ namespace Brochure.Abstract.Extensions
         /// 转换不成功 回返回默认值
         /// </summary>
         /// <param name="obj">转化对象</param>
-        /// <param name="exc">异常，如果部位null 则会throw 异常</param>
+        /// <param name="isException"></param>
         /// <typeparam name="T">目标类型</typeparam>
         /// <returns></returns>
         public static T As<T>(this object obj, bool isException = true)
@@ -31,6 +34,12 @@ namespace Brochure.Abstract.Extensions
             }
         }
 
+        /// <summary>
+        /// As the.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>A T.</returns>
         public static T As<T>(this object obj, T defaultValue)
         {
             try
@@ -65,9 +74,14 @@ namespace Brochure.Abstract.Extensions
                 return fun(obj);
             }
             //如果是系统其他类型  则使用系统的转换器
-            return (object)Convert.ChangeType(obj, type);
+            return Convert.ChangeType(obj, type);
         }
 
+        /// <summary>
+        /// As the dictionary.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An IDictionary.</returns>
         public static IDictionary<string, object> AsDictionary(this object obj)
         {
             if (obj == null)

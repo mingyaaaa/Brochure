@@ -19,13 +19,22 @@ using Moq;
 
 namespace Brochure.ORMTest.Transaction
 {
+    /// <summary>
+    /// The test transaction.
+    /// </summary>
     [TestClass]
     public class TestTransaction
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestTransaction"/> class.
+        /// </summary>
         public TestTransaction()
         {
         }
 
+        /// <summary>
+        /// Tests the transaction disable true.
+        /// </summary>
         [TestMethod]
         public void TestTransactionDisableTrue()
         {
@@ -41,6 +50,10 @@ namespace Brochure.ORMTest.Transaction
             mockDelegateMock.Verify(t => t.Invoke(aspectContextMock.Object));
         }
 
+        /// <summary>
+        /// Tests the transaction disable false.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestTransactionDisableFalse()
         {
@@ -77,6 +90,9 @@ namespace Brochure.ORMTest.Transaction
             transactionManagerMock.Verify(t => t.RemoveTransaction(It.IsAny<ITransaction>()));
         }
 
+        /// <summary>
+        /// Tests the transaction commit.
+        /// </summary>
         [TestMethod]
         public void TestTransactionCommit()
         {
@@ -113,6 +129,9 @@ namespace Brochure.ORMTest.Transaction
             transactionMock.Verify(t => t.CommitAsync(), Times.AtLeast(2));
         }
 
+        /// <summary>
+        /// Tests the transaction rollback.
+        /// </summary>
         [TestMethod]
         public void TestTransactionRollback()
         {
@@ -151,6 +170,9 @@ namespace Brochure.ORMTest.Transaction
             transactionMock.Verify(t => t.RollbackAsync());
         }
 
+        /// <summary>
+        /// Tests the transation excute.
+        /// </summary>
         [TestMethod]
         public void TestTransationExcute()
         {
@@ -168,6 +190,9 @@ namespace Brochure.ORMTest.Transaction
             connectFactoryMock.Verify(t => t.CreateConnection(), Times.Exactly(2));
         }
 
+        /// <summary>
+        /// Tests the transation singleton excute.
+        /// </summary>
         [TestMethod]
         public void TestTransationSingletonExcute()
         {
@@ -188,24 +213,44 @@ namespace Brochure.ORMTest.Transaction
 
         #region TestData
 
+        /// <summary>
+        /// The sql excute.
+        /// </summary>
         public interface ISqlExcute
         {
+            /// <summary>
+            /// Insers the data.
+            /// </summary>
             void InserData();
 
+            /// <summary>
+            /// Deletes the data.
+            /// </summary>
             void DeleteData();
         }
 
+        /// <summary>
+        /// The sql excute.
+        /// </summary>
         public class SqlExcute : ISqlExcute
         {
             private readonly IConnectFactory _connectFactory;
             private readonly ISqlExcute2 _sqlExcute2;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SqlExcute"/> class.
+            /// </summary>
+            /// <param name="connectFactory">The connect factory.</param>
+            /// <param name="sqlExcute2">The sql excute2.</param>
             public SqlExcute(IConnectFactory connectFactory, ISqlExcute2 sqlExcute2)
             {
                 _connectFactory = connectFactory;
                 _sqlExcute2 = sqlExcute2;
             }
 
+            /// <summary>
+            /// Insers the data.
+            /// </summary>
             [Transaction]
             public void InserData()
             {
@@ -215,28 +260,50 @@ namespace Brochure.ORMTest.Transaction
                 this.DeleteData();
             }
 
+            /// <summary>
+            /// Deletes the data.
+            /// </summary>
             [Transaction]
             public void DeleteData()
             {
             }
         }
 
+        /// <summary>
+        /// The sql excute2.
+        /// </summary>
         public interface ISqlExcute2
         {
+            /// <summary>
+            /// Insers the data.
+            /// </summary>
             void InserData();
 
+            /// <summary>
+            /// Deletes the data.
+            /// </summary>
             void DeleteData();
         }
 
+        /// <summary>
+        /// The sql excute2.
+        /// </summary>
         public class SqlExcute2 : ISqlExcute2
         {
             private readonly IConnectFactory _connectFactory;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SqlExcute2"/> class.
+            /// </summary>
+            /// <param name="connectFactory">The connect factory.</param>
             public SqlExcute2(IConnectFactory connectFactory)
             {
                 _connectFactory = connectFactory;
             }
 
+            /// <summary>
+            /// Insers the data.
+            /// </summary>
             [Transaction]
             public void InserData()
             {
@@ -244,14 +311,26 @@ namespace Brochure.ORMTest.Transaction
                 this.DeleteData();
             }
 
+            /// <summary>
+            /// Deletes the data.
+            /// </summary>
             [Transaction]
             public void DeleteData()
             {
             }
         }
 
+        /// <summary>
+        /// The test att interceptor attribute.
+        /// </summary>
         public class TestAttInterceptorAttribute : AbstractInterceptorAttribute
         {
+            /// <summary>
+            /// Invokes the.
+            /// </summary>
+            /// <param name="context">The context.</param>
+            /// <param name="next">The next.</param>
+            /// <returns>A Task.</returns>
             public override Task Invoke(AspectContext context, AspectDelegate next)
             {
                 next(context);

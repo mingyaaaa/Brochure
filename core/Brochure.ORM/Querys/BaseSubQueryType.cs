@@ -44,6 +44,9 @@ namespace Brochure.ORM.Querys
         }
     }
 
+    /// <summary>
+    /// The query sub query type.
+    /// </summary>
     public class QuerySubQueryType : BaseSubQueryType
     {
         private readonly IQuery _query;

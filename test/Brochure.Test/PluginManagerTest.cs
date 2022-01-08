@@ -17,6 +17,9 @@ using Moq.AutoMock;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The test plugin.
+    /// </summary>
     public class TestPlugin : Plugins
     {
         /// <summary>
@@ -28,24 +31,37 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The plugin manager test.
+    /// </summary>
     [TestClass]
     public class PluginManagerTest : BaseTest
     {
         private Mock<IPluginsLoadContext> loadPluginContext;
         private Mock<IServiceProvider> serviceProviderMock;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginManagerTest"/> class.
+        /// </summary>
         public PluginManagerTest()
         {
             InitBaseService();
             InitPluginMock();
         }
 
+        /// <summary>
+        /// Inits the plugin mock.
+        /// </summary>
         private void InitPluginMock()
         {
             loadPluginContext = new Mock<IPluginsLoadContext>();
             serviceProviderMock = new Mock<IServiceProvider>();
         }
 
+        /// <summary>
+        /// Tests the load action.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestLoadAction()
         {
@@ -78,6 +94,10 @@ namespace Brochure.Test
             loaderActionMock.Verify(t => t.Invoke(It.IsAny<Guid>()), Times.Exactly(1));
         }
 
+        /// <summary>
+        /// Tests the un load action.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestUnLoadAction()
         {
@@ -96,6 +116,10 @@ namespace Brochure.Test
             autoMock.GetMock<IPluginUnLoadAction>().Verify(t => t.Invoke(guid));
         }
 
+        /// <summary>
+        /// Tests the un load fail action.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestUnLoadFailAction()
         {
@@ -119,8 +143,15 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The p a.
+    /// </summary>
     public class PA : Plugins
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PA"/> class.
+        /// </summary>
+        /// <param name="service">The service.</param>
         public PA(IServiceProvider service) : base(new PluginContext())
         {
         }

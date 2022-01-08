@@ -12,14 +12,15 @@ namespace Brochure.ORM.Database
     {
         private readonly DbContext _dbContext;
 
+        /// <summary>
+        /// Gets the isolation level.
+        /// </summary>
         public IsolationLevel IsolationLevel => _dbContext.IsolationLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbColumns"/> class.
         /// </summary>
-        /// <param name="option">The option.</param>
-        /// <param name="dbSql">The db sql.</param>
-        /// <param name="connectFactory">The connect factory.</param>
+        /// <param name="dbContext"></param>
         protected DbColumns(DbContext dbContext)
         {
             _dbContext = dbContext;
@@ -29,11 +30,12 @@ namespace Brochure.ORM.Database
         /// Are the exist column async.
         /// </summary>
         /// <param name="columnName">The column name.</param>
+        /// <param name="databaseName"></param>
         /// <returns>A Task.</returns>
-        public Task<bool> IsExistColumnAsync<T>(string columnName)
+        public Task<bool> IsExistColumnAsync<T>(string columnName, string databaseName = "")
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return IsExistColumnAsync(tableName, columnName);
+            return IsExistColumnAsync(tableName, columnName, databaseName);
         }
 
         /// <summary>
@@ -41,10 +43,11 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
+        /// <param name="databaseName"></param>
         /// <returns>A bool.</returns>
-        public virtual async Task<bool> IsExistColumnAsync(string tableName, string columnName)
+        public virtual async Task<bool> IsExistColumnAsync(string tableName, string columnName, string databaseName = "")
         {
-            var sql = Sql.GetColumnsCount(tableName, columnName);
+            var sql = Sql.GetColumnsCount(tableName, columnName, databaseName);
             var r = await _dbContext.ExecuteScalarAsync(sql);
             var rr = (long)r;
             return rr >= 1;
@@ -53,16 +56,18 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Renames the column async.
         /// </summary>
-        /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
         /// <param name="newcolumnName">The newcolumn name.</param>
         /// <param name="typeName">The type name.</param>
+        /// <param name="isNotNull"></param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public Task<int> RenameColumnAsync<T>(string columnName, string newcolumnName, TypeCode typeName)
+        public Task<int> RenameColumnAsync<T>(string columnName, string newcolumnName, TypeCode typeName, bool isNotNull, int length, string databaseName = "")
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return RenameColumnAsync(tableName, columnName, newcolumnName, typeName);
+            return RenameColumnAsync(tableName, columnName, newcolumnName, typeName, isNotNull, length, databaseName);
         }
 
         /// <summary>
@@ -72,27 +77,31 @@ namespace Brochure.ORM.Database
         /// <param name="columnName">The column name.</param>
         /// <param name="newcolumnName">The newcolumn name.</param>
         /// <param name="typeCode">The type code.</param>
+        /// <param name="isNotNull"></param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A long.</returns>
         [Transaction]
-        public virtual Task<int> RenameColumnAsync(string tableName, string columnName, string newcolumnName, TypeCode typeCode)
+        public virtual Task<int> RenameColumnAsync(string tableName, string columnName, string newcolumnName, TypeCode typeCode, bool isNotNull, int length, string databaseName = "")
         {
-            var sql = Sql.GetRenameColumnNameSql(tableName, columnName, newcolumnName, typeCode);
+            var sql = Sql.GetRenameColumnNameSql(tableName, columnName, newcolumnName, typeCode, length, databaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
         /// Updates the column async.
         /// </summary>
-        /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
         /// <param name="typeCode">The type code.</param>
         /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public Task<int> UpdateColumnAsync<T>(string columnName, TypeCode typeCode, bool isNotNull)
+        public Task<int> UpdateColumnAsync<T>(string columnName, TypeCode typeCode, bool isNotNull, int length, string databaseName = "")
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return UpdateColumnAsync(tableName, columnName, typeCode, isNotNull);
+            return UpdateColumnAsync(tableName, columnName, typeCode, isNotNull, length, databaseName);
         }
 
         /// <summary>
@@ -102,25 +111,27 @@ namespace Brochure.ORM.Database
         /// <param name="columnName">The column name.</param>
         /// <param name="typeCode">The type code.</param>
         /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A long.</returns>
         [Transaction]
-        public virtual Task<int> UpdateColumnAsync(string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        public virtual Task<int> UpdateColumnAsync(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length, string databaseName = "")
         {
-            var sql = Sql.GetUpdateColumnSql(tableName, columnName, typeCode, isNotNull);
+            var sql = Sql.GetUpdateColumnSql(tableName, columnName, typeCode, isNotNull, length, databaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
         /// Deletes the column async.
         /// </summary>
-        /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
+        /// <param name="databaseName"></param>
         /// <returns>A Task.</returns>
         [Transaction]
-        public Task<int> DeleteColumnAsync<T>(string columnName)
+        public Task<int> DeleteColumnAsync<T>(string columnName, string databaseName = "")
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return DeleteColumnAsync(tableName, columnName);
+            return DeleteColumnAsync(tableName, columnName, databaseName);
         }
 
         /// <summary>
@@ -128,25 +139,29 @@ namespace Brochure.ORM.Database
         /// </summary>
         /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
+        /// <param name="databaseName"></param>
         /// <returns>A long.</returns>
-        public virtual Task<int> DeleteColumnAsync(string tableName, string columnName)
+        [Transaction]
+        public virtual Task<int> DeleteColumnAsync(string tableName, string columnName, string databaseName = "")
         {
-            var sql = Sql.GetDeleteColumnSql(tableName, columnName);
+            var sql = Sql.GetDeleteColumnSql(tableName, columnName, databaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
         /// <summary>
         /// Adds the columns async.
         /// </summary>
-        /// <param name="tableName">The table name.</param>
         /// <param name="columnName">The column name.</param>
         /// <param name="typeCode">The type code.</param>
         /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A Task.</returns>
-        public Task<int> AddColumnsAsync<T>(string columnName, TypeCode typeCode, bool isNotNull)
+        [Transaction]
+        public Task<int> AddColumnsAsync<T>(string columnName, TypeCode typeCode, bool isNotNull, int length, string databaseName = "")
         {
             var tableName = TableUtlis.GetTableName<T>();
-            return AddColumnsAsync(tableName, columnName, typeCode, isNotNull);
+            return AddColumnsAsync(tableName, columnName, typeCode, isNotNull, length, databaseName);
         }
 
         /// <summary>
@@ -156,23 +171,38 @@ namespace Brochure.ORM.Database
         /// <param name="columnName">The column name.</param>
         /// <param name="typeCode">The type code.</param>
         /// <param name="isNotNull">If true, is not null.</param>
+        /// <param name="length"></param>
+        /// <param name="databaseName"></param>
         /// <returns>A long.</returns>
-        public virtual Task<int> AddColumnsAsync(string tableName, string columnName, TypeCode typeCode, bool isNotNull)
+        [Transaction]
+        public virtual Task<int> AddColumnsAsync(string tableName, string columnName, TypeCode typeCode, bool isNotNull, int length, string databaseName = "")
         {
-            var sql = Sql.GetAddColumnSql(tableName, columnName, typeCode, isNotNull);
+            var sql = Sql.GetAddColumnSql(tableName, columnName, typeCode, isNotNull, length, databaseName);
             return _dbContext.ExcuteNoQueryAsync(sql);
         }
 
+        /// <summary>
+        /// Commits the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public Task CommitAsync()
         {
             return _dbContext.CommitAsync();
         }
 
+        /// <summary>
+        /// Rollbacks the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public Task RollbackAsync()
         {
             return _dbContext.RollbackAsync();
         }
 
+        /// <summary>
+        /// Disposes the async.
+        /// </summary>
+        /// <returns>A ValueTask.</returns>
         public ValueTask DisposeAsync()
         {
             return _dbContext.DisposeAsync();

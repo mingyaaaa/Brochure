@@ -17,6 +17,9 @@ using System.Reflection;
 
 namespace LinqDbQueryTest.Datas
 {
+    /// <summary>
+    /// The base test.
+    /// </summary>
     public class BaseTest
     {
         public AutoMocker MockService;
@@ -28,6 +31,9 @@ namespace LinqDbQueryTest.Datas
         /// </summary>
         public Fixture Fixture { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseTest"/> class.
+        /// </summary>
         public BaseTest()
         {
             MockService = new AutoMocker();
@@ -58,15 +64,27 @@ namespace LinqDbQueryTest.Datas
         }
     }
 
+    /// <summary>
+    /// The my method selector.
+    /// </summary>
     public class MyMethodSelector : IMethodQuery
     {
         private readonly Type[] _types;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MyMethodSelector"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
         public MyMethodSelector(params Type[] type)
         {
             _types = type;
         }
 
+        /// <summary>
+        /// Selects the methods.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>A list of IMethods.</returns>
         public IEnumerable<IMethod> SelectMethods(Type type)
         {
             if (type == null)

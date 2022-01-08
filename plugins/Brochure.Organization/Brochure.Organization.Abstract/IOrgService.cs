@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Organization.Abstract
 {
+    /// <summary>
+    /// The org service.
+    /// </summary>
     internal interface IOrgService
     {
 

@@ -31,6 +31,8 @@ namespace Brochure.Core.PluginsDI
         /// Initializes a new instance of the <see cref="PluginsServiceProvider"/> class.
         /// </summary>
         /// <param name="services">The services.</param>
+        /// <param name="pluginManagers"></param>
+        /// <param name="pluginServiceTypeCache"></param>
         public PluginsServiceProvider(IServiceCollection services, IPluginManagers pluginManagers, PluginSerivceTypeCache pluginServiceTypeCache)
         {
             this._services = services;
@@ -78,6 +80,11 @@ namespace Brochure.Core.PluginsDI
             }
         }
 
+        /// <summary>
+        /// Replaces the single imp.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="obj">The obj.</param>
         private void ReplaceSingleImp(Type type, object obj)
         {
             if (singleCache.TryGetValue(type, out var des) && des.ImplementationInstance == null)
@@ -137,6 +144,11 @@ namespace Brochure.Core.PluginsDI
             return GetService(serviceType);
         }
 
+        /// <summary>
+        /// Mergers the collection.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="serviceDescriptors">The service descriptors.</param>
         private void MergerCollection(IServiceCollection services, IServiceCollection serviceDescriptors)
         {
             foreach (var item in serviceDescriptors)

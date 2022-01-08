@@ -17,9 +17,16 @@ using System.Threading.Tasks;
 
 namespace LinqDbQueryTest
 {
+    /// <summary>
+    /// The db table test.
+    /// </summary>
     [TestClass]
     public class DbTableTest : BaseTest
     {
+        /// <summary>
+        /// Tests the is exist table name.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestIsExistTableName()
         {
@@ -33,6 +40,10 @@ namespace LinqDbQueryTest
             mockContext.Verify(t => t.ExecuteScalarAsync(It.IsAny<ISql>()));
         }
 
+        /// <summary>
+        /// Tests the db context contrus.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestDbContextContrus()
         {
@@ -46,6 +57,9 @@ namespace LinqDbQueryTest
             var taple = socpe.ServiceProvider.GetService<DbTable>();
         }
 
+        /// <summary>
+        /// The a.
+        /// </summary>
         private class A
         {
         }

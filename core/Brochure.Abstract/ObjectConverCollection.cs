@@ -12,23 +12,42 @@ namespace Brochure.Abstract
     {
         private static readonly ConcurrentDictionary<Type, Func<object, object>> concurrentDictionary = new ConcurrentDictionary<Type, Func<object, object>> ();
 
+        /// <summary>
+        /// Tries the get conver func.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="func">The func.</param>
+        /// <returns>A bool.</returns>
         public static bool TryGetConverFunc (Type type, out Func<object, object> func)
         {
             return concurrentDictionary.TryGetValue (type, out func);
         }
 
+        /// <summary>
+        /// Tries the get conver func.
+        /// </summary>
+        /// <param name="func">The func.</param>
+        /// <returns>A bool.</returns>
         public static bool TryGetConverFunc<T1> (out Func<object, object> func)
         {
             var type = typeof (T1);
             return concurrentDictionary.TryGetValue (type, out func);
         }
 
+        /// <summary>
+        /// Regists the object conver.
+        /// </summary>
+        /// <param name="func">The func.</param>
         public static void RegistObjectConver<T1> (Func<object, T1> func)
         {
             var type = typeof (T1);
             concurrentDictionary.TryAdd (type, t => func (t));
         }
 
+        /// <summary>
+        /// Regists the object conver.
+        /// </summary>
+        /// <param name="func">The func.</param>
         public static void RegistObjectConver<T1, T2> (Func<T1, T2> func)
         {
             var type = typeof (T2);
@@ -40,6 +59,9 @@ namespace Brochure.Abstract
             });
         }
 
+        /// <summary>
+        /// Removes the.
+        /// </summary>
         public static void Remove<T> ()
         {
             var type = typeof (T);

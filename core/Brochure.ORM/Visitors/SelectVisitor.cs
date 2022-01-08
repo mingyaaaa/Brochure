@@ -12,6 +12,9 @@ namespace Brochure.ORM.Visitors
         Member,
     }
 
+    /// <summary>
+    /// The select visitor.
+    /// </summary>
     public class SelectVisitor : ORMVisitor
     {
         /// <summary>
@@ -31,17 +34,32 @@ namespace Brochure.ORM.Visitors
         {
         }
 
+        /// <summary>
+        /// Visits the parameter.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitParameter(ParameterExpression node)
         {
             return base.VisitParameter(node);
         }
 
+        /// <summary>
+        /// Visits the constant.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitConstant(ConstantExpression node)
         {
             sql = _dbPrivoder.FormatFieldName(node.Value?.ToString());
             return node;
         }
 
+        /// <summary>
+        /// Visits the new array.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>An Expression.</returns>
         protected override Expression VisitNewArray(NewArrayExpression node)
         {
             _selectObjType = SelectObjType.ArrayField;

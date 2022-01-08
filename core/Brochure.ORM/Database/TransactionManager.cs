@@ -38,6 +38,9 @@ namespace Brochure.ORM.Database
         Task<DbTransaction> GetDbTransactionAsync();
     }
 
+    /// <summary>
+    /// The transaction manager.
+    /// </summary>
     public class TransactionManager : ITransactionManager
     {
         private readonly List<ITransaction> transactions;

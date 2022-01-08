@@ -18,11 +18,16 @@ namespace Brochure.ORM.MySql
         /// <param name="dbProvider">The db provider.</param>
         /// <param name="dbOption">The db option.</param>
         /// <param name="visitProvider">The visit provider.</param>
-        /// <param name="queryBuilder">The query builder.</param>
+        /// <param name="typeMap"></param>
         public MySqlSqlBuilder(IDbProvider dbProvider, DbOption dbOption, IVisitProvider visitProvider, TypeMap typeMap) : base(visitProvider, dbProvider, dbOption, typeMap)
         {
         }
 
+        /// <summary>
+        /// Builds the create table.
+        /// </summary>
+        /// <param name="createTableSql">The create table sql.</param>
+        /// <returns>An ISqlResult.</returns>
         protected override ISqlResult BuildCreateTable(CreateTableSql createTableSql)
         {
             var r = new ParmsSqlResult();
@@ -125,6 +130,11 @@ namespace Brochure.ORM.MySql
             return r;
         }
 
+        /// <summary>
+        /// Builds the table count.
+        /// </summary>
+        /// <param name="countTableSql">The count table sql.</param>
+        /// <returns>An ISqlResult.</returns>
         protected override ISqlResult BuildTableCount(CountTableSql countTableSql)
         {
             var result = new ParmsSqlResult();

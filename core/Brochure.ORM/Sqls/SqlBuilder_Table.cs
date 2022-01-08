@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The sql builder.
+    /// </summary>
     public partial class SqlBuilder
     {
         /// <summary>

@@ -3,6 +3,9 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM.Visitors
 {
+    /// <summary>
+    /// The order visitor.
+    /// </summary>
     public class OrderVisitor : ORMVisitor
     {
         /// <summary>

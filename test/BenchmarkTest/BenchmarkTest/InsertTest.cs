@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace BenchmarkTest.BenchmarkTest
 {
+    /// <summary>
+    /// The insert test.
+    /// </summary>
     public class InsertTest
     {
         /// <summary>
@@ -23,6 +26,9 @@ namespace BenchmarkTest.BenchmarkTest
 
         private IServiceProvider Provider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InsertTest"/> class.
+        /// </summary>
         public InsertTest()
         {
             Fixture = new Fixture();
@@ -42,6 +48,10 @@ namespace BenchmarkTest.BenchmarkTest
             Provider = service.BuildServiceProvider();
         }
 
+        /// <summary>
+        /// Inserts the.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [Benchmark]
         public async Task Insert()
         {
@@ -55,6 +65,10 @@ namespace BenchmarkTest.BenchmarkTest
             }
         }
 
+        /// <summary>
+        /// Inserts the ef.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [Benchmark]
         public async Task InsertEf()
         {
@@ -63,11 +77,15 @@ namespace BenchmarkTest.BenchmarkTest
             {
                 var a = new UserEntrity();
                 context.UserEntrities.Add(a);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 //  context.UserEntrities.FirstOrDefault(t => t.Id == a.Id);
             }
         }
 
+        /// <summary>
+        /// Inserts the or.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [Benchmark]
         public async Task InsertOr()
         {
@@ -89,7 +107,7 @@ namespace BenchmarkTest.BenchmarkTest
                 //var com2 = connect.CreateCommand();
                 //com2.CommandText = $"select * from user where id=@p0";
                 //com2.Parameters.Add(new MySqlParameter("@p0", id));
-                var r = com.ExecuteReader();
+                var r = await com.ExecuteReaderAsync();
                 while (r.Read())
                 {
                 };

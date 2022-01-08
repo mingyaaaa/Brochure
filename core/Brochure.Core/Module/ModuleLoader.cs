@@ -22,6 +22,7 @@ namespace Brochure.Core.Module
         /// Initializes a new instance of the <see cref="ModuleLoader"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="reflectorUtil"></param>
         public ModuleLoader(ILogger<ModuleLoader> logger, IReflectorUtil reflectorUtil)
         {
             this.logger = logger;
@@ -31,7 +32,6 @@ namespace Brochure.Core.Module
         /// <summary>
         /// Loads the module.
         /// </summary>
-        /// <param name="provider">The provider.</param>
         /// <param name="services">The services.</param>
         /// <param name="assembly">The assembly.</param>
         public void LoadModule(IServiceCollection services, Assembly assembly)

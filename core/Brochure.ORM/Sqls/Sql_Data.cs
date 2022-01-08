@@ -4,12 +4,16 @@ using System.Linq.Expressions;
 
 namespace Brochure.ORM
 {
+    /// <summary>
+    /// The sql.
+    /// </summary>
     public partial class Sql
     {
         /// <summary>
         /// Inserts the sql.
         /// </summary>
         /// <param name="obj">The obj.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql InsertSql<T>(T obj, string database = "")
         {
@@ -19,7 +23,8 @@ namespace Brochure.ORM
         /// <summary>
         /// Deletes the.
         /// </summary>
-        /// <param name="whereQuery">The where query.</param>
+        /// <param name="expression"></param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql DeleteSql<T>(Expression<Func<T, bool>> expression, string database = "")
         {
@@ -30,6 +35,7 @@ namespace Brochure.ORM
         /// Deletes the.
         /// </summary>
         /// <param name="whereQuery">The where query.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql DeleteSql<T>(IWhereQuery whereQuery = null, string database = "")
         {
@@ -40,7 +46,8 @@ namespace Brochure.ORM
         /// Updates the.
         /// </summary>
         /// <param name="obj">The obj.</param>
-        /// <param name="whereQuery">The where query.</param>
+        /// <param name="expression"></param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql UpdateSql<T>(object obj, Expression<Func<T, bool>> expression, string database = "")
         {
@@ -52,6 +59,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="obj">The obj.</param>
         /// <param name="whereQuery">The where query.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql UpdateSql<T>(object obj, IWhereQuery whereQuery, string database = "")
         {
@@ -61,8 +69,10 @@ namespace Brochure.ORM
         /// <summary>
         /// Updates the.
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="obj">The obj.</param>
         /// <param name="whereQuery">The where query.</param>
+        /// <param name="database"></param>
         /// <returns>An ISql.</returns>
         public static ISql UpdateSql(Type type, object obj, IWhereQuery whereQuery, string database = "")
         {
@@ -95,6 +105,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="table">The table.</param>
         /// <param name="whereQuery">The where query.</param>
+        /// <param name="database"></param>
         public DeleteSql(Type table, IWhereQuery whereQuery, string database)
         {
             Table = table;
@@ -112,6 +123,7 @@ namespace Brochure.ORM
         /// Initializes a new instance of the <see cref="InsertSql"/> class.
         /// </summary>
         /// <param name="table">The table.</param>
+        /// <param name="database"></param>
         public InsertSql(object table, string database)
         {
             Table = table;
@@ -160,6 +172,7 @@ namespace Brochure.ORM
         /// <param name="table">The table.</param>
         /// <param name="updateObj">The update obj.</param>
         /// <param name="whereQuery">The where query.</param>
+        /// <param name="database"></param>
         public UpdateSql(Type table, object updateObj, IWhereQuery whereQuery, string database)
         {
             Table = table;

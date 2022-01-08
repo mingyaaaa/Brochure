@@ -24,7 +24,6 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="dbProvider">The db provider.</param>
         /// <param name="dbOption">The db option.</param>
-        /// <param name="">The .</param>
         /// <param name="funList">The fun list.</param>
         /// <param name="serviceProvider">The service provider.</param>
         protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider serviceProvider = null)
@@ -37,12 +36,32 @@ namespace Brochure.ORM.Visitors
             this.dbOption = dbOption;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         protected IDbProvider _dbPrivoder;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected object sql;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected List<IDbDataParameter> Parameters;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected Dictionary<int, Type> TableTypeDic;
+
         private readonly IEnumerable<IFuncVisit> _funList;
         private readonly IServiceProvider serviceProvider;
+
+        /// <summary>
+        ///
+        /// </summary>
         protected readonly DbOption dbOption;
 
         /// <summary>
@@ -268,6 +287,9 @@ namespace Brochure.ORM.Visitors
             return parms.ParameterName;
         }
 
+        /// <summary>
+        /// The object value.
+        /// </summary>
         private class ObjectValue
         {
             /// <summary>

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Organization.Abstract
 {
+    /// <summary>
+    /// The web api path names.
+    /// </summary>
     public class WebApiPathNames
     {
     }

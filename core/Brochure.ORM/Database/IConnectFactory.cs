@@ -22,6 +22,10 @@ namespace Brochure.ORM.Database
         /// <returns>An IDbConnection.</returns>
         Task<DbConnection> CreateAndOpenConnectionAsync();
 
+        /// <summary>
+        /// Gets the database.
+        /// </summary>
+        /// <returns>A string.</returns>
         string GetDatabase();
     }
 
@@ -86,6 +90,10 @@ namespace Brochure.ORM.Database
             this.dbConnection = null;
         }
 
+        /// <summary>
+        /// Gets the database.
+        /// </summary>
+        /// <returns>A string.</returns>
         public string GetDatabase()
         {
             var connect = CreateConnection();

@@ -1,5 +1,8 @@
 namespace Brochure.Core.RPC
 {
+    /// <summary>
+    /// The polly option.
+    /// </summary>
     public class PollyOption
     {
         /// <summary>

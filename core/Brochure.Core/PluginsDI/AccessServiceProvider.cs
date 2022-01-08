@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Core.PluginsDI
 {
+    /// <summary>
+    /// The access service provider.
+    /// </summary>
     public static class AccessServiceProvider
     {
         /// <summary>

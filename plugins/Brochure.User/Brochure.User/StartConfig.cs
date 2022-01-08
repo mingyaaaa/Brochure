@@ -20,7 +20,7 @@ namespace Brochure.User
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="builder">The builder.</param>
-        public async void Configure(Guid key, IApplicationBuilder builder)
+        public void Configure(Guid key, IApplicationBuilder builder)
         {
             InitDb(builder);
         }

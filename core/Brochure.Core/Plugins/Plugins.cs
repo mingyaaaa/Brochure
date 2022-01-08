@@ -87,6 +87,9 @@ namespace Brochure.Core
         /// </summary>
         public IConfiguration PluginConfiguration { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the auth key.
+        /// </summary>
         public List<Guid> AuthKey { get; set; }
 
         /// <summary>
@@ -97,21 +100,37 @@ namespace Brochure.Core
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Exits the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public virtual Task ExitAsync()
         {
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Startings the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public virtual Task<bool> StartingAsync()
         {
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Exitings the async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public virtual Task<bool> ExitingAsync()
         {
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Configures the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public virtual void ConfigureService(IServiceCollection services)
         {
         }

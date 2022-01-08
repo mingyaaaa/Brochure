@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Organization.Abstract.RequestModel
 {
+    /// <summary>
+    /// The req update org model.
+    /// </summary>
     public class ReqUpdateOrgModel
     {
         /// <summary>

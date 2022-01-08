@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Core.PluginsDI
 {
+    /// <summary>
+    /// The glob lock.
+    /// </summary>
     internal class GlobLock
     {
         public static object LockObj = new object();

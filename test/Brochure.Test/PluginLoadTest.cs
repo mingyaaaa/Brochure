@@ -19,12 +19,18 @@ using Moq.AutoMock;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The plugin load test.
+    /// </summary>
     [TestClass]
     public class PluginLoadTest : BaseTest
     {
         private Mock<IObjectFactory> objFactoryMock;
         private Mock<IPluginsLoadContext> loadContextMock;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PluginLoadTest"/> class.
+        /// </summary>
         public PluginLoadTest()
         {
             InitBaseService();
@@ -32,6 +38,10 @@ namespace Brochure.Test
             loadContextMock = new Mock<IPluginsLoadContext>();
         }
 
+        /// <summary>
+        /// Tests the load1.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestLoad1()
         {
@@ -48,6 +58,10 @@ namespace Brochure.Test
             dir.Verify(t => t.GetFiles(basePath, "plugin.config", SearchOption.AllDirectories));
         }
 
+        /// <summary>
+        /// Tests the load2.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestLoad2()
         {
@@ -65,6 +79,11 @@ namespace Brochure.Test
             jsonUtil.Verify(t => t.Get<PluginConfig>(basePath));
         }
 
+        /// <summary>
+        /// Tests the load3.
+        /// </summary>
+        /// <param name="typeCount">The type count.</param>
+        /// <returns>A Task.</returns>
         [TestMethod]
         [DataRow(0)]
         [DataRow(2)]
@@ -86,6 +105,10 @@ namespace Brochure.Test
             moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Never);
         }
 
+        /// <summary>
+        /// Tests the load4.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestLoad4()
         {
@@ -112,6 +135,10 @@ namespace Brochure.Test
             moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Exactly(1));
         }
 
+        /// <summary>
+        /// Tests the resolve plugins.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestResolvePlugins()
         {
@@ -146,6 +173,10 @@ namespace Brochure.Test
             var str = string.Empty;
         }
 
+        /// <summary>
+        /// Tests the plugins config.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestPluginsConfig()
         {
@@ -181,6 +212,10 @@ namespace Brochure.Test
             var str = string.Empty;
         }
 
+        /// <summary>
+        /// Tests the un load.
+        /// </summary>
+        /// <returns>A Task.</returns>
         [TestMethod]
         public async Task TestUnLoad()
         {
@@ -203,15 +238,29 @@ namespace Brochure.Test
             loadContextMock.Verify(t => t.UnLoad());
         }
 
+        /// <summary>
+        /// The p a.
+        /// </summary>
         protected class PA : Plugins
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PA"/> class.
+            /// </summary>
+            /// <param name="service">The service.</param>
             public PA(IServiceProvider service) : base()
             {
             }
         }
 
+        /// <summary>
+        /// The p b.
+        /// </summary>
         protected class PB : Plugins
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PB"/> class.
+            /// </summary>
+            /// <param name="service">The service.</param>
             public PB(IServiceProvider service) : base()
             {
             }

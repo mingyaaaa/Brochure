@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.User.Abstract
 {
+    /// <summary>
+    /// The user service model.
+    /// </summary>
     public class UserServiceModel
     {
         /// <summary>

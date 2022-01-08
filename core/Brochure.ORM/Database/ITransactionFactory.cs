@@ -12,6 +12,9 @@ namespace Brochure.ORM.Database
         ITransaction GetTransaction();
     }
 
+    /// <summary>
+    /// The transaction factory.
+    /// </summary>
     public class TransactionFactory : ITransactionFactory
     {
         private readonly ITransactionManager transactionManager;

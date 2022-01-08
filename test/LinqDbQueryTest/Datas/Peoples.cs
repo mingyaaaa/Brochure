@@ -1,6 +1,9 @@
 using System;
 namespace Brochure.ORMTest
 {
+    /// <summary>
+    /// The peoples.
+    /// </summary>
     public class Peoples
     {
         /// <summary>

@@ -82,6 +82,9 @@ namespace Brochure.ORM.Querys
         /// </summary>
         public int SkipCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
 
         /// <summary>

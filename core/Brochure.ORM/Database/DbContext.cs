@@ -23,6 +23,9 @@ namespace Brochure.ORM
         /// </summary>
         internal static IServiceProvider ServiceProvider => AccessServiceProvider.Service;
 
+        /// <summary>
+        /// Gets the isolation level.
+        /// </summary>
         public IsolationLevel IsolationLevel => _transaction == null ? IsolationLevel.Unspecified : _transaction.IsolationLevel;
         private bool _isRollbackOrCommit = false;
         private IServiceScope _serviceScope;
@@ -56,12 +59,30 @@ namespace Brochure.ORM
             _serviceScope = serviceScope.CreateScope();
         }
 
+        /// <summary>
+        /// Gets the datas.
+        /// </summary>
         public DbData Datas => _serviceScope.ServiceProvider.GetRequiredService<DbData>();
+        /// <summary>
+        /// Gets the tables.
+        /// </summary>
         public DbTable Tables => _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
+        /// <summary>
+        /// Gets the databases.
+        /// </summary>
         public DbDatabase Databases => _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
+        /// <summary>
+        /// Gets the columns.
+        /// </summary>
         public DbColumn Columns => _serviceScope.ServiceProvider.GetRequiredService<DbColumn>();
+        /// <summary>
+        /// Gets the indexs.
+        /// </summary>
         public DbIndex Indexs => _serviceScope.ServiceProvider.GetRequiredService<DbIndex>();
 
+        /// <summary>
+        /// Gets the database name.
+        /// </summary>
         public string DatabaseName => _connectFactory.GetDatabase();
 
         /// <summary>
@@ -311,6 +332,9 @@ namespace Brochure.ORM
             return command;
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public async void Dispose()
         {
             await DisposeAsync();

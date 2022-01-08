@@ -9,10 +9,16 @@ using System.Threading.Tasks;
 
 namespace BenchmarkTest.BenchmarkTest
 {
+    /// <summary>
+    /// The reflector util test.
+    /// </summary>
     public class ReflectorUtilTest
     {
         public static int Count = 10000;
 
+        /// <summary>
+        /// Tests the get property.
+        /// </summary>
         [Benchmark]
         public void TestGetProperty()
         {
@@ -28,6 +34,9 @@ namespace BenchmarkTest.BenchmarkTest
             }
         }
 
+        /// <summary>
+        /// Tests the get property1.
+        /// </summary>
         [Benchmark]
         public void TestGetProperty1()
         {
@@ -43,6 +52,9 @@ namespace BenchmarkTest.BenchmarkTest
             }
         }
 
+        /// <summary>
+        /// Tests the get property2.
+        /// </summary>
         [Benchmark]
         public void TestGetProperty2()
         {
@@ -59,6 +71,9 @@ namespace BenchmarkTest.BenchmarkTest
             }
         }
 
+        /// <summary>
+        /// Tests the get property3.
+        /// </summary>
         [Benchmark]
         public void TestGetProperty3()
         {

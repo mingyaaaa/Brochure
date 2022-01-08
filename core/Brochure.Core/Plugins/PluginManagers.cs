@@ -39,9 +39,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="plugin">The plugin.</param>
         /// <returns>A Task.</returns>
-        public async Task Remove(IPlugins plugin)
+        public ValueTask Remove(IPlugins plugin)
         {
             pluginDic.TryRemove(plugin.Key, out var _);
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -99,9 +100,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>A Task.</returns>
-        public async Task Remove(Guid key)
+        public ValueTask Remove(Guid key)
         {
             pluginDic.TryRemove(key, out var _);
+            return ValueTask.CompletedTask;
         }
     }
 }

@@ -18,6 +18,9 @@ namespace Brochure.ORM.Database
         IServiceCollection Service { get; }
     }
 
+    /// <summary>
+    /// The db builder.
+    /// </summary>
     public class DbBuilder : IDbBuilder
     {
         private readonly IServiceCollection _services;

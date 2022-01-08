@@ -5,9 +5,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
+    /// <summary>
+    /// The middle manager test.
+    /// </summary>
     [TestClass]
     public class MiddleManagerTest
     {
+        /// <summary>
+        /// Tests the add same middle.
+        /// </summary>
         [TestMethod]
         public void TestAddSameMiddle()
         {
@@ -18,6 +24,9 @@ namespace Brochure.Test
             Assert.AreEqual(1, count);
         }
 
+        /// <summary>
+        /// Tests the add index middle.
+        /// </summary>
         [TestMethod]
         public void TestAddIndexMiddle()
         {
@@ -33,6 +42,9 @@ namespace Brochure.Test
             Assert.AreEqual(2, first.Order);
         }
 
+        /// <summary>
+        /// Tests the index middle.
+        /// </summary>
         [TestMethod]
         public void TestIndexMiddle()
         {
@@ -46,6 +58,9 @@ namespace Brochure.Test
             Assert.AreEqual(2, first.Order);
         }
 
+        /// <summary>
+        /// Tests the index max int order.
+        /// </summary>
         [TestMethod]
         public void TestIndexMaxIntOrder()
         {

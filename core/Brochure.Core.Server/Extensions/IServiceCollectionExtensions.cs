@@ -70,6 +70,13 @@ namespace Brochure.Core.Server
             await services.AddPluginController();
         }
 
+        /// <summary>
+        /// Adds the plugin swagger gen.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="version">The version.</param>
+        /// <param name="xmlDirPath">The xml dir path.</param>
         public static void AddPluginSwaggerGen(this IServiceCollection services, string name, string version, string xmlDirPath)
         {
             services.AddSwaggerGen(c =>
@@ -100,6 +107,13 @@ namespace Brochure.Core.Server
             });
         }
 
+        /// <summary>
+        /// Configures the plugin swagger gen.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="version">The version.</param>
+        /// <param name="xmlDirPath">The xml dir path.</param>
         public static void ConfigurePluginSwaggerGen(this IServiceCollection services, string name, string version, string xmlDirPath)
         {
             services.ConfigureSwaggerGen(c =>

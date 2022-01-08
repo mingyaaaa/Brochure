@@ -3,6 +3,9 @@ using System;
 
 namespace Brochure.ORMTest
 {
+    /// <summary>
+    /// The teachers.
+    /// </summary>
     public class Teachers : EntityBase, IEntityKey<string>
     {
         /// <summary>
@@ -20,8 +23,14 @@ namespace Brochure.ORMTest
         public string Id { get; set; } = Guid.NewGuid().ToString();
     }
 
+    /// <summary>
+    /// The f teachers.
+    /// </summary>
     public class FTeachers
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FTeachers"/> class.
+        /// </summary>
         public FTeachers()
         {
             Teachers = new Teachers();
@@ -33,6 +42,9 @@ namespace Brochure.ORMTest
         public Teachers Teachers { get; set; }
     }
 
+    /// <summary>
+    /// The teachers model.
+    /// </summary>
     public class TeachersModel
     {
         /// <summary>

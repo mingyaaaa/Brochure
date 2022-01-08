@@ -16,7 +16,7 @@ namespace Brochure.Core
         private readonly Type t2Type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyDelegate"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         public PropertyDelegate()
         {
@@ -24,6 +24,11 @@ namespace Brochure.Core
             t2Type = typeof(T2);
         }
 
+        /// <summary>
+        /// Convers the to.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>A T2.</returns>
         public T2 ConverTo(T1 model)
         {
             var properties = t1Type.GetProperties();
@@ -50,7 +55,7 @@ namespace Brochure.Core
         private readonly Type t1Type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecordPropertyDelegate"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         public GetValuePropertyDelegate()
         {
@@ -60,7 +65,7 @@ namespace Brochure.Core
         /// <summary>
         /// Convers the to.
         /// </summary>
-        /// <param name="record">The record.</param>
+        /// <param name="read"></param>
         /// <returns>A T1.</returns>
         public T1 ConverTo(IGetValue read)
         {
@@ -87,7 +92,7 @@ namespace Brochure.Core
         private readonly Type t1Type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectToRecordDelegate"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         public ObjectToRecordDelegate()
         {

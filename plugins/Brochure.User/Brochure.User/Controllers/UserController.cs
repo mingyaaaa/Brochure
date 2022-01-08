@@ -2,6 +2,7 @@ using Brochure.Abstract;
 using Brochure.Abstract.Models;
 using Brochure.Core.Server.Extensions;
 using Brochure.User.Abstract.RequestModel;
+using Brochure.User.Abstract.ResponseModel;
 using Brochure.User.Entrities;
 using Brochure.User.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -41,14 +42,15 @@ namespace Brochure.User.Controllers
         /// <param name="user">The user.</param>
         /// <returns>A Task.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(Result<UserEntrity>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<RspUserModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddUser([FromBody] ReqAddUserModel user)
         {
             var entiry = objectFactory.Create<ReqAddUserModel, UserEntrity>(user);
             var r = await userDal.InsertAndGet(entiry);
             if (r == null)
                 return this.JsonError(500, "添加错误");
-            return this.JsonData(r);
+            var rsp = objectFactory.Create<UserEntrity, RspUserModel>(r);
+            return this.JsonData(rsp);
         }
 
         /// <summary>

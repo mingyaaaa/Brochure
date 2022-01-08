@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.ORM.Utils
 {
+    /// <summary>
+    /// The entity util.
+    /// </summary>
     public static class EntityUtil
     {
         /// <summary>
@@ -44,6 +47,11 @@ namespace Brochure.ORM.Utils
             return result;
         }
 
+        /// <summary>
+        /// As the table record.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns>An IDictionary.</returns>
         public static IDictionary<string, object> AsTableRecord(object obj)
         {
             if (obj == null)

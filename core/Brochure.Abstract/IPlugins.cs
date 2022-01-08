@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Brochure.Abstract
 {
+    /// <summary>
+    /// The plugins.
+    /// </summary>
     public interface IPlugins
     {
         /// <summary>
@@ -79,14 +82,12 @@ namespace Brochure.Abstract
         /// <summary>
         /// 插件加载前执行
         /// </summary>
-        /// <param name="errorMsg"></param>
         /// <returns></returns>
         Task<bool> StartingAsync();
 
         /// <summary>
         /// 退出插件前执行
         /// </summary>
-        /// <param name="errorMsg"></param>
         /// <returns></returns>
         Task<bool> ExitingAsync();
     }

@@ -61,7 +61,7 @@
     public class CountDatabaseSql : ISql
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CountDatabase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         public CountDatabaseSql(string databaseName)
@@ -81,7 +81,7 @@
     public class DeleteDatabaseSql : ISql
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CountDatabase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         public DeleteDatabaseSql(string databaseName)
@@ -101,7 +101,7 @@
     public class AllTableNamesSql : ISql
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CountDatabase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         public AllTableNamesSql(string databaseName)
@@ -121,7 +121,7 @@
     public class CreateDatabaseSql : ISql
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CountDatabase"/> class.
+        /// Initializes a new instance of the
         /// </summary>
         /// <param name="databaseName">The database name.</param>
         public CreateDatabaseSql(string databaseName)
@@ -140,6 +140,9 @@
     /// </summary>
     public class AllDatabaseSql : ISql
     {
+        /// <summary>
+        /// Gets or sets the database.
+        /// </summary>
         public string Database { get; set; }
     }
 }

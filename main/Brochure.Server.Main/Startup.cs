@@ -52,7 +52,6 @@ namespace Brochure.Server.Main
         /// </summary>
         /// <param name="app">The app.</param>
         /// <param name="env">The env.</param>
-        /// <param name="application">The application.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
