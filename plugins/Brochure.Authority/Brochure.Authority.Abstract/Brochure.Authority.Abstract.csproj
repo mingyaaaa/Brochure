@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-<TargetFramework>net5.0</TargetFramework>
+<TargetFramework>net6.0</TargetFramework>
 
     <OutputType>Library</OutputType>
   </PropertyGroup>
@@ -12,7 +12,7 @@
     <Folder Include="Protos\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.8100" />
     <PackageReference Include="Grpc.Tools" Version="2.28.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

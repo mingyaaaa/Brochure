@@ -7,14 +7,9 @@ using Brochure.ORM.MySql;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
-using IGeekFan.AspNetCore.Knife4jUI;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Brochure.User
 {

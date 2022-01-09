@@ -13,40 +13,37 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Brochure.Authority
 {
+    /// <summary>
+    /// The authority plugin.
+    /// </summary>
     public class AuthorityPlugin : Plugins
     {
-        public AuthorityPlugin(IServiceProvider service) : base(service) { }
-
-        public override Task<bool> StartingAsync(out string errorMsg)
+        /// <summary>
+        /// Configures the service.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        public override void ConfigureService(IServiceCollection services)
         {
-            errorMsg = string.Empty;
-            var pluginServiceCollection = this.Context.GetPluginContext<PluginServiceCollectionContext>();
-            pluginServiceCollection.AddAuthentication(t =>
-           {
-               t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-               t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-           }).AddJwtBearer(t =>
-
-               {
-                   t.RequireHttpsMetadata = false;
-                   t.SaveToken = true;
-                   t.TokenValidationParameters = new TokenValidationParameters()
-                   {
-                       ValidateIssuerSigningKey = true,
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("123")),
-                       ValidIssuer = "http://localhost:5000",
-                       ValidAudience = "api"
-                   };
-               });
-            // pluginServiceCollection.AddAuthorization ();
-
-            // Context.AddIdentityServer ().AddDeveloperSigningCredential ()
-            //     .AddInMemoryClients (InitMemoryData.GetClients ())
-            //     .AddInMemoryApiResources (InitMemoryData.GetApiResources ());
-            pluginServiceCollection.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
-            return Task.FromResult(true);
+            services.AddAuthentication(t =>
+            {
+                t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(t =>
+            {
+                t.RequireHttpsMetadata = false;
+                t.SaveToken = true;
+                t.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("123")),
+                    ValidIssuer = "http://localhost:5000",
+                    ValidAudience = "api"
+                };
+            });
+            services.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
         }
     }
+
     public static class InitMemoryData
     {
         public static IEnumerable<Client> GetClients()
@@ -77,6 +74,7 @@ namespace Brochure.Authority
             };
             return result;
         }
+
         public static IEnumerable<ApiResource> GetApiResources()
         {
             var result = new List<ApiResource>()

@@ -4,5 +4,9 @@ using Brochure.Roles.Entrities;
 
 namespace Brochure.Roles.Repository
 {
-    public interface IRoleRepository : IRepository<RoleEntiry> { }
+    /// <summary>
+    /// The role repository.
+    /// </summary>
+    public interface IRoleRepository : IRepository<RoleEntity, string>
+    { }
 }

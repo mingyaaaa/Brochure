@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-<TargetFramework>net5.0</TargetFramework>
+<TargetFramework>net6.0</TargetFramework>
 
   </PropertyGroup>
   <ItemGroup>
@@ -15,8 +15,8 @@
     <ProjectReference Include="..\Brochure.Roles.Abstract\Brochure.Roles.Abstract.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.7728" />
-    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.7728" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8100" />
+    <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8100" />
     <PackageReference Include="Grpc.Core" Version="2.29.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
