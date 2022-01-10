@@ -27,6 +27,7 @@ namespace Brochure.ORM
         /// Gets the isolation level.
         /// </summary>
         public IsolationLevel IsolationLevel => _transaction == null ? IsolationLevel.Unspecified : _transaction.IsolationLevel;
+
         private bool _isRollbackOrCommit = false;
         private IServiceScope _serviceScope;
         private readonly IObjectFactory _objectFactory;
@@ -63,18 +64,22 @@ namespace Brochure.ORM
         /// Gets the datas.
         /// </summary>
         public DbData Datas => _serviceScope.ServiceProvider.GetRequiredService<DbData>();
+
         /// <summary>
         /// Gets the tables.
         /// </summary>
         public DbTable Tables => _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
+
         /// <summary>
         /// Gets the databases.
         /// </summary>
         public DbDatabase Databases => _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
+
         /// <summary>
         /// Gets the columns.
         /// </summary>
         public DbColumn Columns => _serviceScope.ServiceProvider.GetRequiredService<DbColumn>();
+
         /// <summary>
         /// Gets the indexs.
         /// </summary>
@@ -202,6 +207,31 @@ namespace Brochure.ORM
                 var t = fun(new DataReaderGetValue(reader));
                 list.Add(t);
             }
+            return list;
+        }
+
+        /// <summary>
+        /// Excutes the muti query async. 多个结果集
+        /// </summary>
+        /// <param name="database">The database.</param>
+        /// <param name="sqls">The sqls.</param>
+        /// <returns>A Task.</returns>
+        public virtual async Task<IEnumerable<IRecord>> ExcuteMutiQueryAsync(string database, IEnumerable<ISql> sqls)
+        {
+            var sql = _sqlBuilder.Build(sqls);
+            var command = await CreateDbCommandAsync(database);
+            command.CommandText = sql.SQL;
+            command.Parameters.AddRange(sql.Parameters);
+            using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var list = new List<IRecord>();
+            do
+            {
+                while (await reader.ReadAsync().ConfigureAwait(false))
+                {
+                    var t = new Record(new DataReaderGetValue(reader));
+                    list.Add(t);
+                }
+            } while (await reader.NextResultAsync());
             return list;
         }
 

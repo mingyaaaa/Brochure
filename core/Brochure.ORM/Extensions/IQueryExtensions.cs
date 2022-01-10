@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Brochure.ORM.Querys;
+using System.Collections.Generic;
 
 namespace Brochure.ORM.Extensions
 {
@@ -14,6 +15,15 @@ namespace Brochure.ORM.Extensions
         public static IEnumerable<ISql> Continue(this ISql sql, ISql desSql)
         {
             return new List<ISql>() { sql, desSql };
+        }
+
+        /// <summary>
+        /// Continues the.
+        /// </summary>
+        /// <returns>An IQuery.</returns>
+        public static IEnumerable<ISql> Continue(this IEnumerable<ISql> sql, ISql desSql)
+        {
+            return new List<ISql>(sql) { desSql };
         }
     }
 }

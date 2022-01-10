@@ -141,6 +141,9 @@ namespace Brochure.ORM
             return sql switch
             {
                 IQuery query => BuildQuery(query),
+                IfSql ifSql => BuilderIfSql(ifSql),
+                StringSql stringSql => BuilderStringSql(stringSql),
+                ExistSql existSql => BuilderExist(existSql),
                 CountDatabaseSql countDatabaseSql => BuildCountForDatabase(countDatabaseSql),
                 DeleteDatabaseSql deleteDatabaseSql => BuildDeleteDatabase(deleteDatabaseSql),
                 AllTableNamesSql allTableNamesSql => BuildAllTableName(allTableNamesSql),

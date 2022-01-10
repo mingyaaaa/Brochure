@@ -7,6 +7,7 @@ using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.ORM;
 using Brochure.ORM.Database;
+using Brochure.ORM.Querys;
 using LinqDbQueryTest.Datas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -116,7 +117,7 @@ namespace Brochure.ORMTest.Querys
         [TestMethod]
         public void TestDbTable()
         {
-            var sql = Sql.GetCountTable("testTable");
+            var sql = Sql.GetCountTable("testTable", "testdb");
             sql.Database = "testdb";
             var sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("SELECT count(1) FROM information_schema.TABLES WHERE table_name ='testTable' and TABLE_SCHEMA ='testdb'", sqlResult.SQL);
@@ -154,7 +155,7 @@ namespace Brochure.ORMTest.Querys
             var sql = Sql.GetAddColumnSql("testTable", "testColumn", System.TypeCode.String, true, 200);
             var sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("alter table testTable add column testColumn nvarchar(200) not null", sqlResult.SQL);
-            sql = Sql.GetColumnsCount("testTable", "testColumn");
+            sql = Sql.GetColumnsCount("testTable", "testColumn", "testdb");
             sql.Database = "testdb";
             sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("select COUNT(1) from information_schema.columns WHERE table_schema='testdb' and table_name = 'testTable' and column_name = 'testColumn'", sqlResult.SQL);
@@ -193,6 +194,35 @@ namespace Brochure.ORMTest.Querys
             sql = Sql.RenameIndex("test", "index1", "newIndex");
             sqlResult = _sqlBuilder.Build(sql);
             Assert.AreEqual("ALTER TABLE test RENAME INDEX index1 TO newIndex", sqlResult.SQL);
+        }
+
+        [TestMethod]
+        public void TestDbIfExist()
+        {
+            var sql = Sql.If(new ExistSql(Sql.GetCountTable("test", "testDb")), Sql.DeleteTable("Students"), null);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual(@"if exists (SELECT count(1) FROM information_schema.TABLES WHERE table_name ='test' and TABLE_SCHEMA ='testDb')
+drop table Students", sqlResult.SQL);
+        }
+
+        [TestMethod]
+        public void TestDbNotExist()
+        {
+            var sql = Sql.If(new ExistSql(Sql.GetCountTable("test", "testDb"), true), Sql.CreateTable<Students>(), null);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual(@"if not exists (SELECT count(1) FROM information_schema.TABLES WHERE table_name ='test' and TABLE_SCHEMA ='testDb')
+create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))", sqlResult.SQL);
+        }
+
+        [TestMethod]
+        public void TestElse()
+        {
+            var sql = Sql.If(new StringSql("1=2"), Sql.CreateTable<Students>(), Sql.DeleteTable("Students"));
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual(@"if 1=2
+create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))
+else
+drop table Students", sqlResult.SQL);
         }
     }
 }

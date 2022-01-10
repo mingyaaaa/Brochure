@@ -33,7 +33,7 @@ namespace Brochure.ORM
         /// <param name="tableName">The table name.</param>
         /// <param name="database"></param>
         /// <returns>An ISql.</returns>
-        public static ISql GetCountTable(string tableName, string database = "")
+        public static ISql GetCountTable(string tableName, string database)
         {
             return new CountTableSql(tableName, database);
         }

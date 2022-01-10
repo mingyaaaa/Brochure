@@ -25,7 +25,7 @@ namespace Brochure.ORM
         /// <param name="columnName">The column name.</param>
         /// <param name="databaseName">The database name.</param>
         /// <returns>An ISql.</returns>
-        public static ISql GetColumnsCount(string tableName, string columnName, string databaseName = "")
+        public static ISql GetColumnsCount(string tableName, string columnName, string databaseName)
         {
             return new CountColumsSql(tableName, columnName, databaseName);
         }
