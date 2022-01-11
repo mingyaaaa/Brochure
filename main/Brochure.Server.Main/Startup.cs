@@ -65,7 +65,7 @@ namespace Brochure.Server.Main
             app.IntertMiddle("swagger", Guid.Empty, 7, () => app.UseSwagger());
             app.IntertMiddle("swaggerUI", Guid.Empty, 8, () => app.UseKnife4UI());
             app.IntertMiddle("main-routing", Guid.Empty, 10, () => app.UseRouting());
-
+            app.ConfigPlugin();
             app.IntertMiddle("main-endpoint", Guid.Empty, int.MaxValue, () => app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

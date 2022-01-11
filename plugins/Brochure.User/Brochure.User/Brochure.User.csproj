@@ -10,10 +10,10 @@
   </PropertyGroup>
   <Import Project="../../../build/copy_plugin.targets" />
   <ItemGroup>
-	  <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8099" ExcludeAssets="runtime" PrivateAssets="none">
+	  <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8104" ExcludeAssets="runtime" PrivateAssets="none">
 	    <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8099" />
+	  <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8104" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" ExcludeAssets="runtime" PrivateAssets="false" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" ExcludeAssets="runtime" PrivateAssets="false" />
   </ItemGroup>

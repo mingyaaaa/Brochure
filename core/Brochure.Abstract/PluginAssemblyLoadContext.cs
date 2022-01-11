@@ -1,37 +1,32 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using AspectCore.DynamicProxy.Parameters;
-using Brochure.Abstract;
-using Brochure.Abstract.PluginDI;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Brochure.Core
+namespace Brochure.Abstract
 {
     /// <summary>
-    /// The plugins load context.
+    /// The plugin assembly load context.
     /// </summary>
-    public class PluginsLoadContext : AssemblyLoadContext, IPluginsLoadContext
+    public class PluginAssemblyLoadContext : AssemblyLoadContext
     {
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private static IEnumerable<string> loadedAssemblies;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
+        /// Initializes a new instance of the <see cref="PluginAssemblyLoadContext"/> class.
         /// </summary>
-        static PluginsLoadContext()
+        static PluginAssemblyLoadContext()
         {
             loadedAssemblies = Default.Assemblies.Select(t => t.GetName().Name);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
+        /// Initializes a new instance of the <see cref="PluginAssemblyLoadContext"/> class.
         /// </summary>
         /// <param name="resolverProxy">The resolver proxy.</param>
-        public PluginsLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: true)
+        public PluginAssemblyLoadContext(IAssemblyDependencyResolverProxy resolverProxy) : base(isCollectible: true)
         {
             _resolver = resolverProxy;
             this.Unloading += PluginsLoadContext_Unloading;
@@ -59,7 +54,6 @@ namespace Brochure.Core
                 try
                 {
                     var ass = LoadFromAssemblyPath(assemblyPath);
-                    //   var ass = LoadFromStream(new FileStream(assemblyPath, FileMode.Open, FileAccess.Read));
                     return ass;
                 }
                 catch
@@ -82,24 +76,6 @@ namespace Brochure.Core
                 return LoadUnmanagedDllFromPath(libraryPath);
             }
             return IntPtr.Zero;
-        }
-
-        /// <summary>
-        /// Loads the assembly.
-        /// </summary>
-        /// <param name="assemblyName">The assembly name.</param>
-        /// <returns>An Assembly.</returns>
-        public Assembly LoadAssembly(AssemblyName assemblyName)
-        {
-            return LoadFromAssemblyName(assemblyName);
-        }
-
-        /// <summary>
-        /// Uns the load.
-        /// </summary>
-        public void UnLoad()
-        {
-            Unload();
         }
     }
 }

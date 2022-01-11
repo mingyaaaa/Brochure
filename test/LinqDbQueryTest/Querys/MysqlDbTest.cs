@@ -20,7 +20,7 @@ namespace Brochure.ORMTest.Querys
         public MysqlDbTest()
         {
             var builder = new MySqlConnectionStringBuilder();
-            builder.Server = "192.168.0.1";
+            builder.Server = "192.168.0.6";
             builder.UserID = "test";
             builder.Password = "123456";
             builder.Database = "test";
@@ -31,7 +31,7 @@ namespace Brochure.ORMTest.Querys
         /// <summary>
         /// Tests the connnect.
         /// </summary>
-       // [TestMethod]
+      //  [TestMethod]
         public void TestConnnect()
         {
             try
@@ -63,7 +63,7 @@ namespace Brochure.ORMTest.Querys
         /// <summary>
         /// Tests the connnect transction.
         /// </summary>
-        [TestMethod]
+        //[TestMethod]
         public void TestConnnectTransction()
         {
             try
@@ -101,7 +101,7 @@ namespace Brochure.ORMTest.Querys
         /// <summary>
         /// Tests the connect query.
         /// </summary>
-        [TestMethod]
+       // [TestMethod]
         public void TestConnectQuery()
         {
             //   return;
@@ -128,6 +128,28 @@ namespace Brochure.ORMTest.Querys
             command.CommandText = "select * from user";
             reader = command.ExecuteReader();
             reader.Close();
+        }
+
+        [TestMethod]
+        public void ExcuteIfSql()
+        {
+            var sql = @"if not exists (SELECT count(1) FROM information_schema.TABLES WHERE table_name ='Students' and TABLE_SCHEMA ='test') then create table Students(Id nvarchar(36),School nvarchar(255),ClassId nvarchar(255),PeopleId nvarchar(255),ClassCount decimal not null,No decimal not null,PRIMARY KEY ( Id ))";
+            try
+            {
+                dbConnection.Open();
+            }
+            catch (MySqlException)
+            {
+            }
+            var command = dbConnection.CreateCommand();
+            command.CommandText = sql;
+            try
+            {
+                var reader = command.ExecuteNonQuery();
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
 }

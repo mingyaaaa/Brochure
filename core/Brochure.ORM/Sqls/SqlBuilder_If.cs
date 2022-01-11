@@ -19,23 +19,7 @@ namespace Brochure.ORM
         /// <returns>An ISqlResult.</returns>
         protected virtual ISqlResult BuilderIfSql(IfSql ifSql)
         {
-            var condition = BuildSqlResult(ifSql.ConditionSql);
-            var then = BuildSqlResult(ifSql.ThenSql);
-            var elsesql = BuildSqlResult(ifSql.ElseSql);
-            var sql = new ParmsSqlResult();
-            var builder = new StringBuilder();
-            builder.AppendLine($"if {condition.SQL}");
-            builder.AppendLine(then.SQL);
-            if (!string.IsNullOrWhiteSpace(elsesql.SQL))
-            {
-                builder.AppendLine("else");
-                builder.AppendLine(elsesql.SQL);
-            }
-            sql.SQL = builder.ToString();
-            sql.Parameters.AddRange(condition.Parameters);
-            sql.Parameters.AddRange(then.Parameters);
-            sql.Parameters.AddRange(elsesql.Parameters);
-            return sql;
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -58,10 +42,7 @@ namespace Brochure.ORM
         /// <returns>An ISqlResult.</returns>
         protected virtual ISqlResult BuilderExist(ExistSql existSql)
         {
-            var subSql = BuildSqlResult(existSql.SubSql);
-            var notString = existSql.IsNot ? "not " : "";
-            subSql.SQL = $"{notString}exists ({subSql.SQL})";
-            return subSql;
+            throw new NotSupportedException();
         }
     }
 }

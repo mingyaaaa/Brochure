@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
@@ -18,7 +19,7 @@ namespace Brochure.Core
     /// </summary>
     public class PluginLoader : IPluginLoader, IDisposable
     {
-        private readonly ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
+        private static ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
 
         private readonly ISysDirectory directory;
         private readonly IPluginLoadContextProvider pluginLoadContextProvider;
@@ -81,7 +82,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
+        public async ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
         {
             IPluginsLoadContext locadContext = null;
             try
@@ -100,7 +101,8 @@ namespace Brochure.Core
                 var plugin = (Plugins)objectFactory.Create(pluginType);
                 SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
                 pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-                return ValueTask.FromResult((IPlugins)plugin);
+                //  await Task.Delay(100);
+                return plugin;
             }
             catch (Exception e)
             {

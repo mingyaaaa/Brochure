@@ -42,8 +42,7 @@ namespace Brochure.Core
         public IPluginsLoadContext CreateLoadContext(string pluginPath)
         {
             var assemblyDependencyResolverProxy = new AssemblyDependencyResolverProxy(pluginPath);
-            var loadContex = new PluginsLoadContext(assemblyDependencyResolverProxy);
-            return new PluginLoadContextProxy(loadContex);
+            return new PluginsLoadContext(assemblyDependencyResolverProxy);
         }
     }
 }

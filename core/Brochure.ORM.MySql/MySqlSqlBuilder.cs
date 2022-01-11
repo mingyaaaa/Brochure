@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Brochure.Abstract;
 using Brochure.ORM.Atrributes;
+using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 
 namespace Brochure.ORM.MySql
@@ -125,7 +126,7 @@ namespace Brochure.ORM.MySql
             else { throw new NotSupportedException("暂时不支持联合主键，请使用联合唯一索引代替"); }
             if (string.IsNullOrWhiteSpace(tableName))
                 throw new Exception("当前TabelName的值为null 无法创建表");
-            var sql = $@"create table {tableName}({string.Join(",", columSqls)})";
+            var sql = $@"create table if not exists {tableName}({string.Join(",", columSqls)})";
             r.SQL = sql;
             return r;
         }
@@ -140,6 +141,38 @@ namespace Brochure.ORM.MySql
             var result = new ParmsSqlResult();
             result.SQL = $"SELECT count(1) FROM information_schema.TABLES WHERE table_name ='{countTableSql.TableName}' and TABLE_SCHEMA ='{countTableSql.Database}'";
             return result;
+        }
+
+        /// <summary>
+        /// Builders the if sql.
+        /// </summary>
+        /// <param name="ifSql">The if sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected override ISqlResult BuilderIfSql(IfSql ifSql)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Builders the exist.
+        /// </summary>
+        /// <param name="existSql">The exist sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected override ISqlResult BuilderExist(ExistSql existSql)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Builds the delete table.
+        /// </summary>
+        /// <param name="deleteTableSql">The delete table sql.</param>
+        /// <returns>An ISqlResult.</returns>
+        protected override ISqlResult BuildDeleteTable(DeleteTableSql deleteTableSql)
+        {
+            var r = new ParmsSqlResult();
+            r.SQL = $"drop table if exists {deleteTableSql.TableName}";
+            return r;
         }
     }
 }

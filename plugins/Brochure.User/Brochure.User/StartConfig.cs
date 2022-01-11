@@ -36,9 +36,7 @@ namespace Brochure.User
             {
                 using var scope = applicationBuilder.ApplicationServices.CreateScope();
                 var dbTable = scope.ServiceProvider.GetService<DbTable>();
-                var exist = await dbTable.IsExistTableAsync<UserEntrity>();
-                if (!exist)
-                    await dbTable.CreateTableAsync<UserEntrity>();
+                await dbTable.CreateTableAsync<UserEntrity>();
             }
             catch (Exception ex)
             {
