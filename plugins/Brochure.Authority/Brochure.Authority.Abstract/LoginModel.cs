@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Brochure.Authority.Models
+namespace Brochure.Authority.Abstract
 {
     public class LoginModel
     {

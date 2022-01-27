@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Abstract;
-using Microsoft.Extensions.Configuration;
+using Brochure.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
@@ -85,7 +84,12 @@ namespace Brochure.Core
         /// <summary>
         /// Gets or sets the plugin configuration.
         /// </summary>
-        public IConfiguration PluginConfiguration { get; internal set; }
+        public PluginOption PluginOption { get; internal set; }
+
+        /// <summary>
+        /// Gets the application option.
+        /// </summary>
+        public ApplicationOption ApplicationOption { get; internal set; }
 
         /// <summary>
         /// Gets or sets the auth key.

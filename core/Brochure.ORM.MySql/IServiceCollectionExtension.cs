@@ -42,5 +42,13 @@ namespace Brochure.ORM.MySql
             services.AddSingleton<TypeMap, MySqlTypeMap>();
             return services;
         }
+
+        public static IServiceCollection AddMySql(this IDbBuilder builder, string connectString)
+        {
+            return builder.AddMySql(testc =>
+            {
+                testc.ConnectionString = connectString;
+            });
+        }
     }
 }

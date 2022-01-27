@@ -1,15 +1,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
-using User.Rpc;
-using static User.Rpc.UserService;
-
-using UseModel = User.Rpc;
-
 using Brochure.Abstract;
 using Brochure.User.Services.Interfaces;
 using Brochure.User.Entrities;
 using Brochure.Abstract.Extensions;
+using static Proto.UserRpc.UserService;
+using Proto.UserRpc;
 
 namespace Brochure.User.Services
 {
@@ -44,7 +41,7 @@ namespace Brochure.User.Services
             var userResponse = new UserResponse();
             foreach (var item in user)
             {
-                var obj = _objectFactory.Create<UserEntrity, UseModel.User>(item);
+                var obj = _objectFactory.Create<UserEntrity, Proto.UserRpc.User>(item);
                 userResponse.Users.Add(obj);
             }
             return userResponse;
@@ -84,7 +81,7 @@ namespace Brochure.User.Services
             var rsp = new UserResponse();
             foreach (var item in inserUsers)
             {
-                var obj = _objectFactory.Create<UseModel.User>(item);
+                var obj = _objectFactory.Create<Proto.UserRpc.User>(item);
                 rsp.Users.Add(obj);
             }
             return rsp;

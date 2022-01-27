@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
+using Brochure.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -101,7 +101,6 @@ namespace Brochure.Core
                 var plugin = (Plugins)objectFactory.Create(pluginType);
                 SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
                 pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-                //  await Task.Delay(100);
                 return plugin;
             }
             catch (Exception e)
@@ -259,7 +258,7 @@ namespace Brochure.Core
             plugin.Version = config.Version;
             plugin.Order = config.Order;
             plugin.PluginDirectory = pluginDir;
-            plugin.PluginConfiguration = GetPluginConfigSection(config, pluginDir);
+            plugin.PluginOption = GetPluginConfigSection(config, pluginDir, plugin);
         }
 
         /// <summary>
@@ -267,8 +266,9 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfig">The plugin config.</param>
         /// <param name="pluginDir"></param>
+        /// <param name="plugins"></param>
         /// <returns>An IConfiguration.</returns>
-        private IConfiguration GetPluginConfigSection(PluginConfig pluginConfig, string pluginDir)
+        private PluginOption GetPluginConfigSection(PluginConfig pluginConfig, string pluginDir, Plugins plugins)
         {
             var dllName = Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName);
             IConfiguration configurtion = _applicationOption.Configuration?.GetSection(dllName);
@@ -293,7 +293,8 @@ namespace Brochure.Core
             {
                 builder.AddJsonFile(pluginSettingPath);
             }
-            return builder.Build();
+            var configuration = builder.Build();
+            return new PluginOption(plugins, configuration);
         }
 
         /// <summary>

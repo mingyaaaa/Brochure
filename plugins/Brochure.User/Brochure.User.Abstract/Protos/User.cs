@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace User.Rpc {
+namespace Proto.UserRpc {
 
   /// <summary>Holder for reflection information generated from Protos/user.proto</summary>
   public static partial class UserReflection {
@@ -24,29 +24,30 @@ namespace User.Rpc {
     static UserReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFQcm90b3MvdXNlci5wcm90bxIIVXNlci5ScGMiSwoEVXNlchIKCgJpZBgB",
-            "IAEoCRIMCgRuYW1lGAIgASgJEgsKA2FnZRgDIAEoBRIPCgdpZF9jYXJkGAQg",
-            "ASgJEgsKA3B3ZBgFIAEoCSIaCgtVc2VyUmVxdWVzdBILCgNJZHMYASADKAki",
-            "MQoRVXBkYXRlVXNlclJlcXVlc3QSHAoEZGF0YRgCIAEoCzIOLlVzZXIuUnBj",
-            "LlVzZXIiMAoPTXV0aVVzZXJSZXF1ZXN0Eh0KBVVzZXJzGAEgAygLMg4uVXNl",
-            "ci5ScGMuVXNlciIeCg9GYWlsSWRzUmVzcG9uc2USCwoDSWRzGAEgAygJIi0K",
-            "DFVzZXJSZXNwb25zZRIdCgVVc2VycxgBIAMoCzIOLlVzZXIuUnBjLlVzZXIy",
-            "iwIKC1VzZXJTZXJ2aWNlEjkKCEdldFVzZXJzEhUuVXNlci5ScGMuVXNlclJl",
-            "cXVlc3QaFi5Vc2VyLlJwYy5Vc2VyUmVzcG9uc2USPgoKRGVsZXRlVXNlchIV",
-            "LlVzZXIuUnBjLlVzZXJSZXF1ZXN0GhkuVXNlci5ScGMuRmFpbElkc1Jlc3Bv",
-            "bnNlEkQKClVwZGF0ZVVzZXISGy5Vc2VyLlJwYy5VcGRhdGVVc2VyUmVxdWVz",
-            "dBoZLlVzZXIuUnBjLkZhaWxJZHNSZXNwb25zZRI7CgZJbnNlcnQSGS5Vc2Vy",
-            "LlJwYy5NdXRpVXNlclJlcXVlc3QaFi5Vc2VyLlJwYy5Vc2VyUmVzcG9uc2Vi",
-            "BnByb3RvMw=="));
+            "ChFQcm90b3MvdXNlci5wcm90bxINUHJvdG8uVXNlclJwYyJLCgRVc2VyEgoK",
+            "AmlkGAEgASgJEgwKBG5hbWUYAiABKAkSCwoDYWdlGAMgASgFEg8KB2lkX2Nh",
+            "cmQYBCABKAkSCwoDcHdkGAUgASgJIhoKC1VzZXJSZXF1ZXN0EgsKA0lkcxgB",
+            "IAMoCSI2ChFVcGRhdGVVc2VyUmVxdWVzdBIhCgRkYXRhGAIgASgLMhMuUHJv",
+            "dG8uVXNlclJwYy5Vc2VyIjUKD011dGlVc2VyUmVxdWVzdBIiCgVVc2VycxgB",
+            "IAMoCzITLlByb3RvLlVzZXJScGMuVXNlciIeCg9GYWlsSWRzUmVzcG9uc2US",
+            "CwoDSWRzGAEgAygJIjIKDFVzZXJSZXNwb25zZRIiCgVVc2VycxgBIAMoCzIT",
+            "LlByb3RvLlVzZXJScGMuVXNlcjKzAgoLVXNlclNlcnZpY2USQwoIR2V0VXNl",
+            "cnMSGi5Qcm90by5Vc2VyUnBjLlVzZXJSZXF1ZXN0GhsuUHJvdG8uVXNlclJw",
+            "Yy5Vc2VyUmVzcG9uc2USSAoKRGVsZXRlVXNlchIaLlByb3RvLlVzZXJScGMu",
+            "VXNlclJlcXVlc3QaHi5Qcm90by5Vc2VyUnBjLkZhaWxJZHNSZXNwb25zZRJO",
+            "CgpVcGRhdGVVc2VyEiAuUHJvdG8uVXNlclJwYy5VcGRhdGVVc2VyUmVxdWVz",
+            "dBoeLlByb3RvLlVzZXJScGMuRmFpbElkc1Jlc3BvbnNlEkUKBkluc2VydBIe",
+            "LlByb3RvLlVzZXJScGMuTXV0aVVzZXJSZXF1ZXN0GhsuUHJvdG8uVXNlclJw",
+            "Yy5Vc2VyUmVzcG9uc2ViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.User), global::User.Rpc.User.Parser, new[]{ "Id", "Name", "Age", "IdCard", "Pwd" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.UserRequest), global::User.Rpc.UserRequest.Parser, new[]{ "Ids" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.UpdateUserRequest), global::User.Rpc.UpdateUserRequest.Parser, new[]{ "Data" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.MutiUserRequest), global::User.Rpc.MutiUserRequest.Parser, new[]{ "Users" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.FailIdsResponse), global::User.Rpc.FailIdsResponse.Parser, new[]{ "Ids" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::User.Rpc.UserResponse), global::User.Rpc.UserResponse.Parser, new[]{ "Users" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.User), global::Proto.UserRpc.User.Parser, new[]{ "Id", "Name", "Age", "IdCard", "Pwd" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.UserRequest), global::Proto.UserRpc.UserRequest.Parser, new[]{ "Ids" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.UpdateUserRequest), global::Proto.UserRpc.UpdateUserRequest.Parser, new[]{ "Data" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.MutiUserRequest), global::Proto.UserRpc.MutiUserRequest.Parser, new[]{ "Users" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.FailIdsResponse), global::Proto.UserRpc.FailIdsResponse.Parser, new[]{ "Ids" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Proto.UserRpc.UserResponse), global::Proto.UserRpc.UserResponse.Parser, new[]{ "Users" }, null, null, null, null)
           }));
     }
     #endregion
@@ -67,7 +68,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -404,7 +405,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -582,7 +583,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -614,10 +615,10 @@ namespace User.Rpc {
 
     /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
-    private global::User.Rpc.User data_;
+    private global::Proto.UserRpc.User data_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::User.Rpc.User Data {
+    public global::Proto.UserRpc.User Data {
       get { return data_; }
       set {
         data_ = value;
@@ -711,7 +712,7 @@ namespace User.Rpc {
       }
       if (other.data_ != null) {
         if (data_ == null) {
-          Data = new global::User.Rpc.User();
+          Data = new global::Proto.UserRpc.User();
         }
         Data.MergeFrom(other.Data);
       }
@@ -732,7 +733,7 @@ namespace User.Rpc {
             break;
           case 18: {
             if (data_ == null) {
-              Data = new global::User.Rpc.User();
+              Data = new global::Proto.UserRpc.User();
             }
             input.ReadMessage(Data);
             break;
@@ -754,7 +755,7 @@ namespace User.Rpc {
             break;
           case 18: {
             if (data_ == null) {
-              Data = new global::User.Rpc.User();
+              Data = new global::Proto.UserRpc.User();
             }
             input.ReadMessage(Data);
             break;
@@ -780,7 +781,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -812,12 +813,12 @@ namespace User.Rpc {
 
     /// <summary>Field number for the "Users" field.</summary>
     public const int UsersFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::User.Rpc.User> _repeated_users_codec
-        = pb::FieldCodec.ForMessage(10, global::User.Rpc.User.Parser);
-    private readonly pbc::RepeatedField<global::User.Rpc.User> users_ = new pbc::RepeatedField<global::User.Rpc.User>();
+    private static readonly pb::FieldCodec<global::Proto.UserRpc.User> _repeated_users_codec
+        = pb::FieldCodec.ForMessage(10, global::Proto.UserRpc.User.Parser);
+    private readonly pbc::RepeatedField<global::Proto.UserRpc.User> users_ = new pbc::RepeatedField<global::Proto.UserRpc.User>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::User.Rpc.User> Users {
+    public pbc::RepeatedField<global::Proto.UserRpc.User> Users {
       get { return users_; }
     }
 
@@ -958,7 +959,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1136,7 +1137,7 @@ namespace User.Rpc {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::User.Rpc.UserReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1168,12 +1169,12 @@ namespace User.Rpc {
 
     /// <summary>Field number for the "Users" field.</summary>
     public const int UsersFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::User.Rpc.User> _repeated_users_codec
-        = pb::FieldCodec.ForMessage(10, global::User.Rpc.User.Parser);
-    private readonly pbc::RepeatedField<global::User.Rpc.User> users_ = new pbc::RepeatedField<global::User.Rpc.User>();
+    private static readonly pb::FieldCodec<global::Proto.UserRpc.User> _repeated_users_codec
+        = pb::FieldCodec.ForMessage(10, global::Proto.UserRpc.User.Parser);
+    private readonly pbc::RepeatedField<global::Proto.UserRpc.User> users_ = new pbc::RepeatedField<global::Proto.UserRpc.User>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::User.Rpc.User> Users {
+    public pbc::RepeatedField<global::Proto.UserRpc.User> Users {
       get { return users_; }
     }
 

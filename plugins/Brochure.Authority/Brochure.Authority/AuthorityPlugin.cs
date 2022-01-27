@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Loader;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Brochure.Core;
-using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Brochure.ORM.Extensions;
+using Brochure.ORM.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
+using Proto.UserRpc;
 
 namespace Brochure.Authority
 {
@@ -30,60 +28,30 @@ namespace Brochure.Authority
                 t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(t =>
             {
-                t.RequireHttpsMetadata = false;
-                t.SaveToken = true;
-                t.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("123")),
-                    ValidIssuer = "http://localhost:5000",
-                    ValidAudience = "api"
-                };
             });
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddIdentityCore<Proto.UserRpc.User>().AddRoleStore<Proto.RolesGrpc.Roles>();
             services.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
-        }
-    }
-
-    public static class InitMemoryData
-    {
-        public static IEnumerable<Client> GetClients()
-        {
-            var result = new List<Client>
-            {
-                new Client ()
-                {
-                ClientId = "client1",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret ("123456".Sha256 ()) },
-                AllowedScopes = { "api1" },
-                },
-                new Client ()
-                {
-                ClientId = "2",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret ("123456".Sha256 ()) },
-                AllowedScopes = { "api3" },
-                },
-                new Client ()
-                {
-                ClientId = "3",
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret ("123456".Sha256 ()) },
-                AllowedScopes = { "api3" },
-                }
-            };
-            return result;
+            AddDb(services);
         }
 
-        public static IEnumerable<ApiResource> GetApiResources()
+        /// <summary>
+        /// Adds the db.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        private void AddDb(IServiceCollection services)
         {
-            var result = new List<ApiResource>()
+            services.AddDbCore(t => t.AddMySql(p =>
             {
-                new ApiResource ("api1"),
-                new ApiResource ("api2"),
-                new ApiResource ("api3")
-            };
-            return result;
+                var mysqlBuilder = new MySqlConnectionStringBuilder();
+                var dbSection = PluginOption.Configuration.GetSection("db");
+                mysqlBuilder.Database = dbSection.GetValue<string>("database");
+                mysqlBuilder.UserID = dbSection.GetValue<string>("user");
+                mysqlBuilder.Password = dbSection.GetValue<string>("pwd");
+                mysqlBuilder.Server = dbSection.GetValue<string>("server");
+                p.ConnectionString = mysqlBuilder.ToString();
+            }));
         }
     }
 }

@@ -7,10 +7,10 @@
 
 using grpc = global::Grpc.Core;
 
-namespace User.Rpc {
+namespace Proto.UserRpc {
   public static partial class UserService
   {
-    static readonly string __ServiceName = "User.Rpc.UserService";
+    static readonly string __ServiceName = "Proto.UserRpc.UserService";
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
@@ -46,52 +46,52 @@ namespace User.Rpc {
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::User.Rpc.UserRequest> __Marshaller_User_Rpc_UserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::User.Rpc.UserRequest.Parser));
+    static readonly grpc::Marshaller<global::Proto.UserRpc.UserRequest> __Marshaller_Proto_UserRpc_UserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Proto.UserRpc.UserRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::User.Rpc.UserResponse> __Marshaller_User_Rpc_UserResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::User.Rpc.UserResponse.Parser));
+    static readonly grpc::Marshaller<global::Proto.UserRpc.UserResponse> __Marshaller_Proto_UserRpc_UserResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Proto.UserRpc.UserResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::User.Rpc.FailIdsResponse> __Marshaller_User_Rpc_FailIdsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::User.Rpc.FailIdsResponse.Parser));
+    static readonly grpc::Marshaller<global::Proto.UserRpc.FailIdsResponse> __Marshaller_Proto_UserRpc_FailIdsResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Proto.UserRpc.FailIdsResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::User.Rpc.UpdateUserRequest> __Marshaller_User_Rpc_UpdateUserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::User.Rpc.UpdateUserRequest.Parser));
+    static readonly grpc::Marshaller<global::Proto.UserRpc.UpdateUserRequest> __Marshaller_Proto_UserRpc_UpdateUserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Proto.UserRpc.UpdateUserRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::User.Rpc.MutiUserRequest> __Marshaller_User_Rpc_MutiUserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::User.Rpc.MutiUserRequest.Parser));
+    static readonly grpc::Marshaller<global::Proto.UserRpc.MutiUserRequest> __Marshaller_Proto_UserRpc_MutiUserRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Proto.UserRpc.MutiUserRequest.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse> __Method_GetUsers = new grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(
+    static readonly grpc::Method<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.UserResponse> __Method_GetUsers = new grpc::Method<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.UserResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetUsers",
-        __Marshaller_User_Rpc_UserRequest,
-        __Marshaller_User_Rpc_UserResponse);
+        __Marshaller_Proto_UserRpc_UserRequest,
+        __Marshaller_Proto_UserRpc_UserResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.FailIdsResponse> __Method_DeleteUser = new grpc::Method<global::User.Rpc.UserRequest, global::User.Rpc.FailIdsResponse>(
+    static readonly grpc::Method<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.FailIdsResponse> __Method_DeleteUser = new grpc::Method<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.FailIdsResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "DeleteUser",
-        __Marshaller_User_Rpc_UserRequest,
-        __Marshaller_User_Rpc_FailIdsResponse);
+        __Marshaller_Proto_UserRpc_UserRequest,
+        __Marshaller_Proto_UserRpc_FailIdsResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::User.Rpc.UpdateUserRequest, global::User.Rpc.FailIdsResponse> __Method_UpdateUser = new grpc::Method<global::User.Rpc.UpdateUserRequest, global::User.Rpc.FailIdsResponse>(
+    static readonly grpc::Method<global::Proto.UserRpc.UpdateUserRequest, global::Proto.UserRpc.FailIdsResponse> __Method_UpdateUser = new grpc::Method<global::Proto.UserRpc.UpdateUserRequest, global::Proto.UserRpc.FailIdsResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "UpdateUser",
-        __Marshaller_User_Rpc_UpdateUserRequest,
-        __Marshaller_User_Rpc_FailIdsResponse);
+        __Marshaller_Proto_UserRpc_UpdateUserRequest,
+        __Marshaller_Proto_UserRpc_FailIdsResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse> __Method_Insert = new grpc::Method<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse>(
+    static readonly grpc::Method<global::Proto.UserRpc.MutiUserRequest, global::Proto.UserRpc.UserResponse> __Method_Insert = new grpc::Method<global::Proto.UserRpc.MutiUserRequest, global::Proto.UserRpc.UserResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "Insert",
-        __Marshaller_User_Rpc_MutiUserRequest,
-        __Marshaller_User_Rpc_UserResponse);
+        __Marshaller_Proto_UserRpc_MutiUserRequest,
+        __Marshaller_Proto_UserRpc_UserResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::User.Rpc.UserReflection.Descriptor.Services[0]; }
+      get { return global::Proto.UserRpc.UserReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Base class for server-side implementations of UserService</summary>
@@ -99,25 +99,25 @@ namespace User.Rpc {
     public abstract partial class UserServiceBase
     {
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> GetUsers(global::User.Rpc.UserRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Proto.UserRpc.UserResponse> GetUsers(global::Proto.UserRpc.UserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.FailIdsResponse> DeleteUser(global::User.Rpc.UserRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Proto.UserRpc.FailIdsResponse> DeleteUser(global::Proto.UserRpc.UserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.FailIdsResponse> UpdateUser(global::User.Rpc.UpdateUserRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Proto.UserRpc.FailIdsResponse> UpdateUser(global::Proto.UserRpc.UpdateUserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::User.Rpc.UserResponse> Insert(global::User.Rpc.MutiUserRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Proto.UserRpc.UserResponse> Insert(global::Proto.UserRpc.MutiUserRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -152,82 +152,82 @@ namespace User.Rpc {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.UserResponse GetUsers(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Proto.UserRpc.UserResponse GetUsers(global::Proto.UserRpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetUsers(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.UserResponse GetUsers(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual global::Proto.UserRpc.UserResponse GetUsers(global::Proto.UserRpc.UserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetUsers, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUsersAsync(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.UserResponse> GetUsersAsync(global::Proto.UserRpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetUsersAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> GetUsersAsync(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.UserResponse> GetUsersAsync(global::Proto.UserRpc.UserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetUsers, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.FailIdsResponse DeleteUser(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Proto.UserRpc.FailIdsResponse DeleteUser(global::Proto.UserRpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteUser(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.FailIdsResponse DeleteUser(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual global::Proto.UserRpc.FailIdsResponse DeleteUser(global::Proto.UserRpc.UserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_DeleteUser, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.FailIdsResponse> DeleteUserAsync(global::User.Rpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.FailIdsResponse> DeleteUserAsync(global::Proto.UserRpc.UserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteUserAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.FailIdsResponse> DeleteUserAsync(global::User.Rpc.UserRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.FailIdsResponse> DeleteUserAsync(global::Proto.UserRpc.UserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteUser, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.FailIdsResponse UpdateUser(global::User.Rpc.UpdateUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Proto.UserRpc.FailIdsResponse UpdateUser(global::Proto.UserRpc.UpdateUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateUser(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.FailIdsResponse UpdateUser(global::User.Rpc.UpdateUserRequest request, grpc::CallOptions options)
+      public virtual global::Proto.UserRpc.FailIdsResponse UpdateUser(global::Proto.UserRpc.UpdateUserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_UpdateUser, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.FailIdsResponse> UpdateUserAsync(global::User.Rpc.UpdateUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.FailIdsResponse> UpdateUserAsync(global::Proto.UserRpc.UpdateUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return UpdateUserAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.FailIdsResponse> UpdateUserAsync(global::User.Rpc.UpdateUserRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.FailIdsResponse> UpdateUserAsync(global::Proto.UserRpc.UpdateUserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_UpdateUser, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.UserResponse Insert(global::User.Rpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Proto.UserRpc.UserResponse Insert(global::Proto.UserRpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return Insert(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::User.Rpc.UserResponse Insert(global::User.Rpc.MutiUserRequest request, grpc::CallOptions options)
+      public virtual global::Proto.UserRpc.UserResponse Insert(global::Proto.UserRpc.MutiUserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_Insert, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> InsertAsync(global::User.Rpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.UserResponse> InsertAsync(global::Proto.UserRpc.MutiUserRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return InsertAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::User.Rpc.UserResponse> InsertAsync(global::User.Rpc.MutiUserRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::Proto.UserRpc.UserResponse> InsertAsync(global::Proto.UserRpc.MutiUserRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_Insert, null, options, request);
       }
@@ -258,10 +258,10 @@ namespace User.Rpc {
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     public static void BindService(grpc::ServiceBinderBase serviceBinder, UserServiceBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_GetUsers, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UserRequest, global::User.Rpc.UserResponse>(serviceImpl.GetUsers));
-      serviceBinder.AddMethod(__Method_DeleteUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UserRequest, global::User.Rpc.FailIdsResponse>(serviceImpl.DeleteUser));
-      serviceBinder.AddMethod(__Method_UpdateUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.UpdateUserRequest, global::User.Rpc.FailIdsResponse>(serviceImpl.UpdateUser));
-      serviceBinder.AddMethod(__Method_Insert, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::User.Rpc.MutiUserRequest, global::User.Rpc.UserResponse>(serviceImpl.Insert));
+      serviceBinder.AddMethod(__Method_GetUsers, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.UserResponse>(serviceImpl.GetUsers));
+      serviceBinder.AddMethod(__Method_DeleteUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Proto.UserRpc.UserRequest, global::Proto.UserRpc.FailIdsResponse>(serviceImpl.DeleteUser));
+      serviceBinder.AddMethod(__Method_UpdateUser, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Proto.UserRpc.UpdateUserRequest, global::Proto.UserRpc.FailIdsResponse>(serviceImpl.UpdateUser));
+      serviceBinder.AddMethod(__Method_Insert, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Proto.UserRpc.MutiUserRequest, global::Proto.UserRpc.UserResponse>(serviceImpl.Insert));
     }
 
   }

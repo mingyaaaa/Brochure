@@ -1,5 +1,5 @@
 syntax = "proto3";
-package Proto.Roles.Grpc;
+package Proto.RolesGrpc;
 message Roles{
     string id=1;
     string name=2;

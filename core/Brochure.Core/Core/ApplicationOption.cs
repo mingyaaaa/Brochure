@@ -31,6 +31,5 @@ namespace Brochure.Core
         /// Gets the configuration.
         /// </summary>
         public IConfiguration Configuration { get; }
-
     }
 }
