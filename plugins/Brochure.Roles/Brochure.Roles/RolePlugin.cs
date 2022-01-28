@@ -1,4 +1,5 @@
 ﻿using Brochure.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,9 @@ namespace Brochure.Roles
     /// </summary>
     public class RolePlugin : Plugins
     {
+        public override void ConfigureService(IServiceCollection services)
+        {
+            services.AddScoped<IRolesDal, RoleDal>();
+        }
     }
 }
