@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+package Proto.$safeprojectname$Grpc;
+message Roles{
+    string id=1;
+    string name=2;
+}
+message RolesRequest {
+    repeated string Ids=1;
+}
+message MutiRolesRequest{
+    repeated Roles Roles=1;
+}
+message FailIdsResponse {
+    repeated string Ids=1;
+}
+message RolesResponse{
+    repeated Roles Roles=1;
+}
+service RolesService {
+    rpc GetRoles (RolesRequest) returns (RolesResponse);
+    rpc DeleteRoles (RolesRequest) returns (FailIdsResponse);
+    rpc UpdateRoles (RolesRequest) returns(FailIdsResponse);
+    rpc Insert (RolesRequest) returns (RolesResponse);
+    rpc InsertMuti (MutiRolesRequest) returns (RolesResponse);
+}

@@ -7,6 +7,7 @@ using Brochure.User.Entrities;
 using Brochure.Abstract.Extensions;
 using static Proto.UserRpc.UserService;
 using Proto.UserRpc;
+using Brochure.User.Abstract;
 
 namespace Brochure.User.Services
 {

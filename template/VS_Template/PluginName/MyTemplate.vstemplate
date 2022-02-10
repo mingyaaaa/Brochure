@@ -1,0 +1,44 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>PluginSubTemplate</Name>
+    <Description>&lt;没有可用的说明&gt;</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>PluginSubTemplate</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+
+    <LanguageTag>csharp</LanguageTag>
+    <PlatformTag>windows</PlatformTag>
+    <PlatformTag>linux</PlatformTag>
+    <Hidden>true</Hidden>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname$.csproj" File="PluginName.csproj" ReplaceParameters="true">
+      <Folder Name="Controllers" TargetFolderName="Controllers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Controller.cs">PluginNameController.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Dals" TargetFolderName="Dals">
+        <ProjectItem ReplaceParameters="true" TargetFileName="I$safeprojectname$Dal.cs">IPluginNameDal.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Dal.cs">PluginNameDal.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Entrities" TargetFolderName="Entrities">
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Entrity.cs">PluginNameEntrity.cs</ProjectItem>
+      </Folder>
+      <Folder Name="$safeprojectname$Services" TargetFolderName="$safeprojectname$Services" />
+      <Folder Name="Repositorys" TargetFolderName="Repositorys">
+        <ProjectItem ReplaceParameters="true" TargetFileName="I$safeprojectname$Repository.cs">IPluginNameRepository.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Repository.cs">PluginNameRepository.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Plugin.cs">PluginNamePlugin.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="plugin.config">plugin.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="pluginSetting.json">pluginSetting.json</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

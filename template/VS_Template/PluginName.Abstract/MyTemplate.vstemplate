@@ -1,0 +1,40 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>PluginTemplate.Abstract</Name>
+    <Description>&lt;没有可用的说明&gt;</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>PluginTemplate.Abstract</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+    <LanguageTag>csharp</LanguageTag>
+    <PlatformTag>windows</PlatformTag>
+    <PlatformTag>linux</PlatformTag>
+    <Hidden>true</Hidden>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="$safeprojectname$.Abstract.csproj" File="PluginName.Abstract.csproj" ReplaceParameters="true">
+      <Folder Name="Protos" TargetFolderName="Protos">
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.cs">PluginName.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.proto">PluginName.proto</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Grpc.cs">PluginNameGrpc.cs</ProjectItem>
+      </Folder>
+      <Folder Name="RequestModel" TargetFolderName="RequestModel">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ReqAdd$safeprojectname$Model.cs">ReqAddPluginNameModel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ReqUpdate$safeprojectname$Model.cs">ReqUpdatePluginNameModel.cs</ProjectItem>
+      </Folder>
+      <Folder Name="ResponseModel" TargetFolderName="ResponseModel">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Rsp$safeprojectname$Model.cs">RspPluginNameModel.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="I$safeprojectname$Service.cs">IPluginNameService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$ServiceModel.cs">PluginNameServiceModel.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="WebApiPathNames.cs">WebApiPathNames.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

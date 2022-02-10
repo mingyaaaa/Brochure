@@ -1,0 +1,22 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="ProjectGroup">
+  <TemplateData>
+    <Name>PluginTemplate</Name>
+    <Description>插件模板</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1</SortOrder>
+
+    <LanguageTag>csharp</LanguageTag>
+    <PlatformTag>windows</PlatformTag>
+    <PlatformTag>linux</PlatformTag>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectCollection>
+        <ProjectTemplateLink ProjectName="$safeprojectname$">
+            PluginName\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+       <ProjectTemplateLink ProjectName="$safeprojectname$.Abstract">
+            PluginName.Abstract\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+    </ProjectCollection>
+  </TemplateContent>
+</VSTemplate>
