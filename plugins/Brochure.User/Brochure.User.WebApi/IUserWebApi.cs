@@ -1,9 +1,6 @@
 ﻿using Brochure.User.Abstract.RequestModel;
 using Brochure.User.Abstract.ResponseModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;

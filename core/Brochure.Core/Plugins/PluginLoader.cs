@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
-using Brochure.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -32,7 +31,7 @@ namespace Brochure.Core
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
         private readonly ApplicationOption _applicationOption;
-        private readonly IHostEnvironment _hostEnvironment;
+        private readonly IPluginConfigurationLoad _pluginConfigurationLoad;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginLoader"/> class.
@@ -48,6 +47,7 @@ namespace Brochure.Core
         /// <param name="loadActions"></param>
         /// <param name="unLoadActions"></param>
         /// <param name="applicationOption"></param>
+        /// <param name="pluginConfigurationLoad"></param>
         /// <param name="hostEnvironment"></param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
@@ -59,8 +59,7 @@ namespace Brochure.Core
             IModuleLoader moduleLoader,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
-            ApplicationOption applicationOption,
-            IHostEnvironment hostEnvironment)
+            IPluginConfigurationLoad pluginConfigurationLoad)
         {
             this.directory = directory;
             this.jsonUtil = jsonUtil;
@@ -73,8 +72,7 @@ namespace Brochure.Core
             _moduleLoader = moduleLoader;
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
-            _applicationOption = applicationOption;
-            _hostEnvironment = hostEnvironment;
+            _pluginConfigurationLoad = pluginConfigurationLoad;
         }
 
         /// <summary>
@@ -99,7 +97,7 @@ namespace Brochure.Core
                     throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
                 var plugin = (Plugins)objectFactory.Create(pluginType);
-                SetPluginValues(pluginDir, pluginConfig, assemably, ref plugin);
+                SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
                 pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
                 return plugin;
             }
@@ -245,7 +243,7 @@ namespace Brochure.Core
         /// <param name="config">The config.</param>
         /// <param name="assembly">The assembly.</param>
         /// <param name="plugin">The plugin.</param>
-        private void SetPluginValues(string pluginDir, PluginConfig config, Assembly assembly, ref Plugins plugin)
+        private void SetPluginValues(string pluginDir, PluginConfig config, Assembly assembly, Plugins plugin)
         {
             if (config == null)
                 throw new ArgumentException(nameof(PluginConfig));
@@ -258,52 +256,17 @@ namespace Brochure.Core
             plugin.Version = config.Version;
             plugin.Order = config.Order;
             plugin.PluginDirectory = pluginDir;
-            plugin.PluginOption = GetPluginConfigSection(config, pluginDir, plugin);
+            plugin.Configuration = GetPluginConfigSection(plugin);
         }
 
         /// <summary>
         /// Gets the plugin config section.
         /// </summary>
-        /// <param name="pluginConfig">The plugin config.</param>
-        /// <param name="pluginDir"></param>
         /// <param name="plugins"></param>
         /// <returns>An IConfiguration.</returns>
-        private PluginOption GetPluginConfigSection(PluginConfig pluginConfig, string pluginDir, Plugins plugins)
+        private IConfiguration GetPluginConfigSection(Plugins plugins)
         {
-            var dllName = Path.GetFileNameWithoutExtension(pluginConfig.AssemblyName);
-            IConfiguration configurtion = _applicationOption.Configuration?.GetSection(dllName);
-            var builder = new ConfigurationBuilder();
-            if (configurtion == null)
-            {
-                configurtion = _applicationOption.Configuration?.GetSection(pluginConfig.Key.ToString());
-                if (configurtion != null)
-                    builder.AddConfiguration(configurtion);
-            }
-            //查询插件中的配置文件 默认使用插件中的配置文件覆盖 主程序中的配置文件
-
-            var pluginSettingEnvFile = GetPluginSettingFile();
-            var pluginSettingFile = "pluginSetting.json";
-            var pluginSettingPath = Path.Combine(pluginDir, pluginSettingFile);
-            var pluginSettingEnvPath = Path.Combine(pluginDir, pluginSettingEnvFile);
-            if (File.Exists(pluginSettingEnvPath))
-            {
-                builder.AddJsonFile(pluginSettingEnvPath);
-            }
-            if (File.Exists(pluginSettingPath))
-            {
-                builder.AddJsonFile(pluginSettingPath);
-            }
-            var configuration = builder.Build();
-            return new PluginOption(plugins, configuration);
-        }
-
-        /// <summary>
-        /// Gets the plugin setting file.
-        /// </summary>
-        /// <returns>A string.</returns>
-        private string GetPluginSettingFile()
-        {
-            return $"plugin{_hostEnvironment.EnvironmentName}.json";
+            return _pluginConfigurationLoad.GetPluginConfiguration(plugins);
         }
 
         /// <summary>

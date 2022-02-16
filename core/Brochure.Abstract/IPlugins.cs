@@ -42,6 +42,11 @@ namespace Brochure.Abstract
         string AssemblyName { get; }
 
         /// <summary>
+        /// Gets the plugin directory.
+        /// </summary>
+        string PluginDirectory { get; }
+
+        /// <summary>
         /// 插件程序集
         /// </summary>
         Assembly Assembly { get; }
