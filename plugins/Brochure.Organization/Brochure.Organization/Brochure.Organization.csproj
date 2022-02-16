@@ -11,8 +11,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8104" />
-	  <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8104" />
+	  <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8140" />
+	  <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.8140" />
     <PackageReference Include="Grpc.Core" Version="2.42.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>

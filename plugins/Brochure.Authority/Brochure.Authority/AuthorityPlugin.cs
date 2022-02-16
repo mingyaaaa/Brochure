@@ -45,7 +45,7 @@ namespace Brochure.Authority
             services.AddDbCore(t => t.AddMySql(p =>
             {
                 var mysqlBuilder = new MySqlConnectionStringBuilder();
-                var dbSection = PluginOption.Configuration.GetSection("db");
+                var dbSection = Configuration.GetSection("db");
                 mysqlBuilder.Database = dbSection.GetValue<string>("database");
                 mysqlBuilder.UserID = dbSection.GetValue<string>("user");
                 mysqlBuilder.Password = dbSection.GetValue<string>("pwd");

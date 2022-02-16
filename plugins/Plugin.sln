@@ -31,6 +31,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.User.Abstract", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.User.WebApi", "Brochure.User\Brochure.User.WebApi\Brochure.User.WebApi.csproj", "{5BD0E547-B6E0-42CF-9C2E-F499A60AA467}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B85D1E92-EC7E-4AA1-BD54-31961351C3B3}"
+	ProjectSection(SolutionItems) = preProject
+		..\build\copy_plugin.targets = ..\build\copy_plugin.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
