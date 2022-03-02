@@ -83,13 +83,13 @@ export const layout: Partial<ComponentsState> = {
     </div>
   ),
   DashboardTile: ({ columns, rows, children }) => <div className={`tile cols-${columns} rows-${rows}`}>{children}</div>,
-  // Layout: ({ children }) => (
-  //   <div>
-  //     <Notifications />
-  //     <Menu type="general" />
-  //     <div className="container">{children}</div>
-  //   </div>
-  // ),
+  Layout: ({ children }) => (
+    <div>
+      <Notifications />
+      <Menu type="general" />
+      <div className="container">{children}</div>
+    </div>
+  ),
   MenuContainer: ({ children }) => {
     const [collapsed, setCollapsed] = React.useState(true);
     return (

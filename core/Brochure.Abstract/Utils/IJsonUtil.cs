@@ -30,6 +30,13 @@ namespace Brochure.Abstract.Utils
         bool ObjectJsonValid(string str);
 
         /// <summary>
+        /// Are the json.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A bool.</returns>
+        bool IsJson(string str);
+
+        /// <summary>
         /// json对象转化为 对象
         /// </summary>
         /// <param name="str"></param>

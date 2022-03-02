@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
@@ -28,39 +31,27 @@ namespace Brochure.Utils
         }
 
         /// <summary>
-        /// Arrays the json valid.
+        /// Arrays the json valid. 只是判断是否是[] 暂不能通过该方法校验Json格式
         /// </summary>
         /// <param name="str">The str.</param>
         /// <returns>A bool.</returns>
         public bool ArrayJsonValid(string str)
         {
-            try
-            {
-                var json = JsonDocument.Parse(str);
-                return json.RootElement.ValueKind == JsonValueKind.Array;
-            }
-            catch (System.Exception)
-            {
+            if (str == null)
                 return false;
-            }
+            return str.StartsWith("[") && str.EndsWith("]");
         }
 
         /// <summary>
-        /// Objects the json valid.
+        /// Objects the json valid.只是判断是否是{} ，暂不能通过该方法校验Json格式
         /// </summary>
         /// <param name="str">The str.</param>
         /// <returns>A bool.</returns>
         public bool ObjectJsonValid(string str)
         {
-            try
-            {
-                var json = JsonDocument.Parse(str);
-                return json.RootElement.ValueKind == JsonValueKind.Object;
-            }
-            catch (System.Exception)
-            {
+            if (str == null)
                 return false;
-            }
+            return str.StartsWith("{") && str.EndsWith("}");
         }
 
         /// <summary>
@@ -126,6 +117,16 @@ namespace Brochure.Utils
             return new ConfigurationBuilder().AddJsonFile(path).Build().Get<T>();
         }
 
-
+        /// <summary>
+        /// Are the json. 暂不能通过该方法校验Json格式
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <returns>A bool.</returns>
+        public bool IsJson(string str)
+        {
+            if (str == null)
+                return false;
+            return ArrayJsonValid(str) || ObjectJsonValid(str);
+        }
     }
 }
