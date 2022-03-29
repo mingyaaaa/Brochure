@@ -9,7 +9,7 @@ namespace Plugin.Abstract.ResponseModel
     /// <summary>
     /// The rsp user model.
     /// </summary>
-    public class Rsp$ext_safeprojectname$Model
+    public class RspLoginModel
     {
         /// <summary>
         /// Gets or sets the id.

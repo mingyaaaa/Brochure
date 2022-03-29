@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plugin.Abstract
 {
-    public class $ext_safeprojectname$ServiceModel
+    public class LoginServiceModel
     {
     }
 }

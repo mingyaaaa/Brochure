@@ -118,15 +118,21 @@ namespace Brochure.Utils
         }
 
         /// <summary>
-        /// Are the json. 暂不能通过该方法校验Json格式
+        /// Are the json. 此方法 性能较差 不建议频繁使用
         /// </summary>
         /// <param name="str">The str.</param>
         /// <returns>A bool.</returns>
         public bool IsJson(string str)
         {
-            if (str == null)
+            try
+            {
+                JsonDocument.Parse(str);
+                return true;
+            }
+            catch (Exception e)
+            {
                 return false;
-            return ArrayJsonValid(str) || ObjectJsonValid(str);
+            }
         }
     }
 }

@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\$ext_safeprojectname$.proto" />
+    <None Remove="Protos\Login.proto" />
   </ItemGroup>
 	<ItemGroup>
-		<Protobuf Include="Protos\$ext_safeprojectname$.proto" CompileOutputs="false">
+		<Protobuf Include="Protos\Login.proto" CompileOutputs="false">
 			<OutputDir>
 			</OutputDir>
 		</Protobuf>

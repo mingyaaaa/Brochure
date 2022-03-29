@@ -19,21 +19,21 @@
     <Hidden>true</Hidden>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="$safeprojectname$.Abstract.csproj" File="PluginName.Abstract.csproj" ReplaceParameters="true">
+    <Project TargetFileName="$ext_safeprojectname$.Abstract.csproj" File="PluginName.Abstract.csproj" ReplaceParameters="true">
       <Folder Name="Protos" TargetFolderName="Protos">
-        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.cs">PluginName.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$.proto">PluginName.proto</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$Grpc.cs">PluginNameGrpc.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_safeprojectname$.cs">PluginName.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_safeprojectname$.proto">PluginName.proto</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="$ext_safeprojectname$Grpc.cs">PluginNameGrpc.cs</ProjectItem>
       </Folder>
       <Folder Name="RequestModel" TargetFolderName="RequestModel">
-        <ProjectItem ReplaceParameters="true" TargetFileName="ReqAdd$safeprojectname$Model.cs">ReqAddPluginNameModel.cs</ProjectItem>
-        <ProjectItem ReplaceParameters="true" TargetFileName="ReqUpdate$safeprojectname$Model.cs">ReqUpdatePluginNameModel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ReqAdd$ext_safeprojectname$Model.cs">ReqAddPluginNameModel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ReqUpdate$ext_safeprojectname$Model.cs">ReqUpdatePluginNameModel.cs</ProjectItem>
       </Folder>
       <Folder Name="ResponseModel" TargetFolderName="ResponseModel">
-        <ProjectItem ReplaceParameters="true" TargetFileName="Rsp$safeprojectname$Model.cs">RspPluginNameModel.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Rsp$ext_safeprojectname$Model.cs">RspPluginNameModel.cs</ProjectItem>
       </Folder>
-      <ProjectItem ReplaceParameters="true" TargetFileName="I$safeprojectname$Service.cs">IPluginNameService.cs</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="$safeprojectname$ServiceModel.cs">PluginNameServiceModel.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="I$ext_safeprojectname$Service.cs">IPluginNameService.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="$ext_safeprojectname$ServiceModel.cs">PluginNameServiceModel.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="WebApiPathNames.cs">WebApiPathNames.cs</ProjectItem>
     </Project>
   </TemplateContent>

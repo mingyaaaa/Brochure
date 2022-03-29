@@ -13,7 +13,6 @@
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
     <CreateInPlace>true</CreateInPlace>
     <Icon>__TemplateIcon.ico</Icon>
-
     <LanguageTag>csharp</LanguageTag>
     <PlatformTag>windows</PlatformTag>
     <PlatformTag>linux</PlatformTag>

@@ -2,16 +2,16 @@
 
 namespace Plugin.Abstract
 {
-    public interface I$safeprojectname$Service
+    public interface I$ext_safeprojectname$Service
     {
-        ValueTask<IEnumerable<$safeprojectname$ServiceModel>> Get$safeprojectname$();
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Get$ext_safeprojectname$();
 
-        ValueTask<IEnumerable<$safeprojectname$ServiceModel>> GetUsers(IEnumerable<string> ids);
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> GetUsers(IEnumerable<string> ids);
 
-        ValueTask<int> Update$safeprojectname$(string id, IRecord record);
+        ValueTask<int> Update$ext_safeprojectname$(string id, IRecord record);
 
-        ValueTask<int> Delete$safeprojectname$(IEnumerable<string> ids);
+        ValueTask<int> Delete$ext_safeprojectname$(IEnumerable<string> ids);
 
-        ValueTask<IEnumerable<$safeprojectname$ServiceModel>> Insert$safeprojectname$(IEnumerable<$safeprojectname$ServiceModel> users);
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Insert$ext_safeprojectname$(IEnumerable<$ext_safeprojectname$ServiceModel> users);
     }
 }

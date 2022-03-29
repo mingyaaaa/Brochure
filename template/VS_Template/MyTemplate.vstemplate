@@ -14,7 +14,7 @@
         <ProjectTemplateLink ProjectName="$safeprojectname$">
             PluginName\MyTemplate.vstemplate
         </ProjectTemplateLink>
-       <ProjectTemplateLink ProjectName="$safeprojectname$.Abstract">
+       <ProjectTemplateLink ProjectName="$safeprojectname$.Abstract" CopyParameters="true">
             PluginName.Abstract\MyTemplate.vstemplate
         </ProjectTemplateLink>
     </ProjectCollection>
