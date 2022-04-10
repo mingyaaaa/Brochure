@@ -1,25 +1,25 @@
 ﻿syntax = "proto3";
-package Proto.$safeprojectname$Grpc;
-message Roles{
+package Proto.$ext_safeprojectname$Grpc;
+message $ext_safeprojectname${
     string id=1;
     string name=2;
 }
-message RolesRequest {
+message $ext_safeprojectname$Request {
     repeated string Ids=1;
 }
-message MutiRolesRequest{
-    repeated Roles Roles=1;
+message Muti$ext_safeprojectname$Request{
+    repeated $ext_safeprojectname$ $ext_safeprojectname$=1;
 }
 message FailIdsResponse {
     repeated string Ids=1;
 }
-message RolesResponse{
-    repeated Roles Roles=1;
+message $ext_safeprojectname$Response{
+    repeated $ext_safeprojectname$ $ext_safeprojectname$=1;
 }
-service RolesService {
-    rpc GetRoles (RolesRequest) returns (RolesResponse);
-    rpc DeleteRoles (RolesRequest) returns (FailIdsResponse);
-    rpc UpdateRoles (RolesRequest) returns(FailIdsResponse);
-    rpc Insert (RolesRequest) returns (RolesResponse);
-    rpc InsertMuti (MutiRolesRequest) returns (RolesResponse);
+service $ext_safeprojectname$Service {
+    rpc Get$ext_safeprojectname$ ($ext_safeprojectname$Request) returns ($ext_safeprojectname$Response);
+    rpc Delete$ext_safeprojectname$ ($ext_safeprojectname$Request) returns (FailIdsResponse);
+    rpc Update$ext_safeprojectname$ ($ext_safeprojectname$Request) returns(FailIdsResponse);
+    rpc Insert ($ext_safeprojectname$Request) returns ($ext_safeprojectname$Response);
+    rpc InsertMuti (Muti$ext_safeprojectname$Request) returns ($ext_safeprojectname$Response);
 }

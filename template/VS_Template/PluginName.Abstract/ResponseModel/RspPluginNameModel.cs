@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Plugin.Abstract.ResponseModel
 {
-    /// <summary>
-    /// The rsp user model.
-    /// </summary>
     public class Rsp$ext_safeprojectname$Model
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
         public string Id { get; set; }
     }
 }

@@ -11,9 +11,5 @@ namespace Plugin.Abstract.ResponseModel
     /// </summary>
     public class RspLoginModel
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public string Id { get; set; }
     }
 }

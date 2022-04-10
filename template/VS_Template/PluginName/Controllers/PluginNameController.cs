@@ -27,11 +27,6 @@ namespace PluginTemplate.Controllers
             _objectFactory = objectFactory;
         }
 
-        /// <summary>
-        /// Adds the user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns>A Task.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(Result<Rsp$safeprojectname$Model>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Add$safeprojectname$([FromBody] ReqAdd$safeprojectname$Model user)
@@ -44,11 +39,7 @@ namespace PluginTemplate.Controllers
             return this.JsonData(rsp);
         }
 
-        /// <summary>
-        /// Deletes the user.
-        /// </summary>
-        /// <param name="userIds">The user ids.</param>
-        /// <returns>A Task.</returns>
+
         [HttpDelete]
         public async Task<IActionResult> Delete$safeprojectname$([FromQuery] string[] userIds)
         {
@@ -56,12 +47,6 @@ namespace PluginTemplate.Controllers
             return this.JsonData(r);
         }
 
-        /// <summary>
-        /// Updates the user.
-        /// </summary>
-        /// <param name="userId">The user id.</param>
-        /// <param name="model">The model.</param>
-        /// <returns>A Task.</returns>
         [HttpPatch]
         public async Task<IActionResult> Update$safeprojectname$([FromQuery] string userId, [FromBody] ReqUpdate$safeprojectname$Model model)
         {
