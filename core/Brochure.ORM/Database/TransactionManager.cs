@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Brochure.ORM.Database
 {
@@ -69,7 +65,8 @@ namespace Brochure.ORM.Database
         /// <summary>
         /// Gets a value indicating whether is empty.
         /// </summary>
-        public bool IsEmpty { get { return transactions.Count == 0; } }
+        public bool IsEmpty
+        { get { return transactions.Count == 0; } }
 
         /// <summary>
         /// Removes the transaction.

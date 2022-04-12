@@ -40,22 +40,19 @@ namespace LinqDbQueryTest.Querys
             Assert.AreEqual("aaa", name);
         }
 
-
         /// <summary>
         /// The a.
         /// </summary>
         private class A
         {
-
-
         }
+
         /// <summary>
         /// The b.
         /// </summary>
         [Table("aaa")]
         public class B
         {
-
         }
     }
 }

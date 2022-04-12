@@ -1,11 +1,9 @@
-﻿using Brochure.Core.Extenstions;
-using Brochure.ORM.Querys;
+﻿using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace Brochure.ORM

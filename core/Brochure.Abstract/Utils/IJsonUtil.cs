@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Configuration;
-
 namespace Brochure.Abstract.Utils
 {
     /// <summary>

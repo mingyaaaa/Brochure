@@ -1,10 +1,8 @@
-using System;
-using System.Data;
-using System.Reflection;
-using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
 using Brochure.ORM.Database;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Brochure.ORM.Atrributes
 {

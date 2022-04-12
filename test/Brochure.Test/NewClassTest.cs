@@ -1,9 +1,12 @@
-﻿using System;
-using System.Linq;
-using Brochure.Abstract.Extensions;
+﻿using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
+using Mapster;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Brochure.Core.Test
 {
@@ -27,7 +30,7 @@ namespace Brochure.Core.Test
                 ProTime = DateTime.Now,
                 ProString = "ProString"
             };
-            var doc = new Record(obj.AsDictionary());
+            var doc = new Record(obj.Adapt<IDictionary<string, object>>());
             Assert.AreEqual(obj.ProInt, doc[nameof(obj.ProInt)]);
             Assert.AreEqual(obj.ProTime, doc[nameof(obj.ProTime)]);
             Assert.AreEqual(obj.ProString, doc[nameof(obj.ProString)]);

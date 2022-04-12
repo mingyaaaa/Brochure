@@ -1,5 +1,4 @@
 using AspectCore.Abstractions.DependencyInjection;
-using Brochure.ORM;
 using Brochure.ORM.Database;
 
 namespace Brochure.ORM.MySql

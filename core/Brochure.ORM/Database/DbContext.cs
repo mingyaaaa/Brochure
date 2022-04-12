@@ -1,6 +1,7 @@
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
-using Brochure.Core.PluginsDI;
+using Brochure.Core;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -199,12 +200,9 @@ namespace Brochure.ORM
             command.Parameters.AddRange(sql.Parameters);
             using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
             var list = new List<T>();
-            Func<IGetValue, T> fun = t => _objectFactory.Create<T>(t);
-            if (typeof(T).IsAssignableFrom(typeof(IRecord)))
-                fun = t => new Record(t) as T;
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
-                var t = fun(new DataReaderGetValue(reader));
+                var t = reader.As<T>();
                 list.Add(t);
             }
             return list;
@@ -228,7 +226,7 @@ namespace Brochure.ORM
             {
                 while (await reader.ReadAsync().ConfigureAwait(false))
                 {
-                    var t = new Record(new DataReaderGetValue(reader));
+                    var t = reader.As<IRecord>();
                     list.Add(t);
                 }
             } while (await reader.NextResultAsync());

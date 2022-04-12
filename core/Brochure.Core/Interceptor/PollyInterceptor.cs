@@ -1,15 +1,15 @@
+using Brochure.Core.RPC;
+using Castle.DynamicProxy;
+using Polly;
 using System;
 using System.Threading.Tasks;
-using AspectCore.DynamicProxy;
-using Brochure.Core.RPC;
-using Polly;
 
 namespace Brochure.Core.Interceptor
 {
     /// <summary>
     /// The polly interceptor.
     /// </summary>
-    public class PollyInterceptor : AbstractInterceptor
+    public class PollyInterceptor : IInterceptor
     {
         private readonly PollyOption option;
 
@@ -22,17 +22,11 @@ namespace Brochure.Core.Interceptor
             this.option = option ??
                 throw new ArgumentNullException(nameof(option));
         }
-        /// <summary>
-        /// Invokes the.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="next">The next.</param>
-        /// <returns>A Task.</returns>
-        public override async Task Invoke(AspectContext context, AspectDelegate next)
+
+        public async void Intercept(IInvocation invocation)
         {
             var policy = Policy.Handle<Exception>().RetryAsync(this.option.RetryCount);
-            await policy.ExecuteAsync(() => next?.Invoke(context));
+            await policy.ExecuteAsync(() => Task.Run(invocation.Proceed));
         }
     }
-
 }

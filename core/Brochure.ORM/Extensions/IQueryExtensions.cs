@@ -1,5 +1,4 @@
-﻿using Brochure.ORM.Querys;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Brochure.ORM.Extensions
 {

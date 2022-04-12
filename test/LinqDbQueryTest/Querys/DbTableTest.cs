@@ -1,8 +1,4 @@
-﻿using AspectCore.Extensions.DependencyInjection;
-using AutoFixture;
-using AutoFixture.AutoMoq;
-using Brochure.Core.PluginsDI;
-using Brochure.Core.Server;
+﻿using Brochure.Core.Server;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
@@ -12,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
-using System;
 using System.Threading.Tasks;
 
 namespace LinqDbQueryTest
@@ -52,7 +47,7 @@ namespace LinqDbQueryTest
             service.AddDbCore(p => p.AddMySql(t =>
             {
             }));
-            var provider = service.BuildServiceContextProvider();
+            var provider = service.BuildServiceProvider();
             using var socpe = provider.CreateScope();
             var taple = socpe.ServiceProvider.GetService<DbTable>();
         }

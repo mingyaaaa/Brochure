@@ -1,9 +1,9 @@
-using System.Diagnostics;
-using System.Linq;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Brochure.Test
 {
@@ -68,6 +68,7 @@ namespace Brochure.Test
             var aaa = provider1.GetService<IA>();
             Assert.AreEqual("1", aaa.Ap);
         }
+
         /// <summary>
         /// Test3S the.
         /// </summary>
@@ -87,6 +88,7 @@ namespace Brochure.Test
             var aaa = provider1.GetService<IA>();
             Assert.AreEqual("2", aaa.Ap);
         }
+
         /// <summary>
         /// Tests the express.
         /// </summary>
@@ -161,6 +163,7 @@ namespace Brochure.Test
             Trace.TraceInformation(a.ElapsedMilliseconds.ToString());
             a.Stop();
         }
+
         /// <summary>
         /// The a.
         /// </summary>
@@ -170,11 +173,13 @@ namespace Brochure.Test
             /// Gets or sets the ap.
             /// </summary>
             string Ap { get; set; }
+
             /// <summary>
             /// hs the.
             /// </summary>
             void h();
         }
+
         /// <summary>
         /// The b.
         /// </summary>
@@ -185,6 +190,7 @@ namespace Brochure.Test
             /// </summary>
             void k();
         }
+
         /// <summary>
         /// The a.
         /// </summary>
@@ -194,6 +200,7 @@ namespace Brochure.Test
             /// Gets or sets the ap.
             /// </summary>
             public string Ap { get; set; } = "1";
+
             /// <summary>
             /// hs the.
             /// </summary>
@@ -201,8 +208,8 @@ namespace Brochure.Test
             {
                 Trace.TraceInformation("A");
             }
-
         }
+
         /// <summary>
         /// The a1.
         /// </summary>
@@ -221,6 +228,7 @@ namespace Brochure.Test
                 Trace.TraceInformation("A1");
             }
         }
+
         /// <summary>
         /// The b.
         /// </summary>
@@ -250,6 +258,7 @@ namespace Brochure.Test
             {
                 this.services = services;
             }
+
             /// <summary>
             /// Creates the scope.
             /// </summary>
@@ -258,6 +267,7 @@ namespace Brochure.Test
             {
                 return services.BuildServiceProvider().CreateScope();
             }
+
             /// <summary>
             /// Mergers the service.
             /// </summary>

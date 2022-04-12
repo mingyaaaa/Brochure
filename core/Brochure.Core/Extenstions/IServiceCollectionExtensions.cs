@@ -1,16 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using AspectCore.Configuration;
-using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
-using Brochure.Abstract.Extensions;
-using Brochure.Abstract.Models;
 using Brochure.Abstract.Utils;
-using Brochure.Core.Module;
 using Brochure.Core.RPC;
-using Brochure.Extensions;
 using Brochure.Utils;
 using Brochure.Utils.SystemUtils;
 using Grpc.AspNetCore.Server;
@@ -19,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
+using System.Reflection;
 
 namespace Brochure.Core
 {
@@ -36,7 +27,6 @@ namespace Brochure.Core
         /// <returns></returns>
         public static IServiceCollection AddBrochureCore(this IServiceCollection service, Action<ApplicationOption> appAction = null, IConfiguration configuration = null)
         {
-            ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
             //加载一些基本的工具类
             //工具类初始化
             service.TryAddSingleton<IPluginManagers>(new PluginManagers());
@@ -45,11 +35,8 @@ namespace Brochure.Core
             service.TryAddSingleton<IObjectFactory>(new ObjectFactory());
             service.TryAddSingleton<ISysDirectory>(new SysDirectory());
             service.TryAddSingleton<IFile, FileUtils>();
-
-            service.TryAddSingleton<IModuleLoader, ModuleLoader>();
             service.TryAddSingleton<IHostEnvironment, HostingEnvironment>();
             service.AddTransient<IPluginContext, PluginContext>();
-            service.TryAddSingleton<IAspectConfiguration, AspectConfiguration>();
             service.TryAddSingleton<IPluginLoadAction, DefaultLoadAction>();
             service.TryAddSingleton<IPluginLoader, PluginLoader>();
             service.TryAddSingleton<IPluginLoadContextProvider, PluginLoadContextProvider>();
@@ -59,7 +46,7 @@ namespace Brochure.Core
             appAction?.Invoke(option);
             service.TryAddSingleton(option);
             //加载一些核心的程序
-            service.InitApplicationCore();
+            service.InitApplicationModule();
             return service;
         }
 
@@ -69,9 +56,9 @@ namespace Brochure.Core
         /// <param name="services"></param>
         /// <param name="configure"></param>
         /// <returns></returns>
-        public static IServiceCollection AddBrochureInterceptor(this IServiceCollection services, Action<IAspectConfiguration> configure = null)
+        public static IServiceCollection AddBrochureInterceptor(this IServiceCollection services)
         {
-            services.ConfigureDynamicProxy(configure);
+            //   services.ConfigureDynamicProxy(configure);
             return services;
         }
 
@@ -95,20 +82,21 @@ namespace Brochure.Core
         /// <returns>An IServiceCollection.</returns>
         public static IServiceCollection AddGrpcClient<T>(this IServiceCollection services, Action<PollyOption> config = null) where T : class
         {
-            var type = typeof(T);
-            var memoryTypeName = type.Name.TrimEnd("Client".ToArray()) + "Base";
-            var memoryType = Type.GetType(memoryTypeName);
-            var grpcService = services.GetServiceInistaceType(memoryType);
-            if (grpcService == null)
-            {
-                var pollyOption = new PollyOption() { RetryCount = 3 };
-                config?.Invoke(pollyOption);
-                services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcPollyProxyFactory(pollyOption)));
-            }
-            else
-            {
-                services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcMemoryProxyFactory(memoryType)));
-            }
+            //todo  此处获取数据有问题
+            //var type = typeof(T);
+            //var memoryTypeName = type.Name.TrimEnd("Client".ToArray()) + "Base";
+            //var memoryType = Type.GetType(memoryTypeName);
+            //var grpcService = services.GetServiceInistaceType(memoryType);
+            //if (grpcService == null)
+            //{
+            //    var pollyOption = new PollyOption() { RetryCount = 3 };
+            //    config?.Invoke(pollyOption);
+            //    services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcPollyProxyFactory(pollyOption)));
+            //}
+            //else
+            //{
+            //    services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcMemoryProxyFactory(memoryType)));
+            //}
             return services;
         }
 
@@ -117,19 +105,14 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="service">The service.</param>
         /// <returns>An IServiceCollection.</returns>
-        internal static IServiceCollection InitApplicationCore(this IServiceCollection service)
+        internal static IServiceCollection InitApplicationModule(this IServiceCollection service)
         {
-            //注入插件模块
             var provider = service.BuildServiceProvider();
-            //加载模块
-            var modelLoader = provider.GetService<IModuleLoader>();
-            //处理当前程序集和入口程序集
-            var assemablys = new List<Assembly>() { typeof(PluginModule).Assembly, Assembly.GetEntryAssembly() };
-            foreach (var item in assemablys)
+            var modules = provider.GetServices<IModule>();
+            foreach (var item in modules)
             {
-                modelLoader.LoadModule(service, item);
+                item.ConfigModule(service).ConfigureAwait(false).GetAwaiter().GetResult();
             }
-
             return service;
         }
 
@@ -174,17 +157,6 @@ namespace Brochure.Core
                 instance = (T)instanceFactory.Invoke(services.BuildServiceProvider());
             }
             return (T)instance;
-        }
-
-        /// <summary>
-        /// Gets the service inistace type.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns>A Type.</returns>
-        public static Type GetServiceInistaceType<T>(this IServiceCollection services)
-        {
-            var type = typeof(T);
-            return GetServiceInistaceType(services, type);
         }
 
         /// <summary>

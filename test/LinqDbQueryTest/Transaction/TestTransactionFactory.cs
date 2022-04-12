@@ -1,5 +1,3 @@
-using System.Data;
-using System.Data.Common;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

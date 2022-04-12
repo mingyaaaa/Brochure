@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Brochure.Abstract;
 using Brochure.Abstract.Extensions;
-using Brochure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Newtonsoft.Json;
+using System;
 
 namespace Brochure.Core.Test
 {
@@ -27,14 +21,17 @@ namespace Brochure.Core.Test
         /// Gets or sets the a str.
         /// </summary>
         public string AStr { get; set; }
+
         /// <summary>
         /// Gets or sets the b object.
         /// </summary>
         public B BObject { get; set; }
+
         /// <summary>
         /// Gets or sets the c.
         /// </summary>
         public int C { get; set; }
+
         /// <summary>
         /// Gets or sets the date time.
         /// </summary>
@@ -50,10 +47,12 @@ namespace Brochure.Core.Test
         /// Gets or sets the b str.
         /// </summary>
         public string BStr { get; set; }
+
         /// <summary>
         /// Gets or sets the c.
         /// </summary>
         public int C { get; set; }
+
         /// <summary>
         /// Gets or sets the date time.
         /// </summary>
@@ -63,7 +62,8 @@ namespace Brochure.Core.Test
     /// <summary>
     /// The c.
     /// </summary>
-    public class C { }
+    public class C
+    { }
 
     /// <summary>
     /// The as test.
@@ -79,10 +79,6 @@ namespace Brochure.Core.Test
             var service = new ServiceCollection();
             service.AddLogging();
             service.AddBrochureCore();
-            ObjectConverCollection.RegistObjectConver<C, B>(t => new B()
-            {
-                BStr = "C"
-            });
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
-using System.Data;
-using System.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
+using System.Data.Common;
 
 namespace Brochure.ORMTest.Querys
 {

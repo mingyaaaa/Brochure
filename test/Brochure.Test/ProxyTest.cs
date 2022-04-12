@@ -1,6 +1,6 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
@@ -10,19 +10,18 @@ namespace Brochure.Test
     [TestClass]
     public class ProxyTest
     {
-
         /// <summary>
         /// Tests the proxy.
         /// </summary>
         [TestMethod]
-        public void TestProxy ()
+        public void TestProxy()
         {
             //创建代理类，并把SampleProxy作为拦截器注入
-            var sampleProxy = (targetInterface) SampleProxy.Create<targetInterface, SampleProxy> ();
-            var inter = sampleProxy.GetType ().GetInterfaces ();
+            var sampleProxy = (targetInterface)SampleProxy.Create<targetInterface, SampleProxy>();
+            var inter = sampleProxy.GetType().GetInterfaces();
             //执行接口方法
-            sampleProxy.Write ("here is invoke by proxy");
-            sampleProxy.Write2 (1);
+            sampleProxy.Write("here is invoke by proxy");
+            sampleProxy.Write2(1);
         }
     }
 
@@ -37,13 +36,13 @@ namespace Brochure.Test
         /// Writes the.
         /// </summary>
         /// <param name="writesomeshing">The writesomeshing.</param>
-        void Write (string writesomeshing);
+        void Write(string writesomeshing);
 
         /// <summary>
         /// Write2S the.
         /// </summary>
         /// <param name="a">The a.</param>
-        void Write2 (int a);
+        void Write2(int a);
     }
 
     //需要被生成代理实例的接口
@@ -56,18 +55,18 @@ namespace Brochure.Test
         /// Writes the.
         /// </summary>
         /// <param name="writesomeshing">The writesomeshing.</param>
-        public virtual void Write (string writesomeshing)
+        public virtual void Write(string writesomeshing)
         {
-            Console.WriteLine (writesomeshing);
+            Console.WriteLine(writesomeshing);
         }
 
         /// <summary>
         /// Write2S the.
         /// </summary>
         /// <param name="a">The a.</param>
-        public void Write2 (int a)
+        public void Write2(int a)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
     }
 
@@ -82,13 +81,12 @@ namespace Brochure.Test
         /// <param name="method">所拦截的方法信息</param>
         /// <param name="parameters">所拦截方法被传入的参数指</param>
         /// <returns></returns>
-        protected override object Invoke (MethodInfo targetMethod, object[] args)
+        protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
-            Console.WriteLine (args[0]);
-            Console.WriteLine (name);
+            Console.WriteLine(args[0]);
+            Console.WriteLine(name);
             return null;
         }
     }
-
 }

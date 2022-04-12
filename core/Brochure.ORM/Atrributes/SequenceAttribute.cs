@@ -6,5 +6,6 @@ namespace Brochure.ORM.Atrributes
     /// The sequence attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public class SequenceAttribute : Attribute { }
+    public class SequenceAttribute : Attribute
+    { }
 }

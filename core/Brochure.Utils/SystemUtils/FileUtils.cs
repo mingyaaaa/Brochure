@@ -1,5 +1,4 @@
 ﻿using Brochure.Abstract.Utils;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -22,16 +21,37 @@ namespace Brochure.Utils.SystemUtils
             return File.Exists(filePath);
         }
 
+        /// <summary>
+        /// Reads the all text async.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task.</returns>
         public Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
         {
             return File.ReadAllTextAsync(path, encoding, cancellationToken);
         }
 
+        /// <summary>
+        /// Reads the all text async.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task.</returns>
         public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
         {
             return File.ReadAllTextAsync(path, cancellationToken);
         }
 
+        /// <summary>
+        /// Writes the all text async.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="contents">The contents.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A Task.</returns>
         public Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default)
         {
             return File.WriteAllTextAsync(path, contents, encoding, cancellationToken);

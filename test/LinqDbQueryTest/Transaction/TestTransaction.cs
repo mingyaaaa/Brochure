@@ -1,9 +1,4 @@
-using System;
-using System.Data;
-using System.Data.Common;
-using System.Threading.Tasks;
 using AspectCore.DynamicProxy;
-using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
 using Brochure.Core.Extenstions;
@@ -13,9 +8,12 @@ using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Brochure.ORMTest.Transaction
 {
@@ -183,7 +181,7 @@ namespace Brochure.ORMTest.Transaction
             collection.AddSingleton<IPluginManagers>(new PluginManagers());
             collection.AddScoped<ISqlExcute, SqlExcute>();
             collection.AddScoped<ISqlExcute2, SqlExcute2>();
-            var provider = collection.BuildPluginServiceProvider();
+            var provider = collection.BuildServiceProvider();
             var ins = provider.GetRequiredService<ISqlExcute>();
             ins.InserData();
             ins.DeleteData();
@@ -204,7 +202,7 @@ namespace Brochure.ORMTest.Transaction
             collection.AddSingleton<IPluginManagers>(new PluginManagers());
             collection.AddSingleton<ISqlExcute, SqlExcute>();
             collection.AddSingleton<ISqlExcute2, SqlExcute2>();
-            var provider = collection.BuildPluginServiceProvider();
+            var provider = collection.BuildServiceProvider();
             var ins = provider.GetRequiredService<ISqlExcute>();
             ins.InserData();
             ins.DeleteData();

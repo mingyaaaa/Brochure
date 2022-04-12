@@ -1,13 +1,9 @@
+using Brochure.Abstract;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using AspectCore.DynamicProxy.Parameters;
-using Brochure.Abstract;
-using Brochure.Abstract.PluginDI;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
 {

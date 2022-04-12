@@ -1,5 +1,3 @@
-using System;
-
 namespace Brochure.Core.Server.Interfaces
 {
     /// <summary>
@@ -7,6 +5,5 @@ namespace Brochure.Core.Server.Interfaces
     /// </summary>
     public interface IRepository
     {
-
     }
 }

@@ -1,11 +1,9 @@
-using System;
-
 namespace Brochure.Abstract.Models
 {
     /// <summary>
-    /// The result.
+    /// The result des.
     /// </summary>
-    public interface IResult
+    public interface IResultDes
     {
         /// <summary>
         /// Gets the msg.
@@ -16,7 +14,13 @@ namespace Brochure.Abstract.Models
         /// Gets the code.
         /// </summary>
         int Code { get; }
+    }
 
+    /// <summary>
+    /// The result.
+    /// </summary>
+    public interface IResult : IResultDes
+    {
         /// <summary>
         /// Gets the data.
         /// </summary>
@@ -26,7 +30,7 @@ namespace Brochure.Abstract.Models
     /// <summary>
     /// The result.
     /// </summary>
-    public interface IResult<T> : IResult
+    public interface IResult<T> : IResultDes
     {
         /// <summary>
         /// Gets the data.
@@ -141,10 +145,5 @@ namespace Brochure.Abstract.Models
         /// Gets the data.
         /// </summary>
         public T Data => _data;
-
-        /// <summary>
-        /// Gets the data.
-        /// </summary>
-        object IResult.Data => _data;
     }
 }

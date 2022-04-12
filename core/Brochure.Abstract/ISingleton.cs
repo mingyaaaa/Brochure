@@ -12,6 +12,5 @@ namespace Brochure.Abstract
     /// </summary>
     public interface IMutiSingleton
     {
-
     }
 }

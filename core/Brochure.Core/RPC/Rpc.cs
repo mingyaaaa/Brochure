@@ -1,14 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
-using AspectCore.Configuration;
-using AspectCore.DynamicProxy;
-using Brochure.Abstract;
+﻿using Brochure.Abstract;
 using Brochure.Core.Interceptor;
 using Microsoft.Extensions.DependencyInjection;
-using Polly;
+using System;
 
 namespace Brochure.Core.RPC
 {
@@ -70,11 +63,13 @@ namespace Brochure.Core.RPC
         public T CreateRpcProxy<T>(params object[] args) where T : class
         {
             //创建代理类
-            var builder = new ProxyGeneratorBuilder();
-            builder.Configure(t => t.Interceptors.AddTyped<PollyInterceptor>(new object[] { option }));
-            var type = typeof(T);
-            var proxyCreate = builder.Build();
-            return proxyCreate.CreateClassProxy<T>(args);
+            //var builder = new ProxyGeneratorBuilder();
+            //builder.Configure(t => t.Interceptors.AddTyped<PollyInterceptor>(new object[] { option }));
+            //var type = typeof(T);
+            //var proxyCreate = builder.Build();
+            //return proxyCreate.CreateClassProxy<T>(args);
+            //todo
+            return default(T);
         }
     }
 
@@ -119,10 +114,12 @@ namespace Brochure.Core.RPC
         /// <returns>A T.</returns>
         public T CreateRpcProxy<T>(params object[] args) where T : class
         {
-            var builder = new ProxyGeneratorBuilder();
-            builder.Configure(t => t.Interceptors.AddTyped<InnerAssemblyInterceptor>(new object[] { targetObj }));
-            var proxyCreate = builder.Build();
-            return proxyCreate.CreateClassProxy<T>(args);
+            //var builder = new ProxyGeneratorBuilder();
+            //builder.Configure(t => t.Interceptors.AddTyped<InnerAssemblyInterceptor>(new object[] { targetObj }));
+            //var proxyCreate = builder.Build();
+            //return proxyCreate.CreateClassProxy<T>(args);
+            //todo
+            return default(T);
         }
     }
 }

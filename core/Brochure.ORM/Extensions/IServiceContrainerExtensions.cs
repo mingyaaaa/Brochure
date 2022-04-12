@@ -1,9 +1,8 @@
-using System;
-using System.Linq.Expressions;
-using Brochure.Core.Extenstions;
 using Brochure.ORM.Database;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq.Expressions;
 
 namespace Brochure.ORM.Extensions
 {

@@ -16,6 +16,6 @@ namespace Brochure.ORM.Visitors
         /// <param name="call">The call.</param>
         /// <param name="member">The member.</param>
         /// <returns>A string.</returns>
-        string GetExcuteSql (object call, object member);
+        string GetExcuteSql(object call, object member);
     }
 }

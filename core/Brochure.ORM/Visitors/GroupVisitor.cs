@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,6 +13,7 @@ namespace Brochure.ORM.Visitors
         /// Gets the group dic.
         /// </summary>
         public Dictionary<string, string> GroupDic { get; }
+
         private bool isSetNew = false;
 
         /// <summary>

@@ -1,13 +1,7 @@
 ﻿using AspectCore.Abstractions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.ORM.Database;
-using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brochure.ORM.MySql
 {

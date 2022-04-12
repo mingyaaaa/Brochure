@@ -1,5 +1,4 @@
 using System;
-using Brochure.ORM;
 
 namespace Brochure.ORM.MySql
 {

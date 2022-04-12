@@ -11,7 +11,6 @@ namespace Brochure.Test
     [TestClass]
     public class RpcTest
     {
-
         /// <summary>
         /// Creates the proxy.
         /// </summary>
@@ -118,6 +117,7 @@ namespace Brochure.Test
         /// Gets or sets the a.
         /// </summary>
         public int A { get; set; }
+
         /// <summary>
         /// Gets the a value.
         /// </summary>
@@ -133,6 +133,7 @@ namespace Brochure.Test
             return a;
         }
     }
+
     /// <summary>
     /// The a base.
     /// </summary>
@@ -148,6 +149,7 @@ namespace Brochure.Test
             throw new Exception();
         }
     }
+
     /// <summary>
     /// The a service.
     /// </summary>

@@ -4,16 +4,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
-    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.3.0-dv-156615261" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Polly" Version="7.2.2" />
@@ -23,6 +22,8 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="Application\" />
+    <Folder Include="Module\" />
+    <Folder Include="PluginsDI\" />
     <Folder Include="RPC\" />
     <Folder Include="Interceptor\" />
   </ItemGroup>

@@ -2,7 +2,6 @@
 using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.IO;
 
 namespace Brochure.Core

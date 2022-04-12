@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
@@ -9,9 +7,10 @@ using Brochure.Core;
 using Brochure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.Collections.Generic;
 
 namespace Brochure.Test
 {

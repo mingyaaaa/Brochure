@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brochure.Utils", "Brochure.Utils\Brochure.Utils.csproj", "{E012E0F3-56A5-485C-81F0-F932799B0C8B}"
 EndProject
@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6C89A63E
 	ProjectSection(SolutionItems) = preProject
 		..\build\copy_nuget.targets = ..\build\copy_nuget.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils.Test", "..\test\Utils.Test\Utils.Test.csproj", "{A687D657-A56E-4854-B4CA-133D1068DAE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,10 @@ Global
 		{15C783FA-A903-43C2-8DA3-B2F80EB4A5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C783FA-A903-43C2-8DA3-B2F80EB4A5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C783FA-A903-43C2-8DA3-B2F80EB4A5E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A687D657-A56E-4854-B4CA-133D1068DAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A687D657-A56E-4854-B4CA-133D1068DAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A687D657-A56E-4854-B4CA-133D1068DAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A687D657-A56E-4854-B4CA-133D1068DAE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{9A668125-BFF5-47C3-846D-A06AAD4866CE} = {640FDFC0-FDE9-11E9-8553-8D2B27024F48}
 		{ACFA9532-5C71-4112-99E3-3339EC47A26E} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
 		{15C783FA-A903-43C2-8DA3-B2F80EB4A5E2} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
+		{A687D657-A56E-4854-B4CA-133D1068DAE6} = {5CEB6D20-EDBF-11E9-A91F-8DC375BBB25F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3BF9EAD7-5F0B-4F5E-B229-07A76F610988}

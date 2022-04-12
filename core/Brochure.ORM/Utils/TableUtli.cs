@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 using System.Reflection;
 
 namespace Brochure.ORM
@@ -13,6 +11,7 @@ namespace Brochure.ORM
     public static class TableUtlis
     {
         private static ConcurrentDictionary<string, string> _tableNameCache = new ConcurrentDictionary<string, string>();
+
         /// <summary>
         /// Gets the table name.
         /// </summary>

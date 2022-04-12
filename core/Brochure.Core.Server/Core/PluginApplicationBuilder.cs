@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Brochure.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace Brochure.Core.Server
 {
     /// <summary>
@@ -14,10 +15,10 @@ namespace Brochure.Core.Server
     /// </summary>
     public class PluginApplicationBuilder : IApplicationBuilder
     {
-
         private readonly IApplicationBuilder applicationBuilder;
         private static readonly object lockObject = new object();
         private readonly IMiddleManager manager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginApplicationBuilder"/> class.
         /// </summary>
@@ -27,6 +28,7 @@ namespace Brochure.Core.Server
             applicationBuilder = builder;
             manager = builder.ApplicationServices.GetService<IMiddleManager>();
         }
+
         /// <summary>
         /// Gets or sets the application services.
         /// </summary>
@@ -74,6 +76,7 @@ namespace Brochure.Core.Server
             manager.MiddleAction?.Invoke(middleware);
             return this;
         }
+
         /// <summary>
         /// Uses the middle.
         /// </summary>
@@ -139,6 +142,5 @@ namespace Brochure.Core.Server
                 return app.Invoke(t);
             };
         }
-
     }
 }

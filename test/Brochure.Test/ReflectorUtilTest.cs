@@ -1,6 +1,4 @@
-using System;
 using AutoFixture;
-using Brochure.Extensions;
 using Brochure.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

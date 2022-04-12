@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
@@ -16,6 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Brochure.Test
 {
@@ -52,7 +51,7 @@ namespace Brochure.Test
             pluginManager.Setup(t => t.GetBasePluginsPath()).Returns("basePath");
 
             var load = Fixture.Create<PluginLoader>();
-            await load.LoadPlugin();
+            await load.LoadPlugin(Service);
 
             pluginManager.Verify(t => t.GetBasePluginsPath());
             dir.Verify(t => t.GetFiles(basePath, "plugin.config", SearchOption.AllDirectories));
@@ -74,7 +73,7 @@ namespace Brochure.Test
             jsonUtil.Setup(t => t.Get<PluginConfig>(basePath)).Returns(pluginConfig);
             var load = Fixture.Create<PluginLoader>();
 
-            await load.LoadPlugin();
+            await load.LoadPlugin(Service);
 
             jsonUtil.Verify(t => t.Get<PluginConfig>(basePath));
         }
@@ -93,7 +92,6 @@ namespace Brochure.Test
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
             var reflector = Fixture.Freeze<Mock<IReflectorUtil>>();
-            var moduleLoader = Fixture.Freeze<Mock<IModuleLoader>>();
             var basePath = "/a/basePath";
             dir.Setup(t => t.GetFiles(It.IsAny<string>(), "plugin.config", SearchOption.AllDirectories)).Returns(new string[] { basePath });
 
@@ -101,8 +99,8 @@ namespace Brochure.Test
             reflector.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(plugins);
             var load = Fixture.Create<PluginLoader>();
 
-            await load.LoadPlugin();
-            moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Never);
+            await load.LoadPlugin(Service);
+            //    moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Never);
         }
 
         /// <summary>
@@ -116,7 +114,6 @@ namespace Brochure.Test
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
             var reflector = Fixture.Freeze<Mock<IReflectorUtil>>();
-            var moduleLoader = Fixture.Freeze<Mock<IModuleLoader>>();
             var objectFactory = Fixture.Freeze<Mock<IObjectFactory>>();
             var loadProvider = Fixture.Freeze<Mock<IPluginLoadContextProvider>>();
             var basePath = "/a/basePath";
@@ -131,8 +128,8 @@ namespace Brochure.Test
             loadProvider.Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
             var load = Fixture.Create<PluginLoader>();
 
-            await load.LoadPlugin();
-            moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Exactly(1));
+            await load.LoadPlugin(Service);
+            //  moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Exactly(1));
         }
 
         /// <summary>
@@ -165,11 +162,11 @@ namespace Brochure.Test
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
 
-            await ins.LoadPlugin();
+            await ins.LoadPlugin(Service);
             var manager = autoMock.CreateInstance<PluginLoader>();
-            await manager.LoadPlugin();
+            await manager.LoadPlugin(Service);
             configurationMock.Verify(t => t.GetSection(Path.GetFileNameWithoutExtension(plugin.AssemblyName)));
-            autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
+            //        autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
             var str = string.Empty;
         }
 
@@ -204,11 +201,11 @@ namespace Brochure.Test
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
 
-            await ins.LoadPlugin();
+            await ins.LoadPlugin(new ServiceCollection());
             var manager = autoMock.CreateInstance<PluginLoader>();
-            await manager.LoadPlugin();
+            await manager.LoadPlugin(new ServiceCollection());
 
-            autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
+            //     autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
             var str = string.Empty;
         }
 

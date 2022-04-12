@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Brochure.Test
 {
@@ -15,6 +14,5 @@ namespace Brochure.Test
         public BrochureCoreTest()
         {
         }
-
     }
 }

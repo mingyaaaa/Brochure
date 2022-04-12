@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
 using Brochure.Abstract;
-using Brochure.Abstract.PluginDI;
-using Brochure.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Brochure.Core.Server
 {
@@ -16,17 +12,15 @@ namespace Brochure.Core.Server
     public class PluginApplicationBuilderFactory : IApplicationBuilderFactory
     {
         private readonly IServiceProvider provider;
-        private readonly IPluginManagers pluginManagers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginApplicationBuilderFactory"/> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
-        /// <param name="pluginManagers">The plugin managers.</param>
-        public PluginApplicationBuilderFactory(IServiceProvider provider, IPluginManagers pluginManagers)
+
+        public PluginApplicationBuilderFactory(IServiceProvider provider)
         {
             this.provider = provider;
-            this.pluginManagers = pluginManagers;
         }
 
         /// <summary>

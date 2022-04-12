@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Brochure.Abstract;
-using Brochure.Abstract.PluginDI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core
@@ -18,12 +13,6 @@ namespace Brochure.Core
         /// </summary>
         public PluginContext()
         {
-            Services = new ServiceCollection();
         }
-
-        /// <summary>
-        /// Gets the services.
-        /// </summary>
-        public IServiceCollection Services { get; }
     }
 }

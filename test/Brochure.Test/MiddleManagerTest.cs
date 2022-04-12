@@ -1,7 +1,7 @@
-using System;
-using System.Linq;
 using Brochure.Core.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace Brochure.Test
 {

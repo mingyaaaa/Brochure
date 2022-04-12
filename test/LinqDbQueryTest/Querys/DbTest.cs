@@ -1,17 +1,16 @@
-using System;
-using System.Diagnostics;
-using System.Linq;
 using Brochure.Abstract;
 using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.ORM;
 using Brochure.ORM.Database;
-using Brochure.ORM.Querys;
 using LinqDbQueryTest.Datas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Brochure.ORMTest.Querys
 {
@@ -40,7 +39,6 @@ namespace Brochure.ORMTest.Querys
             option = base.Provider.GetService<DbOption>();
             _sqlBuilder = Provider.GetService<ISqlBuilder>();
             option.IsUseParamers = false;
-            ObjectConverCollection.RegistObjectConver<IRecord>(t => new Record(t.AsDictionary()));
         }
 
         /// <summary>

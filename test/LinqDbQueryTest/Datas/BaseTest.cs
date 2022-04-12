@@ -7,7 +7,6 @@ using Brochure.ORM.Database;
 using Brochure.ORM.MySql;
 using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Moq.AutoMock;
 using System;
 using System.Collections.Generic;

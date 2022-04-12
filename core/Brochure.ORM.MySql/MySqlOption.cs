@@ -1,6 +1,3 @@
-using System;
-using Brochure.ORM;
-using Brochure.ORM.Database;
 using MySql.Data.MySqlClient;
 
 namespace Brochure.ORM.MySql
@@ -13,7 +10,8 @@ namespace Brochure.ORM.MySql
         /// <summary>
         /// Initializes a new instance of the <see cref="MySqlOption"/> class.
         /// </summary>
-        public MySqlOption() { }
+        public MySqlOption()
+        { }
 
         /// <summary>
         /// Uses the mysq.

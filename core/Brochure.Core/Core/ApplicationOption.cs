@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Brochure.Abstract;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core

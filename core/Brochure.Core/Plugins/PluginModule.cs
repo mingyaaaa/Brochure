@@ -10,14 +10,21 @@ namespace Brochure.Core
     /// </summary>
     public class PluginModule : IModule
     {
+        private readonly IPluginLoader _pluginLoader;
+
+        public PluginModule(IPluginLoader pluginLoader)
+        {
+            _pluginLoader = pluginLoader;
+        }
+
         /// <summary>
         /// Configs the module.
         /// </summary>
         /// <param name="services">The services.</param>
         /// <returns>A Task.</returns>
-        public Task ConfigModule(IServiceCollection services)
+        public async Task ConfigModule(IServiceCollection services)
         {
-            return Task.CompletedTask;
+            await _pluginLoader.LoadPlugin(services);
         }
 
         /// <summary>
@@ -27,8 +34,7 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public Task Initialization(IServiceProvider provider)
         {
-            var pluginLoader = provider.GetService<IPluginLoader>();
-            return pluginLoader.LoadPlugin().AsTask();
+            return Task.CompletedTask;
         }
     }
 }

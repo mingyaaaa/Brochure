@@ -1,3 +1,8 @@
+using Brochure.Abstract;
+using Brochure.Abstract.Utils;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -5,11 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Brochure.Abstract;
-using Brochure.Abstract.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {
@@ -27,10 +27,8 @@ namespace Brochure.Core
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
         private readonly IPluginManagers _pluginManagers;
-        private readonly IModuleLoader _moduleLoader;
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
-        private readonly ApplicationOption _applicationOption;
         private readonly IPluginConfigurationLoad _pluginConfigurationLoad;
 
         /// <summary>
@@ -43,12 +41,9 @@ namespace Brochure.Core
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="objectFactory">The object factory.</param>
         /// <param name="pluginManagers"></param>
-        /// <param name="moduleLoader"></param>
         /// <param name="loadActions"></param>
         /// <param name="unLoadActions"></param>
-        /// <param name="applicationOption"></param>
         /// <param name="pluginConfigurationLoad"></param>
-        /// <param name="hostEnvironment"></param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             IPluginLoadContextProvider pluginLoadContextProvider,
@@ -56,7 +51,6 @@ namespace Brochure.Core
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
             IPluginManagers pluginManagers,
-            IModuleLoader moduleLoader,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
             IPluginConfigurationLoad pluginConfigurationLoad)
@@ -69,7 +63,6 @@ namespace Brochure.Core
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
             _pluginManagers = pluginManagers;
-            _moduleLoader = moduleLoader;
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
             _pluginConfigurationLoad = pluginConfigurationLoad;
@@ -113,15 +106,15 @@ namespace Brochure.Core
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin()
+        public async ValueTask LoadPlugin(IServiceCollection services)
         {
-            await ResolverPlugins();
+            await ResolverPlugins(services);
         }
 
         /// <summary>
         /// 加载插件
         /// </summary>
-        private async Task ResolverPlugins()
+        private async Task ResolverPlugins(IServiceCollection services)
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
@@ -132,7 +125,7 @@ namespace Brochure.Core
                 try
                 {
                     var p = await LoadPlugin(pluginConfigPath);
-                    p.ConfigureService(p.Context.Services);
+                    p.ConfigureService(services);
                     if (p != null)
                     {
                         listPlugins.Add(p);
@@ -148,7 +141,6 @@ namespace Brochure.Core
             {
                 try
                 {
-                    _moduleLoader.LoadModule(plugin.Context.Services, plugin.Assembly);
                     if (await StartPlugin(plugin))
                     {
                         _pluginManagers.Regist(plugin);

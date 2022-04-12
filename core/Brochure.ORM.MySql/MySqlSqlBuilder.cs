@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Brochure.Abstract;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Querys;
 using Brochure.ORM.Visitors;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Brochure.ORM.MySql
 {

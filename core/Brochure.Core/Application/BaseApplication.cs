@@ -1,15 +1,14 @@
-﻿using System;
-namespace Brochure.Core.Core
+﻿namespace Brochure.Core.Core
 {
     /// <summary>
     /// The base application.
     /// </summary>
-    public class BaseApplication
+    public abstract class BaseApplication
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseApplication"/> class.
         /// </summary>
-        public BaseApplication()
+        public BaseApplication(ApplicationOption applicationOption)
         {
         }
     }

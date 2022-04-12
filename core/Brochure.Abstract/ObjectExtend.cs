@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
+using Mapster;
 using System.Reflection;
-using System.Text.Json;
-using Brochure.Abstract;
 
 namespace Brochure.Abstract.Extensions
 {
@@ -25,8 +22,7 @@ namespace Brochure.Abstract.Extensions
             {
                 if (obj is T t)
                     return t;
-                var type = typeof(T);
-                return (T)obj.As(type);
+                return obj.Adapt<T>();
             }
             catch (System.Exception) when (!isException)
             {
@@ -60,7 +56,8 @@ namespace Brochure.Abstract.Extensions
         /// <returns></returns>
         public static object As(this object obj, Type type)
         {
-            if (type.IsAssignableFrom(obj.GetType()))
+            var objType = obj.GetType();
+            if (type.IsAssignableFrom(objType))
             {
                 return obj;
             }
@@ -68,46 +65,7 @@ namespace Brochure.Abstract.Extensions
             {
                 return Enum.Parse(type, obj.ToString());
             }
-            //处理IObjectConver
-            if (ObjectConverCollection.TryGetConverFunc(type, out var fun))
-            {
-                return fun(obj);
-            }
-            //如果是系统其他类型  则使用系统的转换器
-            return Convert.ChangeType(obj, type);
-        }
-
-        /// <summary>
-        /// As the dictionary.
-        /// </summary>
-        /// <param name="obj">The obj.</param>
-        /// <returns>An IDictionary.</returns>
-        public static IDictionary<string, object> AsDictionary(this object obj)
-        {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj), "参数为空");
-            if (obj is IDictionary<string, object> dictionary)
-                return dictionary;
-            var result = new Dictionary<string, object>();
-            if (obj is IRecord record)
-            {
-                foreach (var keys in record.Keys)
-                {
-                    result[keys] = record[keys];
-                }
-                return result;
-            }
-            var type = obj.GetType();
-            var typeInfo = type.GetTypeInfo();
-            var props = typeInfo.GetRuntimeProperties();
-            foreach (var item in props)
-            {
-                var attribute = item.GetCustomAttribute(typeof(IngoreAttribute), true);
-                if (attribute != null)
-                    continue;
-                result.Add(item.Name, item.GetValue(obj));
-            }
-            return result;
+            return obj.Adapt(objType, type);
         }
     }
 }

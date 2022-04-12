@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+
 namespace Brochure.ORM.Visitors
 {
     /// <summary>
@@ -32,6 +33,7 @@ namespace Brochure.ORM.Visitors
         {
             _serviceProvider = serviceProvider;
         }
+
         /// <summary>
         /// Builders the.
         /// </summary>

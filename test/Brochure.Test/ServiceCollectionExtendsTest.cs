@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Brochure.Core;
+﻿using Brochure.Core;
 using Brochure.Core.Server;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 
 namespace Brochure.Test
 {

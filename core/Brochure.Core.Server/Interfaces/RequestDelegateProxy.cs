@@ -1,5 +1,5 @@
-using System;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Brochure.Core.Server
 {
@@ -22,16 +22,19 @@ namespace Brochure.Core.Server
             this.Order = order;
             this.MiddleFactory = factory;
         }
+
         /// <summary>
         /// 中间件名称
         /// </summary>
         /// <value></value>
         public string MiddleName { get; }
+
         /// <summary>
         /// 插件名称
         /// </summary>
         /// <value></value>
         public Guid PluginId { get; }
+
         /// <summary>
         /// 中间件执行顺序
         /// </summary>

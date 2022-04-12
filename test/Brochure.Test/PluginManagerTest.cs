@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
@@ -11,9 +5,14 @@ using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moq.AutoMock;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Brochure.Test
 {
@@ -87,7 +86,7 @@ namespace Brochure.Test
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadPluginContext.Object);
 
-            await ins.LoadPlugin();
+            await ins.LoadPlugin(Service);
 
             autoMock.GetMock<IReflectorUtil>().Verify(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)), Times.Exactly(1));
 

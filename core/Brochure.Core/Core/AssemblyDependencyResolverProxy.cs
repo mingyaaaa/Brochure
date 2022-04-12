@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Brochure.Abstract;
 using System.Reflection;
 using System.Runtime.Loader;
-using Brochure.Abstract;
 
 namespace Brochure.Core
 {
@@ -20,6 +19,7 @@ namespace Brochure.Core
         {
             this.resolver = resolver;
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyDependencyResolverProxy"/> class.
         /// </summary>

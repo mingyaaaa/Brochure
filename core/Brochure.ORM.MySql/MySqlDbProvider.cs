@@ -1,10 +1,7 @@
-using System;
+using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
-using Brochure.ORM;
-using Brochure.ORM.Visitors;
-using MySql.Data.MySqlClient;
 
 namespace Brochure.ORM.MySql
 {

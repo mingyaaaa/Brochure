@@ -1,5 +1,3 @@
-using System;
-
 namespace Brochure.Abstract
 {
     /// <summary>
@@ -11,7 +9,7 @@ namespace Brochure.Abstract
         /// Invokes the.
         /// </summary>
         /// <param name="key">The key.</param>
-        void Invoke (Guid key);
+        void Invoke(Guid key);
     }
 
     /// <summary>
@@ -23,8 +21,10 @@ namespace Brochure.Abstract
         /// Invokes the.
         /// </summary>
         /// <param name="key">The key.</param>
-        public void Invoke (Guid key) { }
+        public void Invoke(Guid key)
+        { }
     }
+
     /// <summary>
     /// The plugin un load action.
     /// </summary>
@@ -34,8 +34,9 @@ namespace Brochure.Abstract
         /// Invokes the.
         /// </summary>
         /// <param name="key">The key.</param>
-        void Invoke (Guid key);
+        void Invoke(Guid key);
     }
+
     /// <summary>
     /// The default un load action.
     /// </summary>
@@ -45,6 +46,7 @@ namespace Brochure.Abstract
         /// Invokes the.
         /// </summary>
         /// <param name="key">The key.</param>
-        public void Invoke (Guid key) { }
+        public void Invoke(Guid key)
+        { }
     }
 }

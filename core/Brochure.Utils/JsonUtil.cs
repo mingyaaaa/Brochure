@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Brochure.Abstract;
+﻿using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Brochure.Utils
 {
@@ -31,7 +29,7 @@ namespace Brochure.Utils
         }
 
         /// <summary>
-        /// Arrays the json valid. 只是判断是否是[] 暂不能通过该方法校验Json格式
+        /// Arrays the json valid. 只是判断是否是[]
         /// </summary>
         /// <param name="str">The str.</param>
         /// <returns>A bool.</returns>
@@ -39,11 +37,14 @@ namespace Brochure.Utils
         {
             if (str == null)
                 return false;
-            return str.StartsWith("[") && str.EndsWith("]");
+            var isNotArrayJson = !(str.StartsWith("[") && str.EndsWith("]"));
+            if (isNotArrayJson)
+                return false;
+            return IsJson(str);
         }
 
         /// <summary>
-        /// Objects the json valid.只是判断是否是{} ，暂不能通过该方法校验Json格式
+        /// Objects the json valid.只是判断是否是{}
         /// </summary>
         /// <param name="str">The str.</param>
         /// <returns>A bool.</returns>
@@ -51,7 +52,10 @@ namespace Brochure.Utils
         {
             if (str == null)
                 return false;
-            return str.StartsWith("{") && str.EndsWith("}");
+            var isNotObjectJson = !(str.StartsWith("{") && str.EndsWith("}"));
+            if (isNotObjectJson)
+                return false;
+            return IsJson(str);
         }
 
         /// <summary>
@@ -126,7 +130,9 @@ namespace Brochure.Utils
         {
             try
             {
-                JsonDocument.Parse(str);
+                var sp = Encoding.UTF8.GetBytes(str).AsSpan();
+                var reader = new Utf8JsonReader(sp);
+                JsonDocument.TryParseValue(ref reader, out _);
                 return true;
             }
             catch (Exception e)

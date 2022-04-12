@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {
@@ -14,9 +11,9 @@ namespace Brochure.Core
         /// Adds the log.
         /// </summary>
         /// <param name="applicationOption">The application option.</param>
-        public static void AddLog (this ApplicationOption applicationOption)
+        public static void AddLog(this ApplicationOption applicationOption)
         {
-            Log.Logger = applicationOption.Services.GetServiceInstance<ILoggerFactory> ()?.CreateLogger ("Brochure");
+            Log.Logger = applicationOption.Services.GetServiceInstance<ILoggerFactory>()?.CreateLogger("Brochure");
             Log.Services = applicationOption.Services;
         }
     }

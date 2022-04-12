@@ -17,6 +17,7 @@ namespace Brochure.ORMTest
         /// Gets or sets the job.
         /// </summary>
         public string Job { get; set; }
+
         /// <summary>
         /// Gets or sets the id.
         /// </summary>

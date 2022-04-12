@@ -1,8 +1,8 @@
-using System;
-using System.Data;
 using Brochure.ORM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Data;
 
 namespace LinqDbQueryTest.Querys
 {
@@ -41,6 +41,7 @@ namespace LinqDbQueryTest.Querys
         /// Gets or sets the int1.
         /// </summary>
         public int Int1 { get; set; }
+
         /// <summary>
         /// Gets or sets the string2.
         /// </summary>

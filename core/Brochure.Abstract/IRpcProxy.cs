@@ -1,5 +1,4 @@
-﻿using System;
-namespace Brochure.Abstract
+﻿namespace Brochure.Abstract
 {
     /// <summary>
     /// The rpc proxy.

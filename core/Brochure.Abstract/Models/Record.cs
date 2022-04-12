@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text.Json;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Brochure.Abstract.Models
 {
@@ -11,33 +9,6 @@ namespace Brochure.Abstract.Models
     public class Record : IRecord
     {
         private readonly IDictionary<string, object> _dic;
-
-        /// <summary>
-        /// 添加时执行
-        /// </summary>
-        [IgnoreDataMember]
-        public Action AddHander;
-
-        /// <summary>
-        /// 修改数据时执行
-        /// </summary>
-        [IgnoreDataMember]
-        public Action UpdateHander;
-
-        /// <summary>
-        /// 移除数据是执行
-        /// </summary>
-        [IgnoreDataMember]
-        public Action RemoveHander;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Record"/> class.
-        /// </summary>
-        /// <param name="dictionary">The dictionary.</param>
-        public Record(IDictionary<string, object> dictionary)
-        {
-            _dic = dictionary;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Record"/> class.
@@ -50,135 +21,88 @@ namespace Brochure.Abstract.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="Record"/> class.
         /// </summary>
-        /// <param name="getValue">The get value.</param>
-        public Record(IGetValue getValue) : this()
+        /// <param name="dic">The dic.</param>
+        public Record(IDictionary<string, object> dic)
         {
-            var property = getValue.Properties;
-            foreach (var item in property)
-            {
-                _dic.Add(item, getValue.GetValue(item));
-            }
+            _dic = dic;
         }
 
         /// <summary>
-        /// 获取Key的集合
+        ///
         /// </summary>
-        /// <returns></returns>
-        [IgnoreDataMember]
-        public IEnumerable<string> Keys
-        { get { return _dic.Keys; } }
-
-        /// <summary>
-        /// 获取Value的集合
-        /// </summary>
-        /// <returns></returns>
-        [IgnoreDataMember]
-        public IEnumerable<object> Values
-        { get { return _dic.Values; } }
-
-        /// <summary>
-        /// Gets or sets the current.
-        /// </summary>
-        [IgnoreDataMember]
-        public object Current { get; set; }
-
-        /// <summary>
-        /// Gets the properties.
-        /// </summary>
-        public IEnumerable<string> Properties
-        {
-            get
-            {
-                return _dic.Keys;
-            }
-        }
-
-        /// <summary>
-        /// 获取或设置值
-        /// </summary>
+        /// <param name="key"></param>
         /// <returns></returns>
         public object this[string key]
         {
             get
             {
-                if (!_dic.ContainsKey(key))
-                    return null;
-                return _dic[key];
+                _dic.TryGetValue(key, out var value);
+                return value;
             }
             set
             {
-                var isAdd = false;
-                if (!_dic.ContainsKey(key))
-                    isAdd = true;
-                _dic[key] = value;
-                if (isAdd)
-                    AddHander?.Invoke();
+                if (_dic.ContainsKey(key))
+                    _dic[key] = value;
                 else
-                    UpdateHander?.Invoke();
+                    _dic.Add(key, value);
             }
         }
 
         /// <summary>
-        /// 添加值
+        /// Gets the keys.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="obj"></param>
-        public void Add(string key, object obj)
+        public ICollection<string> Keys => _dic.Keys;
+
+        /// <summary>
+        /// Gets the values.
+        /// </summary>
+        public ICollection<object> Values => _dic.Values;
+
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        public int Count => _dic.Count;
+
+        /// <summary>
+        /// Gets a value indicating whether read is only.
+        /// </summary>
+        public bool IsReadOnly => _dic.IsReadOnly;
+
+        /// <summary>
+        /// Adds the.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        public void Add(string key, object value)
         {
-            _dic.Add(key, obj);
-            AddHander?.Invoke();
+            _dic.Add(key, value);
         }
 
         /// <summary>
-        /// Gets the enumerator.
+        /// Adds the.
         /// </summary>
-        /// <returns>An IEnumerator.</returns>
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        /// <param name="item">The item.</param>
+        public void Add(KeyValuePair<string, object> item)
         {
-            return _dic.GetEnumerator();
+            _dic.Add(item);
         }
 
         /// <summary>
-        /// 根据Key值移除数据
+        /// Clears the.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public void Remove(string key)
+        public void Clear()
         {
-            if (_dic.ContainsKey(key))
-                _dic.Remove(key);
-            RemoveHander?.Invoke();
+            _dic.Clear();
         }
 
         /// <summary>
-        /// 批量移除数据
+        /// Contains the.
         /// </summary>
-        /// <param name="keys"></param>
-        public void RemoveMany(string[] keys)
-        {
-            foreach (var item in keys)
-            {
-                if (_dic.ContainsKey(item))
-                    _dic.Remove(item);
-            }
-            RemoveHander?.Invoke();
-        }
-
-        /// <summary>
-        /// Moves the next.
-        /// </summary>
+        /// <param name="item">The item.</param>
         /// <returns>A bool.</returns>
-        public bool MoveNext()
+        public bool Contains(KeyValuePair<string, object> item)
         {
-            return _dic.GetEnumerator().MoveNext();
-        }
-
-        /// <summary>
-        /// Resets the.
-        /// </summary>
-        public void Reset()
-        {
-            _dic.GetEnumerator().Reset();
+            return _dic.Contains(item);
         }
 
         /// <summary>
@@ -192,34 +116,62 @@ namespace Brochure.Abstract.Models
         }
 
         /// <summary>
-        /// Tos the string.
+        /// Copies the to.
         /// </summary>
-        /// <returns>A string.</returns>
-        public override string ToString()
+        /// <param name="array">The array.</param>
+        /// <param name="arrayIndex">The array index.</param>
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            if (_dic == null)
-                return string.Empty;
-            return JsonSerializer.Serialize(_dic);
+            _dic.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
-        /// Gets the value.
+        /// Gets the enumerator.
         /// </summary>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>A T.</returns>
-        public T GetValue<T>(string propertyName)
+        /// <returns>An IEnumerator.</returns>
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return (T)GetValue(propertyName);
+            return _dic.GetEnumerator();
         }
 
         /// <summary>
-        /// Gets the value.
+        /// Removes the.
         /// </summary>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>An object.</returns>
-        public object GetValue(string propertyName)
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
+        public bool Remove(string key)
         {
-            return this[propertyName];
+            return _dic.Remove(key);
+        }
+
+        /// <summary>
+        /// Removes the.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A bool.</returns>
+        public bool Remove(KeyValuePair<string, object> item)
+        {
+            return Remove(item.Key);
+        }
+
+        /// <summary>
+        /// Tries the get value.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>A bool.</returns>
+        public bool TryGetValue(string key, [MaybeNullWhen(false)] out object value)
+        {
+            return TryGetValue(key, out value);
+        }
+
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>An IEnumerator.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

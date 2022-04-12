@@ -5,8 +5,8 @@ namespace Brochure.Abstract
     /// </summary>
     public interface ITransient
     {
-
     }
+
     /// <summary>
     /// The muti transient.
     /// </summary>

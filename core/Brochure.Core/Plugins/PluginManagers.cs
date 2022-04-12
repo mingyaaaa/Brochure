@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Brochure.Abstract;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Brochure.Abstract;
-using Brochure.Abstract.Utils;
-using Microsoft.Extensions.Logging;
 
 namespace Brochure.Core
 {

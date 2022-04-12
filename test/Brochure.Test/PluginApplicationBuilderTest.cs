@@ -1,24 +1,22 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
 using Brochure.Abstract;
-using Brochure.Core.Extenstions;
+using Brochure.Abstract.Utils;
+using Brochure.Core;
 using Brochure.Core.Server;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
-using Brochure.Abstract.PluginDI;
-using Microsoft.AspNetCore.Builder;
-using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Moq.AutoMock;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Brochure.Abstract.Utils;
+using Moq.AutoMock;
+using System;
 using System.Collections.Generic;
-using Brochure.Core;
+using System.Diagnostics;
 using System.Reflection;
-using AutoFixture;
-using AutoFixture.AutoMoq;
+using System.Threading.Tasks;
 
 namespace Brochure.Test
 {
@@ -47,12 +45,12 @@ namespace Brochure.Test
             Service.AddOptions();
             Service.AddRouting();
             await Service.AddBrochureServer();
-            var provider = Service.BuildPluginServiceProvider();
+            var provider = Service.BuildServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
             var middleManager = provider.GetService<IMiddleManager>();
             var builderFactory = new ApplicationBuilderFactory(provider);
             var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
-            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider as IPluginServiceProvider, manager);
+            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
             builder.IntertMiddle("main-routing", Guid.Empty, 10, () => builder.UseRouting());
             var count = middleManager.GetMiddlesList().Count;
@@ -71,13 +69,13 @@ namespace Brochure.Test
             Service.AddOptions();
             Service.AddRouting();
             await Service.AddBrochureServer();
-            var provider = Service.BuildPluginServiceProvider();
+            var provider = Service.BuildServiceProvider();
             var manager = provider.GetService<IPluginManagers>();
 
             var middleManager = provider.GetService<IMiddleManager>();
             var builderFactory = new ApplicationBuilderFactory(provider);
             var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
-            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider as IPluginServiceProvider, manager);
+            var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
             builder.ConfigPlugin();
         }

@@ -1,11 +1,11 @@
-﻿using Brochure.ORM.Querys;
-using Brochure.ORMTest;
-using LinqDbQueryTest.Datas;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.DependencyInjection;
-using Brochure.ORMTest.Datas;
-using Brochure.ORM;
+﻿using Brochure.ORM;
 using Brochure.ORM.Extensions;
+using Brochure.ORM.Querys;
+using Brochure.ORMTest;
+using Brochure.ORMTest.Datas;
+using LinqDbQueryTest.Datas;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LinqDbQueryTest.Querys
 {

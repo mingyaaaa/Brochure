@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Concurrent;
-using System.Linq;
 using Brochure.Abstract;
 using Brochure.Abstract.Models;
-using Brochure.Utils;
+using System;
+using System.Linq;
 
 namespace Brochure.Core
 {
@@ -60,27 +58,6 @@ namespace Brochure.Core
         public GetValuePropertyDelegate()
         {
             t1Type = typeof(T1);
-        }
-
-        /// <summary>
-        /// Convers the to.
-        /// </summary>
-        /// <param name="read"></param>
-        /// <returns>A T1.</returns>
-        public T1 ConverTo(IGetValue read)
-        {
-            var properties = t1Type.GetProperties();
-            var t1 = new T1();
-            foreach (var item in properties)
-            {
-                var value = read.GetValue(item.Name);
-                if (value == null)
-                {
-                    continue;
-                }
-                PropertySetDelegateCache.TrySet(item, t1, value);
-            }
-            return t1;
         }
     }
 

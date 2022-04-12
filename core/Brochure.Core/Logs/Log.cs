@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Brochure.Core
 {
@@ -13,11 +13,14 @@ namespace Brochure.Core
         /// Gets or sets the logger.
         /// </summary>
         internal static ILogger Logger { get; set; }
+
         /// <summary>
         /// Gets or sets the services.
         /// </summary>
         internal static IServiceCollection Services { get; set; }
+
         private static ILoggerFactory factory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Log"/> class.
         /// </summary>
@@ -35,6 +38,7 @@ namespace Brochure.Core
             EnsureLogger();
             Logger.LogInformation(msg);
         }
+
         /// <summary>
         /// Errors the.
         /// </summary>
@@ -45,6 +49,7 @@ namespace Brochure.Core
             EnsureLogger();
             Logger.LogError(msg, e);
         }
+
         /// <summary>
         /// Warnings the.
         /// </summary>
@@ -64,6 +69,7 @@ namespace Brochure.Core
             var logger = factory.CreateLogger<T>();
             logger.LogInformation(msg);
         }
+
         /// <summary>
         /// Errors the.
         /// </summary>
@@ -74,6 +80,7 @@ namespace Brochure.Core
             var logger = factory.CreateLogger<T>();
             logger.LogError(msg, e);
         }
+
         /// <summary>
         /// Warnings the.
         /// </summary>
@@ -95,6 +102,7 @@ namespace Brochure.Core
                 Logger = Services.GetServiceInstance<ILoggerFactory>()?.CreateLogger("Brochure");
             }
         }
+
         /// <summary>
         /// Ensures the logger factorty.
         /// </summary>

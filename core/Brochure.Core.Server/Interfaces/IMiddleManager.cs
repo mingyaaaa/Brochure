@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 
 namespace Brochure.Core.Server
 {
@@ -21,6 +21,7 @@ namespace Brochure.Core.Server
         /// <param name="pluginId">The plugin id.</param>
         /// <param name="middle">The middle.</param>
         void AddMiddle(string middleName, Guid pluginId, Func<RequestDelegate, RequestDelegate> middle);
+
         /// <summary>
         /// Interts the middle.
         /// </summary>
@@ -35,6 +36,7 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="guid">The guid.</param>
         void RemovePluginMiddle(Guid guid);
+
         /// <summary>
         /// Gets the middles list.
         /// </summary>
@@ -46,6 +48,7 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="proxy">The proxy.</param>
         void AddRange(IEnumerable<RequestDelegateProxy> proxy);
+
         /// <summary>
         /// Resets the.
         /// </summary>

@@ -1,12 +1,8 @@
-using System;
 using AspectCore.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.ORM;
-using Brochure.ORM.Atrributes;
 using Brochure.ORM.Database;
-using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
-using Brochure.ORM.Visitors;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.ORMTest

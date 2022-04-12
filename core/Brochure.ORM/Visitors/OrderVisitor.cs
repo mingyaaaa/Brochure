@@ -20,6 +20,7 @@ namespace Brochure.ORM.Visitors
         /// <param name="dbOption">The db option.</param>
         /// <param name="funcVisits">The func visits.</param>
         public OrderVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funcVisits) : base(dbProvider, dbOption, funcVisits) { }
+
         /// <summary>
         /// Visits the member init.
         /// </summary>

@@ -1,9 +1,9 @@
-using System;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Brochure.Core.Server
 {
@@ -33,6 +33,7 @@ namespace Brochure.Core.Server
                 }
             }
         }
+
         /// <summary>
         /// Adds the middle.
         /// </summary>
@@ -98,7 +99,5 @@ namespace Brochure.Core.Server
             action?.Invoke();
             middle.MiddleAction -= middleDelegate;
         }
-
     }
-
 }
