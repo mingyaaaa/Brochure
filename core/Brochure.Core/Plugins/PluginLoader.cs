@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
@@ -106,7 +108,7 @@ namespace Brochure.Core
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin(IServiceCollection services)
+        public async ValueTask LoadPlugin(IContainer services)
         {
             await ResolverPlugins(services);
         }
@@ -114,18 +116,26 @@ namespace Brochure.Core
         /// <summary>
         /// 加载插件
         /// </summary>
-        private async Task ResolverPlugins(IServiceCollection services)
+        private async Task ResolverPlugins(IContainer container)
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             var listPlugins = new List<IPlugins>();
+            var mvcBuilder = container.Resolve<IMvcCoreBuilder>();
             //加载程序集
             foreach (var pluginConfigPath in allPluginPath)
             {
                 try
                 {
                     var p = await LoadPlugin(pluginConfigPath);
-                    p.ConfigureService(services);
+                    var pluginScope = container.BeginLifetimeScope(t =>
+                      {
+                          var service = new ServiceCollection();
+                          p.ConfigureService(service);
+                          mvcBuilder.AddApplicationPart(p.Assembly);
+                          t.Populate(service);
+                      });
+
                     if (p != null)
                     {
                         listPlugins.Add(p);

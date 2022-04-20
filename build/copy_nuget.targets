@@ -8,5 +8,9 @@
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
     <Company>yangming</Company>
     <Authors>yangming</Authors>
+	<IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Brochure.Test"/>
+	</ItemGroup>
 </Project>

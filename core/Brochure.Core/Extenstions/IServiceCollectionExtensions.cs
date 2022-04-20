@@ -45,8 +45,6 @@ namespace Brochure.Core
             var option = new ApplicationOption(service, configuration);
             appAction?.Invoke(option);
             service.TryAddSingleton(option);
-            //加载一些核心的程序
-            service.InitApplicationModule();
             return service;
         }
 
@@ -98,22 +96,6 @@ namespace Brochure.Core
             //    services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcMemoryProxyFactory(memoryType)));
             //}
             return services;
-        }
-
-        /// <summary>
-        /// Inits the application core.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <returns>An IServiceCollection.</returns>
-        internal static IServiceCollection InitApplicationModule(this IServiceCollection service)
-        {
-            var provider = service.BuildServiceProvider();
-            var modules = provider.GetServices<IModule>();
-            foreach (var item in modules)
-            {
-                item.ConfigModule(service).ConfigureAwait(false).GetAwaiter().GetResult();
-            }
-            return service;
         }
 
         /// <summary>

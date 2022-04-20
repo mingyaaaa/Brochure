@@ -1,4 +1,5 @@
-﻿using Brochure.Abstract;
+﻿using Autofac;
+using Brochure.Abstract;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace Brochure.Core
         /// Regists the.
         /// </summary>
         /// <param name="plugin">The plugin.</param>
+        /// <param name="lifetimeScope"></param>
         public void Regist(IPlugins plugin)
         {
             pluginDic.TryAdd(plugin.Key, plugin);

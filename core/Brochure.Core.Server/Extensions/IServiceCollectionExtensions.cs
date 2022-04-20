@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Core.Server.Core;
 using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Builder;
@@ -8,9 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Brochure.Core.Server
 {
@@ -26,25 +24,26 @@ namespace Brochure.Core.Server
         /// <returns>A Task.</returns>
         internal static async Task AddPluginController(this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvc();
-            services.TryAddSingleton<IMvcBuilder>(mvcBuilder);
-            var provider = services.BuildServiceProvider();
-            var manager = provider.GetService<IPluginManagers>();
-            var pluginList = manager.GetPlugins();
-            foreach (var item in pluginList)
-            {
-                try
-                {
-                    await item.StartAsync();
-                    mvcBuilder.AddApplicationPart(item.Assembly);
-                    Log.Info($"{item.Name}加载成功");
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"{item.Name}加载失败", e);
-                    await item.ExitAsync();
-                }
-            }
+            var mvcBuilder = services.AddMvcCore();
+            services.TryAddSingleton<IMvcCoreBuilder>(mvcBuilder);
+            //todo delete
+            //var provider = services.BuildServiceProvider();
+            //var manager = provider.GetService<IPluginManagers>();
+            //var pluginList = manager.GetPlugins();
+            //foreach (var item in pluginList)
+            //{
+            //    try
+            //    {
+            //        await item.StartAsync();
+            //        mvcBuilder.AddApplicationPart(item.Assembly);
+            //        Log.Info($"{item.Name}加载成功");
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Log.Error($"{item.Name}加载失败", e);
+            //        await item.ExitAsync();
+            //    }
+            //}
         }
 
         /// <summary>
@@ -65,6 +64,8 @@ namespace Brochure.Core.Server
                option.Services.Replace(ServiceDescriptor.Transient(typeof(IApplicationBuilderFactory), typeof(PluginApplicationBuilderFactory)));
                action?.Invoke(option);
            });
+            services.AddHostedService<PluginLoadService>();
+            services.Replace(ServiceDescriptor.Scoped(typeof(IControllerActivator), typeof(PluginScopeControllerActivator)));
             await services.AddPluginController();
         }
 

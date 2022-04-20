@@ -6,6 +6,7 @@
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
+
   <ItemGroup>
     <PackageReference Include="IGeekFan.AspNetCore.Knife4jUI" Version="0.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />

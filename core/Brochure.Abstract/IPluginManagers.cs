@@ -1,4 +1,6 @@
-﻿namespace Brochure.Abstract
+﻿using Autofac;
+
+namespace Brochure.Abstract
 {
     /// <summary>
     /// The plugin managers.
@@ -9,6 +11,7 @@
         /// 注册插件
         /// </summary>
         /// <param name="plugin"></param>
+        /// <param name="lifetimeScope"></param>
         void Regist(IPlugins plugin);
 
         /// <summary>

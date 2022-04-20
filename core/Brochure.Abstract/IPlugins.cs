@@ -1,3 +1,4 @@
+using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,6 +13,11 @@ namespace Brochure.Abstract
         /// Gets the context.
         /// </summary>
         IPluginContext Context { get; }
+
+        /// <summary>
+        /// Gets the scope.
+        /// </summary>
+        ILifetimeScope Scope { get; }
 
         /// <summary>
         /// 插件唯一健
@@ -66,6 +72,7 @@ namespace Brochure.Abstract
         /// <summary>
         /// Configures the service.
         /// </summary>
+        /// <param name="builder"></param>
         /// <param name="services">The services.</param>
         void ConfigureService(IServiceCollection services);
 

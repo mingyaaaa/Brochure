@@ -1,3 +1,4 @@
+using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Abstract
@@ -11,7 +12,7 @@ namespace Brochure.Abstract
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        ValueTask LoadPlugin(IServiceCollection services);
+        ValueTask LoadPlugin(IContainer services);
 
         /// <summary>
         /// Loads the plugin.

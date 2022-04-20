@@ -8,6 +8,8 @@
   </PropertyGroup>
   <Import Project="../../build/copy_nuget.targets" />
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />

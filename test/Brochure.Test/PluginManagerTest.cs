@@ -1,3 +1,4 @@
+using Autofac;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
@@ -65,6 +66,7 @@ namespace Brochure.Test
         public async Task TestLoadAction()
         {
             var autoMock = new AutoMocker();
+            var mockContrainer = new Mock<IContainer>();
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
             var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
             var pluginConfig = Fixture.Create<PluginConfig>();
@@ -86,7 +88,7 @@ namespace Brochure.Test
             autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
             autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadPluginContext.Object);
 
-            await ins.LoadPlugin(Service);
+            await ins.LoadPlugin(mockContrainer.Object);
 
             autoMock.GetMock<IReflectorUtil>().Verify(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)), Times.Exactly(1));
 

@@ -1,4 +1,6 @@
-﻿using Brochure.Abstract;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Brochure.Abstract;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -90,6 +92,11 @@ namespace Brochure.Core
         /// Gets or sets the auth key.
         /// </summary>
         public List<Guid> AuthKey { get; set; }
+
+        /// <summary>
+        /// Gets the scope.
+        /// </summary>
+        public ILifetimeScope Scope { get; internal set; }
 
         /// <summary>
         /// 配置服务
