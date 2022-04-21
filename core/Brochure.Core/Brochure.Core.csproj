@@ -25,7 +25,6 @@
     <Folder Include="Logs\" />
     <Folder Include="Application\" />
     <Folder Include="Module\" />
-    <Folder Include="PluginsDI\" />
     <Folder Include="RPC\" />
     <Folder Include="Interceptor\" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
+using Brochure.Core.PluginsDI;
 using Brochure.Core.RPC;
 using Brochure.Utils;
 using Brochure.Utils.SystemUtils;
@@ -42,6 +43,10 @@ namespace Brochure.Core
             service.TryAddSingleton<IPluginLoadContextProvider, PluginLoadContextProvider>();
             service.TryAddSingleton<IPluginUnLoadAction, DefaultUnLoadAction>();
             service.TryAddSingleton<IPluginConfigurationLoad, PluginConfigurationLoad>();
+            service.TryAddSingleton<PluginServiceTypeCache>();
+            service.TryAddSingleton(typeof(IPluginSingleton<>), typeof(PluginSingleton<>));
+            service.TryAddScoped(typeof(IPluginScope<>), typeof(PluginScope<>));
+            service.TryAddTransient(typeof(IPluginTransient<>), typeof(PluginTransient<>));
             var option = new ApplicationOption(service, configuration);
             appAction?.Invoke(option);
             service.TryAddSingleton(option);

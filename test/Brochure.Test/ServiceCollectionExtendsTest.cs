@@ -1,6 +1,9 @@
-﻿using Brochure.Abstract;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
+using Brochure.Core.PluginsDI;
 using Brochure.Core.Server;
 using Brochure.Core.Server.Core;
 using Brochure.ORM.Extensions;
@@ -86,6 +89,21 @@ namespace Brochure.Test
             Assert.IsNotNull(cc4);
         }
 
+        [TestMethod]
+        public async Task TestAutofac()
+        {
+            await services.AddBrochureServer();
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            var provider = builder.Build();
+            var cc5 = provider.Resolve<IPluginScope<Student>>();
+            Assert.IsNotNull(cc5);
+            var cc6 = provider.Resolve<IPluginSingleton<Student>>();
+            Assert.IsNotNull(cc6);
+            var cc7 = provider.Resolve<IPluginTransient<Student>>();
+            Assert.IsNotNull(cc7);
+        }
+
         /// <summary>
         /// Tests the add brochure core server.
         /// </summary>
@@ -114,5 +132,9 @@ namespace Brochure.Test
         {
             //    services.AddDbCore(t => t.AddMySql());
         }
+    }
+
+    public class Student
+    {
     }
 }
