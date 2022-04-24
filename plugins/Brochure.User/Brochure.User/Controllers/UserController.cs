@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Brochure.Core.Server.Extensions;
 using Brochure.User.Abstract.RequestModel;
@@ -45,11 +46,11 @@ namespace Brochure.User.Controllers
         [ProducesResponseType(typeof(Result<RspUserModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddUser([FromBody] ReqAddUserModel user)
         {
-            var entiry = objectFactory.Create<ReqAddUserModel, UserEntrity>(user);
+            var entiry = user.As<UserEntrity>();
             var r = await userDal.InsertAndGet(entiry);
             if (r == null)
                 return this.JsonError(500, "添加错误");
-            var rsp = objectFactory.Create<UserEntrity, RspUserModel>(r);
+            var rsp = r.As<RspUserModel>();
             return this.JsonData(rsp);
         }
 
@@ -74,7 +75,7 @@ namespace Brochure.User.Controllers
         [HttpPatch]
         public async Task<IActionResult> UpdateUser([FromQuery] string userId, [FromBody] ReqUpdateUserModel model)
         {
-            var record = objectFactory.Create(model);
+            var record = model.As<IRecord>();
             var r = await userDal.UpdateUser(userId, record);
             return this.JsonData(r);
         }

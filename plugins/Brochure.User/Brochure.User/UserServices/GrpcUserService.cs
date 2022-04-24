@@ -42,7 +42,7 @@ namespace Brochure.User.Services
             var userResponse = new UserResponse();
             foreach (var item in user)
             {
-                var obj = _objectFactory.Create<UserEntrity, Proto.UserRpc.User>(item);
+                var obj = item.As<Proto.UserRpc.User>();// _objectFactory.Create<UserEntrity, Proto.UserRpc.User>(item);
                 userResponse.Users.Add(obj);
             }
             return userResponse;

@@ -23,6 +23,10 @@ namespace Brochure.Core.Interceptor
                 throw new ArgumentNullException(nameof(option));
         }
 
+        /// <summary>
+        /// Intercepts the.
+        /// </summary>
+        /// <param name="invocation">The invocation.</param>
         public async void Intercept(IInvocation invocation)
         {
             var policy = Policy.Handle<Exception>().RetryAsync(this.option.RetryCount);

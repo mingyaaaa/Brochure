@@ -2,9 +2,11 @@ using Brochure.Abstract;
 using Brochure.Core.Server.Core;
 using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -22,37 +24,21 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="services">The services.</param>
         /// <returns>A Task.</returns>
-        internal static async Task AddPluginController(this IServiceCollection services)
+        internal static Task AddPluginController(this IServiceCollection services)
         {
-            var mvcBuilder = services.AddMvcCore();
-            services.TryAddSingleton<IMvcCoreBuilder>(mvcBuilder);
-            //todo delete
-            //var provider = services.BuildServiceProvider();
-            //var manager = provider.GetService<IPluginManagers>();
-            //var pluginList = manager.GetPlugins();
-            //foreach (var item in pluginList)
-            //{
-            //    try
-            //    {
-            //        await item.StartAsync();
-            //        mvcBuilder.AddApplicationPart(item.Assembly);
-            //        Log.Info($"{item.Name}加载成功");
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Log.Error($"{item.Name}加载失败", e);
-            //        await item.ExitAsync();
-            //    }
-            //}
+            var mvcBuilder = services.AddMvc();
+            services.TryAddSingleton(mvcBuilder);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Adds the brochure server.
         /// </summary>
         /// <param name="services">The services.</param>
+        /// <param name="configuration"></param>
         /// <param name="action">The action.</param>
         /// <returns>A Task.</returns>
-        public static async Task AddBrochureServer(this IServiceCollection services, Action<ApplicationOption> action = null)
+        public static async Task AddBrochureServer(this IServiceCollection services, IConfiguration configuration = null, Action<ApplicationOption> action = null)
         {
             services.AddLogging(t => t.AddConsole());
             services.AddBrochureCore(option =>
@@ -60,13 +46,19 @@ namespace Brochure.Core.Server
                option.AddLog();
                option.Services.TryAddSingleton<IMiddleManager>(new MiddleManager());
                option.Services.AddTransient<IPluginUnLoadAction, PluginMiddleUnLoadAction>();
-               services.AddSingleton<IActionDescriptorChangeProvider>(PluginActionDescriptorChangeProvider.Instance);
                option.Services.Replace(ServiceDescriptor.Transient(typeof(IApplicationBuilderFactory), typeof(PluginApplicationBuilderFactory)));
                action?.Invoke(option);
-           });
+           }, configuration);
             services.AddHostedService<PluginLoadService>();
-            services.Replace(ServiceDescriptor.Scoped(typeof(IControllerActivator), typeof(PluginScopeControllerActivator)));
+
+            services.Replace(ServiceDescriptor.Scoped<IControllerActivator>(t =>
+            {
+                var pluginManager = t.GetService<IPluginManagers>();
+                return new PluginScopeControllerActivator(pluginManager, new ServiceBasedControllerActivator());
+            }));
             await services.AddPluginController();
+            services.Replace(ServiceDescriptor.Singleton<IActionDescriptorChangeProvider>(PluginActionDescriptorChangeProvider.Instance));
+            services.AddSingleton<IStartupFilter, PluginStartupFilter>();
         }
 
         /// <summary>
@@ -113,6 +105,7 @@ namespace Brochure.Core.Server
         /// <param name="name">The name.</param>
         /// <param name="version">The version.</param>
         /// <param name="xmlDirPath">The xml dir path.</param>
+        [Obsolete]
         public static void ConfigurePluginSwaggerGen(this IServiceCollection services, string name, string version, string xmlDirPath)
         {
             services.ConfigureSwaggerGen(c =>

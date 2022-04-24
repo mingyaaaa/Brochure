@@ -20,6 +20,10 @@ namespace Brochure.Core.Interceptor
             this.impObj = obj;
         }
 
+        /// <summary>
+        /// Intercepts the.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public void Intercept(IInvocation context)
         {
             var impType = impObj.GetType();
@@ -30,11 +34,25 @@ namespace Brochure.Core.Interceptor
             context.ReturnValue = impMethod.Invoke(impObj, context.Arguments);
         }
 
+        /// <summary>
+        /// Intercepts the async.
+        /// </summary>
+        /// <param name="invocation">The invocation.</param>
+        /// <param name="proceedInfo">The proceed info.</param>
+        /// <param name="proceed">The proceed.</param>
+        /// <returns>A Task.</returns>
         protected override Task InterceptAsync(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task> proceed)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Intercepts the async.
+        /// </summary>
+        /// <param name="invocation">The invocation.</param>
+        /// <param name="proceedInfo">The proceed info.</param>
+        /// <param name="proceed">The proceed.</param>
+        /// <returns>A Task.</returns>
         protected override Task<TResult> InterceptAsync<TResult>(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
         {
             throw new NotImplementedException();

@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebApiClientCore" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Brochure.User.Abstract\Brochure.User.Abstract.csproj" />
   </ItemGroup>
 

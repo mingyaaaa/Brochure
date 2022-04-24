@@ -11,7 +11,7 @@
   "profiles": {
     "Brochure.Server.Main": {
       "commandName": "Executable",
-      "executablePath": "E:\\GitProgram\\Brochure\\bin\\Brochure.Server.Main.exe",
+      "executablePath": "E:\\GitProgram\\brochure\\bin\\Brochure.Server.Main.exe",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

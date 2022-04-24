@@ -6,8 +6,7 @@ using Brochure.Core;
 using Brochure.Core.PluginsDI;
 using Brochure.Core.Server;
 using Brochure.Core.Server.Core;
-using Brochure.ORM.Extensions;
-using Brochure.ORM.MySql;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -87,6 +86,8 @@ namespace Brochure.Test
             Assert.IsNotNull(cc3);
             var cc4 = provider.GetService<ApplicationOption>();
             Assert.IsNotNull(cc4);
+            var cc5 = provider.GetService<IStartupFilter>();
+            Assert.IsNotNull(cc5 as PluginStartupFilter);
         }
 
         [TestMethod]
@@ -113,7 +114,7 @@ namespace Brochure.Test
         {
             await services.AddPluginController();
             var provider = services.BuildServiceProvider();
-            var a = provider.GetService<IMvcCoreBuilder>();
+            var a = provider.GetService<IMvcBuilder>();
             Assert.IsNotNull(a);
         }
 
@@ -134,6 +135,9 @@ namespace Brochure.Test
         }
     }
 
+    /// <summary>
+    /// The student.
+    /// </summary>
     public class Student
     {
     }

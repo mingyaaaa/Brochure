@@ -1,12 +1,8 @@
 ﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Brochure.Core
 {
@@ -138,6 +134,14 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="services">The services.</param>
         public virtual void ConfigureService(IServiceCollection services)
+        {
+        }
+
+        /// <summary>
+        /// Configs the application.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        public virtual void ConfigApplication(IPluginAppBuilder serviceProvider)
         {
         }
     }

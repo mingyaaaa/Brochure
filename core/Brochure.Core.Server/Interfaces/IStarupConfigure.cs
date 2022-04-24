@@ -6,6 +6,7 @@ namespace Brochure.Core.Server
     /// <summary>
     /// The starup configure.
     /// </summary>
+    [Obsolete]
     public interface IStarupConfigure
     {
         /// <summary>
@@ -13,6 +14,7 @@ namespace Brochure.Core.Server
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="builder">The builder.</param>
+        [Obsolete]
         void Configure(Guid key, IApplicationBuilder builder);
     }
 }

@@ -38,11 +38,10 @@ namespace Brochure.Core
             var dllName = plugins.AssemblyName;
             IConfiguration configurtion = _applicationOption.Configuration?.GetSection(dllName);
             var builder = new ConfigurationBuilder();
-            builder.AddConfiguration(_applicationOption.Configuration);
+            if (_applicationOption.Configuration != null)
+                builder.AddConfiguration(_applicationOption.Configuration);
             if (configurtion != null)
-            {
                 builder.AddConfiguration(configurtion);
-            }
             //查询插件中的配置文件 默认使用插件中的配置文件覆盖 主程序中的配置文件
             var pluginDir = plugins.PluginDirectory;
             var pluginSettingEnvFile = GetPluginSettingFile();

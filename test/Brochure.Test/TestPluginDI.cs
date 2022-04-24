@@ -108,30 +108,56 @@ namespace Brochure.Test
 
         #region PluginSingleton
 
+        /// <summary>
+        /// The app singleton_ p_ singleton.
+        /// </summary>
         public class AppSingleton_P_Singleton
         {
+            /// <summary>
+            /// Gets the plugin a.
+            /// </summary>
             public IPluginSingleton<PluginA> PluginA { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AppSingleton_P_Singleton"/> class.
+            /// </summary>
+            /// <param name="pluginSingleton">The plugin singleton.</param>
             public AppSingleton_P_Singleton(IPluginSingleton<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;
             }
         }
 
+        /// <summary>
+        /// The app scope_ p singleton.
+        /// </summary>
         public class AppScope_PSingleton
         {
+            /// <summary>
+            /// Gets the plugin a.
+            /// </summary>
             public IPluginSingleton<PluginA> PluginA { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AppScope_PSingleton"/> class.
+            /// </summary>
+            /// <param name="pluginSingleton">The plugin singleton.</param>
             public AppScope_PSingleton(IPluginSingleton<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;
             }
         }
 
+        /// <summary>
+        /// The plugin a.
+        /// </summary>
         public class PluginA
         {
         }
 
+        /// <summary>
+        /// The plugin b.
+        /// </summary>
         public class PluginB
         {
         }
@@ -140,10 +166,20 @@ namespace Brochure.Test
 
         #region PluginScope
 
+        /// <summary>
+        /// The app scope_ p scope.
+        /// </summary>
         public class AppScope_PScope
         {
+            /// <summary>
+            /// Gets the plugin a.
+            /// </summary>
             public IPluginScope<PluginA> PluginA { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AppScope_PScope"/> class.
+            /// </summary>
+            /// <param name="pluginSingleton">The plugin singleton.</param>
             public AppScope_PScope(IPluginScope<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;

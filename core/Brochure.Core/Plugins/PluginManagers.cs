@@ -1,11 +1,5 @@
-﻿using Autofac;
-using Brochure.Abstract;
-using System;
+﻿using Brochure.Abstract;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Brochure.Core
 {

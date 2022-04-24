@@ -1,3 +1,4 @@
+using Brochure.Abstract.Models;
 using Mapster;
 using System.Reflection;
 
@@ -16,18 +17,11 @@ namespace Brochure.Abstract.Extensions
         /// <param name="isException"></param>
         /// <typeparam name="T">目标类型</typeparam>
         /// <returns></returns>
-        public static T As<T>(this object obj, bool isException = true)
+        public static T As<T>(this object obj)
         {
-            try
-            {
-                if (obj is T t)
-                    return t;
-                return obj.Adapt<T>();
-            }
-            catch (System.Exception) when (!isException)
-            {
-                return (T)(object)default(T);
-            }
+            if (obj is T t)
+                return t;
+            return (T)As(obj, typeof(T));
         }
 
         /// <summary>
@@ -36,11 +30,11 @@ namespace Brochure.Abstract.Extensions
         /// <param name="obj">The obj.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>A T.</returns>
-        public static T As<T>(this object obj, T defaultValue)
+        public static T AsDefault<T>(this object obj, T defaultValue)
         {
             try
             {
-                return As<T>(obj, false);
+                return As<T>(obj);
             }
             catch (System.Exception)
             {
@@ -58,13 +52,11 @@ namespace Brochure.Abstract.Extensions
         {
             var objType = obj.GetType();
             if (type.IsAssignableFrom(objType))
-            {
                 return obj;
-            }
             if (type.IsEnum)
-            {
                 return Enum.Parse(type, obj.ToString());
-            }
+            if (typeof(IRecord).IsAssignableFrom(type))
+                return (object)new Record(obj.Adapt<IDictionary<string, object>>());
             return obj.Adapt(objType, type);
         }
     }

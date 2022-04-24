@@ -16,6 +16,7 @@ namespace Brochure.Core.Server
         /// Configs the plugin.
         /// </summary>
         /// <param name="app">The app.</param>
+        [Obsolete]
         public static void ConfigPlugin(this IApplicationBuilder app)
         {
             var managers = app.ApplicationServices.GetService<IPluginManagers>();

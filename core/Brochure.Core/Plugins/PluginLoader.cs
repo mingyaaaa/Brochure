@@ -5,13 +5,8 @@ using Brochure.Abstract.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Brochure.Core
 {
@@ -25,6 +20,7 @@ namespace Brochure.Core
         private readonly ISysDirectory directory;
         private readonly IPluginLoadContextProvider pluginLoadContextProvider;
         private readonly IJsonUtil jsonUtil;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<PluginLoader> log;
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
@@ -38,6 +34,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="directory">The directory.</param>
         /// <param name="jsonUtil">The json util.</param>
+        /// <param name="serviceProvider"></param>
         /// <param name="pluginLoadContextProvider"></param>
         /// <param name="log">The log.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
@@ -48,6 +45,7 @@ namespace Brochure.Core
         /// <param name="pluginConfigurationLoad"></param>
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
+            IServiceProvider serviceProvider,
             IPluginLoadContextProvider pluginLoadContextProvider,
             ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
@@ -59,6 +57,7 @@ namespace Brochure.Core
         {
             this.directory = directory;
             this.jsonUtil = jsonUtil;
+            _serviceProvider = serviceProvider;
             this.pluginLoadContextProvider = pluginLoadContextProvider;
             this.log = log;
             pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
@@ -75,7 +74,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
+        public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
         {
             IPluginsLoadContext locadContext = null;
             try
@@ -91,10 +90,10 @@ namespace Brochure.Core
                 if (allPluginTypes.Count == 2)
                     throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
-                var plugin = (Plugins)objectFactory.Create(pluginType);
+                var plugin = (Plugins)ActivatorUtilities.CreateInstance(_serviceProvider, typeof(Plugins));
                 SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
                 pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-                return plugin;
+                return new ValueTask<IPlugins>(plugin);
             }
             catch (Exception e)
             {
@@ -108,7 +107,7 @@ namespace Brochure.Core
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin(IContainer services)
+        public async ValueTask LoadPlugin(ILifetimeScope services)
         {
             await ResolverPlugins(services);
         }
@@ -116,12 +115,12 @@ namespace Brochure.Core
         /// <summary>
         /// 加载插件
         /// </summary>
-        private async Task ResolverPlugins(IContainer container)
+        private async Task ResolverPlugins(ILifetimeScope container)
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             var listPlugins = new List<IPlugins>();
-            var mvcBuilder = container.Resolve<IMvcCoreBuilder>();
+            var mvcBuilder = container.Resolve<IMvcBuilder>();
             //加载程序集
             foreach (var pluginConfigPath in allPluginPath)
             {

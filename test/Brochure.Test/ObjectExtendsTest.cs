@@ -1,5 +1,7 @@
+using AutoFixture;
 using Brochure.Abstract;
 using Brochure.Abstract.Extensions;
+using Brochure.Abstract.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -58,12 +60,6 @@ namespace Brochure.Core.Test
         /// </summary>
         public DateTime DateTime { get; set; }
     }
-
-    /// <summary>
-    /// The c.
-    /// </summary>
-    public class C
-    { }
 
     /// <summary>
     /// The as test.
@@ -228,15 +224,25 @@ namespace Brochure.Core.Test
             Assert.AreEqual(b.DateTime, br[nameof(b.DateTime)]);
         }
 
-        /// <summary>
-        /// IS the b conver to.
-        /// </summary>
         [TestMethod]
-        public void IBConverTo()
+        public void RecordTo2()
         {
-            var c = new C();
-            var b = c.As<B>();
-            Assert.AreEqual("C", b.BStr);
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            var ar = a.As<Record>();
+            var b = a.BObject;
+            Assert.IsTrue(ar.ContainsKey(nameof(a.AStr)));
+            Assert.IsTrue(ar.ContainsKey(nameof(a.BObject)));
+            Assert.IsTrue(ar.ContainsKey(nameof(a.C)));
+            Assert.IsTrue(ar.ContainsKey(nameof(a.DateTime)));
+            Assert.AreEqual(a.AStr, ar[nameof(a.AStr)]);
+            Assert.AreEqual(a.C, ar[nameof(a.C)]);
+            Assert.AreEqual(a.DateTime, ar[nameof(a.DateTime)]);
+            Assert.AreEqual(a.AStr, ar[nameof(a.AStr)]);
+            var br = ar[nameof(a.BObject)].As<IRecord>();
+            Assert.AreEqual(b.BStr, br[nameof(b.BStr)]);
+            Assert.AreEqual(b.C, br[nameof(b.C)]);
+            Assert.AreEqual(b.DateTime, br[nameof(b.DateTime)]);
         }
     }
 }
