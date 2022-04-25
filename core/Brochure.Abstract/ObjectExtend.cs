@@ -1,6 +1,8 @@
 using Brochure.Abstract.Models;
 using Mapster;
+using System.Data;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Brochure.Abstract.Extensions
 {
@@ -51,13 +53,38 @@ namespace Brochure.Abstract.Extensions
         public static object As(this object obj, Type type)
         {
             var objType = obj.GetType();
-            if (type.IsAssignableFrom(objType))
+            if ((obj is string objStr) && type.IsClass)
+                return JsonSerializer.Deserialize(objStr, type);
+            else if (type == typeof(string) && objType.IsClass)
+                return JsonSerializer.Serialize(obj);
+            else if (type.IsAssignableFrom(objType))
                 return obj;
-            if (type.IsEnum)
+            else if (type.IsEnum)
                 return Enum.Parse(type, obj.ToString());
-            if (typeof(IRecord).IsAssignableFrom(type))
+            else if (typeof(IRecord).IsAssignableFrom(type))
                 return (object)new Record(obj.Adapt<IDictionary<string, object>>());
+            else if (type.IsClass && obj is IDataRecord reader)
+                return DataRecordToObj(reader, type);
+            else if (type.IsClass && obj is IRecord record)
+                return RecordToObj(record, type);
             return obj.Adapt(objType, type);
+        }
+
+        private static object RecordToObj(IRecord record, Type type)
+        {
+            var dic = new Dictionary<string, object>(record);
+            return dic.Adapt(typeof(IDictionary<string, object>), type);
+        }
+
+        private static object DataRecordToObj(IDataRecord record, Type type)
+        {
+            var dic = new Dictionary<string, object>();
+            for (int i = 0; i < record.FieldCount; i++)
+            {
+                var item = record.GetName(i);
+                dic[item] = record[i];
+            }
+            return dic.Adapt(typeof(IDictionary<string, object>), type);
         }
     }
 }

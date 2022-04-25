@@ -1,10 +1,16 @@
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using Brochure.Abstract;
 using Brochure.Abstract.Extensions;
 using Brochure.Abstract.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text.Json;
 
 namespace Brochure.Core.Test
 {
@@ -198,7 +204,7 @@ namespace Brochure.Core.Test
         /// Records the to.
         /// </summary>
         [TestMethod]
-        public void RecordTo()
+        public void ObjToRecord()
         {
             var a = new A();
             a.AStr = "AStr";
@@ -225,7 +231,7 @@ namespace Brochure.Core.Test
         }
 
         [TestMethod]
-        public void RecordTo2()
+        public void ObjToRecord2()
         {
             var fix = new Fixture();
             var a = fix.Create<A>();
@@ -243,6 +249,93 @@ namespace Brochure.Core.Test
             Assert.AreEqual(b.BStr, br[nameof(b.BStr)]);
             Assert.AreEqual(b.C, br[nameof(b.C)]);
             Assert.AreEqual(b.DateTime, br[nameof(b.DateTime)]);
+        }
+
+        [TestMethod]
+        public void TestObjectToObject()
+        {
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            var b = a.As<B>();
+            Assert.IsNotNull(b);
+            Assert.AreEqual(b.C, a.C);
+            Assert.AreEqual(b.DateTime, a.DateTime);
+        }
+
+        [TestMethod]
+        public void StringToObj()
+        {
+            var fix = new Fixture(); ;
+            var a = fix.Create<A>();
+            var json = JsonSerializer.Serialize(a);
+            var aa = json.As<A>();
+            Assert.AreEqual(aa.AStr, a.AStr);
+            Assert.AreEqual(aa.C, a.C);
+            Assert.AreEqual(aa.DateTime, a.DateTime);
+        }
+
+        [TestMethod]
+        public void ObjToString()
+        {
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            var str = a.As<string>();
+            var json = JsonSerializer.Serialize(a);
+            Assert.AreEqual(str, json);
+        }
+
+        [TestMethod]
+        public void ReaderToObj()
+        {
+            var reader = new Mock<IDataReader>();
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            reader.Setup(t => t.GetName(0)).Returns(nameof(A.AStr));
+            reader.Setup(t => t.GetName(1)).Returns(nameof(A.C));
+            reader.Setup(t => t.GetName(2)).Returns(nameof(A.DateTime));
+            reader.Setup(t => t[0]).Returns(a.AStr);
+            reader.Setup(t => t[1]).Returns(a.C);
+            reader.Setup(t => t[2]).Returns(a.DateTime);
+            reader.Setup(t => t.FieldCount).Returns(3);
+            var aa = reader.Object.As<A>();
+            Assert.AreEqual(aa.AStr, a.AStr);
+            Assert.AreEqual(aa.DateTime, a.DateTime);
+            Assert.AreEqual(aa.C, a.C);
+        }
+
+        [TestMethod]
+        public void DicToObj()
+        {
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            var dic = new Dictionary<string, object>()
+            {
+                [nameof(A.AStr)] = a.AStr,
+                [nameof(A.DateTime)] = a.DateTime,
+                [nameof(A.C)] = a.C,
+            };
+            var aa = dic.As<A>();
+            Assert.AreEqual(aa.AStr, a.AStr);
+            Assert.AreEqual(aa.DateTime, a.DateTime);
+            Assert.AreEqual(aa.C, a.C);
+        }
+
+        [TestMethod]
+        public void RecordToObj()
+        {
+            var fix = new Fixture();
+            var a = fix.Create<A>();
+            var dic = new Dictionary<string, object>()
+            {
+                [nameof(A.AStr)] = a.AStr,
+                [nameof(A.DateTime)] = a.DateTime,
+                [nameof(A.C)] = a.C,
+            };
+            var record = new Record(dic);
+            var aa = record.As<A>();
+            Assert.AreEqual(aa.AStr, a.AStr);
+            Assert.AreEqual(aa.DateTime, a.DateTime);
+            Assert.AreEqual(aa.C, a.C);
         }
     }
 }
