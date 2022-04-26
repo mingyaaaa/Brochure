@@ -66,7 +66,7 @@ namespace Brochure.Test
         public async Task TestLoadAction()
         {
             var autoMock = new AutoMocker();
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
             var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
             var pluginConfig = Fixture.Create<PluginConfig>();

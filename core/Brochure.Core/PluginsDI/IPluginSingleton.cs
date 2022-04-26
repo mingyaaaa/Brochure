@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core.Lifetime;
 using Brochure.Abstract;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.PluginsDI
 {
@@ -20,8 +21,8 @@ namespace Brochure.Core.PluginsDI
     /// </summary>
     internal class PluginSingleton<T> : IPluginSingleton<T> where T : class
     {
-        private ILifetimeScope scope;
-        private ILifetimeScope _pluginScope;
+        private IPluginServiceProvider scope;
+        private IPluginServiceProvider _pluginScope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginSingleton"/> class.
@@ -31,21 +32,7 @@ namespace Brochure.Core.PluginsDI
         {
             var type = typeof(T);
             _pluginScope = serviceTypeCache.GetPluginScope(type);
-            scope = _pluginScope?.BeginLifetimeScope();
-            if (_pluginScope != null)
-                _pluginScope.CurrentScopeEnding += Scope_CurrentScopeEnding;
-        }
-
-        /// <summary>
-        /// Scope_S the current scope ending.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The e.</param>
-        private void Scope_CurrentScopeEnding(object sender, LifetimeScopeEndingEventArgs e)
-        {
-            scope = null;
-            if (_pluginScope != null)
-                _pluginScope.CurrentScopeEnding -= Scope_CurrentScopeEnding;
+            scope = _pluginScope?.CreateScope();
         }
 
         /// <summary>
@@ -55,7 +42,9 @@ namespace Brochure.Core.PluginsDI
         {
             get
             {
-                var value = scope?.Resolve<T>();
+                if (_pluginScope.IsDisposed)
+                    scope = null;
+                var value = scope?.GetService<T>();
                 return new WeakReference<T>(value);
             }
         }

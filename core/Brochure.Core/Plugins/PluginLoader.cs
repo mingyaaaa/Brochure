@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
+using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace Brochure.Core
         private readonly ILogger<PluginLoader> log;
         private readonly IReflectorUtil reflectorUtil;
         private readonly IObjectFactory objectFactory;
+        private readonly PluginServiceTypeCache _pluginServiceTypeCache;
         private readonly IPluginManagers _pluginManagers;
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
@@ -39,6 +41,7 @@ namespace Brochure.Core
         /// <param name="log">The log.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="objectFactory">The object factory.</param>
+        /// <param name="pluginServiceTypeCache"></param>
         /// <param name="pluginManagers"></param>
         /// <param name="loadActions"></param>
         /// <param name="unLoadActions"></param>
@@ -50,6 +53,7 @@ namespace Brochure.Core
             ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
+            PluginServiceTypeCache pluginServiceTypeCache,
             IPluginManagers pluginManagers,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
@@ -63,6 +67,7 @@ namespace Brochure.Core
             pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
             this.reflectorUtil = reflectorUtil;
             this.objectFactory = objectFactory;
+            _pluginServiceTypeCache = pluginServiceTypeCache;
             _pluginManagers = pluginManagers;
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
@@ -107,7 +112,7 @@ namespace Brochure.Core
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin(ILifetimeScope services)
+        public async ValueTask LoadPlugin(IPluginServiceProvider services)
         {
             await ResolverPlugins(services);
         }
@@ -115,26 +120,23 @@ namespace Brochure.Core
         /// <summary>
         /// 加载插件
         /// </summary>
-        private async Task ResolverPlugins(ILifetimeScope container)
+        private async Task ResolverPlugins(IPluginServiceProvider container)
         {
             var pluginBathPath = _pluginManagers.GetBasePluginsPath();
             var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             var listPlugins = new List<IPlugins>();
-            var mvcBuilder = container.Resolve<IMvcBuilder>();
+            var mvcBuilder = container.GetService<IMvcBuilder>();
             //加载程序集
             foreach (var pluginConfigPath in allPluginPath)
             {
                 try
                 {
                     var p = await LoadPlugin(pluginConfigPath);
-                    var pluginScope = container.BeginLifetimeScope(t =>
-                      {
-                          var service = new ServiceCollection();
-                          p.ConfigureService(service);
-                          mvcBuilder.AddApplicationPart(p.Assembly);
-                          t.Populate(service);
-                      });
-
+                    var service = new ServiceCollection();
+                    p.ConfigureService(service);
+                    mvcBuilder.AddApplicationPart(p.Assembly);
+                    var pluginScope = container.CreateScope(service);
+                    _pluginServiceTypeCache.AddPluginServiceType(p.Key.ToString(), pluginScope, service);
                     if (p != null)
                     {
                         listPlugins.Add(p);

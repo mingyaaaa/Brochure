@@ -12,7 +12,7 @@ namespace Brochure.Abstract
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        ValueTask LoadPlugin(ILifetimeScope services);
+        ValueTask LoadPlugin(IPluginServiceProvider services);
 
         /// <summary>
         /// Loads the plugin.

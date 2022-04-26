@@ -70,12 +70,24 @@ namespace Brochure.Abstract.Extensions
             return obj.Adapt(objType, type);
         }
 
+        /// <summary>
+        /// Records the to obj.
+        /// </summary>
+        /// <param name="record">The record.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>An object.</returns>
         private static object RecordToObj(IRecord record, Type type)
         {
             var dic = new Dictionary<string, object>(record);
             return dic.Adapt(typeof(IDictionary<string, object>), type);
         }
 
+        /// <summary>
+        /// Data the record to obj.
+        /// </summary>
+        /// <param name="record">The record.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>An object.</returns>
         private static object DataRecordToObj(IDataRecord record, Type type)
         {
             var dic = new Dictionary<string, object>();

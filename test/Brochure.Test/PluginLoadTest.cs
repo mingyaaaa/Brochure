@@ -1,10 +1,12 @@
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
+using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +17,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Brochure.Test
@@ -45,7 +48,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestLoad1()
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var pluginManager = Fixture.Freeze<Mock<IPluginManagers>>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
@@ -59,6 +62,26 @@ namespace Brochure.Test
             dir.Verify(t => t.GetFiles(basePath, "plugin.config", SearchOption.AllDirectories));
         }
 
+        [TestMethod]
+        public async Task TestPluginLoadService()
+        {
+            var loadService = Fixture.Create<PluginLoadService>();
+            var serviceProviderMock = Fixture.Freeze<Mock<IServiceProvider>>();
+            var pluginLoader = new Mock<IPluginLoader>();
+
+            serviceProviderMock.Setup(t => t.GetService(typeof(IPluginLoader))).Returns(pluginLoader.Object);
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => loadService.StartAsync(CancellationToken.None));
+        }
+
+        [TestMethod]
+        public async Task TestPluginLoadService1()
+        {
+            var lifescope = new Mock<ILifetimeScope>();
+            var provider = new AutofacServiceProvider(lifescope.Object);
+            var loadService = new PluginLoadService(provider);
+            await loadService.StartAsync(CancellationToken.None);
+        }
+
         /// <summary>
         /// Tests the load2.
         /// </summary>
@@ -66,7 +89,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestLoad2()
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
@@ -91,7 +114,7 @@ namespace Brochure.Test
         [DataRow(2)]
         public async Task TestLoad3(int typeCount)
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
@@ -114,7 +137,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestLoad4()
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
@@ -144,7 +167,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestResolvePlugins()
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var autoMock = new AutoMocker();
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
             var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
@@ -183,7 +206,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestPluginsConfig()
         {
-            var mockContrainer = new Mock<IContainer>();
+            var mockContrainer = new Mock<IPluginServiceProvider>();
             var autoMock = new AutoMocker();
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
             var allPluginPath = Fixture.CreateMany<string>(1).ToArray();

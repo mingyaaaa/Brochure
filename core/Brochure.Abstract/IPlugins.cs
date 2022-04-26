@@ -72,7 +72,6 @@ namespace Brochure.Abstract
         /// <summary>
         /// Configures the service.
         /// </summary>
-        /// <param name="builder"></param>
         /// <param name="services">The services.</param>
         void ConfigureService(IServiceCollection services);
 

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Brochure.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
@@ -12,18 +13,18 @@ namespace Brochure.Core
     /// <summary>
     /// The plugin service type cache.
     /// </summary>
-    internal class PluginServiceTypeCache
+    public class PluginServiceTypeCache
     {
-        private ConcurrentDictionary<string, ILifetimeScope> pluginScope;
-        private ConcurrentDictionary<Type, ILifetimeScope> serviceScope;
+        private ConcurrentDictionary<string, IPluginServiceProvider> pluginScope;
+        private ConcurrentDictionary<Type, IPluginServiceProvider> serviceScope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginServiceTypeCache"/> class.
         /// </summary>
         public PluginServiceTypeCache()
         {
-            pluginScope = new ConcurrentDictionary<string, ILifetimeScope>();
-            serviceScope = new ConcurrentDictionary<Type, ILifetimeScope>();
+            pluginScope = new ConcurrentDictionary<string, IPluginServiceProvider>();
+            serviceScope = new ConcurrentDictionary<Type, IPluginServiceProvider>();
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Brochure.Core
         /// <param name="guid">The guid.</param>
         /// <param name="scope">The scope.</param>
         /// <param name="services">The services.</param>
-        public void AddPluginServiceType(string guid, ILifetimeScope scope, IServiceCollection services)
+        public virtual void AddPluginServiceType(string guid, IPluginServiceProvider scope, IServiceCollection services)
         {
             pluginScope.TryAdd(guid, scope);
             foreach (var item in services)
@@ -45,7 +46,7 @@ namespace Brochure.Core
         /// Removes the plugin service type.
         /// </summary>
         /// <param name="guid">The guid.</param>
-        public void RemovePluginServiceType(string guid)
+        public virtual void RemovePluginServiceType(string guid)
         {
             if (pluginScope.TryRemove(guid, out var item))
             {
@@ -62,7 +63,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>An ILifetimeScope.</returns>
-        public ILifetimeScope GetPluginScope(Type type)
+        public virtual IPluginServiceProvider GetPluginScope(Type type)
         {
             serviceScope.TryGetValue(type, out var scope);
             return scope;
@@ -73,7 +74,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="guid">The guid.</param>
         /// <returns>An ILifetimeScope.</returns>
-        public ILifetimeScope GetPluginScope(string guid)
+        public virtual IPluginServiceProvider GetPluginScope(string guid)
         {
             pluginScope.TryGetValue(guid, out var scope);
             return scope;

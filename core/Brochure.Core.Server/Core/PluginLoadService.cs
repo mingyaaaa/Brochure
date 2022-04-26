@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Brochure.Abstract;
+using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -30,11 +31,7 @@ namespace Brochure.Core
         public Task StartAsync(CancellationToken cancellationToken)
         {
             var pluginLoader = _serviceProvider.GetService<IPluginLoader>();
-            var autofacServiceProvider = _serviceProvider as AutofacServiceProvider;
-            var container = autofacServiceProvider?.LifetimeScope;
-            if (container == null)
-                throw new InvalidOperationException("需要autofac容器支持");
-            pluginLoader.LoadPlugin(container);
+            pluginLoader.LoadPlugin(new AutofacPluginServiceProvider(_serviceProvider));
             return Task.CompletedTask;
         }
 

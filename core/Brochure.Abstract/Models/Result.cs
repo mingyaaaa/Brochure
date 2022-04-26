@@ -35,7 +35,7 @@ namespace Brochure.Abstract.Models
         /// <summary>
         /// Gets the data.
         /// </summary>
-        new T Data { get; }
+        T Data { get; }
     }
 
     /// <summary>

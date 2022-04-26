@@ -34,15 +34,13 @@ namespace Brochure.Test
             return builder.Build();
         }
 
-        private ILifetimeScope CreatePluginScope(IContainer container, Action<IServiceCollection> action)
+        private IPluginServiceProvider CreatePluginScope(IContainer container, Action<IServiceCollection> action)
         {
             var typeCache = container.Resolve<PluginServiceTypeCache>();
+            var pluginProvider = new AutofacPluginServiceProvider(container);
             var service = new ServiceCollection();
-            var scope = container.BeginLifetimeScope(t =>
-             {
-                 action(service);
-                 t.Populate(service);
-             });
+            action?.Invoke(service);
+            var scope = pluginProvider.CreateScope(service);
             typeCache.AddPluginServiceType("test", scope, service);
             return scope;
         }
