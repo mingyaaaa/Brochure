@@ -28,11 +28,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A Task.</returns>
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             var pluginLoader = _serviceProvider.GetService<IPluginLoader>();
-            pluginLoader.LoadPlugin(new AutofacPluginServiceProvider(_serviceProvider));
-            return Task.CompletedTask;
+            await pluginLoader.LoadPlugin();
         }
 
         /// <summary>
@@ -40,9 +39,10 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A Task.</returns>
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            var pluginLoader = _serviceProvider.GetService<IPluginLoader>();
+            await pluginLoader.UnLoadAll();
         }
     }
 }

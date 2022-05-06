@@ -22,6 +22,48 @@ namespace Brochure.Abstract
         IPluginServiceProvider CreateScope(IServiceCollection action);
     }
 
+    public class DefaultPluginServiceProvider : IPluginServiceProvider
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private IList<IServiceScope> _scopes;
+
+        public DefaultPluginServiceProvider(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _scopes = new List<IServiceScope>();
+        }
+
+        public bool IsDisposed { get; private set; }
+
+        public IPluginServiceProvider CreateScope(IServiceCollection action)
+        {
+            var scope = _serviceProvider.CreateScope();
+            _scopes.Add(scope);
+            return new DefaultPluginServiceProvider(scope.ServiceProvider);
+        }
+
+        public void Dispose()
+        {
+            IsDisposed = true;
+            foreach (var item in _scopes)
+            {
+                item.Dispose();
+            }
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            IsDisposed = true;
+            Dispose();
+            return ValueTask.CompletedTask;
+        }
+
+        public object GetService(Type serviceType)
+        {
+            return _serviceProvider.GetService(serviceType);
+        }
+    }
+
     public static class PluginServiceProviderExtensions
     {
         /// <summary>

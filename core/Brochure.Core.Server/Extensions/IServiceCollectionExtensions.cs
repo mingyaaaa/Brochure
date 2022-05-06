@@ -1,4 +1,5 @@
 using Brochure.Abstract;
+using Brochure.Core.PluginsDI;
 using Brochure.Core.Server.Core;
 using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.AspNetCore.Builder;
@@ -50,7 +51,7 @@ namespace Brochure.Core.Server
                action?.Invoke(option);
            }, configuration);
             services.AddHostedService<PluginLoadService>();
-
+            services.AddSingleton<IPluginServiceProvider, DefaultPluginServiceProvider>();
             services.Replace(ServiceDescriptor.Scoped<IControllerActivator>(t =>
             {
                 var pluginManager = t.GetService<IPluginManagers>();
@@ -59,6 +60,17 @@ namespace Brochure.Core.Server
             await services.AddPluginController();
             services.Replace(ServiceDescriptor.Singleton<IActionDescriptorChangeProvider>(PluginActionDescriptorChangeProvider.Instance));
             services.AddSingleton<IStartupFilter, PluginStartupFilter>();
+        }
+
+        /// <summary>
+        /// Adds the autofac plugin.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns>An IServiceCollection.</returns>
+        public static IServiceCollection AddAutofacPlugin(this IServiceCollection services)
+        {
+            services.Replace(ServiceDescriptor.Singleton<IPluginServiceProvider, AutofacPluginServiceProvider>());
+            return services;
         }
 
         /// <summary>

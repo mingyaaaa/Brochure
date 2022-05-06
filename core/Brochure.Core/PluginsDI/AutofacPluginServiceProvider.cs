@@ -17,7 +17,7 @@ namespace Brochure.Core.PluginsDI
         /// Initializes a new instance of the <see cref="AutofacPluginServiceProvider"/> class.
         /// </summary>
         /// <param name="lifetimeScope">The lifetime scope.</param>
-        public AutofacPluginServiceProvider(ILifetimeScope lifetimeScope) : this()
+        internal AutofacPluginServiceProvider(ILifetimeScope lifetimeScope) : this()
         {
             _lifetimeScope = lifetimeScope;
         }
@@ -29,8 +29,11 @@ namespace Brochure.Core.PluginsDI
         public AutofacPluginServiceProvider(IServiceProvider lifetimeScope) : this()
         {
             if (lifetimeScope is AutofacServiceProvider autofacServiceProvider)
+            {
                 _lifetimeScope = autofacServiceProvider.LifetimeScope;
-            throw new Exception("需要使用Autofac容器");
+                return;
+            }
+            throw new InvalidOperationException("需要使用Autofac容器");
         }
 
         /// <summary>

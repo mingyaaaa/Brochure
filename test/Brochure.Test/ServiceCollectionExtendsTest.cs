@@ -88,12 +88,17 @@ namespace Brochure.Test
             Assert.IsNotNull(cc4);
             var cc5 = provider.GetService<IStartupFilter>();
             Assert.IsNotNull(cc5 as PluginStartupFilter);
+
+            var cc6 = provider.GetService<IPluginServiceProvider>();
+            Assert.IsNotNull(cc6);
+            Assert.IsTrue(cc6 is DefaultPluginServiceProvider);
         }
 
         [TestMethod]
         public async Task TestAutofac()
         {
             await services.AddBrochureServer();
+            services.AddAutofacPlugin();
             var builder = new ContainerBuilder();
             builder.Populate(services);
             var provider = builder.Build();
@@ -103,6 +108,10 @@ namespace Brochure.Test
             Assert.IsNotNull(cc6);
             var cc7 = provider.Resolve<IPluginTransient<Student>>();
             Assert.IsNotNull(cc7);
+
+            var cc8 = provider.Resolve<IPluginServiceProvider>();
+            Assert.IsNotNull(cc8);
+            Assert.IsTrue(cc8 is AutofacPluginServiceProvider);
         }
 
         /// <summary>

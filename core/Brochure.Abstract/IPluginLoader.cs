@@ -12,7 +12,7 @@ namespace Brochure.Abstract
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        ValueTask LoadPlugin(IPluginServiceProvider services);
+        ValueTask LoadPlugin();
 
         /// <summary>
         /// Loads the plugin.
@@ -27,5 +27,11 @@ namespace Brochure.Abstract
         /// <param name="key">The key.</param>
         /// <returns>A ValueTask.</returns>
         ValueTask<bool> UnLoad(Guid key);
+
+        /// <summary>
+        /// Uns the load all.
+        /// </summary>
+        /// <returns>A ValueTask.</returns>
+        ValueTask<bool> UnLoadAll();
     }
 }

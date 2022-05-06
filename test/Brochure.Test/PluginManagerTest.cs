@@ -85,10 +85,10 @@ namespace Brochure.Test
 
             autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
             autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
+            autoMock.GetMock<IObjectFactory>().Setup(t => t.CreateByIoc<Plugins>(It.IsAny<IServiceProvider>())).Returns(plugin);
             autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadPluginContext.Object);
 
-            await ins.LoadPlugin(mockContrainer.Object);
+            await ins.LoadPlugin("aa");
 
             autoMock.GetMock<IReflectorUtil>().Verify(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)), Times.Exactly(1));
 

@@ -16,15 +16,17 @@ namespace Brochure.Core
     /// </summary>
     public class PluginLoader : IPluginLoader, IDisposable
     {
-        private static ConcurrentDictionary<Guid, IPluginsLoadContext> pluginContextDic;
+        private static ConcurrentDictionary<Guid, IPluginsLoadContext> _pluginContextDic;
 
-        private readonly ISysDirectory directory;
-        private readonly IPluginLoadContextProvider pluginLoadContextProvider;
-        private readonly IJsonUtil jsonUtil;
+        private readonly ISysDirectory _directory;
+        private readonly IPluginLoadContextProvider _pluginLoadContextProvider;
+        private readonly IJsonUtil _jsonUtil;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<PluginLoader> log;
-        private readonly IReflectorUtil reflectorUtil;
-        private readonly IObjectFactory objectFactory;
+        private readonly IPluginServiceProvider _pluginServiceProvider;
+        private readonly ILogger<PluginLoader> _log;
+        private readonly IReflectorUtil _reflectorUtil;
+        private readonly IObjectFactory _objectFactory;
+        private readonly IMvcBuilder _mvcBuilder;
         private readonly PluginServiceTypeCache _pluginServiceTypeCache;
         private readonly IPluginManagers _pluginManagers;
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
@@ -37,10 +39,12 @@ namespace Brochure.Core
         /// <param name="directory">The directory.</param>
         /// <param name="jsonUtil">The json util.</param>
         /// <param name="serviceProvider"></param>
+        /// <param name="pluginServiceProvider"></param>
         /// <param name="pluginLoadContextProvider"></param>
         /// <param name="log">The log.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="objectFactory">The object factory.</param>
+        /// <param name="mvcBuilder"></param>
         /// <param name="pluginServiceTypeCache"></param>
         /// <param name="pluginManagers"></param>
         /// <param name="loadActions"></param>
@@ -49,24 +53,28 @@ namespace Brochure.Core
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             IServiceProvider serviceProvider,
+            IPluginServiceProvider pluginServiceProvider,
             IPluginLoadContextProvider pluginLoadContextProvider,
             ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
+            IMvcBuilder mvcBuilder,
             PluginServiceTypeCache pluginServiceTypeCache,
             IPluginManagers pluginManagers,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
             IPluginConfigurationLoad pluginConfigurationLoad)
         {
-            this.directory = directory;
-            this.jsonUtil = jsonUtil;
+            _directory = directory;
+            _jsonUtil = jsonUtil;
             _serviceProvider = serviceProvider;
-            this.pluginLoadContextProvider = pluginLoadContextProvider;
-            this.log = log;
-            pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
-            this.reflectorUtil = reflectorUtil;
-            this.objectFactory = objectFactory;
+            _pluginServiceProvider = pluginServiceProvider;
+            _pluginLoadContextProvider = pluginLoadContextProvider;
+            _log = log;
+            _pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
+            _reflectorUtil = reflectorUtil;
+            _objectFactory = objectFactory;
+            _mvcBuilder = mvcBuilder;
             _pluginServiceTypeCache = pluginServiceTypeCache;
             _pluginManagers = pluginManagers;
             _loadActions = loadActions;
@@ -79,91 +87,66 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
+        public async ValueTask<IPlugins> LoadPlugin(string pluginConfigPath)
         {
-            IPluginsLoadContext locadContext = null;
-            try
-            {
-                var pluginConfig = jsonUtil.Get<PluginConfig>(pluginConfigPath);
-                var pluginDir = Path.GetDirectoryName(pluginConfigPath);
-                var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
-                locadContext = pluginLoadContextProvider.CreateLoadContext(pluginPath);
-                var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
-                var allPluginTypes = reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
-                if (allPluginTypes.Count == 0)
-                    throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
-                if (allPluginTypes.Count == 2)
-                    throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
-                var pluginType = allPluginTypes[0];
-                var plugin = (Plugins)ActivatorUtilities.CreateInstance(_serviceProvider, typeof(Plugins));
-                SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
-                pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-                return new ValueTask<IPlugins>(plugin);
-            }
-            catch (Exception e)
-            {
-                log.LogError(e, e.Message);
-                locadContext?.UnLoad();
-                throw;
-            }
+            var p = await ResolverPlugins(pluginConfigPath);
+            var service = new ServiceCollection();
+            p.ConfigureService(service);
+            var pluginScope = _pluginServiceProvider.CreateScope(service);
+            _pluginServiceTypeCache.AddPluginServiceType(p.Key.ToString(), pluginScope, service);
+
+            //启动插件
+            if (await StartPlugin(p))
+                return p;
+            return null;
         }
 
         /// <summary>
         /// Loads the plugin.
         /// </summary>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask LoadPlugin(IPluginServiceProvider services)
+        public async ValueTask LoadPlugin()
         {
-            await ResolverPlugins(services);
+            var pluginBathPath = _pluginManagers.GetBasePluginsPath();
+            var allPluginPath = _directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
+            foreach (var item in allPluginPath)
+            {
+                var p = await LoadPlugin(item);
+                _mvcBuilder.AddApplicationPart(p.Assembly);
+            }
         }
 
         /// <summary>
-        /// 加载插件
+        /// Resolvers the plugins.
         /// </summary>
-        private async Task ResolverPlugins(IPluginServiceProvider container)
+        /// <param name="pluginConfigPath">The plugin config path.</param>
+        /// <returns>A ValueTask.</returns>
+        private ValueTask<IPlugins> ResolverPlugins(string pluginConfigPath)
         {
-            var pluginBathPath = _pluginManagers.GetBasePluginsPath();
-            var allPluginPath = directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
-            var listPlugins = new List<IPlugins>();
-            var mvcBuilder = container.GetService<IMvcBuilder>();
-            //加载程序集
-            foreach (var pluginConfigPath in allPluginPath)
+            IPluginsLoadContext locadContext = null;
+            try
             {
-                try
-                {
-                    var p = await LoadPlugin(pluginConfigPath);
-                    var service = new ServiceCollection();
-                    p.ConfigureService(service);
-                    mvcBuilder.AddApplicationPart(p.Assembly);
-                    var pluginScope = container.CreateScope(service);
-                    _pluginServiceTypeCache.AddPluginServiceType(p.Key.ToString(), pluginScope, service);
-                    if (p != null)
-                    {
-                        listPlugins.Add(p);
-                    }
-                }
-                catch (Exception e)
-                {
-                    log.LogError(e, e.Message);
-                }
+                var pluginConfig = _jsonUtil.Get<PluginConfig>(pluginConfigPath);
+                var pluginDir = Path.GetDirectoryName(pluginConfigPath);
+                var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
+                locadContext = _pluginLoadContextProvider.CreateLoadContext(pluginPath);
+                var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));
+                var allPluginTypes = _reflectorUtil.GetTypeOfAbsoluteBase(assemably, typeof(Plugins)).ToList();
+                if (allPluginTypes.Count == 0)
+                    throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
+                if (allPluginTypes.Count == 2)
+                    throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
+                var pluginType = allPluginTypes[0];
+                var plugin = _objectFactory.CreateByIoc<Plugins>(_serviceProvider);
+                SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
+                _pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
+                return new ValueTask<IPlugins>(plugin);
             }
-            //执行插件初始化
-            foreach (var plugin in listPlugins)
+            catch (Exception e)
             {
-                try
-                {
-                    if (await StartPlugin(plugin))
-                    {
-                        _pluginManagers.Regist(plugin);
-                        NotifyLoad(plugin.Key);
-                    }
-                }
-                catch (Exception e)
-                {
-                    log.LogError(e, e.Message);
-                    if (plugin.Key != Guid.Empty)
-                        await UnLoad(plugin.Key);
-                }
+                _log.LogError(e, e.Message);
+                locadContext?.UnLoad();
+                throw;
             }
         }
 
@@ -201,11 +184,17 @@ namespace Brochure.Core
             try
             {
                 result = await plugin.StartingAsync();
+                if (!result)
+                    return result;
+                _pluginManagers.Regist(plugin);
+                NotifyLoad(plugin.Key);
+                result = true;
             }
             catch (Exception e)
             {
                 Log.Error($"{plugin.Name}插件加载失败", e);
                 await plugin.ExitAsync();
+                await UnLoad(plugin.Key);
                 result = false;
             }
             return result;
@@ -218,17 +207,18 @@ namespace Brochure.Core
         /// <returns>A ValueTask.</returns>
         public ValueTask<bool> UnLoad(Guid key)
         {
-            if (pluginContextDic.TryRemove(key, out var context))
+            if (_pluginContextDic.TryRemove(key, out var context))
             {
                 try
                 {
+                    _pluginManagers.Remove(key);
                     context.UnLoad();
                     NotifyUnload(key);
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex, ex.Message);
-                    pluginContextDic.TryAdd(key, context);
+                    _log.LogError(ex, ex.Message);
+                    _pluginContextDic.TryAdd(key, context);
                     return new ValueTask<bool>(false);
                 }
             }
@@ -270,6 +260,21 @@ namespace Brochure.Core
         private IConfiguration GetPluginConfigSection(Plugins plugins)
         {
             return _pluginConfigurationLoad.GetPluginConfiguration(plugins);
+        }
+
+        /// <summary>
+        /// Uns the load all.
+        /// </summary>
+        /// <returns>A ValueTask.</returns>
+        public async ValueTask<bool> UnLoadAll()
+        {
+            var allPlugin = _pluginManagers.GetPlugins();
+            var r = true;
+            foreach (var item in allPlugin)
+            {
+                r = r && await UnLoad(item.Key);
+            }
+            return r;
         }
 
         /// <summary>

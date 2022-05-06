@@ -56,38 +56,14 @@ namespace Brochure.Test
             pluginManager.Setup(t => t.GetBasePluginsPath()).Returns("basePath");
 
             var load = Fixture.Create<PluginLoader>();
-            await load.LoadPlugin(mockContrainer.Object);
+            await load.LoadPlugin();
 
             pluginManager.Verify(t => t.GetBasePluginsPath());
             dir.Verify(t => t.GetFiles(basePath, "plugin.config", SearchOption.AllDirectories));
         }
 
-        [TestMethod]
-        public async Task TestPluginLoadService()
-        {
-            var loadService = Fixture.Create<PluginLoadService>();
-            var serviceProviderMock = Fixture.Freeze<Mock<IServiceProvider>>();
-            var pluginLoader = new Mock<IPluginLoader>();
-
-            serviceProviderMock.Setup(t => t.GetService(typeof(IPluginLoader))).Returns(pluginLoader.Object);
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => loadService.StartAsync(CancellationToken.None));
-        }
-
-        [TestMethod]
-        public async Task TestPluginLoadService1()
-        {
-            var lifescope = new Mock<ILifetimeScope>();
-            var provider = new AutofacServiceProvider(lifescope.Object);
-            var loadService = new PluginLoadService(provider);
-            await loadService.StartAsync(CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Tests the load2.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        [TestMethod]
-        public async Task TestLoad2()
+        [TestMethod("测试没有实现Plugins插件")]
+        public void TestLoadPlugin()
         {
             var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
@@ -99,144 +75,44 @@ namespace Brochure.Test
             jsonUtil.Setup(t => t.Get<PluginConfig>(basePath)).Returns(pluginConfig);
             var load = Fixture.Create<PluginLoader>();
 
-            await load.LoadPlugin(mockContrainer.Object);
-
-            jsonUtil.Verify(t => t.Get<PluginConfig>(basePath));
+            Assert.ThrowsExceptionAsync<Exception>(() => load.LoadPlugin().AsTask());
         }
 
-        /// <summary>
-        /// Tests the load3.
-        /// </summary>
-        /// <param name="typeCount">The type count.</param>
-        /// <returns>A Task.</returns>
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(2)]
-        public async Task TestLoad3(int typeCount)
+        [TestMethod("测试多个Plugins实现")]
+        public void MyTestMethod()
         {
             var mockContrainer = new Mock<IPluginServiceProvider>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
-            var reflector = Fixture.Freeze<Mock<IReflectorUtil>>();
+            var reflectorUtil = Fixture.Freeze<Mock<IReflectorUtil>>();
             var basePath = "/a/basePath";
-            dir.Setup(t => t.GetFiles(It.IsAny<string>(), "plugin.config", SearchOption.AllDirectories)).Returns(new string[] { basePath });
-
-            var plugins = Fixture.CreateMany<Type>(typeCount);
-            reflector.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(plugins);
-            var load = Fixture.Create<PluginLoader>();
-
-            await load.LoadPlugin(mockContrainer.Object);
-            //    moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Never);
-        }
-
-        /// <summary>
-        /// Tests the load4.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        [TestMethod]
-        public async Task TestLoad4()
-        {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            var dir = Fixture.Freeze<Mock<ISysDirectory>>();
-            var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
-            var reflector = Fixture.Freeze<Mock<IReflectorUtil>>();
-            var objectFactory = Fixture.Freeze<Mock<IObjectFactory>>();
-            var loadProvider = Fixture.Freeze<Mock<IPluginLoadContextProvider>>();
-            var basePath = "/a/basePath";
-            dir.Setup(t => t.GetFiles(It.IsAny<string>(), "plugin.config", SearchOption.AllDirectories)).Returns(new string[] { basePath });
-
-            var pluginsType = Fixture.Create<Type>();
-            var plugin = Fixture.Create<Plugins>();
             var pluginConfig = Fixture.Create<PluginConfig>();
-            reflector.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new Type[] { pluginsType });
-            objectFactory.Setup(t => t.Create(pluginsType)).Returns(plugin);
+            dir.Setup(t => t.GetFiles(It.IsAny<string>(), "plugin.config", SearchOption.AllDirectories)).Returns(new string[] { basePath });
             jsonUtil.Setup(t => t.Get<PluginConfig>(basePath)).Returns(pluginConfig);
-            loadProvider.Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
+            reflectorUtil.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new Type[] { typeof(PA), typeof(PB) });
             var load = Fixture.Create<PluginLoader>();
 
-            await load.LoadPlugin(mockContrainer.Object);
-            //  moduleLoader.Verify(t => t.LoadModule(It.IsAny<ServiceCollection>(), It.IsAny<Assembly>()), Times.Exactly(1));
+            Assert.ThrowsExceptionAsync<Exception>(() => load.LoadPlugin().AsTask());
         }
 
-        /// <summary>
-        /// Tests the resolve plugins.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        [TestMethod]
-        public async Task TestResolvePlugins()
+        [TestMethod("测试正常插件实现")]
+        public async Task TestLoadPlugin3()
         {
             var mockContrainer = new Mock<IPluginServiceProvider>();
-            var autoMock = new AutoMocker();
-            Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
-            var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
+            var reflectorUtil = Fixture.Freeze<Mock<IReflectorUtil>>();
+
+            var basePath = "/a/basePath";
             var pluginConfig = Fixture.Create<PluginConfig>();
-            var assemably = Fixture.Create<Assembly>();
-            loadContextMock.Setup(t => t.LoadAssembly(It.IsAny<AssemblyName>())).Returns(assemably);
-            var serviceProvider = Fixture.Freeze<Mock<IServiceProvider>>();
-            Fixture.Customize(new AutoMoqCustomization());
-            serviceProvider.Setup(t => t.GetService(typeof(IPluginContext))).Returns(new Mock<IPluginContext>().Object);
-            var plugin = Fixture.Create<Plugins>();
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>()).Returns(new ConcurrentDictionary<Guid, IPluginsLoadContext>());
-            var ins = autoMock.CreateInstance<PluginLoader>();
-            var loaderActionMock = autoMock.GetMock<IPluginLoadAction>();
-            var directoryMokc = autoMock.GetMock<ISysDirectory>();
-            directoryMokc.Setup(t => t.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
-                .Returns(allPluginPath);
-            var configurationMock = new Mock<IConfiguration>();
-            autoMock.Use(new ApplicationOption(null, configurationMock.Object));
-            autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
-            autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
+            jsonUtil.Setup(t => t.Get<PluginConfig>(basePath)).Returns(pluginConfig);
+            reflectorUtil.Setup(t => t.GetTypeOfAbsoluteBase(It.IsAny<Assembly>(), typeof(Plugins))).Returns(new Type[] { typeof(PA) });
 
-            await ins.LoadPlugin(mockContrainer.Object);
-            var manager = autoMock.CreateInstance<PluginLoader>();
-            await manager.LoadPlugin(mockContrainer.Object);
-            configurationMock.Verify(t => t.GetSection(Path.GetFileNameWithoutExtension(plugin.AssemblyName)));
-            //        autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
-            var str = string.Empty;
-        }
+            var load = Fixture.Create<PluginLoader>();
 
-        /// <summary>
-        /// Tests the plugins config.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        [TestMethod]
-        public async Task TestPluginsConfig()
-        {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
-            var autoMock = new AutoMocker();
-            Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
-            var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
-            var pluginConfig = Fixture.Create<PluginConfig>();
-            var assemably = Fixture.Create<Assembly>();
-            loadContextMock.Setup(t => t.LoadAssembly(It.IsAny<AssemblyName>())).Returns(assemably);
-            var serviceProvider = Fixture.Freeze<Mock<IServiceProvider>>();
-            Fixture.Customize(new AutoMoqCustomization());
-            serviceProvider.Setup(t => t.GetService(typeof(IPluginContext))).Returns(new Mock<IPluginContext>().Object);
-            var plugin = Fixture.Create<Plugins>();
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>()).Returns(new ConcurrentDictionary<Guid, IPluginsLoadContext>());
-            var ins = autoMock.CreateInstance<PluginLoader>();
-            var loaderActionMock = autoMock.GetMock<IPluginLoadAction>();
-            var directoryMokc = autoMock.GetMock<ISysDirectory>();
-
-            directoryMokc.Setup(t => t.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>()))
-                .Returns(allPluginPath);
-            var configurationMock = new Mock<IConfiguration>();
-            autoMock.Use(new ApplicationOption(null, configurationMock.Object));
-            autoMock.GetMock<IJsonUtil>().Setup(t => t.Get<PluginConfig>(It.IsAny<string>())).Returns(pluginConfig);
-            autoMock.GetMock<IReflectorUtil>().Setup(t => t.GetTypeOfAbsoluteBase(assemably, typeof(Plugins))).Returns(Fixture.CreateMany<Type>(1));
-            autoMock.GetMock<IObjectFactory>().Setup(t => t.Create(It.IsAny<Type>())).Returns(plugin);
-            autoMock.GetMock<IPluginLoadContextProvider>().Setup(t => t.CreateLoadContext(It.IsAny<string>())).Returns(loadContextMock.Object);
-
-            await ins.LoadPlugin(mockContrainer.Object);
-            var manager = autoMock.CreateInstance<PluginLoader>();
-            await manager.LoadPlugin(mockContrainer.Object);
-
-            //     autoMock.GetMock<IModuleLoader>().Verify(t => t.LoadModule(It.IsAny<IServiceCollection>(), It.IsAny<Assembly>()));
-            var str = string.Empty;
+            var a = await load.LoadPlugin(basePath);
+            Assert.IsNotNull(a);
         }
 
         /// <summary>
@@ -274,7 +150,7 @@ namespace Brochure.Test
             /// Initializes a new instance of the <see cref="PA"/> class.
             /// </summary>
             /// <param name="service">The service.</param>
-            public PA(IServiceProvider service) : base()
+            public PA() : base()
             {
             }
         }
@@ -288,7 +164,7 @@ namespace Brochure.Test
             /// Initializes a new instance of the <see cref="PB"/> class.
             /// </summary>
             /// <param name="service">The service.</param>
-            public PB(IServiceProvider service) : base()
+            public PB() : base()
             {
             }
         }
