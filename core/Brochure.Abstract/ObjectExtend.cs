@@ -53,6 +53,8 @@ namespace Brochure.Abstract.Extensions
         public static object As(this object obj, Type type)
         {
             var objType = obj.GetType();
+            if (objType == type)
+                return obj;
             if ((obj is string objStr) && type.IsClass)
                 return JsonSerializer.Deserialize(objStr, type);
             else if (type == typeof(string) && objType.IsClass)

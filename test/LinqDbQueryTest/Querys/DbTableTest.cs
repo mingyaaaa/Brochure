@@ -1,4 +1,5 @@
-﻿using Brochure.Core.Server;
+﻿using AspectCore.Extensions.DependencyInjection;
+using Brochure.Core.Server;
 using Brochure.ORM;
 using Brochure.ORM.Database;
 using Brochure.ORM.Extensions;
@@ -47,7 +48,7 @@ namespace LinqDbQueryTest
             service.AddDbCore(p => p.AddMySql(t =>
             {
             }));
-            var provider = service.BuildServiceProvider();
+            var provider = service.BuildServiceContextProvider();
             using var socpe = provider.CreateScope();
             var taple = socpe.ServiceProvider.GetService<DbTable>();
         }

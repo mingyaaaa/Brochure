@@ -22,7 +22,6 @@ namespace Brochure.Core
         /// Regists the.
         /// </summary>
         /// <param name="plugin">The plugin.</param>
-        /// <param name="lifetimeScope"></param>
         public void Regist(IPlugins plugin)
         {
             pluginDic.TryAdd(plugin.Key, plugin);
@@ -35,8 +34,7 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public ValueTask Remove(IPlugins plugin)
         {
-            pluginDic.TryRemove(plugin.Key, out var _);
-            return ValueTask.CompletedTask;
+            return Remove(plugin.Key);
         }
 
         /// <summary>
@@ -96,7 +94,8 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public ValueTask Remove(Guid key)
         {
-            pluginDic.TryRemove(key, out var _);
+            if (pluginDic.TryRemove(key, out var plugin))
+                plugin.Scope?.Dispose();
             return ValueTask.CompletedTask;
         }
     }

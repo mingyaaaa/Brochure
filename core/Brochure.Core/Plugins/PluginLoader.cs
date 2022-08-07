@@ -1,8 +1,5 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
-using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,18 +13,16 @@ namespace Brochure.Core
     /// </summary>
     public class PluginLoader : IPluginLoader, IDisposable
     {
-        private static ConcurrentDictionary<Guid, IPluginsLoadContext> _pluginContextDic;
-
+        private ConcurrentDictionary<Guid, IPluginsLoadContext> _pluginContextDic;
         private readonly ISysDirectory _directory;
         private readonly IPluginLoadContextProvider _pluginLoadContextProvider;
         private readonly IJsonUtil _jsonUtil;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IPluginServiceProvider _pluginServiceProvider;
+        private readonly IPluginScopeFactory _pluginScopeFactory;
         private readonly ILogger<PluginLoader> _log;
         private readonly IReflectorUtil _reflectorUtil;
         private readonly IObjectFactory _objectFactory;
         private readonly IMvcBuilder _mvcBuilder;
-        private readonly PluginServiceTypeCache _pluginServiceTypeCache;
         private readonly IPluginManagers _pluginManagers;
         private readonly IEnumerable<IPluginLoadAction> _loadActions;
         private readonly IEnumerable<IPluginUnLoadAction> _unLoadActions;
@@ -39,13 +34,12 @@ namespace Brochure.Core
         /// <param name="directory">The directory.</param>
         /// <param name="jsonUtil">The json util.</param>
         /// <param name="serviceProvider"></param>
-        /// <param name="pluginServiceProvider"></param>
+        /// <param name="pluginScopeFactory"></param>
         /// <param name="pluginLoadContextProvider"></param>
         /// <param name="log">The log.</param>
         /// <param name="reflectorUtil">The reflector util.</param>
         /// <param name="objectFactory">The object factory.</param>
         /// <param name="mvcBuilder"></param>
-        /// <param name="pluginServiceTypeCache"></param>
         /// <param name="pluginManagers"></param>
         /// <param name="loadActions"></param>
         /// <param name="unLoadActions"></param>
@@ -53,13 +47,12 @@ namespace Brochure.Core
         public PluginLoader(ISysDirectory directory,
             IJsonUtil jsonUtil,
             IServiceProvider serviceProvider,
-            IPluginServiceProvider pluginServiceProvider,
+            IPluginScopeFactory pluginScopeFactory,
             IPluginLoadContextProvider pluginLoadContextProvider,
             ILogger<PluginLoader> log,
             IReflectorUtil reflectorUtil,
             IObjectFactory objectFactory,
             IMvcBuilder mvcBuilder,
-            PluginServiceTypeCache pluginServiceTypeCache,
             IPluginManagers pluginManagers,
             IEnumerable<IPluginLoadAction> loadActions,
             IEnumerable<IPluginUnLoadAction> unLoadActions,
@@ -68,14 +61,13 @@ namespace Brochure.Core
             _directory = directory;
             _jsonUtil = jsonUtil;
             _serviceProvider = serviceProvider;
-            _pluginServiceProvider = pluginServiceProvider;
+            _pluginScopeFactory = pluginScopeFactory;
             _pluginLoadContextProvider = pluginLoadContextProvider;
             _log = log;
             _pluginContextDic = objectFactory.Create<ConcurrentDictionary<Guid, IPluginsLoadContext>>();
             _reflectorUtil = reflectorUtil;
             _objectFactory = objectFactory;
             _mvcBuilder = mvcBuilder;
-            _pluginServiceTypeCache = pluginServiceTypeCache;
             _pluginManagers = pluginManagers;
             _loadActions = loadActions;
             _unLoadActions = unLoadActions;
@@ -92,9 +84,7 @@ namespace Brochure.Core
             var p = await ResolverPlugins(pluginConfigPath);
             var service = new ServiceCollection();
             p.ConfigureService(service);
-            var pluginScope = _pluginServiceProvider.CreateScope(service);
-            _pluginServiceTypeCache.AddPluginServiceType(p.Key.ToString(), pluginScope, service);
-
+            p.Scope = _pluginScopeFactory.CreateScope(service); ;
             //启动插件
             if (await StartPlugin(p))
                 return p;
@@ -121,7 +111,7 @@ namespace Brochure.Core
         /// </summary>
         /// <param name="pluginConfigPath">The plugin config path.</param>
         /// <returns>A ValueTask.</returns>
-        private ValueTask<IPlugins> ResolverPlugins(string pluginConfigPath)
+        private ValueTask<Plugins> ResolverPlugins(string pluginConfigPath)
         {
             IPluginsLoadContext locadContext = null;
             try
@@ -135,12 +125,12 @@ namespace Brochure.Core
                 if (allPluginTypes.Count == 0)
                     throw new Exception($"{pluginConfig.AssemblyName}请实现基于Plugins的插件类");
                 if (allPluginTypes.Count == 2)
-                    throw new Exception($"{ pluginConfig.AssemblyName}存在多个Plugins实现类");
+                    throw new Exception($"{pluginConfig.AssemblyName}存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
                 var plugin = _objectFactory.CreateByIoc<Plugins>(_serviceProvider);
                 SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
                 _pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
-                return new ValueTask<IPlugins>(plugin);
+                return new ValueTask<Plugins>(plugin);
             }
             catch (Exception e)
             {

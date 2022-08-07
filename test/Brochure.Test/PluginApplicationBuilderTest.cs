@@ -77,7 +77,7 @@ namespace Brochure.Test
             var applicationBuilder = builderFactory.CreateBuilder(new FeatureCollection());
             var pluginbuilderFactory = new PluginApplicationBuilderFactory(provider);
             var builder = pluginbuilderFactory.CreateBuilder(new FeatureCollection());
-            builder.ConfigPlugin();
+            //        builder.ConfigPlugin();
         }
 
         /// <summary>
@@ -92,7 +92,6 @@ namespace Brochure.Test
             fix.Customize(new AutoMoqCustomization());
             var serviceProviderMock = new Mock<IServiceProvider>();
             var pluginManagerMock = new Mock<IPluginManagers>();
-            var startConfigMock = new Mock<IStarupConfigure>();
             var middleManager = new Mock<IMiddleManager>();
             fix.Freeze<Mock<IServiceProvider>>().Setup(t => t.GetService(typeof(IPluginContext))).Returns(new Mock<IPluginContext>().Object);
             var plugin = fix.Create<TestPlugin>();
@@ -102,13 +101,9 @@ namespace Brochure.Test
             serviceProviderMock.Setup(t => t.GetService(typeof(IMiddleManager))).Returns(middleManager.Object);
 
             pluginManagerMock.Setup(t => t.GetPlugins()).Returns(new List<IPlugins>() { plugin });
-            reflectUtilMock.Setup(t => t.GetObjectOfBase<IStarupConfigure>(It.IsAny<Assembly>())).Returns(new List<IStarupConfigure>() { startConfigMock.Object });
             var appBuilderMock = autoMock.GetMock<IApplicationBuilder>();
             appBuilderMock.Setup(t => t.ApplicationServices).Returns(serviceProviderMock.Object);
             var ins = autoMock.CreateInstance<PluginApplicationBuilder>();
-            ins.ConfigPlugin();
-            reflectUtilMock.Verify(t => t.GetObjectOfBase<IStarupConfigure>(plugin.Assembly));
-            startConfigMock.Verify(t => t.Configure(plugin.Key, ins));
         }
 
         /// <summary>

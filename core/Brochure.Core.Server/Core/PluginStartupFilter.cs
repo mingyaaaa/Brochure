@@ -35,12 +35,15 @@ namespace Brochure.Core.Server.Core
         /// <returns>An Action.</returns>
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            var plugins = _pluginManagers.GetPlugins().OfType<Plugins>();
-            foreach (var item in plugins)
+            return builder =>
             {
-                item.ConfigApplication(new PluginAppBuilder(_serviceProvider, item.Scope));
-            }
-            return next;
+                var plugins = _pluginManagers.GetPlugins().OfType<Plugins>();
+                foreach (var item in plugins)
+                {
+                    item.ConfigApplication(builder);
+                }
+                next(builder);
+            };
         }
     }
 }

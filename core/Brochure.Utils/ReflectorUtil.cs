@@ -204,7 +204,6 @@ namespace Brochure.Utils
         /// <returns>A Func.</returns>
         public Func<T1, object> GetPropertyValueFun<T1>(string propertyName)
         {
-            // return GetPropertyValueFun (typeof (T1), propertyName) as Func<T1, object>;
             var classType = typeof(T1);
             var propertyInfo = classType.GetProperty(propertyName);
             var instance = Expression.Parameter(classType, "t");

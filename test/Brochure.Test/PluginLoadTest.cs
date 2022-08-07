@@ -1,23 +1,14 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.Kernel;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
-using Brochure.Core.PluginsDI;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.AutoMock;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Brochure.Test
@@ -48,7 +39,7 @@ namespace Brochure.Test
         [TestMethod]
         public async Task TestLoad1()
         {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
+            var mockContrainer = new Mock<IPluginScopeFactory>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var pluginManager = Fixture.Freeze<Mock<IPluginManagers>>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
@@ -65,7 +56,7 @@ namespace Brochure.Test
         [TestMethod("测试没有实现Plugins插件")]
         public void TestLoadPlugin()
         {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
+            var mockContrainer = new Mock<IPluginScopeFactory>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
@@ -81,7 +72,7 @@ namespace Brochure.Test
         [TestMethod("测试多个Plugins实现")]
         public void MyTestMethod()
         {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
+            var mockContrainer = new Mock<IPluginScopeFactory>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var dir = Fixture.Freeze<Mock<ISysDirectory>>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
@@ -99,7 +90,7 @@ namespace Brochure.Test
         [TestMethod("测试正常插件实现")]
         public async Task TestLoadPlugin3()
         {
-            var mockContrainer = new Mock<IPluginServiceProvider>();
+            var mockContrainer = new Mock<IPluginScopeFactory>();
             var mockServiceProvider = new Mock<IServiceProvider>();
             var jsonUtil = Fixture.Freeze<Mock<IJsonUtil>>();
             var reflectorUtil = Fixture.Freeze<Mock<IReflectorUtil>>();

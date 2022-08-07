@@ -1,13 +1,11 @@
-using Castle.DynamicProxy;
-using System;
-using System.Threading.Tasks;
+using AspectCore.DynamicProxy;
 
 namespace Brochure.Core.Interceptor
 {
     /// <summary>
     /// The inner assembly interceptor.
     /// </summary>
-    public class InnerAssemblyInterceptor : AsyncInterceptorBase
+    public class InnerAssemblyInterceptor : AbstractInterceptor
     {
         private readonly object impObj;
 
@@ -21,41 +19,20 @@ namespace Brochure.Core.Interceptor
         }
 
         /// <summary>
-        /// Intercepts the.
+        /// Invokes the.
         /// </summary>
         /// <param name="context">The context.</param>
-        public void Intercept(IInvocation context)
+        /// <param name="next">The next.</param>
+        /// <returns>A Task.</returns>
+        public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var impType = impObj.GetType();
-            var proxyMethod = context.Method;
+            var proxyMethod = context.ProxyMethod;
             var impMethod = Array.Find(impType.GetMethods(), t => t.Name == proxyMethod.Name);
             if (impMethod == null)
                 throw new Exception($"{impType}实现类中没有{proxyMethod.Name}方法");
-            context.ReturnValue = impMethod.Invoke(impObj, context.Arguments);
-        }
-
-        /// <summary>
-        /// Intercepts the async.
-        /// </summary>
-        /// <param name="invocation">The invocation.</param>
-        /// <param name="proceedInfo">The proceed info.</param>
-        /// <param name="proceed">The proceed.</param>
-        /// <returns>A Task.</returns>
-        protected override Task InterceptAsync(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task> proceed)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Intercepts the async.
-        /// </summary>
-        /// <param name="invocation">The invocation.</param>
-        /// <param name="proceedInfo">The proceed info.</param>
-        /// <param name="proceed">The proceed.</param>
-        /// <returns>A Task.</returns>
-        protected override Task<TResult> InterceptAsync<TResult>(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
-        {
-            throw new NotImplementedException();
+            context.ReturnValue = impMethod.Invoke(impObj, context.Parameters);
+            return Task.CompletedTask;
         }
     }
 }

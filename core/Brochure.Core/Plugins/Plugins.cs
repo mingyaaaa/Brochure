@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Brochure.Abstract;
+﻿using Brochure.Abstract;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -89,10 +89,7 @@ namespace Brochure.Core
         /// </summary>
         public List<Guid> AuthKey { get; set; }
 
-        /// <summary>
-        /// Gets the scope.
-        /// </summary>
-        public ILifetimeScope Scope { get; internal set; }
+        public IPluginScope Scope { get; internal set; }
 
         /// <summary>
         /// 配置服务
@@ -141,7 +138,7 @@ namespace Brochure.Core
         /// Configs the application.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        public virtual void ConfigApplication(IPluginAppBuilder serviceProvider)
+        public virtual void ConfigApplication(IApplicationBuilder serviceProvider)
         {
         }
     }

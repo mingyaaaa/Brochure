@@ -26,9 +26,9 @@ namespace Brochure.Core.Server.Extensions
         /// <param name="name">The name.</param>
         /// <param name="version">The version.</param>
         /// <param name="xmlDirPath">The xml dir path.</param>
-        public static void ConfigurePluginSwaggerGen(this IPluginAppBuilder services, string name, string version, string xmlDirPath)
+        public static void ConfigurePluginSwaggerGen(this IApplicationBuilder services, string name, string version, string xmlDirPath)
         {
-            var swaggerOption = services.AppService.GetService<IOptions<SwaggerGenOptions>>();
+            var swaggerOption = services.ApplicationServices.GetService<IOptions<SwaggerGenOptions>>();
             if (swaggerOption == null)
                 return;
             var option = swaggerOption.Value;
@@ -50,7 +50,7 @@ namespace Brochure.Core.Server.Extensions
                 // 添加控制器层注释，true表示显示控制器注释
                 option.IncludeXmlComments(item, true);
             }
-            var knifeUiOption = services.AppService.GetService<IOptions<Knife4UIOptions>>();
+            var knifeUiOption = services.ApplicationServices.GetService<IOptions<Knife4UIOptions>>();
             var uiOption = knifeUiOption.Value;
             uiOption.RoutePrefix = ""; // serve the UI at root
             uiOption.SwaggerEndpoint($"/{version}/api-docs", name);

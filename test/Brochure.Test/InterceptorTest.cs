@@ -1,6 +1,7 @@
 using AspectCore.Configuration;
 using AspectCore.DependencyInjection;
 using AspectCore.DynamicProxy;
+using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +44,7 @@ namespace Brochure.Test
             Service.AddSingleton<ITestA, ImpTestA>();
             Service.AddSingleton<ICount>(count.Object);
             Service.AddSingleton<TestInterceptor>();
-            var provider = Service.BuildServiceProvider();
+            var provider = Service.BuildServiceContextProvider();
             var test = provider.GetService<ITestA>();
             test.Test();
             count.Verify(t => t.Count(), Times.AtLeast(1));
@@ -58,7 +59,7 @@ namespace Brochure.Test
             Service.AddSingleton<ITestA, ImpTestA>();
             Service.AddSingleton<ICount, ImpCount>();
             //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
-            var provider = Service.BuildServiceProvider();
+            var provider = Service.BuildServiceContextProvider();
             var test = provider.GetService<ITestA>();
             var count = provider.GetService<ICount>();
             test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变
@@ -78,7 +79,7 @@ namespace Brochure.Test
             service.AddSingleton<ITestA, ImpTestA>();
             service.AddSingleton<ICount, ImpCount>();
             //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
-            var provider = service.BuildServiceProvider();
+            var provider = service.BuildServiceContextProvider();
             var test = provider.GetService<ITestA>();
             var count = provider.GetService<ICount>();
             test.Test();//此处Test执行一次，拦截器执行一次 共两次 由于是单例则值不变
@@ -101,7 +102,7 @@ namespace Brochure.Test
                 return mock.Object;
             });
             //  Service.AddBrochureInterceptor(t => t.Interceptors.AddTyped<TestAttInterceptorAttribute>());
-            var provider = Service.BuildServiceProvider();
+            var provider = Service.BuildServiceContextProvider();
             var test = provider.GetService<ITestA>();//此处的拦截器
             test.Test();
             mock.Verify(t => t.Count(), Times.Exactly(3));
@@ -116,7 +117,7 @@ namespace Brochure.Test
             var mock = new Mock<ICount>();
             Service.AddScoped<ITestA, ImpTestA>();
             Service.AddSingleton<ICount>(mock.Object);
-            var provider = Service.BuildServiceProvider();
+            var provider = Service.BuildServiceContextProvider();
             using (var scope = provider.CreateScope())
             {
                 var test = scope.ServiceProvider.GetService<ITestA>();
@@ -148,7 +149,7 @@ namespace Brochure.Test
                 mock.Object.Count();
                 return mock.Object;
             });
-            var provider = Service.BuildServiceProvider();
+            var provider = Service.BuildServiceContextProvider();
             using (var scope = provider.CreateScope())
             {
                 var test = scope.ServiceProvider.GetService<ITestA>();

@@ -1,7 +1,4 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Brochure.Abstract;
-using Brochure.Core.PluginsDI;
+﻿using Brochure.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

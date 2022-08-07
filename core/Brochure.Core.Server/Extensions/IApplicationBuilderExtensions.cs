@@ -13,29 +13,6 @@ namespace Brochure.Core.Server
     public static class IApplicationBuilderExtensions
     {
         /// <summary>
-        /// Configs the plugin.
-        /// </summary>
-        /// <param name="app">The app.</param>
-        [Obsolete]
-        public static void ConfigPlugin(this IApplicationBuilder app)
-        {
-            var managers = app.ApplicationServices.GetService<IPluginManagers>();
-            var reflectUtil = app.ApplicationServices.GetService<IReflectorUtil>();
-            var plugins = managers.GetPlugins();
-            foreach (var item in plugins)
-            {
-                if (item is Plugins pp)
-                {
-                    var configs = reflectUtil.GetObjectOfBase<IStarupConfigure>(item.Assembly);
-                    foreach (var config in configs)
-                    {
-                        config.Configure(item.Key, app);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Adds the middle.
         /// </summary>
         /// <param name="application">The application.</param>

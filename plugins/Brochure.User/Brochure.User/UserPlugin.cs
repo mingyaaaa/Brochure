@@ -4,9 +4,11 @@ using Brochure.Core;
 using Brochure.Core.Server;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
+using Brochure.User.Extensions;
 using Brochure.User.Repository;
 using Brochure.User.Services.Imps;
 using Brochure.User.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
@@ -47,7 +49,13 @@ namespace Brochure.User
             //// 获取xml文件名
             // 获取xml文件路径
             var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
-            services.ConfigurePluginSwaggerGen("User", "user_v1", xmlPath);
+            services.AddPluginSwaggerGen("User", "user_v1", xmlPath);
+        }
+
+        public override void ConfigApplication(IApplicationBuilder application)
+        {
+            application.InitDb();
+            base.ConfigApplication(application);
         }
     }
 }

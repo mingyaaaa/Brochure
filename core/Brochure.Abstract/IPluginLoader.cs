@@ -1,6 +1,3 @@
-using Autofac;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Brochure.Abstract
 {
     /// <summary>

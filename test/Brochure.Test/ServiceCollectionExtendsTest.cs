@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Abstract.Utils;
 using Brochure.Core;
@@ -41,11 +40,9 @@ namespace Brochure.Test
         public async Task TestAddBrochureServer()
         {
             await services.AddBrochureServer();
-            var provider = services.BuildServiceProvider();
+            var provider = services.BuildServiceContextProvider();
             var s = provider.GetServices<IHostedService>().FirstOrDefault(t => t is PluginLoadService);
             Assert.IsNotNull(s);
-            var a = provider.GetService<IControllerActivator>();
-            Assert.IsNotNull(a as PluginScopeControllerActivator);
 
             Assert.IsNotNull(Log.Logger);
 
@@ -89,29 +86,8 @@ namespace Brochure.Test
             var cc5 = provider.GetService<IStartupFilter>();
             Assert.IsNotNull(cc5 as PluginStartupFilter);
 
-            var cc6 = provider.GetService<IPluginServiceProvider>();
+            var cc6 = provider.GetService<IPluginScopeFactory>();
             Assert.IsNotNull(cc6);
-            Assert.IsTrue(cc6 is DefaultPluginServiceProvider);
-        }
-
-        [TestMethod]
-        public async Task TestAutofac()
-        {
-            await services.AddBrochureServer();
-            services.AddAutofacPlugin();
-            var builder = new ContainerBuilder();
-            builder.Populate(services);
-            var provider = builder.Build();
-            var cc5 = provider.Resolve<IPluginScope<Student>>();
-            Assert.IsNotNull(cc5);
-            var cc6 = provider.Resolve<IPluginSingleton<Student>>();
-            Assert.IsNotNull(cc6);
-            var cc7 = provider.Resolve<IPluginTransient<Student>>();
-            Assert.IsNotNull(cc7);
-
-            var cc8 = provider.Resolve<IPluginServiceProvider>();
-            Assert.IsNotNull(cc8);
-            Assert.IsTrue(cc8 is AutofacPluginServiceProvider);
         }
 
         /// <summary>

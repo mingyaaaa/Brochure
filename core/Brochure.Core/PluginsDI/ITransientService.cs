@@ -1,13 +1,12 @@
-﻿using AspectCore.DependencyInjection;
-using Brochure.Abstract;
+﻿using Brochure.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Brochure.Core.PluginsDI
 {
     /// <summary>
-    /// The plugin singleton.
+    /// The plugin transient.
     /// </summary>
-    public interface ISingletonService<T> where T : class
+    public interface ITransientService<T> : IDisposable where T : class
     {
         /// <summary>
         /// Gets the value.
@@ -16,24 +15,31 @@ namespace Brochure.Core.PluginsDI
     }
 
     /// <summary>
-    /// The plugin singleton.
+    /// The plugin transient.
     /// </summary>
-    internal class SingletonService<T> : ISingletonService<T> where T : class
+    internal class TransientService<T> : ITransientService<T> where T : class
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScope _scope;
 
-        public SingletonService(IServiceProvider serviceProvider)
+        public TransientService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            _scope = _serviceProvider.CreateScope();
         }
 
         public WeakReference<T> Value
         {
             get
             {
-                var obj = _serviceProvider.GetService<T>();
+                var obj = _scope.ServiceProvider.GetService<T>();
                 return new WeakReference<T>(obj);
             }
+        }
+
+        public void Dispose()
+        {
+            _scope.Dispose();
         }
     }
 }

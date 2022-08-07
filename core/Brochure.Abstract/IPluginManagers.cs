@@ -1,6 +1,4 @@
-﻿using Autofac;
-
-namespace Brochure.Abstract
+﻿namespace Brochure.Abstract
 {
     /// <summary>
     /// The plugin managers.

@@ -1,4 +1,3 @@
-using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -14,10 +13,7 @@ namespace Brochure.Abstract
         /// </summary>
         IPluginContext Context { get; }
 
-        /// <summary>
-        /// Gets the scope.
-        /// </summary>
-        ILifetimeScope Scope { get; }
+        IPluginScope Scope { get; }
 
         /// <summary>
         /// 插件唯一健

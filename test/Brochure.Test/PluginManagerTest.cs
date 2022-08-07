@@ -1,4 +1,3 @@
-using Autofac;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
@@ -66,7 +65,7 @@ namespace Brochure.Test
         public async Task TestLoadAction()
         {
             var autoMock = new AutoMocker();
-            var mockContrainer = new Mock<IPluginServiceProvider>();
+            var mockContrainer = new Mock<IPluginScopeFactory>();
             Fixture.Customizations.Add(new TypeRelay(typeof(Plugins), typeof(TestPlugin)));
             var allPluginPath = Fixture.CreateMany<string>(1).ToArray();
             var pluginConfig = Fixture.Create<PluginConfig>();

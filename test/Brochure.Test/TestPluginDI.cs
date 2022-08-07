@@ -1,12 +1,12 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using AspectCore.DependencyInjection;
+using AspectCore.Extensions.DependencyInjection;
 using Brochure.Abstract;
 using Brochure.Core;
+using Brochure.Core.AspectCore;
 using Brochure.Core.PluginsDI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 
 namespace Brochure.Test
 {
@@ -17,8 +17,8 @@ namespace Brochure.Test
     public class TestPluginDI
     {
         private IServiceCollection service;
-        /// <summary>
 
+        /// <summary>
         /// Initializes a new instance of the <see cref="TestPluginDI"/> class.
         /// </summary>
         public TestPluginDI()
@@ -27,21 +27,18 @@ namespace Brochure.Test
             service.AddBrochureCore();
         }
 
-        private IContainer CreateContainer(IServiceCollection serviceDescriptors)
+        private IServiceResolver CreateContainer(IServiceCollection serviceDescriptors)
         {
-            var builder = new ContainerBuilder();
-            builder.Populate(serviceDescriptors);
+            var builder = serviceDescriptors.ToServiceContext(null);
             return builder.Build();
         }
 
-        private IPluginServiceProvider CreatePluginScope(IContainer container, Action<IServiceCollection> action)
+        private IPluginScope CreatePluginScope(IServiceResolver container, Action<IServiceCollection> action)
         {
-            var typeCache = container.Resolve<PluginServiceTypeCache>();
-            var pluginProvider = new AutofacPluginServiceProvider(container);
+            var pluginProvider = new AspectPluginScopeFactory(container);
             var service = new ServiceCollection();
             action?.Invoke(service);
             var scope = pluginProvider.CreateScope(service);
-            typeCache.AddPluginServiceType("test", scope, service);
             return scope;
         }
 
@@ -84,7 +81,7 @@ namespace Brochure.Test
                 t.AddSingleton<PluginA>();
             });
             var app = container.Resolve<AppScope_PSingleton>();
-            using var appScope = container.BeginLifetimeScope();
+            using var appScope = container.CreateScope();
 
             var app1 = appScope.Resolve<AppScope_PSingleton>();
             Assert.AreNotSame(app, app1);
@@ -114,13 +111,13 @@ namespace Brochure.Test
             /// <summary>
             /// Gets the plugin a.
             /// </summary>
-            public IPluginSingleton<PluginA> PluginA { get; }
+            public ISingletonService<PluginA> PluginA { get; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="AppSingleton_P_Singleton"/> class.
             /// </summary>
             /// <param name="pluginSingleton">The plugin singleton.</param>
-            public AppSingleton_P_Singleton(IPluginSingleton<PluginA> pluginSingleton)
+            public AppSingleton_P_Singleton(ISingletonService<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;
             }
@@ -134,13 +131,13 @@ namespace Brochure.Test
             /// <summary>
             /// Gets the plugin a.
             /// </summary>
-            public IPluginSingleton<PluginA> PluginA { get; }
+            public ISingletonService<PluginA> PluginA { get; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="AppScope_PSingleton"/> class.
             /// </summary>
             /// <param name="pluginSingleton">The plugin singleton.</param>
-            public AppScope_PSingleton(IPluginSingleton<PluginA> pluginSingleton)
+            public AppScope_PSingleton(ISingletonService<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;
             }
@@ -172,13 +169,13 @@ namespace Brochure.Test
             /// <summary>
             /// Gets the plugin a.
             /// </summary>
-            public IPluginScope<PluginA> PluginA { get; }
+            public IScopeService<PluginA> PluginA { get; }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="AppScope_PScope"/> class.
             /// </summary>
             /// <param name="pluginSingleton">The plugin singleton.</param>
-            public AppScope_PScope(IPluginScope<PluginA> pluginSingleton)
+            public AppScope_PScope(IScopeService<PluginA> pluginSingleton)
             {
                 PluginA = pluginSingleton;
             }
