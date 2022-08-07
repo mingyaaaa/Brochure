@@ -11,6 +11,8 @@
   </ItemGroup>
 	<PropertyGroup>
 		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
   <Target Name="AfterBuildCopy" AfterTargets="Build">
     <MakeDir Directories="%(MySourceFiles.DescDir)"></MakeDir>

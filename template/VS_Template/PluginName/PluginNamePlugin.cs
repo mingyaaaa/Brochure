@@ -14,7 +14,7 @@ namespace PluginTemplate
             //// 获取xml文件名
             // 获取xml文件路径
             var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
-            services.ConfigurePluginSwaggerGen("$safeprojectname$", "$safeprojectname$_v1", xmlPath);
+            services.AddPluginSwaggerGen("$safeprojectname$", "$safeprojectname$_v1", xmlPath);
             services.AddScoped<I$safeprojectname$Dal, $safeprojectname$Dal>();
             services.AddScoped<I$safeprojectname$Repository, $safeprojectname$Repository>();
         }
