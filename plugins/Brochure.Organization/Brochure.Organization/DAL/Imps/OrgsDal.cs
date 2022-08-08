@@ -1,4 +1,5 @@
 ﻿using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Organization.Abstract.Models;
 using Brochure.Organization.Abstract.RequestModel;
 using Brochure.Organization.DAL.Interfaces;
@@ -97,7 +98,7 @@ namespace Brochure.Organization.DAL.Imps
         /// <returns>A ValueTask.</returns>
         public async ValueTask<int> InsertOrgs(IEnumerable<ReqAddOrgModel> reqAddOrgModels)
         {
-            var list = reqAddOrgModels.Select(t => _objectFactory.Create<ReqAddOrgModel, OrganizationEntiry>(t));
+            var list = reqAddOrgModels.Select(t => t.As<OrganizationEntiry>());
             return await _oraginzationRepository.InsertAsync(list);
         }
 

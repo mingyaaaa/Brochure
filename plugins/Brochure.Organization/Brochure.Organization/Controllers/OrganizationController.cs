@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Brochure.Abstract;
+using Brochure.Abstract.Extensions;
 using Brochure.Core.Server.Extensions;
 using Brochure.Organization.Abstract.RequestModel;
 using Brochure.Organization.DAL.Interfaces;
@@ -69,7 +70,7 @@ namespace Brochure.Organization.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateOraginzation([FromQuery] string oraginzationId, [FromBody] ReqUpdateOrgModel model)
         {
-            var record = _objectFactory.Create(model);
+            var record = model.As<IRecord>();
             var r = await _orgsDal.UpdateOrg(oraginzationId, record);
             return this.JsonData(r);
         }

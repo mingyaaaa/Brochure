@@ -60,14 +60,7 @@ namespace Brochure.Server.Main.Controllers
             var p = await pluginLoader.LoadPlugin(path);
             if (!(p is Plugins plugin))
                 return new ContentResult() { Content = "bbb" };
-
-            var startConfigs = reflectorUtil.GetObjectOfBase<IStarupConfigure>(plugin.Assembly);
-            //         var context = new PluginMiddleContext(app.ServiceProvider, plugin.Key);
-            //  plugin.Context.Services.Add(context);
-            foreach (var item in startConfigs)
-            {
-                item.Configure(plugin.Key, applicationBuilder);
-            }
+            plugin.ConfigApplication(applicationBuilder);
             mvcBuilder.AddApplicationPart(plugin.Assembly);
 
             PluginActionDescriptorChangeProvider.Instance.HasChanged = true;

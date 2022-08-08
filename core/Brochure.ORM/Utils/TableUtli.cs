@@ -32,12 +32,12 @@ namespace Brochure.ORM
             if (type == null)
                 throw new Exception("");
             var tableName = string.Empty;
-            if (_tableNameCache.TryGetValue(type.FullName, out tableName))
+            if (_tableNameCache.TryGetValue(type.FullName!, out tableName))
                 return tableName;
             tableName = type.Name;
             if (type.GetCustomAttribute(typeof(TableAttribute)) is TableAttribute tableAttribute)
                 tableName = tableAttribute.Name;
-            _tableNameCache.TryAdd(type.FullName, tableName);
+            _tableNameCache.TryAdd(type.FullName!, tableName);
             return tableName;
         }
     }

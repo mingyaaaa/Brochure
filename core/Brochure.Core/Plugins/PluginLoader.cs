@@ -127,7 +127,8 @@ namespace Brochure.Core
                 if (allPluginTypes.Count == 2)
                     throw new Exception($"{pluginConfig.AssemblyName}存在多个Plugins实现类");
                 var pluginType = allPluginTypes[0];
-                var plugin = _objectFactory.CreateByIoc<Plugins>(_serviceProvider);
+                var plugin = (Plugins)_objectFactory.CreateByIoc(_serviceProvider, pluginType);
+                //var plugin = (Plugins)_objectFactory.CreateByIoc<Plugins>(_serviceProvider);
                 SetPluginValues(pluginDir, pluginConfig, assemably, plugin);
                 _pluginContextDic.TryAdd(pluginConfig.Key, locadContext);
                 return new ValueTask<Plugins>(plugin);
@@ -182,7 +183,7 @@ namespace Brochure.Core
             }
             catch (Exception e)
             {
-                Log.Error($"{plugin.Name}插件加载失败", e);
+                _log.LogError($"{plugin.Name}插件加载失败", e);
                 await plugin.ExitAsync();
                 await UnLoad(plugin.Key);
                 result = false;

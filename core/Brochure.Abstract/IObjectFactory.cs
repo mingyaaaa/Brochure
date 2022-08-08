@@ -41,7 +41,6 @@ namespace Brochure.Abstract
         /// Creates the.
         /// </summary>
         /// <param name="service">The service.</param>
-        /// <param name="type">The type.</param>
         /// <param name="objs">The objs.</param>
         /// <returns>A T.</returns>
         T CreateByIoc<T>(IServiceProvider service, params object[] objs);

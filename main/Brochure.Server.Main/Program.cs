@@ -1,7 +1,6 @@
 using System;
 using System.IO;
-using Autofac.Extensions.DependencyInjection;
-using Brochure.Core.PluginsDI;
+using AspectCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -29,7 +28,8 @@ namespace Brochure.Server.Main
         /// <returns>An IHostBuilder.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-              .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+             //    .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory())
+             .UseServiceProviderFactory(new ServiceContextProviderFactory())
             .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }

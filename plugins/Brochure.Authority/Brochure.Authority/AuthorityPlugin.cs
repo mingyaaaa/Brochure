@@ -1,13 +1,13 @@
-﻿using System.Text;
+﻿using Brochure.Authority.Extensions;
 using Brochure.Core;
+using Brochure.Core.Server;
 using Brochure.ORM.Extensions;
 using Brochure.ORM.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
-using Proto.UserRpc;
 
 namespace Brochure.Authority
 {
@@ -34,6 +34,15 @@ namespace Brochure.Authority
             services.AddIdentityCore<Proto.UserRpc.User>().AddRoleStore<Proto.RolesGrpc.Roles>();
             services.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
             AddDb(services);
+        }
+
+        public override void ConfigApplication(IApplicationBuilder application)
+        {
+            application.IntertMiddle("author-authentication", Key, 100, () => application.UseAuthentication());
+
+            application.IntertMiddle("author-authorization", Key, 101, () => application.UseAuthorization());
+            application.InitDb().ConfigureAwait(false).GetAwaiter().GetResult();
+            base.ConfigApplication(application);
         }
 
         /// <summary>

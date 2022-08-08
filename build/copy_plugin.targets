@@ -16,6 +16,6 @@
 	</PropertyGroup>
   <Target Name="AfterBuildCopy" AfterTargets="Build">
     <MakeDir Directories="%(MySourceFiles.DescDir)"></MakeDir>
-    <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'%(DescDir)/%(RecursiveDir)%(Filename)%(Extension)')" UseHardlinksIfPossible="True"></Copy>
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles->'%(DescDir)/%(RecursiveDir)%(Filename)%(Extension)')"></Copy>
   </Target>
 </Project>

@@ -26,7 +26,7 @@ namespace Brochure.ORM.Visitors
         /// <param name="dbOption">The db option.</param>
         /// <param name="funList">The fun list.</param>
         /// <param name="serviceProvider">The service provider.</param>
-        protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider serviceProvider = null)
+        protected ORMVisitor(IDbProvider dbProvider, DbOption dbOption, IEnumerable<IFuncVisit> funList, IServiceProvider? serviceProvider = null)
         {
             _dbPrivoder = dbProvider;
             Parameters = new List<IDbDataParameter>();
@@ -57,7 +57,7 @@ namespace Brochure.ORM.Visitors
         protected Dictionary<int, Type> TableTypeDic;
 
         private readonly IEnumerable<IFuncVisit> _funList;
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider? serviceProvider;
 
         /// <summary>
         ///
@@ -69,7 +69,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        public virtual object GetSql(Expression expression = null)
+        public virtual object GetSql(Expression? expression = null)
         {
             return GetSqlBase(expression);
         }
@@ -79,7 +79,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        private object GetSqlBase(Expression expression = null)
+        private object GetSqlBase(Expression? expression = null)
         {
             if (expression != null)
                 Visit(expression);
@@ -91,7 +91,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        protected object GetConstantExpressValue(MemberExpression expression = null)
+        protected object? GetConstantExpressValue(MemberExpression? expression = null)
         {
             if (expression == null)
                 return null;
@@ -100,12 +100,12 @@ namespace Brochure.ORM.Visitors
                 var obj = GetConstantExpressValue(memberExpression);
                 if (expression.Member is PropertyInfo propertyInfo)
                 {
-                    return propertyInfo.GetGetMethod().Invoke(obj, null);
+                    return propertyInfo.GetGetMethod()?.Invoke(obj, null);
                 }
             }
-            if (expression.Member is FieldInfo)
+            if (expression.Member is FieldInfo fieldInfo)
             {
-                return (expression.Member as FieldInfo)?.GetValue((expression.Expression as ConstantExpression)?.Value);
+                return fieldInfo.GetValue((expression.Expression as ConstantExpression)?.Value);
             }
             return null;
         }
@@ -115,7 +115,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        private object GetRootExpressValue(MemberExpression expression)
+        private object? GetRootExpressValue(MemberExpression expression)
         {
             if (expression.Expression is MemberExpression memberExpression)
             {
@@ -123,7 +123,7 @@ namespace Brochure.ORM.Visitors
                 //   return obj;
                 if (expression.Member is PropertyInfo propertyInfo && obj is ObjectValue valueObj)
                 {
-                    return new ObjectValue(propertyInfo.GetGetMethod().Invoke(valueObj.Value, null));
+                    return new ObjectValue(propertyInfo.GetGetMethod()?.Invoke(valueObj.Value, null));
                 }
             }
             else if (expression.Expression is ParameterExpression parameterExpression)
@@ -132,9 +132,9 @@ namespace Brochure.ORM.Visitors
             }
             else if (expression.Expression is ConstantExpression constantExpression)
             {
-                if (expression.Member is FieldInfo)
+                if (expression.Member is FieldInfo fieldInfo)
                 {
-                    return new ObjectValue((expression.Member as FieldInfo)?.GetValue(constantExpression.Value));
+                    return new ObjectValue(fieldInfo?.GetValue(constantExpression.Value));
                 }
             }
             else if (expression.Expression is UnaryExpression unary && unary.Operand is ParameterExpression unaryParamExpression)
@@ -296,7 +296,7 @@ namespace Brochure.ORM.Visitors
             /// Initializes a new instance of the <see cref="ObjectValue"/> class.
             /// </summary>
             /// <param name="obj">The obj.</param>
-            internal ObjectValue(object obj)
+            internal ObjectValue(object? obj)
             {
                 Value = obj;
             }
@@ -304,7 +304,7 @@ namespace Brochure.ORM.Visitors
             /// <summary>
             /// Gets or sets the value.
             /// </summary>
-            public object Value { get; set; }
+            public object? Value { get; set; }
         }
     }
 }

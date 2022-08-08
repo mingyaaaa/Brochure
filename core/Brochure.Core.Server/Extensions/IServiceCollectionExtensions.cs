@@ -44,7 +44,6 @@ namespace Brochure.Core.Server
             services.AddLogging(t => t.AddConsole());
             services.AddBrochureCore(option =>
            {
-               option.AddLog();
                option.Services.TryAddSingleton<IMiddleManager>(new MiddleManager());
                option.Services.AddTransient<IPluginUnLoadAction, PluginMiddleUnLoadAction>();
                option.Services.Replace(ServiceDescriptor.Transient(typeof(IApplicationBuilderFactory), typeof(PluginApplicationBuilderFactory)));

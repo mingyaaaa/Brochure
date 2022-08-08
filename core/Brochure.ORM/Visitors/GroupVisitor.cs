@@ -105,7 +105,7 @@ namespace Brochure.ORM.Visitors
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An object.</returns>
-        public override object GetSql(Expression expression = null)
+        public override object GetSql(Expression? expression = null)
         {
             base.Visit(expression);
             sql = $"group by {sql}";

@@ -34,7 +34,6 @@ namespace Brochure.ORM
         /// Builders the exist.
         /// </summary>
         /// <param name="existSql">The exist sql.</param>
-        /// <param name="isNot">If true, is not.</param>
         /// <returns>An ISqlResult.</returns>
         protected virtual ISqlResult BuilderExist(ExistSql existSql)
         {

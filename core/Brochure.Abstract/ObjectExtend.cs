@@ -16,7 +16,6 @@ namespace Brochure.Abstract.Extensions
         /// 转换不成功 回返回默认值
         /// </summary>
         /// <param name="obj">转化对象</param>
-        /// <param name="isException"></param>
         /// <typeparam name="T">目标类型</typeparam>
         /// <returns></returns>
         public static T As<T>(this object obj)

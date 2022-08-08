@@ -27,7 +27,7 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var pluginLoader = _serviceProvider.GetService<IPluginLoader>();
+            var pluginLoader = _serviceProvider.GetRequiredService<IPluginLoader>();
             await pluginLoader.LoadPlugin();
         }
 
@@ -38,7 +38,7 @@ namespace Brochure.Core
         /// <returns>A Task.</returns>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            var pluginLoader = _serviceProvider.GetService<IPluginLoader>();
+            var pluginLoader = _serviceProvider.GetRequiredService<IPluginLoader>();
             await pluginLoader.UnLoadAll();
         }
     }

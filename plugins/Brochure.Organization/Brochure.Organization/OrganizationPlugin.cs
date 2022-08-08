@@ -28,7 +28,7 @@ namespace Brochure.Organization
             //// 获取xml文件名
             // 获取xml文件路径
             var xmlPath = Path.Combine(AppContext.BaseDirectory, "Plugins", fileName);
-            services.ConfigurePluginSwaggerGen("Organization", "org_v1", xmlPath);
+            services.AddPluginSwaggerGen("Organization", "org_v1", xmlPath);
         }
     }
 }

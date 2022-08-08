@@ -165,7 +165,7 @@ namespace Brochure.ORM
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>An IQuery.</returns>
-        IQuery<T> Select<T>(Expression<Func<T1, T>> expression = null);
+        IQuery<T> Select<T>(Expression<Func<T1, T>>? expression = null);
 
         /// <summary>
         /// Selects the.

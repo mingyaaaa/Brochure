@@ -58,7 +58,6 @@ namespace Brochure.Core
         /// 添加拦截器
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configure"></param>
         /// <returns></returns>
         public static IServiceCollection AddBrochureInterceptor(this IServiceCollection services)
         {
@@ -72,7 +71,7 @@ namespace Brochure.Core
         /// <param name="services">The services.</param>
         /// <param name="configureOptions">The configure options.</param>
         /// <returns>An IServiceCollection.</returns>
-        public static IServiceCollection AddGrpcService(this IServiceCollection services, Action<GrpcServiceOptions> configureOptions = null)
+        public static IServiceCollection AddGrpcService(this IServiceCollection services, Action<GrpcServiceOptions>? configureOptions = null)
         {
             services.AddGrpc(configureOptions);
             return services;
@@ -84,25 +83,25 @@ namespace Brochure.Core
         /// <param name="services">The services.</param>
         /// <param name="config">The config.</param>
         /// <returns>An IServiceCollection.</returns>
-        public static IServiceCollection AddGrpcClient<T>(this IServiceCollection services, Action<PollyOption> config = null) where T : class
-        {
-            //todo  此处获取数据有问题
-            //var type = typeof(T);
-            //var memoryTypeName = type.Name.TrimEnd("Client".ToArray()) + "Base";
-            //var memoryType = Type.GetType(memoryTypeName);
-            //var grpcService = services.GetServiceInistaceType(memoryType);
-            //if (grpcService == null)
-            //{
-            //    var pollyOption = new PollyOption() { RetryCount = 3 };
-            //    config?.Invoke(pollyOption);
-            //    services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcPollyProxyFactory(pollyOption)));
-            //}
-            //else
-            //{
-            //    services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcMemoryProxyFactory(memoryType)));
-            //}
-            return services;
-        }
+        //public static IServiceCollection AddGrpcClient<T>(this IServiceCollection services, Action<PollyOption>? config = null) where T : class
+        //{
+        //    //todo  此处获取数据有问题
+        //    var type = typeof(T);
+        //    var memoryTypeName = type.Name.TrimEnd("Client".ToArray()) + "Base";
+        //    var memoryType = Type.GetType(memoryTypeName);
+        //    var grpcService = services.GetServiceInistaceType(memoryType);
+        //    if (grpcService == null)
+        //    {
+        //        var pollyOption = new PollyOption() { RetryCount = 3 };
+        //        config?.Invoke(pollyOption);
+        //        services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcPollyProxyFactory(pollyOption)));
+        //    }
+        //    else
+        //    {
+        //        services.AddSingleton<IRpcProxy<T>>(new Rpc<T>(new RpcMemoryProxyFactory(memoryType)));
+        //    }
+        //    return services;
+        //}
 
         /// <summary>
         /// 获取服务对象集合
@@ -122,30 +121,30 @@ namespace Brochure.Core
         /// <typeparam name="T"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static T GetServiceInstance<T>(this IServiceCollection services)
-        {
-            var type = typeof(T);
-            var instance = (T)services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
-            if (instance != null)
-                return instance;
-            var provider = services.BuildServiceProvider();
-            instance = provider.GetService<T>();
-            if (instance != null)
-                return instance;
-            var instanceType = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationType;
-            if (instanceType != null)
-            {
-                instance = (T)Activator.CreateInstance(instanceType);
-                if (instance != null)
-                    return instance;
-            }
-            var instanceFactory = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationFactory;
-            if (instanceFactory != null)
-            {
-                instance = (T)instanceFactory.Invoke(services.BuildServiceProvider());
-            }
-            return (T)instance;
-        }
+        //public static T GetServiceInstance<T>(this IServiceCollection services)
+        //{
+        //    var type = typeof(T);
+        //    var instance = (T)services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
+        //    if (instance != null)
+        //        return instance;
+        //    var provider = services.BuildServiceProvider();
+        //    instance = provider.GetService<T>();
+        //    if (instance != null)
+        //        return instance;
+        //    var instanceType = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationType;
+        //    if (instanceType != null)
+        //    {
+        //        instance = (T)Activator.CreateInstance(instanceType);
+        //        if (instance != null)
+        //            return instance;
+        //    }
+        //    var instanceFactory = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationFactory;
+        //    if (instanceFactory != null)
+        //    {
+        //        instance = (T)instanceFactory.Invoke(services.BuildServiceProvider());
+        //    }
+        //    return (T)instance;
+        //}
 
         /// <summary>
         /// Gets the service inistace type.
@@ -153,23 +152,23 @@ namespace Brochure.Core
         /// <param name="services">The services.</param>
         /// <param name="type">The type.</param>
         /// <returns>A Type.</returns>
-        public static Type GetServiceInistaceType(this IServiceCollection services, Type type)
-        {
-            var instance = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
-            if (instance != null)
-                return instance.GetType();
-            var instanceType = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationType;
-            if (instanceType != null)
-            {
-                return instanceType;
-            }
-            var instanceFactory = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationFactory;
-            if (instanceFactory != null)
-            {
-                instance = instanceFactory.Invoke(services.BuildServiceProvider());
-            }
-            return instance.GetType();
-        }
+        //public static Type GetServiceInistaceType(this IServiceCollection services, Type type)
+        //{
+        //    var instance = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationInstance;
+        //    if (instance != null)
+        //        return instance.GetType();
+        //    var instanceType = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationType;
+        //    if (instanceType != null)
+        //    {
+        //        return instanceType;
+        //    }
+        //    var instanceFactory = services.FirstOrDefault(t => t.ServiceType == type)?.ImplementationFactory;
+        //    if (instanceFactory != null)
+        //    {
+        //        instance = instanceFactory.Invoke(services.BuildServiceProvider());
+        //    }
+        //    return instance.GetType();
+        //}
 
         /// <summary>
         /// 加载依赖注入对象
@@ -212,7 +211,7 @@ namespace Brochure.Core
                 {
                     var baseTypes = GetBaseTypeOrInterface(item);
                     foreach (var baseType in baseTypes)
-                        AddMutiService(services, baseType, item, ServiceLifetime.Singleton);
+                        AddService(services, baseType, item, ServiceLifetime.Singleton);
                     continue;
                 }
                 type = item.GetInterface(nameof(IMutiScope));
@@ -220,7 +219,7 @@ namespace Brochure.Core
                 {
                     var baseTypes = GetBaseTypeOrInterface(item);
                     foreach (var baseType in baseTypes)
-                        AddMutiService(services, baseType, item, ServiceLifetime.Scoped);
+                        AddService(services, baseType, item, ServiceLifetime.Scoped);
                     continue;
                 }
                 type = item.GetInterface(nameof(IMutiTransient));
@@ -228,8 +227,7 @@ namespace Brochure.Core
                 {
                     var baseTypes = GetBaseTypeOrInterface(item);
                     foreach (var baseType in baseTypes)
-                        AddMutiService(services, baseType, item, ServiceLifetime.Transient);
-                    continue;
+                        AddService(services, baseType, item, ServiceLifetime.Transient);
                 }
             }
         }
@@ -275,29 +273,6 @@ namespace Brochure.Core
             else if (serviceLifetime == ServiceLifetime.Scoped)
             {
                 services.TryAddScoped(baseType, impType);
-            }
-            else if (serviceLifetime == ServiceLifetime.Transient)
-            {
-                services.AddTransient(baseType, impType);
-            }
-        }
-
-        /// <summary>
-        /// Adds the muti service.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <param name="baseType">The base type.</param>
-        /// <param name="impType">The imp type.</param>
-        /// <param name="serviceLifetime">The service lifetime.</param>
-        private static void AddMutiService(IServiceCollection services, Type baseType, Type impType, ServiceLifetime serviceLifetime)
-        {
-            if (serviceLifetime == ServiceLifetime.Singleton)
-            {
-                services.AddSingleton(baseType, impType);
-            }
-            else if (serviceLifetime == ServiceLifetime.Scoped)
-            {
-                services.AddScoped(baseType, impType);
             }
             else if (serviceLifetime == ServiceLifetime.Transient)
             {

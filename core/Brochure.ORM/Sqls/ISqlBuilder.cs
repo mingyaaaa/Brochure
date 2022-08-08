@@ -42,7 +42,7 @@ namespace Brochure.ORM
         /// <param name="tableType">The table type.</param>
         /// <param name="tempTable">The temp table.</param>
         /// <param name="groupDic">The group dic.</param>
-        void RenameTableType(StringBuilder str, IDictionary<int, Type> tableType, IEnumerable<int> tempTable = null, IDictionary<string, string> groupDic = null);
+        void RenameTableType(StringBuilder str, IDictionary<int, Type> tableType, IEnumerable<int>? tempTable = null, IDictionary<string, string>? groupDic = null);
 
         /// <summary>
         /// Renames the temp table type.
@@ -58,22 +58,22 @@ namespace Brochure.ORM
     public partial class SqlBuilder : ISqlBuilder
     {
         /// <summary>
-        ///
+        /// IVisitProvider
         /// </summary>
         protected readonly IVisitProvider _visitProvider;
 
         /// <summary>
-        ///
+        /// IDbProvider
         /// </summary>
         protected readonly IDbProvider _dbProvider;
 
         /// <summary>
-        ///
+        /// DbOption
         /// </summary>
         protected readonly DbOption _dbOption;
 
         /// <summary>
-        ///
+        /// TypeMap
         /// </summary>
         protected readonly TypeMap _typeMap;
 

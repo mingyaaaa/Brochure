@@ -11,10 +11,11 @@ namespace Brochure.Core
         /// Adds the log.
         /// </summary>
         /// <param name="applicationOption">The application option.</param>
-        public static void AddLog(this ApplicationOption applicationOption)
-        {
-            Log.Logger = applicationOption.Services.GetServiceInstance<ILoggerFactory>()?.CreateLogger("Brochure");
-            Log.Services = applicationOption.Services;
-        }
+        //public static void AddLog(this ApplicationOption applicationOption)
+        //{
+        //    var factory = new LoggerFactory();
+        //    Log.Logger = applicationOption.Services.GetServiceInstance<ILoggerFactory>()?.CreateLogger("Brochure");
+        //    Log.Services = applicationOption.Services;
+        //}
     }
 }

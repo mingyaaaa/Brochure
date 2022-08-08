@@ -44,8 +44,6 @@ namespace Brochure.Test
             var s = provider.GetServices<IHostedService>().FirstOrDefault(t => t is PluginLoadService);
             Assert.IsNotNull(s);
 
-            Assert.IsNotNull(Log.Logger);
-
             var m = provider.GetService<IMiddleManager>();
             Assert.IsNotNull(m);
             var b = provider.GetService<IPluginUnLoadAction>();
@@ -98,7 +96,7 @@ namespace Brochure.Test
         public async Task TestAddBrochureController1()
         {
             await services.AddPluginController();
-            var provider = services.BuildServiceProvider();
+            var provider = services.BuildServiceContextProvider();
             var a = provider.GetService<IMvcBuilder>();
             Assert.IsNotNull(a);
         }
@@ -107,6 +105,13 @@ namespace Brochure.Test
         public void TestAddBrochureCore()
         {
             services.AddBrochureCore();
+        }
+
+        [TestMethod]
+        public void MyTestMethod()
+        {
+            var provider = services.BuildServiceProvider();
+            ActivatorUtilities.CreateInstance(provider, typeof(Student));
         }
 
         /// <summary>

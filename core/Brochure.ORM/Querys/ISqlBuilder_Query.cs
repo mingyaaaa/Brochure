@@ -402,7 +402,7 @@ namespace Brochure.ORM
         /// <param name="tempTableDic">The temp table dic.</param>
         /// <param name="groupDic">The group dic.</param>
         /// <param name="type">The type.</param>
-        public SqlParam(string sql, List<IDbDataParameter> pp, IDictionary<int, Type> tableType, HashSet<int> tempTableDic = null, IDictionary<string, string> groupDic = null, Type type = null)
+        public SqlParam(string sql, List<IDbDataParameter> pp, IDictionary<int, Type> tableType, HashSet<int>? tempTableDic = null, IDictionary<string, string>? groupDic = null, Type? type = null)
         {
             SQL = sql;
             Params = pp;
@@ -415,7 +415,7 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
-        public Type Type { get; set; }
+        public Type? Type { get; set; }
 
         /// <summary>
         /// Gets or sets the s q l.
