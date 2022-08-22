@@ -43,8 +43,8 @@ namespace Brochure.ORM
             var tableName = TableUtlis.GetTableName(insertSql.Table.GetType());
             var sql = $"insert into {_dbProvider.FormatFieldName(tableName)}";
             var pams = new List<IDbDataParameter>();
-            var fields = new List<string>();
-            var valueList = new List<string>();
+            var fields = new StringJoin(",");
+            var valueList = new StringJoin(",");
             foreach (var item in doc.Keys.ToList())
             {
                 if (_dbOption.IsUseParamers)
@@ -54,7 +54,7 @@ namespace Brochure.ORM
                     param.Value = doc[item];
                     if (param.Value != null)
                     {
-                        fields.Add($"{_dbProvider.FormatFieldName(item)}");
+                        fields.Join($"{_dbProvider.FormatFieldName(item)}");
                         pams.Add(param);
                     }
                 }
@@ -63,15 +63,15 @@ namespace Brochure.ORM
                     var t_value = _dbProvider.GetObjectType(doc[item]);
                     if (t_value != null)
                     {
-                        valueList.Add(t_value);
-                        fields.Add($"{_dbProvider.FormatFieldName(item)}");
+                        valueList.Join(t_value);
+                        fields.Join($"{_dbProvider.FormatFieldName(item)}");
                     }
                 }
             }
             if (_dbOption.IsUseParamers)
-                sql = $"{sql}({fields.Join(",")}) values({pams.Join(",", t => t.ParameterName)})";
+                sql = $"{sql}({fields}) values({pams.Join(",", t => t.ParameterName)})";
             else
-                sql = $"{sql}({fields.Join(",")}) values({valueList.Join(",")})";
+                sql = $"{sql}({fields}) values({valueList})";
             result.SQL = sql;
             result.Parameters.AddRange(pams);
             return result;
@@ -90,7 +90,7 @@ namespace Brochure.ORM
             var tableName = TableUtlis.GetTableName(updateSql.Table);
             var doc = updateSql.UpdateObj.As<IRecord>();
             var sql = $"update {_dbProvider.FormatFieldName(tableName)} set ";
-            var fieldList = new List<string>();
+            var fieldList = new StringJoin(",");
             var parms = new List<IDbDataParameter>(whereSqlResult.Parameters);
             foreach (var item in doc.Keys.ToList())
             {
@@ -107,9 +107,9 @@ namespace Brochure.ORM
                 {
                     fieldStr = $"{_dbProvider.FormatFieldName(item)}={_dbProvider.GetObjectType(doc[item])}";
                 }
-                fieldList.Add(fieldStr);
+                fieldList.Join(fieldStr);
             }
-            sql = $"{sql}{fieldList.Join(",")} {whereSqlResult.SQL}";
+            sql = $"{sql}{fieldList} {whereSqlResult.SQL}";
             result.SQL = sql;
             result.Parameters.AddRange(parms);
             return result;

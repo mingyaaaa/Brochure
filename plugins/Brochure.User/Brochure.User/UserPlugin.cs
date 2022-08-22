@@ -52,6 +52,10 @@ namespace Brochure.User
             services.AddPluginSwaggerGen("User", "user_v1", xmlPath);
         }
 
+        /// <summary>
+        /// Configs the application.
+        /// </summary>
+        /// <param name="application">The application.</param>
         public override void ConfigApplication(IApplicationBuilder application)
         {
             application.InitDb();

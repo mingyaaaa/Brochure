@@ -101,8 +101,15 @@ namespace Brochure.Core
             var allPluginPath = _directory.GetFiles(pluginBathPath, "plugin.config", SearchOption.AllDirectories).ToList();
             foreach (var item in allPluginPath)
             {
-                var p = await LoadPlugin(item);
-                _mvcBuilder.AddApplicationPart(p.Assembly);
+                try
+                {
+                    var p = await LoadPlugin(item);
+                    _mvcBuilder.AddApplicationPart(p.Assembly);
+                }
+                catch (Exception e)
+                {
+                    _log.LogError(e, e.Message + $"{item} 插件加载失败");
+                }
             }
         }
 
@@ -113,11 +120,13 @@ namespace Brochure.Core
         /// <returns>A ValueTask.</returns>
         private ValueTask<Plugins> ResolverPlugins(string pluginConfigPath)
         {
-            IPluginsLoadContext locadContext = null;
+            IPluginsLoadContext? locadContext = null;
             try
             {
                 var pluginConfig = _jsonUtil.Get<PluginConfig>(pluginConfigPath);
                 var pluginDir = Path.GetDirectoryName(pluginConfigPath);
+                if (string.IsNullOrWhiteSpace(pluginDir))
+                    throw new Exception($"{pluginConfigPath}路径不正确");
                 var pluginPath = Path.Combine(pluginDir, pluginConfig.AssemblyName);
                 locadContext = _pluginLoadContextProvider.CreateLoadContext(pluginPath);
                 var assemably = locadContext.LoadAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPath)));

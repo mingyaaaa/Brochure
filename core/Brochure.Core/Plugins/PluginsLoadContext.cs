@@ -1,5 +1,6 @@
 using Brochure.Abstract;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,13 +15,15 @@ namespace Brochure.Core
     {
         private readonly IAssemblyDependencyResolverProxy _resolver;
         private static IEnumerable<string> loadedAssemblies;
+        private static ConcurrentDictionary<string, AssemblyCount> ShareAssembly;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginsLoadContext"/> class.
         /// </summary>
         static PluginsLoadContext()
         {
-            loadedAssemblies = Default.Assemblies.Select(t => t.GetName().Name);
+            loadedAssemblies = Default.Assemblies.Select(t => t.GetName().FullName);
+            ShareAssembly = new ConcurrentDictionary<string, AssemblyCount>();
         }
 
         /// <summary>
@@ -50,11 +53,17 @@ namespace Brochure.Core
         protected override Assembly Load(AssemblyName assemblyName)
         {
             string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            if (!string.IsNullOrWhiteSpace(assemblyPath) && !loadedAssemblies.Contains(assemblyName.Name))
+            if (!string.IsNullOrWhiteSpace(assemblyPath) && !loadedAssemblies.Contains(assemblyName.FullName))
             {
                 try
                 {
+                    if (ShareAssembly.TryGetValue(assemblyName.FullName!, out var assemCount))
+                    {
+                        assemCount.Count++;
+                        return assemCount.Assembly;
+                    }
                     var ass = LoadFromAssemblyPath(assemblyPath);
+                    ShareAssembly.TryAdd(assemblyName.FullName, new AssemblyCount(ass, 1));
                     //   var ass = LoadFromStream(new FileStream(assemblyPath, FileMode.Open, FileAccess.Read));
                     return ass;
                 }
@@ -95,7 +104,29 @@ namespace Brochure.Core
         /// </summary>
         public void UnLoad()
         {
+            foreach (var item in Assemblies)
+            {
+                if (ShareAssembly.TryGetValue(item.FullName!, out var assemblyCount))
+                {
+                    assemblyCount.Count--;
+                    if (assemblyCount.Count == 0)
+                        ShareAssembly.TryRemove(item.FullName!, out _);
+                }
+            }
             Unload();
+        }
+
+        private class AssemblyCount
+        {
+            public AssemblyCount(Assembly assembly, int count)
+            {
+                Assembly = assembly;
+                Count = count;
+            }
+
+            internal Assembly Assembly { get; }
+
+            internal int Count { get; set; }
         }
     }
 }

@@ -137,8 +137,8 @@ namespace Brochure.Core
         /// <summary>
         /// Configs the application.
         /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        public virtual void ConfigApplication(IApplicationBuilder serviceProvider)
+        /// <param name="application">The service provider.</param>
+        public virtual void ConfigApplication(IApplicationBuilder application)
         {
         }
     }

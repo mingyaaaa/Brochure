@@ -164,8 +164,13 @@ namespace Brochure.ORM
                 DeleteSql deleteSql => BuildDeleteSql(deleteSql),
                 InsertSql insertSql => BuildInsertSql(insertSql),
                 UpdateSql updateSql => BuildUpdateSql(updateSql),
-                _ => new ParmsSqlResult()
+                _ => BuildOtherSql(sql),
             };
+        }
+
+        public virtual ISqlResult BuildOtherSql(ISql sql)
+        {
+            return new ParmsSqlResult();
         }
 
         /// <summary>

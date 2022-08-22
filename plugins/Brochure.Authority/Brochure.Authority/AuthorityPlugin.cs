@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
+using System.Security.Claims;
+using System.Text;
 
 namespace Brochure.Authority
 {
@@ -22,16 +25,25 @@ namespace Brochure.Authority
         /// <param name="services">The services.</param>
         public override void ConfigureService(IServiceCollection services)
         {
+            var jwtConfig = Configuration.GetSection("Jwt");
             services.AddAuthentication(t =>
             {
                 t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 t.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(t =>
             {
+                t.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    NameClaimType = CustomClaimType.Name,
+                    RoleClaimType = CustomClaimType.Role,
+                    ValidIssuer = "颁发机构",
+                    ValidAudience = "颁发给谁",
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.GetValue<string>("sigin"))),
+                    ClockSkew = TimeSpan.FromMinutes(5),
+                };
             });
-            services.AddDistributedMemoryCache();
-            services.AddSession();
-            services.AddIdentityCore<Proto.UserRpc.User>().AddRoleStore<Proto.RolesGrpc.Roles>();
             services.AddSingleton<AuthorityService.AuthorityService.AuthorityServiceBase, Services.AuthorityService>();
             AddDb(services);
         }

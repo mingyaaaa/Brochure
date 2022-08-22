@@ -37,7 +37,7 @@ namespace Brochure.Core.Server.Core
         {
             return builder =>
             {
-                var plugins = _pluginManagers.GetPlugins().OfType<Plugins>();
+                var plugins = _pluginManagers.GetPlugins().OfType<Plugins>().OrderBy(t => t.Order);
                 foreach (var item in plugins)
                 {
                     item.ConfigApplication(builder);

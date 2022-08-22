@@ -4,11 +4,13 @@ using Brochure.Abstract.Models;
 using Brochure.Extensions;
 using Brochure.ORM;
 using Brochure.ORM.Database;
+using Brochure.ORM.MySql;
 using LinqDbQueryTest.Datas;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -87,6 +89,38 @@ namespace Brochure.ORMTest.Querys
             Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p0").Value, "dd");
             Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p1").Value, "11");
             Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p2").Value, 1);
+        }
+
+        [TestMethod]
+        public void TestInsertManay()
+        {
+            var list = new List<Students>();
+            for (int i = 0; i < 3; i++)
+            {
+                var obj = new Students()
+                {
+                    ClassCount = i,
+                    ClassId = i.ToString(),
+                    School = "dd",
+                };
+                list.Add(obj);
+            }
+            option.IsUseParamers = true;
+            var sql = new InsertManySql(list);
+            var sqlResult = _sqlBuilder.Build(sql);
+            Assert.AreEqual("insert into `Students`(`Id`,`School`,`ClassId`,`PeopleId`,`ClassCount`,`No`) values(@p0,@p1,@p2,@p3,@p4,@p5),(@p6,@p7,@p8,@p9,@p10,@p11),(@p12,@p13,@p14,@p15,@p16,@p17)", sqlResult.SQL);
+
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p0").Value, null);
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p1").Value, "dd");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p2").Value, "0");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p3").Value, null);
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p4").Value, 0);
+
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p6").Value, null);
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p7").Value, "dd");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p8").Value, "1");
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p9").Value, null);
+            Assert.AreEqual(sqlResult.Parameters.FirstOrDefault(t => t.ParameterName == "@p10").Value, 1);
         }
 
         /// <summary>
@@ -222,5 +256,37 @@ namespace Brochure.ORMTest.Querys
         //else
         //drop table Students", sqlResult.SQL);
         //        }
+
+        #region ¿‡
+
+        //public class Students
+        //{
+        //    /// <summary>
+        //    /// Gets or sets the id.
+        //    /// </summary>
+        //    public string Id { get; set; }
+
+        //    /// <summary>
+        //    /// Gets or sets the school.
+        //    /// </summary>
+        //    public string School { get; set; }
+
+        //    /// <summary>
+        //    /// Gets or sets the class id.
+        //    /// </summary>
+        //    public string ClassId { set; get; }
+
+        //    /// <summary>
+        //    /// Gets or sets the class count.
+        //    /// </summary>
+        //    public int ClassCount { get; set; }
+
+        //    /// <summary>
+        //    /// Gets or sets the no.
+        //    /// </summary>
+        //    public decimal No { get; set; }
+        //}
+
+        #endregion ¿‡
     }
 }

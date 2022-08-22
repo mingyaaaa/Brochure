@@ -2,7 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Brochure.Abstract.Models;
 using Brochure.Authority.Abstract;
+using Brochure.Core.PluginsDI;
+using Brochure.User.Abstract;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Brochure.Authority.Services
 {
@@ -11,11 +14,16 @@ namespace Brochure.Authority.Services
     /// </summary>
     public class LoginService : ILoginService
     {
+        private readonly IAccountService _accountService;
+        private readonly IDistributedCache _distributedCache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginService"/> class.
         /// </summary>
-        public LoginService()
+        public LoginService(IAccountService accountService, IDistributedCache distributedCache)
         {
+            _accountService = accountService;
+            _distributedCache = distributedCache;
         }
 
         /// <summary>
@@ -23,10 +31,14 @@ namespace Brochure.Authority.Services
         /// </summary>
         /// <param name="loginModel">The login model.</param>
         /// <returns>A ValueTask.</returns>
-        public async ValueTask<IResult> Login(LoginModel loginModel)
+        public async ValueTask<Result<LoginUserModel>> Login(LoginModel loginModel)
         {
-            return Result.OK;
-            //   return ChangeToResult(result);
+            var loginResult = await _accountService.VerifyAccount(loginModel.UseName, loginModel.Passward);
+            if (loginResult.Code == 0)
+            {
+                //todo 查询角色，用户信息，部门信息，等
+            }
+            return new Result<LoginUserModel>(loginResult.Code, loginResult.Msg);
         }
 
         /// <summary>
@@ -34,7 +46,7 @@ namespace Brochure.Authority.Services
         /// </summary>
         /// <param name="userName">The user name.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IResult> RefreshToken(string userName)
+        public ValueTask<Result> RefreshToken(string userName)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +56,7 @@ namespace Brochure.Authority.Services
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IResult> VerifyToken(string token)
+        public ValueTask<Result> VerifyToken(string token)
         {
             throw new NotImplementedException();
         }
@@ -54,7 +66,7 @@ namespace Brochure.Authority.Services
         /// </summary>
         /// <param name="userName">The user name.</param>
         /// <returns>A ValueTask.</returns>
-        public ValueTask<IResult> VerifyUserName(string userName)
+        public ValueTask<Result> VerifyUserName(string userName)
         {
             throw new NotImplementedException();
         }
@@ -63,8 +75,8 @@ namespace Brochure.Authority.Services
         /// Changes the to result.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <returns>An IResult.</returns>
-        private IResult ChangeToResult(SignInResult result)
+        /// <returns>An Result.</returns>
+        private Result ChangeToResult(SignInResult result)
         {
             if (result.IsLockedOut)
             {

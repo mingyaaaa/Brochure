@@ -1,48 +1,12 @@
 namespace Brochure.Abstract.Models
 {
     /// <summary>
-    /// The result des.
-    /// </summary>
-    public interface IResultDes
-    {
-        /// <summary>
-        /// Gets the msg.
-        /// </summary>
-        string Msg { get; }
-
-        /// <summary>
-        /// Gets the code.
-        /// </summary>
-        int Code { get; }
-    }
-
-    /// <summary>
     /// The result.
     /// </summary>
-    public interface IResult : IResultDes
+    public class Result
     {
-        /// <summary>
-        /// Gets the data.
-        /// </summary>
-        object Data { get; }
-    }
+        private readonly object? _data;
 
-    /// <summary>
-    /// The result.
-    /// </summary>
-    public interface IResult<T> : IResultDes
-    {
-        /// <summary>
-        /// Gets the data.
-        /// </summary>
-        T Data { get; }
-    }
-
-    /// <summary>
-    /// The result.
-    /// </summary>
-    public class Result : IResult
-    {
         /// <summary>
         /// Initializes a new instance of the <see cref="Result"/> class.
         /// </summary>
@@ -62,62 +26,50 @@ namespace Brochure.Abstract.Models
         /// <param name="msg">The msg.</param>
         public Result(object data, int code = 0, string msg = "") : this(code, msg)
         {
-            Data = data;
+            _data = data;
         }
 
         /// <summary>
         /// Gets the msg.
         /// </summary>
-        public string Msg { get; }
+        public string Msg { get; protected set; }
 
         /// <summary>
         /// Gets the code.
         /// </summary>
-        public int Code { get; }
+        public int Code { get; protected set; }
 
         /// <summary>
         /// Gets the data.
         /// </summary>
-        public object Data { get; }
+        /// <returns>A T? .</returns>
+        public T? GetData<T>()
+        {
+            return (T?)_data;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether is success.
+        /// </summary>
+        public virtual bool IsSuccess => Code == 0;
 
         /// <summary>
         /// Gets the o k.
         /// </summary>
-        public static IResult OK => new Result(0, "");
-    }
-
-    /// <summary>
-    /// The result extensions.
-    /// </summary>
-    public static class ResultExtensions
-    {
-        /// <summary>
-        /// Gets the data.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <returns>A T.</returns>
-        public static T GetData<T>(this IResult result)
-        {
-            return (T)result.Data;
-        }
+        public static Result OK => new Result(0, string.Empty);
     }
 
     /// <summary>
     /// The result.
     /// </summary>
-    public class Result<T> : IResult<T>
+    public class Result<T> : Result
     {
-        private readonly T _data;
+        private readonly T? _data;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Result"/> class.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        /// <param name="msg">The msg.</param>
-        public Result(int code, string msg)
+        public Result(int code, string msg) : base(code, msg)
         {
-            this.Msg = msg;
             this.Code = code;
+            this.Msg = msg;
         }
 
         /// <summary>
@@ -132,18 +84,8 @@ namespace Brochure.Abstract.Models
         }
 
         /// <summary>
-        /// Gets the msg.
-        /// </summary>
-        public string Msg { get; }
-
-        /// <summary>
-        /// Gets the code.
-        /// </summary>
-        public int Code { get; }
-
-        /// <summary>
         /// Gets the data.
         /// </summary>
-        public T Data => _data;
+        public T? Data => _data;
     }
 }

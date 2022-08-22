@@ -64,32 +64,34 @@ namespace Brochure.ORM
         /// <summary>
         /// Gets the datas.
         /// </summary>
-        public DbData Datas => _serviceScope.ServiceProvider.GetRequiredService<DbData>();
+        public DbData Datas => _serviceScope!.ServiceProvider.GetRequiredService<DbData>();
 
         /// <summary>
         /// Gets the tables.
         /// </summary>
-        public DbTable Tables => _serviceScope.ServiceProvider.GetRequiredService<DbTable>();
+        public DbTable Tables => _serviceScope!.ServiceProvider.GetRequiredService<DbTable>();
 
         /// <summary>
         /// Gets the databases.
         /// </summary>
-        public DbDatabase Databases => _serviceScope.ServiceProvider.GetRequiredService<DbDatabase>();
+        public DbDatabase Databases => _serviceScope!.ServiceProvider.GetRequiredService<DbDatabase>();
 
         /// <summary>
         /// Gets the columns.
         /// </summary>
-        public DbColumn Columns => _serviceScope.ServiceProvider.GetRequiredService<DbColumn>();
+        public DbColumn Columns => _serviceScope!.ServiceProvider.GetRequiredService<DbColumn>();
 
         /// <summary>
         /// Gets the indexs.
         /// </summary>
-        public DbIndex Indexs => _serviceScope.ServiceProvider.GetRequiredService<DbIndex>();
+        public DbIndex Indexs => _serviceScope!.ServiceProvider.GetRequiredService<DbIndex>();
 
         /// <summary>
         /// Gets the database name.
         /// </summary>
-        public string DatabaseName => _connectFactory.GetDatabase();
+        public string DatabaseName => _connectFactory!.GetDatabase();
+
+        public DbConnection Connection => _connectFactory.CreateConnection();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContext"/> class.
@@ -97,10 +99,12 @@ namespace Brochure.ORM
         /// <param name="isBeginTransaction">If true, is begin transaction.</param>
         protected DbContext(bool isBeginTransaction = false)
         {
-            _serviceScope = ServiceProvider?.CreateScope();
-            _connectFactory = _serviceScope?.ServiceProvider.GetRequiredService<IConnectFactory>();
-            _transactionManager = _serviceScope?.ServiceProvider.GetRequiredService<ITransactionManager>();
-            _sqlBuilder = _serviceScope?.ServiceProvider.GetRequiredService<ISqlBuilder>();
+            if (ServiceProvider == null)
+                throw new ArgumentNullException(nameof(ServiceProvider));
+            _serviceScope = ServiceProvider.CreateScope();
+            _connectFactory = _serviceScope.ServiceProvider.GetRequiredService<IConnectFactory>();
+            _transactionManager = _serviceScope.ServiceProvider.GetRequiredService<ITransactionManager>();
+            _sqlBuilder = _serviceScope.ServiceProvider.GetRequiredService<ISqlBuilder>();
             _objectFactory = _serviceScope.ServiceProvider.GetRequiredService<IObjectFactory>();
             _isBeginTransaction = isBeginTransaction;
             BenginTransaction();
@@ -115,7 +119,7 @@ namespace Brochure.ORM
             if (_transaction != null && !_isRollbackOrCommit)
                 await _transaction.CommitAsync();
             _serviceScope?.Dispose();
-            _transactionManager.RemoveTransaction(_transaction);
+            _transactionManager?.RemoveTransaction(_transaction!);
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace Brochure.ORM
         {
             if (_isBeginTransaction)
             {
-                _transaction = new Transaction(_connectFactory);
+                _transaction = new Transaction(_connectFactory!);
                 _transactionManager?.AddTransaction(_transaction);
             }
             else
@@ -170,7 +174,7 @@ namespace Brochure.ORM
         /// <returns>A list of TS.</returns>
         public virtual async Task<IEnumerable<T>> ExcuteQueryAsync<T>(IEnumerable<ISql> sqls) where T : class
         {
-            var defaultDatabase = _connectFactory.GetDatabase();
+            var defaultDatabase = _connectFactory!.GetDatabase();
             var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
             var list = new List<T>();
             var taskList = new List<Task<IEnumerable<T>>>();
@@ -216,7 +220,7 @@ namespace Brochure.ORM
         /// <returns>A Task.</returns>
         public virtual async Task<IEnumerable<IRecord>> ExcuteMutiQueryAsync(string database, IEnumerable<ISql> sqls)
         {
-            var sql = _sqlBuilder.Build(sqls);
+            var sql = _sqlBuilder!.Build(sqls);
             var command = await CreateDbCommandAsync(database);
             command.CommandText = sql.SQL;
             command.Parameters.AddRange(sql.Parameters);
@@ -260,7 +264,7 @@ namespace Brochure.ORM
         /// <returns>An int.</returns>
         public virtual async Task<int> ExcuteNoQueryAsync(IEnumerable<ISql> sqls)
         {
-            var defaultDatabase = _connectFactory.GetDatabase();
+            var defaultDatabase = _connectFactory!.GetDatabase();
             var group = sqls.GroupBy(t => string.IsNullOrWhiteSpace(t.Database) ? defaultDatabase : t.Database).ToDictionary(t => t.Key, t => t.ToArray());
             var r = 0;
             var taskList = new List<Task<int>>();

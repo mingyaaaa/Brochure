@@ -1,11 +1,13 @@
 ﻿using Brochure.ORM;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Brochure.Authority.Entities
 {
     /// <summary>
     /// The user role entity.
     /// </summary>
+    [Table("role")]
     public class UserRoleEntity : EntityBase, IEntityKey<string>
     {
         /// <summary>

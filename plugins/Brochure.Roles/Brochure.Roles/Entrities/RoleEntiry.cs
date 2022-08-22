@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Brochure.ORM;
 
 namespace Brochure.Roles.Entrities
@@ -6,6 +7,7 @@ namespace Brochure.Roles.Entrities
     /// <summary>
     /// The role entity.
     /// </summary>
+    [Table("role")]
     public class RoleEntity : EntityBase, IEntityKey<string>
     {
         /// <summary>

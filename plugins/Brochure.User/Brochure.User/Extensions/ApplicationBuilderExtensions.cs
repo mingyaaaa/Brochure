@@ -3,7 +3,6 @@ using Brochure.User.Entrities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Brochure.User.Extensions
 {

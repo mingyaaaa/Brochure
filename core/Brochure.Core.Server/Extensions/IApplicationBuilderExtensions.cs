@@ -21,7 +21,7 @@ namespace Brochure.Core.Server
         /// <param name="middleware">The middleware.</param>
         public static void AddMiddle(this IApplicationBuilder application, string middleName, Guid pluginId, Func<RequestDelegate, RequestDelegate> middleware)
         {
-            var middle = application.ApplicationServices.GetService<IMiddleManager>();
+            var middle = application.ApplicationServices.GetRequiredService<IMiddleManager>();
             middle.AddMiddle(middleName, pluginId, middleware);
         }
 
@@ -35,7 +35,7 @@ namespace Brochure.Core.Server
         /// <param name="middleware">The middleware.</param>
         public static void IntertMiddle(this IApplicationBuilder application, string middleName, Guid pluginId, int index, Func<RequestDelegate, RequestDelegate> middleware)
         {
-            var middle = application.ApplicationServices.GetService<IMiddleManager>();
+            var middle = application.ApplicationServices.GetRequiredService<IMiddleManager>();
             middle.IntertMiddle(middleName, pluginId, index, middleware);
         }
 
@@ -48,7 +48,7 @@ namespace Brochure.Core.Server
         /// <param name="action">The action.</param>
         public static void AddMiddle(this IApplicationBuilder application, string middleName, Guid pluginId, Action action)
         {
-            var middle = application.ApplicationServices.GetService<IMiddleManager>();
+            var middle = application.ApplicationServices.GetRequiredService<IMiddleManager>();
             Action<Func<RequestDelegate, RequestDelegate>> middleDelegate = t =>
             {
                 middle.AddMiddle(middleName, pluginId, t);
@@ -68,7 +68,7 @@ namespace Brochure.Core.Server
         /// <param name="action">The action.</param>
         public static void IntertMiddle(this IApplicationBuilder application, string middleName, Guid pluginId, int index, Action action)
         {
-            var middle = application.ApplicationServices.GetService<IMiddleManager>();
+            var middle = application.ApplicationServices.GetRequiredService<IMiddleManager>();
             Action<Func<RequestDelegate, RequestDelegate>> middleDelegate = t =>
             {
                 middle.IntertMiddle(middleName, pluginId, index, t);

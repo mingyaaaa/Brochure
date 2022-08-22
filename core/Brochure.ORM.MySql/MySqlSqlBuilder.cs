@@ -1,10 +1,17 @@
 using Brochure.Abstract;
+using Brochure.Core;
+using Brochure.Extensions;
 using Brochure.ORM.Atrributes;
 using Brochure.ORM.Querys;
+using Brochure.ORM.Utils;
 using Brochure.ORM.Visitors;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Brochure.ORM.MySql
 {
@@ -173,6 +180,63 @@ namespace Brochure.ORM.MySql
             var r = new ParmsSqlResult();
             r.SQL = $"drop table if exists {deleteTableSql.TableName}";
             return r;
+        }
+
+        public override ISqlResult BuildOtherSql(ISql sql)
+        {
+            return sql switch
+            {
+                InsertManySql insertManySql => BuildInsertManySql(insertManySql),
+                _ => base.BuildOtherSql(sql),
+            };
+        }
+
+        private ISqlResult BuildInsertManySql(InsertManySql insertManySql)
+        {
+            var result = new ParmsSqlResult();
+            var first = insertManySql.Datas.First();
+            var count = insertManySql.Datas.Count();
+            var tableName = TableUtlis.GetTableName(first.GetType());
+            var fields = new StringJoin(",");
+            var allProp = first.GetType().GetRuntimeProperties();
+            var pams = new List<IDbDataParameter>();
+            var sqlJoinString = new StringJoin(",");
+            for (int i = 0; i < count; i++)
+            {
+                var obj = insertManySql.Datas.ElementAt(i);
+                var valueStringJoin = new StringJoin(",");
+                var pStr = new StringJoin(",");
+                foreach (var item in allProp)
+                {
+                    if (i == 0)
+                    {
+                        fields.Join(_dbProvider.FormatFieldName(item.Name));
+                    }
+                    var value = PropertyGetDelegateCache.TryGet(item, obj);
+                    if (_dbOption.IsUseParamers)
+                    {
+                        var param = _dbProvider.GetDbDataParameter();
+                        param.ParameterName = Guid.NewGuid().ToString();
+                        param.Value = value;
+                        pams.Add(param);
+                        pStr.Join(param.ParameterName);
+                    }
+                    else
+                    {
+                        var t_value = _dbProvider.GetObjectType(value) ?? "null";
+                        valueStringJoin.Join(t_value);
+                    }
+                }
+                string? valueSql;
+                if (_dbOption.IsUseParamers)
+                    valueSql = $"({pStr})";
+                else
+                    valueSql = $"({valueStringJoin})";
+                sqlJoinString.Join(valueSql);
+            }
+            result.SQL = $"insert into {_dbProvider.FormatFieldName(tableName)}({fields}) values{sqlJoinString}";
+            result.Parameters.AddRange(pams);
+            return result;
         }
     }
 }

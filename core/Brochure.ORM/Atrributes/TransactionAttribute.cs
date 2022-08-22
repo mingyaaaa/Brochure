@@ -38,8 +38,8 @@ namespace Brochure.ORM.Atrributes
             }
             else
             {
-                var transactionManager = context.ServiceProvider.GetService<ITransactionManager>();
-                var factory = context.ServiceProvider.GetService<ITransactionFactory>();
+                var transactionManager = context.ServiceProvider.GetRequiredService<ITransactionManager>();
+                var factory = context.ServiceProvider.GetRequiredService<ITransactionFactory>();
                 //此处如果transactionManager.IsEmpty为空则 返回Transaction 否则返回InnerTransaction
                 ITransaction transaction = factory.GetTransaction();
                 transactionManager.AddTransaction(transaction);

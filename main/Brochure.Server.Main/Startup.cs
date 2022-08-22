@@ -45,6 +45,7 @@ namespace Brochure.Server.Main
         {
             services.AddBrochureServer(Configuration).ConfigureAwait(false).GetAwaiter().GetResult();
             services.AddPluginSwaggerGen("Main", "main_v1", AppContext.BaseDirectory);
+            services.AddDistributedMemoryCache();
             //var xmlPath = Path.Combine(AppContext.BaseDirectory, "plugins", "Brochure.User");
             //services.ConfigurePluginSwaggerGen("User", "user_v1", xmlPath);
             //services.Configure<Knife4UIOptions>(knife4UIOptions =>

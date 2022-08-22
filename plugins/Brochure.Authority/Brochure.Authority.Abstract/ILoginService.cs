@@ -5,12 +5,12 @@ namespace Brochure.Authority.Abstract
 {
     public interface ILoginService
     {
-        ValueTask<IResult> Login(LoginModel loginModel);
+        ValueTask<Result<LoginUserModel>> Login(LoginModel loginModel);
 
-        ValueTask<IResult> VerifyUserName(string userName);
+        ValueTask<Result> VerifyUserName(string userName);
 
-        ValueTask<IResult> VerifyToken(string token);
+        ValueTask<Result> VerifyToken(string token);
 
-        ValueTask<IResult> RefreshToken(string userName);
+        ValueTask<Result> RefreshToken(string userName);
     }
 }

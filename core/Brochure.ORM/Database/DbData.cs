@@ -24,7 +24,7 @@ namespace Brochure.ORM.Database
             _dbContext = dbContext;
         }
 
-        private readonly DbContext _dbContext;
+        protected readonly DbContext _dbContext;
 
         /// <summary>
         /// Gets the isolation level.
@@ -51,6 +51,17 @@ namespace Brochure.ORM.Database
         public virtual Task<int> InsertManyAsync<T>(IEnumerable<T> objs) where T : class
         {
             return InsertMany(objs);
+        }
+
+        /// <summary>
+        /// Sqls the bulk copy async.
+        /// </summary>
+        /// <param name="objs">The objs.</param>
+        /// <returns>A Task.</returns>
+        [Transaction]
+        public virtual Task<int> SqlBulkCopyAsync<T>(IEnumerable<T> objs) where T : class
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>
