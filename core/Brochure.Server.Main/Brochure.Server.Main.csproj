@@ -19,7 +19,7 @@
     <PackageReference Include="Brochure.Extensions" Version="1.0.0" />
     <PackageReference Include="Brochure.ORM.MySql" Version="1.0.0" />
     <PackageReference Include="Brochure.Utils" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 </Project>
