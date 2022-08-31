@@ -6,11 +6,13 @@ using Brochure.ORM.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using System.Security.Claims;
 using System.Text;
+using Brochure.Authority.Models;
 
 namespace Brochure.Authority
 {
@@ -26,6 +28,8 @@ namespace Brochure.Authority
         public override void ConfigureService(IServiceCollection services)
         {
             var jwtConfig = Configuration.GetSection("Jwt");
+            services.Configure<JwtConfig>(jwtConfig);
+            services.Configure<AuthConfig>(Configuration);
             services.AddAuthentication(t =>
             {
                 t.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

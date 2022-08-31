@@ -7,10 +7,6 @@ namespace Brochure.Authority.Abstract
     {
         ValueTask<Result<LoginUserModel>> Login(LoginModel loginModel);
 
-        ValueTask<Result> VerifyUserName(string userName);
-
-        ValueTask<Result> VerifyToken(string token);
-
-        ValueTask<Result> RefreshToken(string userName);
+        ValueTask<Result<LoginInfo>> GetFailLoginInfo(string userName);
     }
 }

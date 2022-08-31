@@ -9,6 +9,6 @@ namespace Brochure.Authority.Abstract
 {
     public interface IAccountService
     {
-        public ValueTask<Result> VerifyAccount(string userName, string pwd);
+        public ValueTask<Result<string>> VerifyAccount(string userName, string pwd);
     }
 }

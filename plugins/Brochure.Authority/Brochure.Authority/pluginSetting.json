@@ -1,5 +1,7 @@
 {
   "Jwt": {
     "sign": "test"
-  }
+  },
+  "LoginExpireTime": 5 //分钟
+  "LoginErrorCount": 5
 }

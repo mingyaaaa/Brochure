@@ -9,10 +9,13 @@
     <Compile Remove="Class1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="ILoginService.cs~RF42c58c0f.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Protos\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Abstract" Version="0.0.0.*" />
+    <PackageReference Include="Brochure.Abstract" Version="0.0.0.8349" />
     <PackageReference Include="Grpc.Tools" Version="2.43.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

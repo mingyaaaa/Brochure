@@ -30,6 +30,12 @@ namespace Brochure.ORM.MySql
         {
         }
 
+        public override Task<int> InsertManyAsync<T>(IEnumerable<T> objs)
+        {
+            var sql = new InsertManySql(objs);
+            return _dbContext.ExcuteNoQueryAsync(sql);
+        }
+
         [Transaction]
         public override async Task<int> SqlBulkCopyAsync<T>(IEnumerable<T> objs)
         {

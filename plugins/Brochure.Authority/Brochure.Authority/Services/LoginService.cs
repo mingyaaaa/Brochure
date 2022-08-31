@@ -1,11 +1,19 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Brochure.Abstract.Models;
+using Brochure.Abstract.Utils;
 using Brochure.Authority.Abstract;
+using Brochure.Authority.Models;
 using Brochure.Core.PluginsDI;
+using Brochure.Extensions;
+using Brochure.Roles.Abstract;
 using Brochure.User.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Extensions;
 
 namespace Brochure.Authority.Services
 {
@@ -16,14 +24,32 @@ namespace Brochure.Authority.Services
     {
         private readonly IAccountService _accountService;
         private readonly IDistributedCache _distributedCache;
+        private readonly IScopeService<IUserService> _userServiceScope;
+        private readonly IScopeService<IRolesService> _roleServiceScope;
+        private readonly IJsonUtil _jsonUtil;
+        private readonly IOptions<AuthConfig> _options;
+
+        /// <summary>
+        /// The login service key.
+        /// </summary>
+        private const string LoginServiceKey = "auth";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginService"/> class.
         /// </summary>
-        public LoginService(IAccountService accountService, IDistributedCache distributedCache)
+        public LoginService(IAccountService accountService,
+            IDistributedCache distributedCache,
+            IScopeService<IUserService> userServiceScope,
+            IScopeService<IRolesService> roleServiceScope,
+            IJsonUtil jsonUtil,
+            IOptions<AuthConfig> options)
         {
             _accountService = accountService;
             _distributedCache = distributedCache;
+            _userServiceScope = userServiceScope;
+            _roleServiceScope = roleServiceScope;
+            _jsonUtil = jsonUtil;
+            _options = options;
         }
 
         /// <summary>
@@ -33,42 +59,67 @@ namespace Brochure.Authority.Services
         /// <returns>A ValueTask.</returns>
         public async ValueTask<Result<LoginUserModel>> Login(LoginModel loginModel)
         {
+            var loginInfoResult = await GetFailLoginInfo(loginModel.UseName);
+            if (loginInfoResult.IsSuccess && loginInfoResult.Data != null)
+            {
+                var loginInfo = loginInfoResult.Data;
+                if (loginInfo.FailCount > _options.Value.LoginErrorCount)
+                {
+                    return new Result<LoginUserModel>((int)ErrorCode.UserLock, ErrorCode.UserLock.GetDescript());
+                }
+            }
+            var userModel = new LoginUserModel();
             var loginResult = await _accountService.VerifyAccount(loginModel.UseName, loginModel.Passward);
             if (loginResult.Code == 0)
             {
-                //todo 查询角色，用户信息，部门信息，等
+                //查询用户信息
+                if (_userServiceScope.Value.TryGetTarget(out var userService))
+                {
+                    var user = await userService.GetUser(loginResult.Data);
+                    userModel.UserId = user?.UserId;
+                    userModel.UserName = user?.Name;
+                }
+                //查询角色信息
+                if (_roleServiceScope.Value.TryGetTarget(out var rolesService))
+                {
+                    var roles = await rolesService.GetRolesByUserId(loginResult.Data);
+                    userModel.Roles = roles.Select(t => new AccountRoleModel() { RoleId = t.RoleId, RoleName = t.RoleName });
+                }
+                //todo 查询部门信息
+                var key = $"{LoginServiceKey}:userid:{userModel.UserId}";
+                await _distributedCache.SetStringAsync(key, _jsonUtil.ConverToString(userModel), new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromMilliseconds(_options.Value.LoginExpireTime) });
+
+                //清除统计数据
+                await ClearFailLoginInfo(loginModel.UseName);
             }
-            return new Result<LoginUserModel>(loginResult.Code, loginResult.Msg);
+            else
+            {
+                await UpdateLoginFailCount(loginModel.UseName);
+                userModel = null;
+            }
+            return new Result<LoginUserModel>(userModel, loginResult.Code, loginResult.Msg);
         }
 
-        /// <summary>
-        /// Refreshes the token.
-        /// </summary>
-        /// <param name="userName">The user name.</param>
-        /// <returns>A ValueTask.</returns>
-        public ValueTask<Result> RefreshToken(string userName)
+        private async Task UpdateLoginFailCount(string userName)
         {
-            throw new NotImplementedException();
+            var key = $"{LoginServiceKey}:username:{userName}";
+            var str = await _distributedCache.GetStringAsync(key);
+            var loginInfo = _jsonUtil.ConverToObject<LoginInfo>(str);
+            loginInfo.FailCount++;
+            await _distributedCache.SetStringAsync(key, _jsonUtil.ConverToString(loginInfo), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_options.Value.LoginLockTime) });
         }
 
-        /// <summary>
-        /// Verifies the token.
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <returns>A ValueTask.</returns>
-        public ValueTask<Result> VerifyToken(string token)
+        public async ValueTask<Result<LoginInfo>> GetFailLoginInfo(string userName)
         {
-            throw new NotImplementedException();
+            var key = $"{LoginServiceKey}:username:{userName}";
+            var str = await _distributedCache.GetStringAsync(key);
+            var loginInfo = _jsonUtil.ConverToObject<LoginInfo>(str);
+            return new Result<LoginInfo>(loginInfo);
         }
 
-        /// <summary>
-        /// Verifies the user name.
-        /// </summary>
-        /// <param name="userName">The user name.</param>
-        /// <returns>A ValueTask.</returns>
-        public ValueTask<Result> VerifyUserName(string userName)
+        private async ValueTask ClearFailLoginInfo(string userName)
         {
-            throw new NotImplementedException();
+            await _distributedCache.RemoveAsync(userName);
         }
 
         /// <summary>

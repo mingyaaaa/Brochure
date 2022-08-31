@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Brochure.Abstract.Models;
 using Brochure.Authority.Abstract;
 using Brochure.Authority.Services;
+using Brochure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,16 @@ namespace Brochure.Authority.Controllers.V1
                 returnUrl = null;
             }
             var loginResult = await loginService.Login(model);
-            SignIn(new System.Security.Claims.ClaimsPrincipal(new ClaimsIdentity()), JwtBearerDefaults.AuthenticationScheme);
+            if (loginResult.IsSuccess)
+            {
+                var clamis = new List<Claim>() {
+                new Claim(CustomClaimType.Name,loginResult.Data!.UserName),
+                new Claim(CustomClaimType.UserId,loginResult.Data!.UserId),
+                new Claim(CustomClaimType.Role,loginResult.Data!.Roles.Join(",")),
+                new Claim(CustomClaimType.Dpts,loginResult.Data!.Depts.Join(",")),
+            };
+                SignIn(new System.Security.Claims.ClaimsPrincipal(new ClaimsIdentity(clamis)), JwtBearerDefaults.AuthenticationScheme);
+            }
             return Ok();
         }
 

@@ -24,7 +24,7 @@ namespace Brochure.Abstract.Models
         /// <param name="data">The data.</param>
         /// <param name="code">The code.</param>
         /// <param name="msg">The msg.</param>
-        public Result(object data, int code = 0, string msg = "") : this(code, msg)
+        public Result(object? data, int code = 0, string msg = "") : this(code, msg)
         {
             _data = data;
         }
@@ -78,7 +78,7 @@ namespace Brochure.Abstract.Models
         /// <param name="data">The data.</param>
         /// <param name="code">The code.</param>
         /// <param name="msg">The msg.</param>
-        public Result(T data, int code = 0, string msg = "") : this(code, msg)
+        public Result(T? data, int code = 0, string msg = "") : this(code, msg)
         {
             _data = data;
         }

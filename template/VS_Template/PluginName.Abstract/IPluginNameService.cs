@@ -4,9 +4,11 @@ namespace Plugin.Abstract
 {
     public interface I$ext_safeprojectname$Service
     {
-        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Get$ext_safeprojectname$();
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Get$ext_safeprojectname$(string id);
 
-        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> GetUsers(IEnumerable<string> ids);
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Get$ext_safeprojectname$s();
+
+        ValueTask<IEnumerable<$ext_safeprojectname$ServiceModel>> Get$ext_safeprojectname$s(IEnumerable<string> ids);
 
         ValueTask<int> Update$ext_safeprojectname$(string id, IRecord record);
 

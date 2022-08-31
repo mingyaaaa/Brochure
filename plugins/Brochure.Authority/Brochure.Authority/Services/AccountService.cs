@@ -10,7 +10,7 @@ namespace Brochure.Authority.Services
 {
     internal class AccountService : IAccountService
     {
-        public ValueTask<Result> VerifyAccount(string userName, string pwd)
+        public ValueTask<Result<string>> VerifyAccount(string userName, string pwd)
         {
             throw new NotImplementedException();
         }

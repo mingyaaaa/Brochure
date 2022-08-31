@@ -14,10 +14,11 @@
     <ProjectReference Include="..\Brochure.Authority.Abstract\Brochure.Authority.Abstract.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.*" />
+    <PackageReference Include="Brochure.Core.Server" Version="0.0.0.8349" />
     <PackageReference Include="Brochure.ORM.MySql" Version="0.0.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="plugin.config" />

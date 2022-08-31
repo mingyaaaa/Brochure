@@ -10,6 +10,13 @@ namespace Brochure.User.Abstract
     public interface IUserService
     {
         /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>A ValueTask.</returns>
+        ValueTask<UserServiceModel> GetUser(string id);
+
+        /// <summary>
         /// Gets the users.
         /// </summary>
         /// <returns>A ValueTask.</returns>
@@ -21,6 +28,13 @@ namespace Brochure.User.Abstract
         /// <param name="ids">The ids.</param>
         /// <returns>A ValueTask.</returns>
         ValueTask<IEnumerable<UserServiceModel>> GetUsers(IEnumerable<string> ids);
+
+        /// <summary>
+        /// Gets the users by roles.
+        /// </summary>
+        /// <param name="roleId">The role id.</param>
+        /// <returns>A ValueTask.</returns>
+        ValueTask<IEnumerable<UserServiceModel>> GetUsersByRoles(string roleId);
 
         /// <summary>
         /// Updates the user.
